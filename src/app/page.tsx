@@ -8,7 +8,7 @@ import { useAppDispatch } from "@/redux/hooks"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import { useState } from "react"
 
-export default function page() {
+export default function Page() {
 
 	const dispatch = useAppDispatch()
 	const [loading, setLoading] = useState<boolean>(true)

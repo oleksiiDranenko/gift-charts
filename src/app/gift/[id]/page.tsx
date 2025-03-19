@@ -7,7 +7,7 @@ import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-export default function page({params}: any) {
+export default function Page({params}: any) {
 
     const [gift, setGift] = useState<GiftInterface | null>(null)
     const [weekList, setWeekList] = useState<GiftWeekDataInterface[]>([])
