@@ -9,8 +9,8 @@ export default interface GiftInterface {
     upgradePrice: number,
     initTonPrice: number,
     initUsdPrice: number,
-    tonPrice24hAgo: number,
-    usdPrice24hAgo: number,
+    tonPrice24hAgo?: number,
+    usdPrice24hAgo?: number,
     priceTon: number,
     priceUsd: number
 }

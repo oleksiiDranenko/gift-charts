@@ -8,7 +8,7 @@ import { useAppDispatch } from "@/redux/hooks"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import { useState } from "react"
 
-export default function Home() {
+export default function page() {
 
 	const dispatch = useAppDispatch()
 	const [loading, setLoading] = useState<boolean>(true)
@@ -28,7 +28,7 @@ export default function Home() {
 	}, [dispatch]); 
 
     return (
-      	<main className="">
+      	<main className="pt-16 pb-20">
 			<GiftsList loading={loading}/>
       	</main>
     )

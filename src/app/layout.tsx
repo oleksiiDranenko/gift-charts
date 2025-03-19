@@ -6,6 +6,7 @@ import { TonConnectUIProvider } from '@tonconnect/ui-react'
 import './globals.css'
 import ReduxProvider from '@/redux/provider'
 import NavbarTop from '@/components/navbar/NavbarTop'
+import NavbarBottom from '@/components/navbar/NavbarBottom'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({
 					<ReduxProvider>
 						<NavbarTop/>
 						{children}
+						<NavbarBottom/>
 					</ReduxProvider>
     	    	</body>
     	  	</TonConnectUIProvider>
