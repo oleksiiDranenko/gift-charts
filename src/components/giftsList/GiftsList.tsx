@@ -2,9 +2,11 @@
 
 import GiftInterface from "@/interfaces/GiftInterface"
 import { useAppSelector } from "@/redux/hooks"
-import Image from "next/image"
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import ReactLoading from 'react-loading';
+import GiftItem from "./GiftItem";
+import Image from "next/image";
+
 
 interface PropsInterface {
     loading: boolean
@@ -13,21 +15,143 @@ interface PropsInterface {
 export default function GiftsList({loading}: PropsInterface) {
 
     const giftsList = useAppSelector((state) => state.giftsList)
+    
+    const [list, setList] = useState<GiftInterface[]>([])
+    const [ton, setTon] = useState<number>(0)
 
-    const formatNumber = (number: number) => {
-        if (number >= 1000) {
-            const shortNumber = (number / 1000).toFixed(1);
-            return `${shortNumber}K`;
-          }
-        return number.toString();
-    }
+    const [currency, setCurrency] = useState<'ton' | 'usd'>('ton')
+    const [sort, setSort] = useState<'lowFirst' | 'highFirst'>('highFirst')
+    const [sortBy, setSortBy] = useState<'price' | 'supply' | 'initSupply' | 'starsPrice'>('price')
+
+    useEffect(() => {
+        if (!loading) {
+            setList([...giftsList]);
+
+            const priceTon = giftsList[0].priceTon;
+            const priceUsd = giftsList[0].priceUsd;
+            setTon(parseFloat((priceUsd/priceTon).toFixed(2)))
+        }
+    }, [loading, giftsList]);
+    
+    useEffect(() => {
+        if (!loading) {
+            let sortedList = [...giftsList]; 
+    
+            switch (sortBy) {
+                case 'price':
+                    sortedList.sort((a, b) =>
+                        currency === 'ton'
+                            ? sort === 'lowFirst' ? a.priceTon - b.priceTon : b.priceTon - a.priceTon
+                            : sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
+                    );
+                    break;
+                case 'supply':
+                    sortedList.sort((a, b) =>
+                        sort === 'lowFirst' ? a.supply - b.supply : b.supply - a.supply
+                    );
+                    break;
+                case 'initSupply':
+                    sortedList.sort((a, b) =>
+                        sort === 'lowFirst' ? a.initSupply - b.initSupply : b.initSupply - a.initSupply
+                    );
+                    break;
+                case 'starsPrice':
+                    sortedList.sort((a, b) =>
+                        sort === 'lowFirst' ? a.starsPrice - b.starsPrice : b.starsPrice - a.starsPrice
+                    );
+                    break;
+            }
+    
+            setList(sortedList);
+        }
+    }, [currency, sort, sortBy, loading, giftsList]);
 
     return (
         <div className='w-screen h-auto flex flex-col items-center'>
+
+            <div className="w-full flex flex-row justify-between items-center mb-5 pl-3 pr-3">
+                <div className="w-1/3 flex justify-between">
+                    <button
+                        className={`w-1/2 text-sm  h-10 box-border ${currency == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => setCurrency('ton')}
+                    >
+                        TON
+                    </button>
+                    <button
+                        className={`w-1/2 text-sm  h-10 box-border ${currency == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => setCurrency('usd')}
+                    >
+                        USD
+                    </button>
+                </div>
+
+                <div className="w-2/3 flex flex-row justify-end">
+                    {!loading ?
+                        <div className="h-10 w-1/2 bg-slate-800 rounded-lg flex flex-row items-center justify-center font-bold">
+                            <Image 
+                               alt="ton logo"
+                               src='/images/ton.webp'
+                               width={15}
+                               height={15}
+                               className="mr-1"
+                            /> 
+                            <span>
+                            {'1 ≈ '}{'$'+ ton}
+                            </span>
+                        </div>
+                        : null
+                    }
+                </div>
+
+                
+            </div>
+
+            <div className="w-full flex flex-row justify-end items-center mb-5 pl-3 pr-3">
+
+                <div className="w-2/3 flex justify-start items-center gap-2">
+                    <span className="text-slate-500 mr-1 text-sm">
+                        Sort By:
+                    </span>
+                    <select
+                        value={sortBy}
+                        onChange={(e: any) => setSortBy(e.target.value)}
+                        className="px-3 h-10 rounded-lg bg-transparent text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value={'price'}>Price</option>
+                        <option value={'supply'}>Supply</option>
+                        <option value={'initSupply'}>Init. Supply</option>
+                        <option value={'starsPrice'}>Stars Price</option>
+                    </select>
+                </div>
+
+                <div className="w-1/3 flex justify-end">
+                    <button
+                        className={`w-1/3 text-sm  h-10 box-border ${sort == 'lowFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => setSort('lowFirst')}
+                    >
+                        ↑
+                    </button>
+                    <button
+                        className={`w-1/3 text-sm  h-10 box-border ${sort == 'highFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => setSort('highFirst')}
+                        >
+                            ↓
+                    </button>
+                </div>
+            </div>
+
+
+
             
             <div className="w-full pl-3 pr-3 mb-3 flex flex-row items-center justify-between h-6 text-xs text-slate-500">
                 <div className="">
-                    Name / Supply
+                    Name / {
+                        sortBy === 'price' ? 'Supply' 
+                        : sortBy === 'supply' ? 'Supply'
+                        : sortBy === 'initSupply' ? 'Init. Supply'
+                        : sortBy === 'starsPrice' ? 'Stars Price'
+                        : null
+                    }
                 </div>
                 <div className="">
                     Price / 24h change
@@ -38,60 +162,12 @@ export default function GiftsList({loading}: PropsInterface) {
                 ? 
                 <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 : 
-                giftsList !== undefined 
+                list !== undefined 
                 ? 
-                giftsList.map((item: GiftInterface) => {
+                list.map((item: GiftInterface) => {
 
                     return (
-                        <Link 
-                            className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-between" 
-                            key={item._id}
-                            href={`/gift/${item._id}`}
-                        >
-
-                            <div className=" flex flex-row items-center">
-                                <Image
-                                    alt="gift image"
-                                    src={`/gifts/${item.image}.webp`}
-                                    width={50}
-                                    height={50}
-                                    className="bg-slate-800 p-1 mr-3 rounded-lg"
-                                />
-
-                                <div className="flex flex-col">
-                                    <span className="text-base font-bold">
-                                        {item.name} 
-                                    </span>
-                                    <span className="text-slate-500 text-sm font-normal">
-                                        {formatNumber(item.supply)}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className=" flex flex-row items-center justify-end">
-                                <div className="w-20 h-10 text-sm flex flex-col items-end justify-center mr-2">
-                                    <div className="flex flex-row items-center">
-                                        <Image 
-                                            alt="ton logo"
-                                            src='/images/ton.webp'
-                                            width={15}
-                                            height={15}
-                                            className="mr-1"
-                                        />
-                                        <span className="text-base font-bold">
-                                            {item.priceTon}
-                                        </span>
-                                    </div>
-
-                                    
-                                    <span className={`text-sm font-light text-green-500`}>
-                                        +10%
-                                    </span>
-                                </div>
-                                
-                            </div>
-
-                        </Link>
+                        <GiftItem item={item} currency={currency} sortBy={sortBy} key={item._id}/>
                     )
                 }) : null
             }

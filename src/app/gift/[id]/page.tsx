@@ -27,8 +27,6 @@ export default function Page({params}: any) {
             setWeekList(weekRes.data)
             setLifeList(lifeRes.data)
             setLoading(false)
-
-            console.log(weekRes.data)
         })()
     }, [])
 

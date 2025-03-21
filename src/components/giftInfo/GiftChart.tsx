@@ -276,7 +276,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 </button>
                 <button 
                     className={`w-1/5 text-sm  h-10 ${listType == '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
-                    onClick={() => lifeData.length > 0 ? setListType('all') : null}
+                    onClick={() => lifeData.length > 0 ? setListType('1m') : null}
                 >
                     1m
                 </button>
