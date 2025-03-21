@@ -1,11 +1,13 @@
 'use client'
 
 import GiftChart from "@/components/giftInfo/GiftChart"
+import GiftStats from "@/components/giftInfo/GiftStats"
 import GiftInterface from "@/interfaces/GiftInterface"
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface"
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface"
 import axios from "axios"
 import { useEffect, useState } from "react"
+import ReactLoading from "react-loading"
 
 export default function Page({params}: any) {
 
@@ -31,11 +33,17 @@ export default function Page({params}: any) {
     }, [])
 
     return (
-      	<main className="pt-16">
-			<h1 className="w-screen text-center">
+      	<main className="pt-16 pb-24">
+			<div className="w-screen flex justify-center">
                 
-                {!loading ? <GiftChart gift={gift} lifeData={lifeList} weekData={weekList}/> : null}
-            </h1>
+                {!loading && gift ?
+                <div className="flex flex-col">
+                    <GiftChart gift={gift} lifeData={lifeList} weekData={weekList}/>
+                    <GiftStats gift={gift}/>
+                </div> 
+                
+                : <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>}
+            </div>
       	</main>
     )
 }
