@@ -70,7 +70,7 @@ export default function GiftsList({loading}: PropsInterface) {
         <div className='w-screen h-auto flex flex-col items-center'>
 
             <div className="w-full flex flex-row justify-between items-center mb-5 pl-3 pr-3">
-                <div className="w-1/3 flex justify-between">
+                <div className="w-1/3 gap-2 flex justify-between">
                     <button
                         className={`w-1/2 text-sm  h-10 box-border ${currency == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
                         onClick={() => setCurrency('ton')}
@@ -124,15 +124,15 @@ export default function GiftsList({loading}: PropsInterface) {
                     </select>
                 </div>
 
-                <div className="w-1/3 flex justify-end">
+                <div className="w-1/3 gap-2 flex justify-end">
                     <button
-                        className={`w-1/3 text-sm  h-10 box-border ${sort == 'lowFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-2/5 text-sm  h-10 box-border ${sort == 'lowFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
                         onClick={() => setSort('lowFirst')}
                     >
                         ↑
                     </button>
                     <button
-                        className={`w-1/3 text-sm  h-10 box-border ${sort == 'highFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-2/5 text-sm  h-10 box-border ${sort == 'highFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
                         onClick={() => setSort('highFirst')}
                         >
                             ↓
