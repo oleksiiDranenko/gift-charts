@@ -8,6 +8,7 @@ import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import ReactLoading from "react-loading"
+import { useRouter } from "next/navigation";
 
 export default function Page({params}: any) {
 
@@ -15,6 +16,16 @@ export default function Page({params}: any) {
     const [weekList, setWeekList] = useState<GiftWeekDataInterface[]>([])
     const [lifeList, setLifeList] = useState<GiftLifeDataInterface[]>([])
     const [loading, setLoading] = useState<boolean>(true)
+
+    const router = useRouter();
+
+    const goBack = () => {
+        if (window.history.length > 1) {
+            router.back();
+        } else {
+            router.push("/");
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -38,6 +49,11 @@ export default function Page({params}: any) {
                 
                 {!loading && gift ?
                 <div className="flex flex-col">
+                    <div className="w-screen h-10 px-3 flex items-center">
+                        <button onClick={goBack} className="px-5 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
+                            {'<- Back'}
+                        </button>
+                    </div>
                     <GiftChart gift={gift} lifeData={lifeList} weekData={weekList}/>
                     <GiftStats gift={gift}/>
                 </div> 

@@ -26,7 +26,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
         } else {
             setPercentChange('no data')
         }
-    }, [])
+    }, [currency])
 
     const formatNumber = (number: number) => {
         if (number >= 1000 && (sortBy === 'price' || sortBy === 'supply')) {

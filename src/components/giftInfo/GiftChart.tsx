@@ -192,7 +192,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
   return (
     <div className="h-auto w-screen pl-3 pr-3">
 
-        <div className="w-full h-16 mt-5 flex flex-row justify-between items-center">
+        <div className="w-full h-16 mt-3 flex flex-row justify-between items-center">
             <div className="h-full flex items-center">
                 <Image 
                     alt="gift"
