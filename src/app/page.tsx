@@ -6,27 +6,33 @@ import axios from "axios"
 import { useAppDispatch } from "@/redux/hooks"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import { useState } from "react"
+import { useAppSelector } from "@/redux/hooks"
 
 export default function Page() {
 	const [isClient, setIsClient] = useState(false);
 
 	const dispatch = useAppDispatch()
+	const giftsList = useAppSelector((item) => item.giftsList)
 	const [loading, setLoading] = useState<boolean>(true)
 
 
 	useEffect(() => {
 		const fetchGifts = async () => {
-			try {
-				const response = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-				dispatch(setGiftsList(response.data)); 
-				setLoading(false)
-			} catch (error) {
-				console.error("Error fetching gifts:", error);
+			if (giftsList.length === 0) {
+				try {
+					const response = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+					dispatch(setGiftsList(response.data));
+					setLoading(false);
+				} catch (error) {
+					console.error("Error fetching gifts:", error);
+				}
+			} else {
+				setLoading(false);
 			}
 		};
 
 		fetchGifts();
-	}, [dispatch]); 
+	}, [dispatch, giftsList]);
 
 	useEffect(() => {
 		setIsClient(true);
@@ -34,49 +40,40 @@ export default function Page() {
 
 	useEffect(() => {
 		if (isClient) {
-			import('@twa-dev/sdk').then((WebApp) => {
+		  	import('@twa-dev/sdk').then((WebApp) => {
 				const telegramWebApp = WebApp.default;
-	
+				
 				if (telegramWebApp) {
-					console.log('Telegram Web App initialized:', telegramWebApp);
-	
-					telegramWebApp.ready();
-					telegramWebApp.expand();
-					
-					// Disable swipe-down close behavior
-					if (telegramWebApp.disableClosingConfirmation) {
-						telegramWebApp.disableClosingConfirmation();
-						console.log('Swipe-to-close disabled.');
-					}
-	
-					// Disable vertical swipes
-					if (telegramWebApp.disableVerticalSwipes) {
-						telegramWebApp.disableVerticalSwipes();
+				  	console.log('Telegram Web App initialized:', telegramWebApp);
+				
+				  	telegramWebApp.ready(); 
+				  	telegramWebApp.expand(); 
+				
+				  	if (telegramWebApp.disableVerticalSwipes) {
+						telegramWebApp.disableVerticalSwipes(); 
 						console.log('Vertical swipes disabled.');
-					}
-	
-					// Lock screen orientation
-					if (telegramWebApp.lockOrientation) {
-						telegramWebApp.lockOrientation();
+				  	}
+				
+				  	if (telegramWebApp.lockOrientation) {
+						telegramWebApp.lockOrientation(); 
 						console.log('Screen orientation locked.');
-					}
-	
-					// Remove header (optional)
-					if (telegramWebApp.setHeaderColor) {
-						telegramWebApp.setHeaderColor('#00000000'); // Transparent header
-						console.log('Header hidden.');
-					} else {
+				  	}
+				
+				
+				  	if (telegramWebApp.setHeaderColor) {
+						telegramWebApp.setHeaderColor('#111827'); 
+						console.log('Header color set to #1E90FF.');
+				  	} else {
 						console.warn('setHeaderColor method not available.');
-					}
+				  	}
 				} else {
-					console.error('Telegram Web App SDK not available.');
+			  		console.error('Telegram Web App SDK not available.');
 				}
 			}).catch((err) => {
 				console.error('Error loading WebApp SDK:', err);
 			});
 		}
-	}, [isClient]);
-	
+	  }, [isClient]);
 
     return (
       	<main className="pt-[70px] pb-24">
