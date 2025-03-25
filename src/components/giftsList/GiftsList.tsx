@@ -1,11 +1,17 @@
 'use client'
 
 import GiftInterface from "@/interfaces/GiftInterface"
+
 import { useAppSelector } from "@/redux/hooks"
-import { useEffect, useState } from "react";
-import ReactLoading from 'react-loading';
-import GiftItem from "./GiftItem";
-import Image from "next/image";
+import { useAppDispatch } from "@/redux/hooks"
+import { setFilters } from "@/redux/slices/filterListSlice"
+
+import { useEffect, useState } from "react"
+import ReactLoading from 'react-loading'
+import GiftItem from "./GiftItem"
+import Image from "next/image"
+import Link from "next/link"
+import { setGiftsList } from "@/redux/slices/giftsListSlice"
 
 
 interface PropsInterface {
@@ -15,13 +21,12 @@ interface PropsInterface {
 export default function GiftsList({loading}: PropsInterface) {
 
     const giftsList = useAppSelector((state) => state.giftsList)
+    const filters = useAppSelector((state) => state.filters)
+    const dispatch = useAppDispatch()
     
     const [list, setList] = useState<GiftInterface[]>([])
     const [ton, setTon] = useState<number>(0)
 
-    const [currency, setCurrency] = useState<'ton' | 'usd'>('ton')
-    const [sort, setSort] = useState<'lowFirst' | 'highFirst'>('highFirst')
-    const [sortBy, setSortBy] = useState<'price' | 'supply' | 'initSupply' | 'starsPrice'>('price')
 
     useEffect(() => {
         if (!loading) {
@@ -35,36 +40,44 @@ export default function GiftsList({loading}: PropsInterface) {
     
     useEffect(() => {
         if (!loading) {
-            let sortedList = [...giftsList]; 
+            let filteredList = [...giftsList];
+
+            if (filters.chosenGifts.length !== 0) {
+                filteredList = filters.chosenGifts
+            }
+
+            let sortedList = [...filteredList];
     
-            switch (sortBy) {
+            switch (filters.sortBy) {
                 case 'price':
                     sortedList.sort((a, b) =>
-                        currency === 'ton'
-                            ? sort === 'lowFirst' ? a.priceTon - b.priceTon : b.priceTon - a.priceTon
-                            : sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
+                        filters.currency === 'ton'
+                            ? filters.sort === 'lowFirst' ? a.priceTon - b.priceTon : b.priceTon - a.priceTon
+                            : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
                     );
                     break;
                 case 'supply':
                     sortedList.sort((a, b) =>
-                        sort === 'lowFirst' ? a.supply - b.supply : b.supply - a.supply
+                        filters.sort === 'lowFirst' ? a.supply - b.supply : b.supply - a.supply
                     );
                     break;
                 case 'initSupply':
                     sortedList.sort((a, b) =>
-                        sort === 'lowFirst' ? a.initSupply - b.initSupply : b.initSupply - a.initSupply
+                        filters.sort === 'lowFirst' ? a.initSupply - b.initSupply : b.initSupply - a.initSupply
                     );
                     break;
                 case 'starsPrice':
                     sortedList.sort((a, b) =>
-                        sort === 'lowFirst' ? a.starsPrice - b.starsPrice : b.starsPrice - a.starsPrice
+                        filters.sort === 'lowFirst' ? a.starsPrice - b.starsPrice : b.starsPrice - a.starsPrice
                     );
                     break;
             }
     
-            setList(sortedList);
+            setList(sortedList)
         }
-    }, [currency, sort, sortBy, loading, giftsList]);
+    }, [filters, loading, giftsList]);
+
+    
 
     return (
         <div className='w-screen h-auto flex flex-col items-center'>
@@ -72,36 +85,25 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full flex flex-row justify-between items-center mb-5 pl-3 pr-3">
                 <div className="w-1/3 gap-2 flex justify-between">
                     <button
-                        className={`w-1/2 text-sm  h-10 box-border ${currency == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                        onClick={() => setCurrency('ton')}
+                        className={`w-1/2 text-sm  h-10 box-border ${filters.currency == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => dispatch(setFilters({...filters, currency: 'ton'}))}
                     >
                         TON
                     </button>
                     <button
-                        className={`w-1/2 text-sm  h-10 box-border ${currency == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                        onClick={() => setCurrency('usd')}
+                        className={`w-1/2 text-sm  h-10 box-border ${filters.currency == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => dispatch(setFilters({...filters, currency: 'usd'}))}
                     >
                         USD
                     </button>
                 </div>
 
-                <div className="w-2/3 flex flex-row justify-end">
-                    {!loading ?
-                        <div className="h-10 w-1/2 bg-slate-800 rounded-lg flex flex-row items-center justify-center font-bold">
-                            <Image 
-                               alt="ton logo"
-                               src='/images/ton.webp'
-                               width={15}
-                               height={15}
-                               className="mr-1"
-                            /> 
-                            <span>
-                            {'1 ≈ '}{'$'+ ton}
-                            </span>
-                        </div>
-                        : null
-                    }
-                </div>
+                <Link 
+                    href={'/home-filters'}
+                    className="w-1/2 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
+                >
+                    ≡ Filter Gifts
+                </Link>
 
                 
             </div>
@@ -113,8 +115,8 @@ export default function GiftsList({loading}: PropsInterface) {
                         Sort By:
                     </span>
                     <select
-                        value={sortBy}
-                        onChange={(e: any) => setSortBy(e.target.value)}
+                        value={filters.sortBy}
+                        onChange={(e: any) => dispatch(setFilters({...filters, sortBy: e.target.value}))}
                         className="px-3 h-10 rounded-lg bg-transparent text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value={'price'}>Price</option>
@@ -126,14 +128,14 @@ export default function GiftsList({loading}: PropsInterface) {
 
                 <div className="w-1/3 gap-2 flex justify-end">
                     <button
-                        className={`w-2/5 text-sm  h-10 box-border ${sort == 'lowFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                        onClick={() => setSort('lowFirst')}
+                        className={`w-2/5 text-sm  h-10 box-border ${filters.sort == 'lowFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => dispatch(setFilters({...filters, sort: 'lowFirst'}))} 
                     >
                         ↑
                     </button>
                     <button
-                        className={`w-2/5 text-sm  h-10 box-border ${sort == 'highFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                        onClick={() => setSort('highFirst')}
+                        className={`w-2/5 text-sm  h-10 box-border ${filters.sort == 'highFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => dispatch(setFilters({...filters, sort: 'highFirst'}))}
                         >
                             ↓
                     </button>
@@ -146,10 +148,10 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full pl-3 pr-3 mb-3 flex flex-row items-center justify-between h-6 text-xs text-slate-500">
                 <div className="">
                     Name / {
-                        sortBy === 'price' ? 'Supply' 
-                        : sortBy === 'supply' ? 'Supply'
-                        : sortBy === 'initSupply' ? 'Init. Supply'
-                        : sortBy === 'starsPrice' ? 'Stars Price'
+                        filters.sortBy === 'price' ? 'Supply' 
+                        : filters.sortBy === 'supply' ? 'Supply'
+                        : filters.sortBy === 'initSupply' ? 'Init. Supply'
+                        : filters.sortBy === 'starsPrice' ? 'Stars Price'
                         : null
                     }
                 </div>
@@ -167,7 +169,7 @@ export default function GiftsList({loading}: PropsInterface) {
                 list.map((item: GiftInterface) => {
 
                     return (
-                        <GiftItem item={item} currency={currency} sortBy={sortBy} key={item._id}/>
+                        <GiftItem item={item} currency={filters.currency} sortBy={filters.sortBy} key={item._id}/>
                     )
                 }) : null
             }

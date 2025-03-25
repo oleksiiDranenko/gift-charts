@@ -50,7 +50,7 @@ export default function Page({params}: any) {
                 {!loading && gift ?
                 <div className="flex flex-col">
                     <div className="w-screen h-10 px-3 flex items-center">
-                        <button onClick={goBack} className="px-5 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
+                        <button onClick={goBack} className="px-10 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
                             {'<- Back'}
                         </button>
                     </div>
