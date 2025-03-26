@@ -45,7 +45,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
 
     return (
         <Link 
-            className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-between" 
+            className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-between hover:bg-slate-800 hover:bg-opacity-35 rounded-lg" 
             key={item._id}
             href={`/gift/${item._id}`}
         >
@@ -55,7 +55,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
                     src={`/gifts/${item.image}.webp`}
                     width={50}
                     height={50}
-                    className={`bg-slate-800 p-1 mr-3 rounded-lg ${item.staked === true && 'shadow-md shadow-[#0098EA]'}`}
+                    className={`bg-slate-800 p-1 mr-3 rounded-lg ${item.staked && 'shadow-md shadow-[#0098EA]'}`}
                 />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">

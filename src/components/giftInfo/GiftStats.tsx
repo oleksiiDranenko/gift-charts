@@ -38,6 +38,16 @@ export default function GiftStats({gift}: PropsInterface) {
                     </span>
                 </p>
 
+                <p className="mb-8 w-full flex justify-between">
+                    <span className="font-light">
+                        Avaliable for<span className="text-[#0098EA] font-bold">{' Staking'}</span>:
+                    </span>
+                    <span className={`${gift.staked && 'text-[#0098EA] font-bold'}`}>
+                        {gift.staked ? 'Yes' : 'No'}
+                    </span>
+                </p>
+
+
                 <p className="mb-3 w-full flex justify-between">
                     <span className="font-light">
                         {'Stars Price: '}

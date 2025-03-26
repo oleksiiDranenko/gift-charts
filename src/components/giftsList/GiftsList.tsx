@@ -129,13 +129,13 @@ export default function GiftsList({loading}: PropsInterface) {
                         className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, sort: 'lowFirst'}))} 
                     >
-                        High ↑
+                        Low ↑
                     </button>
                     <button
                         className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, sort: 'highFirst'}))}
                         >
-                            Low ↓
+                            High ↓
                     </button>
                 </div>
             </div>

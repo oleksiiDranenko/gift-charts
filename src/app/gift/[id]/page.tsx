@@ -49,7 +49,7 @@ export default function Page({params}: any) {
             <div className="w-full lg:w-1/2">    
                 {!loading && gift ?
                 <div className="flex flex-col">
-                    <div className="w-full h-10 px-3 flex items-center">
+                    <div className="w-full h-10 px-3 flex items-center justify-between">
                         <button onClick={goBack} className="w-1/3 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
                             {'<- Back'}
                         </button>
