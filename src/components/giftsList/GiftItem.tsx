@@ -45,7 +45,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
 
     return (
         <Link 
-            className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-between hover:bg-slate-800 hover:bg-opacity-35 rounded-lg" 
+            className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
             key={item._id}
             href={`/gift/${item._id}`}
         >
