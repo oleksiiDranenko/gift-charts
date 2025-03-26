@@ -7,7 +7,7 @@ export default function page() {
 
 
     return (
-        <div className="w-screen pt-[70px] pb-24">
+        <div className="w-full lg:w-1/2 pt-[70px] pb-24">
             <FilterGifts />
         </div>
     )

@@ -9,9 +9,7 @@ import { setFilters } from "@/redux/slices/filterListSlice"
 import { useEffect, useState } from "react"
 import ReactLoading from 'react-loading'
 import GiftItem from "./GiftItem"
-import Image from "next/image"
 import Link from "next/link"
-import { setGiftsList } from "@/redux/slices/giftsListSlice"
 
 
 interface PropsInterface {
@@ -80,7 +78,7 @@ export default function GiftsList({loading}: PropsInterface) {
     
 
     return (
-        <div className='w-screen h-auto flex flex-col items-center'>
+        <div className='w-full h-auto flex flex-col items-center'>
 
             <div className="w-full flex flex-row justify-between items-center mb-5 pl-3 pr-3">
                 <div className="w-1/3 gap-2 flex justify-between">

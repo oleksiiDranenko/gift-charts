@@ -64,7 +64,7 @@ export default function FilterGifts() {
 
     return (
         <div className="w-full pt-14 flex flex-col items-center">
-            <div className="w-screen top-14 fixed mb-3 p-3 gap-3 flex justify-between items-center bg-[#111827]">
+            <div className="w-full lg:w-1/2 top-14 fixed mb-3 p-3 gap-3 flex justify-between items-center bg-[#111827]">
                 <button 
                     onClick={goBack} 
                     className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"

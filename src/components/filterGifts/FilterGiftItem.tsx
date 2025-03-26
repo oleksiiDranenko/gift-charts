@@ -2,10 +2,7 @@
 
 import GiftInterface from "@/interfaces/GiftInterface"
 import Image from "next/image"
-import { useAppDispatch } from "@/redux/hooks"
-import { useAppSelector } from "@/redux/hooks"
-import { setFilters } from "@/redux/slices/filterListSlice"
-import { useEffect, useState } from "react"
+
 
 interface PropsInterface {
     gift: GiftInterface,
@@ -14,7 +11,6 @@ interface PropsInterface {
 }
 
 export default function FilterGiftItem({ gift, selected, onClick } : PropsInterface) {
-
 
     return (
         <div 

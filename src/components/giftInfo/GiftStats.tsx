@@ -26,7 +26,7 @@ export default function GiftStats({gift}: PropsInterface) {
     }
 
     return (
-        <div className="w-screen mt-8 px-3">
+        <div className="w-full mt-8 px-3">
 
             <div className="text-slate-300 p-3 bg-slate-800 rounded-lg">
                 <p className="mb-8 w-full flex justify-between">

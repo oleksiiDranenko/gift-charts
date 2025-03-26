@@ -76,7 +76,7 @@ export default function Page() {
 	  }, [isClient]);
 
     return (
-      	<main className="pt-[70px] pb-24">
+      	<main className="w-full  lg:w-1/2 pt-[70px] pb-24">
 			<GiftsList loading={loading}/>
       	</main>
     )

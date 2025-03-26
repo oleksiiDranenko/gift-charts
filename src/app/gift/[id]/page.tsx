@@ -44,22 +44,26 @@ export default function Page({params}: any) {
     }, [])
 
     return (
-      	<main className="pt-16 pb-24">
-			<div className="w-screen flex justify-center">
-                
+      	<div className="w-screen pt-16 pb-24 flex justify-center">
+			
+            <div className="w-full lg:w-1/2">    
                 {!loading && gift ?
                 <div className="flex flex-col">
-                    <div className="w-screen h-10 px-3 flex items-center">
-                        <button onClick={goBack} className="px-10 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
+                    <div className="w-full h-10 px-3 flex items-center">
+                        <button onClick={goBack} className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
                             {'<- Back'}
                         </button>
                     </div>
                     <GiftChart gift={gift} lifeData={lifeList} weekData={weekList}/>
                     <GiftStats gift={gift}/>
                 </div> 
-                
-                : <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>}
+
+                : 
+                <div className="w-full flex justify-center">
+                    <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
+                </div>
+                }
             </div>
-      	</main>
+      	</div>
     )
 }

@@ -190,7 +190,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
   
 
   return (
-    <div className="h-auto w-screen pl-3 pr-3">
+    <div className="h-auto w-full pl-3 pr-3">
 
         <div className="w-full h-16 mt-3 flex flex-row justify-between items-center">
             <div className="h-full flex items-center">
@@ -272,8 +272,8 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
         
 
 
-        <div className="mb-1 mt-5  flex flex-col">
-            <div className="w-full  flex flex-row justify-between">
+        <div className="mb-1 mt-5 flex flex-col">
+            <div className="w-full flex flex-row justify-between">
                 <button 
                     className={`w-1/5 text-sm  h-10  ${listType == 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
                     onClick={() => lifeData.length > 0 ? setListType('all') : null}
