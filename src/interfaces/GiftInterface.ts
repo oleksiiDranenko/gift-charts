@@ -12,5 +12,6 @@ export default interface GiftInterface {
     tonPrice24hAgo?: number,
     usdPrice24hAgo?: number,
     priceTon: number,
-    priceUsd: number
+    priceUsd: number,
+    staked?: boolean
 }

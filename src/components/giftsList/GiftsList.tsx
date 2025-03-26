@@ -83,13 +83,13 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full flex flex-row justify-between items-center mb-5 pl-3 pr-3">
                 <div className="w-1/3 gap-2 flex justify-between">
                     <button
-                        className={`w-1/2 text-sm  h-10 box-border ${filters.currency == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, currency: 'ton'}))}
                     >
                         TON
                     </button>
                     <button
-                        className={`w-1/2 text-sm  h-10 box-border ${filters.currency == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, currency: 'usd'}))}
                     >
                         USD
@@ -115,7 +115,7 @@ export default function GiftsList({loading}: PropsInterface) {
                     <select
                         value={filters.sortBy}
                         onChange={(e: any) => dispatch(setFilters({...filters, sortBy: e.target.value}))}
-                        className="px-3 h-10 rounded-lg bg-transparent text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value={'price'}>Price</option>
                         <option value={'supply'}>Supply</option>
@@ -126,21 +126,19 @@ export default function GiftsList({loading}: PropsInterface) {
 
                 <div className="w-1/3 gap-2 flex justify-end">
                     <button
-                        className={`w-2/5 text-sm  h-10 box-border ${filters.sort == 'lowFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-2/5 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, sort: 'lowFirst'}))} 
                     >
                         ↑
                     </button>
                     <button
-                        className={`w-2/5 text-sm  h-10 box-border ${filters.sort == 'highFirst' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-2/5 text-sm  h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, sort: 'highFirst'}))}
                         >
                             ↓
                     </button>
                 </div>
             </div>
-
-
 
             
             <div className="w-full pl-3 pr-3 mb-3 flex flex-row items-center justify-between h-6 text-xs text-slate-500">
@@ -153,6 +151,7 @@ export default function GiftsList({loading}: PropsInterface) {
                         : null
                     }
                 </div>
+
                 <div className="">
                     Price / 24h change
                 </div>

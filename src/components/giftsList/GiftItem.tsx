@@ -55,11 +55,11 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
                     src={`/gifts/${item.image}.webp`}
                     width={50}
                     height={50}
-                    className="bg-slate-800 p-1 mr-3 rounded-lg"
+                    className={`bg-slate-800 p-1 mr-3 rounded-lg ${item.staked === true && 'shadow-md shadow-[#0098EA]'}`}
                 />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">
-                        {item.name} 
+                        {item.name}
                     </span>
                     <span className="text-slate-500 text-sm font-normal">
                         {
@@ -72,6 +72,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
                     </span>
                 </div>
             </div>
+
             <div className=" flex flex-row items-center justify-end">
                 <div className="w-20 h-10 text-sm flex flex-col items-end justify-center mr-2">
                     <div className="flex flex-row items-center">
