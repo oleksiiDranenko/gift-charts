@@ -33,24 +33,29 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
     const [list, setList] = useState<GiftLifeDataInterface[] | GiftWeekDataInterface[]>(weekData.slice(-24))
     const [listType, setListType] = useState<'24h' | '1w' | '1m' | 'all'>('24h')
 
+    const [low, setLow] = useState<number>()
+    const [high, setHigh] = useState<number>()
 
     useEffect(() => {
-        if(selectedPrice == 'ton') {
+        if (list.length === 0) return
+
+        const prices = list.map(item => selectedPrice === 'ton' ? item.priceTon : item.priceUsd);
+
+        if (selectedPrice === 'ton') {
             const firstData = list[0].priceTon;
             const lastData = list[list.length - 1].priceTon;
-
             const result = parseFloat(((lastData - firstData) / firstData * 100).toFixed(2));
-
-            setPercentChange(result)
+            setPercentChange(result);
+            setLow(Math.min(...prices));
+            setHigh(Math.max(...prices));
         } else {
             const firstData = list[0].priceUsd;
             const lastData = list[list.length - 1].priceUsd;
-
             const result = parseFloat(((lastData - firstData) / firstData * 100).toFixed(2));
-
-            setPercentChange(result)
+            setPercentChange(result);
+            setLow(Math.min(...prices));
+            setHigh(Math.max(...prices));
         }
-
     }, [selectedPrice, list])
 
 
@@ -98,6 +103,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 tension: 0, 
                 pointRadius: 0,
                 pointHoverRadius: 6,
+                fill: true,
                 pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
             },
           ],
@@ -184,6 +190,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
             ticks: { color: "rgba(255, 255, 255, 0.6)", padding: 10 },
             position: "right",
             suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
+            suggestedMin: Math.min(...data.datasets[0].data) * 0.95,
         },
     }
   };
@@ -263,12 +270,22 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
             </div>
             
         </div>
+        
 
         
         <Line 
             data={data} 
             options={options}
         />
+
+        <div className="w-full flex flex-row justify-between mt-3 gap-x-3">
+            <span className="w-1/2 flex justify-center items-center h-10 bg-red-600 bg-opacity-40 rounded-lg">
+                Low: {low}
+            </span>
+            <span className="w-1/2 flex justify-center items-center h-10 bg-green-600 bg-opacity-40 rounded-lg">
+                High: {high}
+            </span>
+        </div>
         
 
 

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 interface PropsInterface {
     item: GiftInterface,
     currency: 'ton' | 'usd',
-    sortBy: 'price' | 'supply' | 'initSupply' | 'starsPrice'
+    sortBy: 'price' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange'
 }
 
 export default function GiftItem({item, currency, sortBy}: PropsInterface) {

@@ -69,6 +69,18 @@ export default function GiftsList({loading}: PropsInterface) {
                         filters.sort === 'lowFirst' ? a.starsPrice - b.starsPrice : b.starsPrice - a.starsPrice
                     );
                     break;
+                case 'percentChange':
+                    sortedList.sort((a, b) => {
+                        const aChange = filters.currency === 'ton'
+                            ? a.tonPrice24hAgo ? Math.abs(((a.priceTon - a.tonPrice24hAgo) / a.tonPrice24hAgo) * 100) : 0
+                            : a.usdPrice24hAgo ? Math.abs(((a.priceUsd - a.usdPrice24hAgo) / a.usdPrice24hAgo) * 100) : 0;
+                        const bChange = filters.currency === 'ton'
+                            ? b.tonPrice24hAgo ? Math.abs(((b.priceTon - b.tonPrice24hAgo) / b.tonPrice24hAgo) * 100) : 0
+                            : b.usdPrice24hAgo ? Math.abs(((b.priceUsd - b.usdPrice24hAgo) / b.usdPrice24hAgo) * 100) : 0;
+
+                        return filters.sort === 'lowFirst' ? aChange - bChange : bChange - aChange;
+                    });
+                    break;
             }
     
             setList(sortedList)
@@ -118,6 +130,7 @@ export default function GiftsList({loading}: PropsInterface) {
                         className="w-full px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value={'price'}>Price</option>
+                        <option value={'percentChange'}>Price Change</option>
                         <option value={'supply'}>Supply</option>
                         <option value={'initSupply'}>Init. Supply</option>
                         <option value={'starsPrice'}>Stars Price</option>
@@ -144,8 +157,7 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full pl-3 pr-3 mb-3 flex flex-row items-center justify-between h-6 text-xs text-slate-500">
                 <div className="">
                     Name / {
-                        filters.sortBy === 'price' ? 'Supply' 
-                        : filters.sortBy === 'supply' ? 'Supply'
+                        filters.sortBy === 'price' || 'supply' || 'percentChange' ? 'Supply' 
                         : filters.sortBy === 'initSupply' ? 'Init. Supply'
                         : filters.sortBy === 'starsPrice' ? 'Stars Price'
                         : null
