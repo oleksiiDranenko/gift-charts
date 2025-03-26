@@ -80,8 +80,8 @@ export default function GiftsList({loading}: PropsInterface) {
     return (
         <div className='w-full h-auto flex flex-col items-center'>
 
-            <div className="w-full flex flex-row justify-between items-center mb-5 pl-3 pr-3">
-                <div className="w-1/3 gap-2 flex justify-between">
+            <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 pl-3 pr-3">
+                <div className="w-1/2 gap-2 flex justify-between">
                     <button
                         className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, currency: 'ton'}))}
@@ -106,16 +106,16 @@ export default function GiftsList({loading}: PropsInterface) {
                 
             </div>
 
-            <div className="w-full flex flex-row justify-end items-center mb-5 pl-3 pr-3">
+            <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3  pl-3 pr-3">
 
-                <div className="w-2/3 flex justify-start items-center gap-2">
-                    <span className="text-slate-500 mr-1 text-sm">
+                <div className="w-1/2 flex justify-between items-center">
+                    <span className="w-24 text-slate-500 mr-2 text-sm">
                         Sort By:
                     </span>
                     <select
                         value={filters.sortBy}
                         onChange={(e: any) => dispatch(setFilters({...filters, sortBy: e.target.value}))}
-                        className="px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value={'price'}>Price</option>
                         <option value={'supply'}>Supply</option>
@@ -124,18 +124,18 @@ export default function GiftsList({loading}: PropsInterface) {
                     </select>
                 </div>
 
-                <div className="w-1/3 gap-2 flex justify-end">
+                <div className="w-1/2 gap-2 flex justify-end">
                     <button
-                        className={`w-2/5 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, sort: 'lowFirst'}))} 
                     >
-                        ↑
+                        High ↑
                     </button>
                     <button
-                        className={`w-2/5 text-sm  h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => dispatch(setFilters({...filters, sort: 'highFirst'}))}
                         >
-                            ↓
+                            Low ↓
                     </button>
                 </div>
             </div>
