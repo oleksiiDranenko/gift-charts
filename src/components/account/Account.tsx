@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import Asset from "./Asset"
 import Cash from "./Cash"
-import { TonConnect } from "@tonconnect/sdk";
+import { TonConnect } from "@tonconnect/sdk"; // Regular import
 import { AssetInterface, UserInterface } from "@/interfaces/UserInterface"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import GiftInterface from "@/interfaces/GiftInterface"
@@ -22,12 +22,10 @@ interface AssetDisplayInterface {
 }
 
 export default function Account() {
-
-    const tonConnect = new TonConnect()
-
     const giftsList = useAppSelector((state) => state.giftsList)
     const dispatch = useAppDispatch()
     
+    const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
     const [currency, setCurrency] = useState<'ton' | 'usd'>('ton')
     const [loading, setLoading] = useState<boolean>(true)
     const [user, setUser] = useState<UserInterface | null>(null)
@@ -36,48 +34,57 @@ export default function Account() {
     const [assetsPrice, setAssetsPrice] = useState<number>(0)
 
     const [ton, setTon] = useState<number>(3.6)
-
     const [tonPercentage, setTonPercentage] = useState<number>(0)
     const [usdPercentage, setUsdPercentage] = useState<number>(0)
 
+    // Initialize TonConnect only on the client side
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const tc = new TonConnect();
+            setTonConnect(tc);
+        }
+    }, [])
+
+    // Fetch user data and gifts when tonConnect is ready
+    useEffect(() => {
+        if (!tonConnect) return;
+
         (async () => {
             try {
-
                 await tonConnect.restoreConnection();
-
                 const wallet = tonConnect.wallet;
 
                 if (wallet) {
                     const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${wallet.account.address}`)
                     
-                    if(giftsList.length === 0) {
+                    if (giftsList.length === 0) {
                         const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-					    dispatch(setGiftsList(giftsRes.data));
+                        dispatch(setGiftsList(giftsRes.data));
 
-                        if(giftsRes.data[0].usdPrice24hAgo && giftsRes.data[0].tonPrice24hAgo) {
-                            setTon(giftsRes.data[0].usdPrice24hAgo / giftsRes.data[0].tonPrice24hAgo)
+                        if (giftsRes.data[0]?.usdPrice24hAgo && giftsRes.data[0]?.tonPrice24hAgo) {
+                            setTon(giftsRes.data[0].usdPrice24hAgo / giftsRes.data[0].tonPrice24hAgo);
                         }
                     }
 
-                    if(userRes.data._id) {
-                        setUser(userRes.data)
-                        setLoading(false)
+                    if (userRes.data._id) {
+                        setUser(userRes.data);
                     } else {
-                        setUser(null)
-                        setLoading(false)
+                        setUser(null);
                     }
+                    setLoading(false);
+                } else {
+                    setLoading(false); // No wallet connected
                 }
-                
             } catch (error) {
-                console.log(error)
+                console.error("Error fetching data:", error);
+                setLoading(false); // Ensure loading stops even on error
             }
-        })()
-    }, [])
+        })();
+    }, [tonConnect, dispatch, giftsList])
 
     useEffect(() => {
-        setCashPersentages()
-        updateAssetsArray()
+        setCashPersentages();
+        updateAssetsArray();
     }, [user, currency, giftsList])
 
     const updateAssetsArray = () => {
@@ -101,7 +108,6 @@ export default function Account() {
     
             setAssetsArray(updatedAssets);
     
-
             const totalPrice = updatedAssets.reduce((sum, asset) => {
                 return sum + (currency === 'ton' ? asset.priceTon * asset.amount : asset.priceUsd * asset.amount);
             }, 0);
@@ -110,33 +116,28 @@ export default function Account() {
     };
     
     const setCashPersentages = () => {
-        if(user){
-
-            if(currency === 'ton'){
-                setTonPercentage( Math.round( ( user.ton / (user.ton + (user.usd / ton)) ) * 100 ) )
-                setUsdPercentage( Math.round( ( (user.usd / ton) / (user.ton + (user.usd / ton)) ) * 100 ) )
+        if (user) {
+            if (currency === 'ton') {
+                setTonPercentage(Math.round((user.ton / (user.ton + (user.usd / ton))) * 100));
+                setUsdPercentage(Math.round(((user.usd / ton) / (user.ton + (user.usd / ton))) * 100));
             } else {
-                setTonPercentage( Math.round( ( (user.ton * ton) / (user.ton * ton + user.usd) ) * 100 ) )
-                setUsdPercentage( Math.round( ( user.usd / (user.ton * ton + user.usd) ) * 100 ) )
+                setTonPercentage(Math.round(((user.ton * ton) / (user.ton * ton + user.usd)) * 100));
+                setUsdPercentage(Math.round((user.usd / (user.ton * ton + user.usd)) * 100));
             }
-
         }
     }
 
     return (
         <div className="w-full flex flex-col justify-center px-3">
-            {
-                loading ? 
+            {loading ? 
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 </div>
-                :
-                user ?
+                : user ?
                 <>
                     <div className="w-full h-28 flex flex-col justify-center items-center">
                         <div className="flex flex-row items-center">
-                            {
-                                currency === 'ton' ?
+                            {currency === 'ton' ?
                                 <Image 
                                     alt="ton logo"
                                     src='/images/ton.webp'
@@ -147,7 +148,10 @@ export default function Account() {
                                 <span className="text-4xl font-bold mr-1">$</span>
                             }
                             <h1 className="text-4xl font-bold">
-                                {assetsPrice + user.ton + user.usd}
+                                {currency === 'ton' 
+                                    ? (assetsPrice + user.ton + (user.usd / ton)).toFixed(2)
+                                    : (assetsPrice + (user.ton * ton) + user.usd).toFixed(2)
+                                }
                             </h1>
                         </div>
                         <span className="text-sm font-bold text-slate-400 mt-1">
@@ -155,43 +159,36 @@ export default function Account() {
                         </span>
                     </div>
 
-
                     <div className="w-full flex justify-between items-center h-14 mb-5 gap-x-3">
                         <div className="w-1/3 flex justify-between gap-x-2">
                             <button 
-                                className={`w-1/2 text-sm  h-10 box-border rounded-lg ${currency == 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                                className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800'}`}
                                 onClick={() => setCurrency('ton')}
                             >
                                 TON
                             </button>
                             <button 
-                                className={`w-1/2 text-sm  h-10 box-border rounded-lg ${currency == 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                                className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800'}`}
                                 onClick={() => setCurrency('usd')}
                             >
                                 USD
                             </button>
                         </div>
-                        <button className="w-1/3 h-10 box-border bg-slate-800 rounded-lg ">
+                        <button className="w-1/3 h-10 box-border bg-slate-800 rounded-lg">
                             Statistics
                         </button>
-                        <button className="w-1/3 h-10 box-border bg-slate-800 rounded-lg ">
+                        <button className="w-1/3 h-10 box-border bg-slate-800 rounded-lg">
                             Edit Assets
                         </button>
                     </div>
 
-
-
                     <div className="w-full h-auto">
-
                         {user?.ton !== 0 || user.usd !== 0 ?
                             <div className="mb-5">
                                 <div className="w-full flex justify-between items-center text-lg font-bold mb-3 pr-2">
-                                    <h2>
-                                        Cash
-                                    </h2>
+                                    <h2>Cash</h2>
                                     <div className="flex flex-row items-center">
-                                        {
-                                            currency === 'ton' ?
+                                        {currency === 'ton' ?
                                             <Image 
                                                 alt="ton logo"
                                                 src='/images/ton.webp'
@@ -202,10 +199,9 @@ export default function Account() {
                                             : <span className="mr-1">$</span>
                                         }
                                         <span>
-                                            {
-                                                currency === 'ton' 
-                                                ? Math.round(user.ton + (user.usd / ton))
-                                                : Math.round(user.ton * ton + user.usd)
+                                            {currency === 'ton' 
+                                                ? (user.ton + (user.usd / ton)).toFixed(2)
+                                                : (user.ton * ton + user.usd).toFixed(2)
                                             }
                                         </span>
                                     </div>
@@ -218,14 +214,14 @@ export default function Account() {
                                             amount={user.ton} 
                                             percentage={tonPercentage}
                                         /> 
-                                    : null}
+                                        : null}
                                     {user.usd !== 0 ? 
                                         <Cash 
                                             name="usd" 
                                             amount={user.usd}
                                             percentage={usdPercentage}
                                         /> 
-                                    : null}
+                                        : null}
                                 </div>
                             </div>
                             : null
@@ -233,12 +229,9 @@ export default function Account() {
 
                         <div>
                             <div className="w-full flex justify-between items-center text-lg font-bold mb-1 pr-2">
-                                <h2>
-                                    Assets
-                                </h2>
+                                <h2>Assets</h2>
                                 <div className="flex flex-row items-center">
-                                    {
-                                        currency === 'ton' ?
+                                    {currency === 'ton' ?
                                         <Image 
                                             alt="ton logo"
                                             src='/images/ton.webp'
@@ -249,14 +242,12 @@ export default function Account() {
                                         <span className="mr-1">$</span>
                                     }
                                     <span>
-                                        {user?.assets.length === 0 ? 0 : Math.round(assetsPrice)}
+                                        {assetsPrice.toFixed(2)}
                                     </span>
                                 </div>
                             </div>
 
-                            {
-                                assetsArray.length !== 0 
-                                ?
+                            {assetsArray.length !== 0 ?
                                 assetsArray.map((asset) => (
                                     <Asset 
                                         name={asset.name}
@@ -274,14 +265,13 @@ export default function Account() {
                                     No assets yet
                                 </h2>
                             }
-
                         </div>
-                        
                     </div>
                 </>
-                : null
+                : <div className="w-full flex justify-center mt-5">
+                    <h2 className="text-slate-400">Please connect your wallet</h2>
+                </div>
             }
-            
         </div>
     )
 }
