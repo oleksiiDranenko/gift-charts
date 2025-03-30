@@ -3,11 +3,13 @@
 import Image from "next/image"
 
 interface PropsInterface {
-    name: 'ton' | 'usd'
+    name: 'ton' | 'usd',
+    amount: number,
+    percentage: number
 }
 
 
-export default function Cash({name} : PropsInterface) {
+export default function Cash({name, amount, percentage} : PropsInterface) {
     return (
         <div 
             className="w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
@@ -31,13 +33,13 @@ export default function Cash({name} : PropsInterface) {
                         {name === 'ton' ? 'Toncoin' : 'US Dollar'}
                     </span>
                     <span className="text-slate-500 text-sm font-normal">
-                        50%
+                        {percentage}%
                     </span>
                 </div>
             </div>
                     
             <div className=" flex flex-row items-center justify-end">
-                <div className="w-20 h-10 text-sm flex flex-col items-end justify-center">
+                <div className="w-20 h-10 text-sm flex flex-col items-end justify-center mr-2">
                     <div className="flex flex-row items-center">
                         {name === 'ton' ?
                             <Image 
@@ -50,7 +52,7 @@ export default function Cash({name} : PropsInterface) {
                             : <span className="mr-1 font-bold">$</span>
                         }
                         <span className="text-base font-bold">
-                            {name === 'ton' ? '36.64' : '253.56'}
+                            {amount}
                         </span>
                     </div>
                 </div>
