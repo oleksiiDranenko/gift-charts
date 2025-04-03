@@ -47,38 +47,34 @@ export default function Page() {
 			if (telegramWebApp) {
 			  console.log('Telegram Web App initialized:', telegramWebApp);
 	  
-			  // Signal that the app is ready
+			  // Signal readiness
 			  telegramWebApp.ready();
 	  
-			  // Expand to full available height
-			  telegramWebApp.expand();
-	  
-			  // Disable vertical swipes if available (optional, improves fullscreen feel)
-			  if (telegramWebApp.disableVerticalSwipes) {
-				telegramWebApp.disableVerticalSwipes();
-				console.log('Vertical swipes disabled.');
-			  }
-	  
-			  // Lock orientation if available (optional)
-			  if (telegramWebApp.lockOrientation) {
-				telegramWebApp.lockOrientation();
-				console.log('Screen orientation locked.');
-			  }
-	  
-			  // Set header color to blend with your app's background
-			  if (telegramWebApp.setHeaderColor) {
-				telegramWebApp.setHeaderColor('#001a2c'); // Transparent or match your app's background
-				console.log('Header color set to transparent or matching background.');
+			  // Attempt fullscreen mode (newer SDK feature)
+			  if (telegramWebApp.requestFullscreen) {
+				telegramWebApp.requestFullscreen();
+				console.log('Requested fullscreen mode.');
 			  } else {
-				console.warn('setHeaderColor method not available.');
+				// Fallback to expand if fullscreen isn’t available
+				telegramWebApp.expand();
+				console.log('Expanded to full height (fullscreen not available).');
 			  }
 	  
-			  // Optional: Use MainButton to replace header navigation
-			  if (telegramWebApp.MainButton) {
-				telegramWebApp.MainButton.hide(); // Hide default button if not needed
-				console.log('MainButton hidden.');
+			  // Make header invisible if possible
+			  if (telegramWebApp.setHeaderColor) {
+				telegramWebApp.setHeaderColor('#000'); // Transparent
+				console.log('Header set to transparent.');
 			  }
 	  
+			  // Hide BackButton to simplify header
+			  if (telegramWebApp.BackButton) {
+				telegramWebApp.BackButton.hide();
+				console.log('BackButton hidden.');
+			  }
+	  
+			  // Log version and methods for debugging
+			  console.log('SDK Version:', telegramWebApp.version);
+			  console.log('Available Methods:', Object.keys(telegramWebApp));
 			} else {
 			  console.error('Telegram Web App SDK not available.');
 			}
