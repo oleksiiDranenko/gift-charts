@@ -27,7 +27,7 @@ export default function GiftsList({loading}: PropsInterface) {
     
     const [list, setList] = useState<GiftInterface[]>([])
     const [ton, setTon] = useState<number>(0)
-    const [showFilters, setShowFilters] = useState<boolean>(false)
+    const [showFilters, setShowFilters] = useState<boolean>(true)
 
 
     useEffect(() => {

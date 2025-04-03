@@ -6,9 +6,6 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import GiftItem from "../giftsList/GiftItem"
 
-interface PropsInterface {
-    loading: boolean
-}
 
 export default function MainPage() {
 
@@ -18,7 +15,7 @@ export default function MainPage() {
     const [list, setList] = useState<GiftInterface[]>([])
         
     useEffect(() => {
-        if (giftsList.length > 0) {  // Ensure giftsList has items before sorting
+        if (giftsList.length > 0) {
             let sortedList = [...giftsList];
 
             sortedList.sort((a, b) =>
@@ -34,6 +31,12 @@ export default function MainPage() {
 
     return (
         <div className="px-3">
+
+            <h1 className="mb-7 text-2xl font-bold">
+                {'Hourly Price updates ⏰'}
+            </h1>
+
+
             <div className="w-full pt-3 bg-slate-800 bg-opacity-50 rounded-lg">
                 <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
                     <h2
@@ -62,6 +65,8 @@ export default function MainPage() {
                 }
                 </div>
             </div>
+
+
         </div>
     )
 }

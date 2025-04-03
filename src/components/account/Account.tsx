@@ -281,15 +281,15 @@ export default function Account() {
                 </>
                 : 
                 user._id === '' ?
+                <div className="w-full flex justify-center mt-5">
+                    <h2 className="text-slate-400">Please connect your wallet</h2>
+                </div>
+                :
                 walletId ?
                 <CreateAccount walletId={walletId}/>
                 :
                 <div className="w-full flex justify-center mt-5">
                     <h2 className="text-slate-400 w-2/3">There was an error accesing your wallet ID. Please try disconnecting and connecting it again</h2>
-                </div>
-                : 
-                <div className="w-full flex justify-center mt-5">
-                    <h2 className="text-slate-400">Please connect your wallet</h2>
                 </div>
             }
         </div>

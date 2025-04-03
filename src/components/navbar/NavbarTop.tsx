@@ -15,7 +15,7 @@ export default function NavbarTop() {
                         height={40}
                         className='p-2'
                     />
-                    <span className=''>
+                    <span className='font-bold'>
                         Gift Charts
                     </span>
                 </div>

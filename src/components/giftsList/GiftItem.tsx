@@ -92,7 +92,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
                         </span>
                     </div>
                     
-                    <span className={`text-sm font-light ${percentChange !== 'no data' ? percentChange > 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
+                    <span className={`text-sm font-light ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
                         {percentChange}{percentChange !== 'no data' ? '%' : null}
                     </span>
                 </div>
