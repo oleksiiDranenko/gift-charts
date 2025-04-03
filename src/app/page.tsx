@@ -41,38 +41,50 @@ export default function Page() {
 
 	useEffect(() => {
 		if (isClient) {
-		  	import('@twa-dev/sdk').then((WebApp) => {
-				const telegramWebApp = WebApp.default;
-				
-				if (telegramWebApp) {
-				  	console.log('Telegram Web App initialized:', telegramWebApp);
-				
-				  	telegramWebApp.ready(); 
-				  	telegramWebApp.expand(); 
-				
-				  	if (telegramWebApp.disableVerticalSwipes) {
-						telegramWebApp.disableVerticalSwipes(); 
-						console.log('Vertical swipes disabled.');
-				  	}
-				
-				  	if (telegramWebApp.lockOrientation) {
-						telegramWebApp.lockOrientation(); 
-						console.log('Screen orientation locked.');
-				  	}
-				
-				
-				  	if (telegramWebApp.setHeaderColor) {
-						telegramWebApp.setHeaderColor('#111827'); 
-						console.log('Header color set to #1E90FF.');
-				  	} else {
-						console.warn('setHeaderColor method not available.');
-				  	}
-				} else {
-			  		console.error('Telegram Web App SDK not available.');
-				}
-			}).catch((err) => {
-				console.error('Error loading WebApp SDK:', err);
-			});
+		  import('@twa-dev/sdk').then((WebApp) => {
+			const telegramWebApp = WebApp.default;
+	  
+			if (telegramWebApp) {
+			  console.log('Telegram Web App initialized:', telegramWebApp);
+	  
+			  // Signal that the app is ready
+			  telegramWebApp.ready();
+	  
+			  // Expand to full available height
+			  telegramWebApp.expand();
+	  
+			  // Disable vertical swipes if available (optional, improves fullscreen feel)
+			  if (telegramWebApp.disableVerticalSwipes) {
+				telegramWebApp.disableVerticalSwipes();
+				console.log('Vertical swipes disabled.');
+			  }
+	  
+			  // Lock orientation if available (optional)
+			  if (telegramWebApp.lockOrientation) {
+				telegramWebApp.lockOrientation();
+				console.log('Screen orientation locked.');
+			  }
+	  
+			  // Set header color to blend with your app's background
+			  if (telegramWebApp.setHeaderColor) {
+				telegramWebApp.setHeaderColor('#001a2c'); // Transparent or match your app's background
+				console.log('Header color set to transparent or matching background.');
+			  } else {
+				console.warn('setHeaderColor method not available.');
+			  }
+	  
+			  // Optional: Use MainButton to replace header navigation
+			  if (telegramWebApp.MainButton) {
+				telegramWebApp.MainButton.hide(); // Hide default button if not needed
+				console.log('MainButton hidden.');
+			  }
+	  
+			} else {
+			  console.error('Telegram Web App SDK not available.');
+			}
+		  }).catch((err) => {
+			console.error('Error loading WebApp SDK:', err);
+		  });
 		}
 	  }, [isClient]);
 
