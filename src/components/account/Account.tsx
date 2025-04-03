@@ -6,13 +6,14 @@ import axios from "axios"
 import Asset from "./Asset"
 import Cash from "./Cash"
 import { TonConnect } from "@tonconnect/sdk";
-import { AssetInterface, UserInterface } from "@/interfaces/UserInterface"
+import { AssetInterface } from "@/interfaces/UserInterface"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import ReactLoading from "react-loading"
 import Link from "next/link"
 import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
+import CreateAccount from "./CreateAccount"
 
 interface AssetDisplayInterface {
     name: string,
@@ -29,6 +30,7 @@ export default function Account() {
     const dispatch = useAppDispatch()
     
     const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
+    const [walletId, setWalletId] = useState<string | null>(null);
     const [currency, setCurrency] = useState<'ton' | 'usd'>('ton')
     const [loading, setLoading] = useState<boolean>(true)
     
@@ -58,6 +60,9 @@ export default function Account() {
                     const wallet = tonConnect.wallet;
                     
                     if (wallet) {
+                        const walletAddress = wallet.account.address
+                        setWalletId(walletAddress)
+
                         const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${wallet.account.address}`)
                         
                         if (giftsList.length === 0) {
@@ -83,7 +88,7 @@ export default function Account() {
                 setLoading(false);
             }
         })();
-    }, [tonConnect, dispatch, giftsList])
+    }, [tonConnect, dispatch, giftsList, user])
 
     useEffect(() => {
         setCashPersentages();
@@ -274,6 +279,14 @@ export default function Account() {
                         </div>
                     </div>
                 </>
+                : 
+                user._id === '' ?
+                walletId ?
+                <CreateAccount walletId={walletId}/>
+                :
+                <div className="w-full flex justify-center mt-5">
+                    <h2 className="text-slate-400 w-2/3">There was an error accesing your wallet ID. Please try disconnecting and connecting it again</h2>
+                </div>
                 : 
                 <div className="w-full flex justify-center mt-5">
                     <h2 className="text-slate-400">Please connect your wallet</h2>

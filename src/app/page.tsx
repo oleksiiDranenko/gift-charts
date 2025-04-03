@@ -7,6 +7,8 @@ import { useAppDispatch } from "@/redux/hooks"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import { useState } from "react"
 import { useAppSelector } from "@/redux/hooks"
+import MainPage from "@/components/mainPage/MainPage"
+import ReactLoading from "react-loading"
 
 export default function Page() {
 	const [isClient, setIsClient] = useState(false);
@@ -77,7 +79,14 @@ export default function Page() {
 
     return (
       	<main className="w-full  lg:w-1/2 pt-[70px] pb-24">
-			<GiftsList loading={loading}/>
+			{
+				loading ?
+				<div className="w-full flex justify-center">
+					<ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
+				</div>
+				:
+				<MainPage/>
+			}
       	</main>
     )
 }

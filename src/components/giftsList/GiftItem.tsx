@@ -29,7 +29,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
     }, [currency])
 
     const formatNumber = (number: number) => {
-        if (number >= 1000 && (sortBy === 'price' || sortBy === 'supply')) {
+        if (number >= 1000 && (sortBy === 'price' || sortBy === 'supply' || sortBy === 'percentChange')) {
             const shortNumber = (number / 1000).toFixed(1);
             return `${shortNumber}K`;
         } else if (number >= 1000 && sortBy === 'initSupply') {
@@ -64,6 +64,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
                     <span className="text-slate-500 text-sm font-normal">
                         {
                             sortBy === 'price' ? formatNumber(item.supply) 
+                            : sortBy === 'percentChange' ? formatNumber(item.supply)
                             : sortBy === 'supply' ? formatNumber(item.supply)
                             : sortBy === 'initSupply' ? formatNumber(item.initSupply)
                             : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`

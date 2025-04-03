@@ -60,6 +60,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
 
 
     useEffect(() => {
+        const lastPriceIndex = weekData.length - 1;
 
         switch(listType) {
             case '24h': 
@@ -69,10 +70,10 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 setList(weekData)
                 break;
             case '1m':
-                setList(lifeData.slice(-30))
+                setList([...lifeData.slice(-30), weekData[lastPriceIndex]])
                 break;
             case 'all':
-                setList(lifeData)
+                setList([...lifeData, weekData[lastPriceIndex]])
                 break;
         }
 
