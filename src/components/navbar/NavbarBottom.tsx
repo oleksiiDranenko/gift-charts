@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import useVibrate from "@/hooks/useVibrate";
 
 export default function NavbarBottom() {
     const pathname = usePathname();
+
+    const vibrate = useVibrate()
+
     const [selectedPage, setSelectedPage] = useState<'home' | 'tools' | 'account' | null>(null);
 
     useEffect(() => {
@@ -24,21 +28,30 @@ export default function NavbarBottom() {
                 <Link
                     className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'home' ? 'bg-[#0098EA] rounded-lg' : ''}`}
                     href="/"
-                    onClick={() => setSelectedPage('home')}
+                    onClick={() => {
+                        setSelectedPage('home')
+                        vibrate()
+                    }}
                 >
                     Home
                 </Link>
                 <Link
                     className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'tools' ? 'bg-[#0098EA] rounded-lg' : ''}`}
                     href="/tools"
-                    onClick={() => setSelectedPage('tools')}
+                    onClick={() => {
+                        setSelectedPage('tools')
+                        vibrate()
+                    }}
                 >
                     Tools
                 </Link>
                 <Link
                     className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'account' ? 'bg-[#0098EA] rounded-lg' : ''}`}
                     href="/account"
-                    onClick={() => setSelectedPage('account')}
+                    onClick={() => {
+                        setSelectedPage('account')
+                        vibrate()
+                    }}
                 >
                     Account
                 </Link>
