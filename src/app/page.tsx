@@ -1,6 +1,5 @@
 'use client'
 
-import GiftsList from "@/components/giftsList/GiftsList"
 import { useEffect } from "react"
 import axios from "axios"
 import { useAppDispatch } from "@/redux/hooks"
