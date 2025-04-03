@@ -24,7 +24,7 @@ export default function RootLayout({
     	    	<body className={inter.className}>
 					<ReduxProvider>
 						<NavbarTop/>
-							<div className='w-screen flex items-center justify-center'>
+							<div className='w-screen flex items-center justify-center pt-32'>
 								{children}
 							</div>
 						<NavbarBottom/>

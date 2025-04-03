@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: linear-gradient(to right, #001523, #002137), #001a2c;
+  --background: linear-gradient(to top, #001523, #002137);
   --foreground: #ffffff;
 }
 
@@ -12,5 +12,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  background-attachment: fixed; /* Keeps gradient fixed while scrolling */
+  background-size: cover;
   font-family: Arial, Helvetica, sans-serif;
 }
