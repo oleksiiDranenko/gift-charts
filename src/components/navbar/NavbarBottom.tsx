@@ -23,8 +23,8 @@ export default function NavbarBottom() {
     }, [pathname]);
 
     return (
-        <div className="fixed bottom-0 mb-0 w-screen flex justify-center gap-3 pt-2 pb-10 px-3 items-center bg-[#111827]">
-            <div className="w-full lg:w-1/2 flex flex-row justify-between">
+        <div className="fixed bottom-0 mb-0 w-screen flex justify-center gap-3 pt-2 pb-10 px-3 items-center">
+            <div className="w-full lg:w-1/2 flex flex-row justify-between p-3 bg-slate-800 rounded-lg">
                 <Link
                     className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'home' ? 'bg-[#0098EA] rounded-lg' : ''}`}
                     href="/"

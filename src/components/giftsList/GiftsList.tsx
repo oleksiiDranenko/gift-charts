@@ -102,10 +102,7 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 pl-3 pr-3">
                 <button
                     className="w-1/2 h-10 bg-slate-800 rounded-lg"
-                    onClick={() => {
-                        router.back()
-                        vibrate()
-                    }}
+                    onClick={() => router.back()}
                 >
                     {'<- Back'}
                 </button>

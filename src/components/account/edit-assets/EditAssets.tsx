@@ -169,7 +169,6 @@ export default function EditAssets() {
                     <Link
                         href={'/account'}
                         className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
-                        onClick={(() => vibrate())}
                     >
                         {'<- Back'}
                     </Link>

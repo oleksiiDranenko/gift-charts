@@ -9,7 +9,7 @@ export default function NavbarTop() {
     const vibrate = useVibrate()
 
     return (
-        <div className='fixed w-screen top-0 h-14 pl-2 pr-2 flex justify-center items-center bg-[#111827]'>
+        <div className='fixed w-screen top-0 h-14 pl-2 pr-2 flex justify-center items-center bg-gradient-to-r from-[#001523] to-[#002137]'>
             <div className='w-full lg:w-1/2 flex flex-row justify-between items-center'>
                 <div className='flex flex-row items-center '>
                     <Image
