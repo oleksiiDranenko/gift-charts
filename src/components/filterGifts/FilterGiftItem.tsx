@@ -1,5 +1,6 @@
 'use client'
 
+import useVibrate from "@/hooks/useVibrate"
 import GiftInterface from "@/interfaces/GiftInterface"
 import Image from "next/image"
 
@@ -12,11 +13,16 @@ interface PropsInterface {
 
 export default function FilterGiftItem({ gift, selected, onClick } : PropsInterface) {
 
+    const vibrate = useVibrate()
+
     return (
         <div 
             className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-start" 
             key={gift._id}
-            onClick={() => onClick(gift)}
+            onClick={() => {
+                onClick(gift)
+                vibrate()
+            }}
         >
             <div 
                 className='w-10 h-10 mr-3 flex justify-center items-center border border-slate-800 rounded-lg'

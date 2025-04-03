@@ -3,6 +3,7 @@
 import GiftInterface from "@/interfaces/GiftInterface"
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import useVibrate from "@/hooks/useVibrate"
 
 interface PropsInterface {
     giftId: string,
@@ -13,6 +14,9 @@ interface PropsInterface {
 }
 
 export default function EditAssetItem({giftId, amount, giftsList, removeGift, updateAmount}: PropsInterface) {
+
+    const vibrate = useVibrate()
+
     const [gift, setGift] = useState<GiftInterface>()
 
     const filterGift = () => {
@@ -49,7 +53,10 @@ export default function EditAssetItem({giftId, amount, giftsList, removeGift, up
             <div className="flex flex-row items-center">
                 <button
                     className="h-10 w-10 mr-3 bg-red-500 bg-opacity-30 rounded-lg"
-                    onClick={() => removeGift(giftId)}
+                    onClick={() => {
+                        removeGift(giftId)
+                        vibrate()
+                    }}
                 >
                     -
                 </button>
@@ -70,7 +77,10 @@ export default function EditAssetItem({giftId, amount, giftsList, removeGift, up
             <div className="flex flex-row items-center justify-end gap-x-3">
                 <button
                     className="font-bold"
-                    onClick={() => handleChangeButtons('decrease')}
+                    onClick={() => {
+                        handleChangeButtons('decrease')
+                        vibrate()
+                    }}
                 >
                     -
                 </button>
@@ -83,7 +93,10 @@ export default function EditAssetItem({giftId, amount, giftsList, removeGift, up
                 />
                 <button
                     className="font-bold"
-                    onClick={() => handleChangeButtons('increase')}
+                    onClick={() => {
+                        handleChangeButtons('increase')
+                        vibrate()
+                    }}
                 >
                     +
                 </button>

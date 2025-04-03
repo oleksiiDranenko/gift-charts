@@ -5,12 +5,15 @@ import { setUser } from "@/redux/slices/userSlice"
 import { useState } from "react"
 import axios from "axios"
 import ReactLoading from "react-loading"
+import useVibrate from "@/hooks/useVibrate"
 
 interface PropsInterface {
     walletId: string
 }
 
 export default function CreateAccount({walletId}: PropsInterface) {
+
+    const vibrate = useVibrate()
 
     const user = useAppSelector((state) => state.user)
     const dispatch = useAppDispatch()
@@ -52,7 +55,10 @@ export default function CreateAccount({walletId}: PropsInterface) {
                 </h1>
                 <button
                     className="w-2/3 h-10 bg-[#0098EA] rounded-lg"
-                    onClick={createAccount}
+                    onClick={() => {
+                        createAccount()
+                        vibrate()
+                    }}
                 >
                     Create account
                 </button>

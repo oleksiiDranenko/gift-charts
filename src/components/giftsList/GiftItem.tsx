@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { useEffect, useState } from "react"
+import useVibrate from "@/hooks/useVibrate"
 
 interface PropsInterface {
     item: GiftInterface,
@@ -13,6 +14,8 @@ interface PropsInterface {
 }
 
 export default function GiftItem({item, currency, sortBy}: PropsInterface) {
+
+    const vibrate = useVibrate()
 
     const [percentChange, setPercentChange] = useState<number | 'no data'>(0)
 
@@ -48,6 +51,7 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
             className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
             key={item._id}
             href={`/gift/${item._id}`}
+            onClick={() => vibrate()}
         >
             <div className=" flex flex-row items-center">
                 <Image

@@ -14,9 +14,13 @@ import AddAssetItem from "./AddAssetItem"
 import GiftInterface from "@/interfaces/GiftInterface"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import useVibrate from "@/hooks/useVibrate"
 
 
 export default function EditAssets() {
+
+    const vibrate = useVibrate()
+
     const router = useRouter()
 
     const giftsList = useAppSelector((state) => state.giftsList)
@@ -165,13 +169,17 @@ export default function EditAssets() {
                     <Link
                         href={'/account'}
                         className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
+                        onClick={(() => vibrate())}
                     >
                         {'<- Back'}
                     </Link>
 
                     <button
                         className="w-1/2 h-10 bg-[#0098EA] rounded-lg"
-                        onClick={saveChanges}
+                        onClick={() => {
+                            saveChanges()
+                            vibrate()
+                        }}
                     >
                         Save
                     </button>

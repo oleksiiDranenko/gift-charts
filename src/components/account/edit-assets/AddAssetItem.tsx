@@ -1,5 +1,6 @@
 'use client'
 
+import useVibrate from "@/hooks/useVibrate"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
@@ -11,6 +12,8 @@ interface PropsInterface {
 }
 
 export default function AddAssetItem({_id, name, image, addGift}: PropsInterface) {
+
+    const vibrate = useVibrate()
 
     return (
         <div className="w-full h-20 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg">  
@@ -32,7 +35,10 @@ export default function AddAssetItem({_id, name, image, addGift}: PropsInterface
                     
             <button
                 className="h-10 px-3 bg-slate-800 rounded-lg"
-                onClick={() => addGift(_id)}
+                onClick={() => {
+                    addGift(_id)
+                    vibrate()
+                }}
             >
                 + Add
             </button>

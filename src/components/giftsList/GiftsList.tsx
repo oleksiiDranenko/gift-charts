@@ -11,6 +11,7 @@ import ReactLoading from 'react-loading'
 import GiftItem from "./GiftItem"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import useVibrate from "@/hooks/useVibrate"
 
 
 interface PropsInterface {
@@ -18,6 +19,8 @@ interface PropsInterface {
 }
 
 export default function GiftsList({loading}: PropsInterface) {
+
+    const vibrate = useVibrate()
 
     const giftsList = useAppSelector((state) => state.giftsList)
     const filters = useAppSelector((state) => state.filters)
@@ -99,13 +102,19 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 pl-3 pr-3">
                 <button
                     className="w-1/2 h-10 bg-slate-800 rounded-lg"
-                    onClick={() => router.back()}
+                    onClick={() => {
+                        router.back()
+                        vibrate()
+                    }}
                 >
                     {'<- Back'}
                 </button>
                 <button
                     className="w-1/2 h-10 bg-slate-800 rounded-lg"
-                    onClick={() => setShowFilters(!showFilters)}
+                    onClick={() => {
+                        setShowFilters(!showFilters)
+                        vibrate()
+                    }}
                 >
                     {showFilters ? 'Hide Filters ↑' : 'Show Filters ↓'}
                 </button>
@@ -118,13 +127,19 @@ export default function GiftsList({loading}: PropsInterface) {
                 <div className="w-1/2 gap-2 flex justify-between">
                     <button
                         className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => dispatch(setFilters({...filters, currency: 'ton'}))}
+                        onClick={() => {
+                            dispatch(setFilters({...filters, currency: 'ton'}))
+                            vibrate()
+                        }}
                     >
                         TON
                     </button>
                     <button
                         className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => dispatch(setFilters({...filters, currency: 'usd'}))}
+                        onClick={() => {
+                            dispatch(setFilters({...filters, currency: 'usd'}))
+                            vibrate()
+                        }}
                     >
                         USD
                     </button>
@@ -133,6 +148,7 @@ export default function GiftsList({loading}: PropsInterface) {
                 <Link 
                     href={'/gift-filters'}
                     className="w-1/2 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
+                    onClick={() => vibrate()}
                 >
                     ≡ Filter Gifts
                 </Link>
@@ -148,7 +164,10 @@ export default function GiftsList({loading}: PropsInterface) {
                     </span>
                     <select
                         value={filters.sortBy}
-                        onChange={(e: any) => dispatch(setFilters({...filters, sortBy: e.target.value}))}
+                        onChange={(e: any) => {
+                            dispatch(setFilters({...filters, sortBy: e.target.value}))
+                            vibrate()
+                        }}
                         className="w-full px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value={'price'}>Price</option>
@@ -162,13 +181,19 @@ export default function GiftsList({loading}: PropsInterface) {
                 <div className="w-1/2 gap-2 flex justify-end">
                     <button
                         className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => dispatch(setFilters({...filters, sort: 'lowFirst'}))} 
+                        onClick={() => {
+                            dispatch(setFilters({...filters, sort: 'lowFirst'}))
+                            vibrate()
+                        }} 
                     >
                         Low ↑
                     </button>
                     <button
                         className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => dispatch(setFilters({...filters, sort: 'highFirst'}))}
+                        onClick={() => {
+                            dispatch(setFilters({...filters, sort: 'highFirst'}))
+                            vibrate()
+                        }}
                         >
                             High ↓
                     </button>

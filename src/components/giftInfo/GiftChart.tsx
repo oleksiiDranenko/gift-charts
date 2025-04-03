@@ -16,6 +16,7 @@ import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface"
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface"
 import { useEffect, useState } from "react"
 import Image from "next/image";
+import useVibrate from "@/hooks/useVibrate";
 
 
 ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale);
@@ -27,6 +28,8 @@ interface PropsInterface {
 }
 
 export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
+
+    const vibrate = useVibrate()
     
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton')
     const [percentChange, setPercentChange] = useState<number>(0)
@@ -249,13 +252,19 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
             <div className="w-1/2 flex flex-row box-border">
                 <button 
                     className={`w-2/5 text-sm  h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                    onClick={() => setSelectedPrice('ton')}
+                    onClick={() => {
+                        setSelectedPrice('ton')
+                        vibrate()
+                    }}
                 >
                     TON
                 </button>
                 <button 
                     className={`w-2/5 text-sm  h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                    onClick={() => setSelectedPrice('usd')}
+                    onClick={() => {
+                        setSelectedPrice('usd')
+                        vibrate()
+                    }}
                 >
                     USD
                 </button>
@@ -265,7 +274,6 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {
                         (percentChange > 0 ? '+' : '') + percentChange + '%'
-
                     }
                 </span>
             </div>
@@ -294,25 +302,37 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
             <div className="w-full flex flex-row justify-between">
                 <button 
                     className={`w-1/5 text-sm  h-10  ${listType == 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
-                    onClick={() => lifeData.length > 0 ? setListType('all') : null}
+                    onClick={() => {
+                        lifeData.length > 0 ? setListType('all') : null
+                        vibrate()
+                    }}
                 >
                     All
                 </button>
                 <button 
                     className={`w-1/5 text-sm  h-10 ${listType == '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
-                    onClick={() => lifeData.length > 0 ? setListType('1m') : null}
+                    onClick={() => {
+                        lifeData.length > 0 ? setListType('1m') : null
+                        vibrate()
+                    }}
                 >
                     1m
                 </button>
                 <button 
                     className={`w-1/5 text-sm h-10  ${listType == '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
-                    onClick={() => setListType('1w')}
+                    onClick={() => {
+                        setListType('1w')
+                        vibrate()
+                    }}
                 >
                     1w
                 </button>
                 <button 
                     className={`w-1/5 text-sm  h-10  ${listType == '24h' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
-                    onClick={() => setListType('24h')}
+                    onClick={() => {
+                        setListType('24h')
+                        vibrate(0)
+                    }}
                 >
                     24h
                 </button>

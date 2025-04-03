@@ -11,8 +11,11 @@ import ReactLoading from 'react-loading'
 import FilterGiftItem from "./FilterGiftItem"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { setFilters } from "@/redux/slices/filterListSlice"
+import useVibrate from "@/hooks/useVibrate"
 
 export default function FilterGifts() {
+    
+    const vibrate = useVibrate()
 
     const dispatch = useAppDispatch()
     const giftsList = useAppSelector((state) => state.giftsList)
@@ -66,14 +69,20 @@ export default function FilterGifts() {
         <div className="w-full pt-14 flex flex-col items-center">
             <div className="w-full lg:w-1/2 top-14 fixed mb-3 p-3 gap-3 flex justify-between items-center bg-[#111827]">
                 <button 
-                    onClick={goBack} 
+                    onClick={() => {
+                        goBack()
+                        vibrate()
+                    }} 
                     className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
                 >
                     {'<- Back'}
                 </button>
                 <button 
                     className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
-                    onClick={() => dispatch(setFilters({...filters, chosenGifts: []}))}
+                    onClick={() => {
+                        dispatch(setFilters({...filters, chosenGifts: []}))
+                        vibrate()
+                    }}
                 >
                     Clear
                 </button>

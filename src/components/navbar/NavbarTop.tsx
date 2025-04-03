@@ -1,9 +1,13 @@
 'use client'
 
+import useVibrate from '@/hooks/useVibrate'
 import { TonConnectButton } from '@tonconnect/ui-react' 
 import Image from 'next/image'
 
 export default function NavbarTop() {
+
+    const vibrate = useVibrate()
+
     return (
         <div className='fixed w-screen top-0 h-14 pl-2 pr-2 flex justify-center items-center bg-[#111827]'>
             <div className='w-full lg:w-1/2 flex flex-row justify-between items-center'>
@@ -19,7 +23,9 @@ export default function NavbarTop() {
                         Gift Charts
                     </span>
                 </div>
+                <div onClick={() => vibrate()}>
                 <TonConnectButton className='bg-[#0098EA] rounded-full border border-[#0098EA]'/>
+                </div>
             </div>
         </div>
     )

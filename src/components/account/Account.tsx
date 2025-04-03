@@ -14,6 +14,7 @@ import ReactLoading from "react-loading"
 import Link from "next/link"
 import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
 import CreateAccount from "./CreateAccount"
+import useVibrate from "@/hooks/useVibrate"
 
 interface AssetDisplayInterface {
     name: string,
@@ -25,6 +26,9 @@ interface AssetDisplayInterface {
 }
 
 export default function Account() {
+
+    const vibrate = useVibrate()
+
     const giftsList = useAppSelector((state) => state.giftsList)
     const user = useAppSelector((state) => state.user)
     const dispatch = useAppDispatch()
@@ -171,23 +175,33 @@ export default function Account() {
                         <div className="w-1/3 flex justify-between gap-x-2">
                             <button 
                                 className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800'}`}
-                                onClick={() => setCurrency('ton')}
+                                onClick={() => {
+                                    setCurrency('ton')
+                                    vibrate()
+                                }}
                             >
                                 TON
                             </button>
                             <button 
                                 className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800'}`}
-                                onClick={() => setCurrency('usd')}
+                                onClick={() => {
+                                    setCurrency('usd')
+                                    vibrate()
+                                }}
                             >
                                 USD
                             </button>
                         </div>
-                        <button className="w-1/3 h-10 box-border bg-slate-800 rounded-lg">
+                        <button 
+                            className="w-1/3 h-10 box-border bg-slate-800 rounded-lg"
+                            onClick={() => vibrate()}
+                        >
                             Statistics
                         </button>
                         <Link 
                             href={'/account/edit-assets'}
                             className="w-1/3 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
+                            onClick={() => vibrate()}
                         >
                             Edit Assets
                         </Link>
