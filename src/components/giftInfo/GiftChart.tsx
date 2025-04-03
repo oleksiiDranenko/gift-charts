@@ -217,7 +217,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                     </span>
                 </h1>
             </div>
-            <div className="w-1/3 h-14 flex flex-row items-center justify-center bg-slate-800 rounded-lg">
+            <div className="w-1/3 h-14 flex flex-row items-center justify-center bg-slate-800 bg-opacity-50 rounded-lg">
                 {
                     selectedPrice == 'ton' 
                     ?

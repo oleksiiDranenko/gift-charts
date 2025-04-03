@@ -5,12 +5,14 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import Asset from "./Asset"
 import Cash from "./Cash"
-import { TonConnect } from "@tonconnect/sdk"; // Regular import
+import { TonConnect } from "@tonconnect/sdk";
 import { AssetInterface, UserInterface } from "@/interfaces/UserInterface"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import ReactLoading from "react-loading"
+import Link from "next/link"
+import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
 
 interface AssetDisplayInterface {
     name: string,
@@ -23,12 +25,12 @@ interface AssetDisplayInterface {
 
 export default function Account() {
     const giftsList = useAppSelector((state) => state.giftsList)
+    const user = useAppSelector((state) => state.user)
     const dispatch = useAppDispatch()
     
     const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
     const [currency, setCurrency] = useState<'ton' | 'usd'>('ton')
     const [loading, setLoading] = useState<boolean>(true)
-    const [user, setUser] = useState<UserInterface | null>(null)
     
     const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([])
     const [assetsPrice, setAssetsPrice] = useState<number>(0)
@@ -37,7 +39,6 @@ export default function Account() {
     const [tonPercentage, setTonPercentage] = useState<number>(0)
     const [usdPercentage, setUsdPercentage] = useState<number>(0)
 
-    // Initialize TonConnect only on the client side
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const tc = new TonConnect();
@@ -45,39 +46,41 @@ export default function Account() {
         }
     }, [])
 
-    // Fetch user data and gifts when tonConnect is ready
     useEffect(() => {
         if (!tonConnect) return;
 
         (async () => {
             try {
-                await tonConnect.restoreConnection();
-                const wallet = tonConnect.wallet;
-
-                if (wallet) {
-                    const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${wallet.account.address}`)
-                    
-                    if (giftsList.length === 0) {
-                        const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-                        dispatch(setGiftsList(giftsRes.data));
-
-                        if (giftsRes.data[0]?.usdPrice24hAgo && giftsRes.data[0]?.tonPrice24hAgo) {
-                            setTon(giftsRes.data[0].usdPrice24hAgo / giftsRes.data[0].tonPrice24hAgo);
-                        }
-                    }
-
-                    if (userRes.data._id) {
-                        setUser(userRes.data);
-                    } else {
-                        setUser(null);
-                    }
-                    setLoading(false);
+                if(user._id !== '') {
+                    setLoading(false)
                 } else {
-                    setLoading(false); // No wallet connected
+                    await tonConnect.restoreConnection();
+                    const wallet = tonConnect.wallet;
+                    
+                    if (wallet) {
+                        const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${wallet.account.address}`)
+                        
+                        if (giftsList.length === 0) {
+                            const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+                            dispatch(setGiftsList(giftsRes.data));
+                        
+                            setTon(giftsRes.data[0].priceUsd / giftsRes.data[0].priceTon);
+                            
+                        }
+                    
+                        if (userRes.data._id) {
+                            dispatch(setUser(userRes.data));
+                        } else {
+                            dispatch(setDefaultUser());
+                        }
+                        setLoading(false);
+                    } else {
+                        setLoading(false);
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-                setLoading(false); // Ensure loading stops even on error
+                setLoading(false);
             }
         })();
     }, [tonConnect, dispatch, giftsList])
@@ -89,28 +92,28 @@ export default function Account() {
 
     const updateAssetsArray = () => {
         if (user && giftsList.length > 0) {
-            const updatedAssets = user.assets
-                .map((asset: AssetInterface) => {
-                    const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId);
-                    if (gift) {
-                        return {
-                            name: gift.name,
-                            image: gift.image,
-                            currency: currency,
-                            amount: asset.amount,
-                            priceTon: gift.priceTon,
-                            priceUsd: gift.priceUsd,
-                        };
-                    }
-                    return undefined; 
-                })
-                .filter((asset): asset is AssetDisplayInterface => asset !== undefined);
+            const updatedAssets = user.assets.map((asset: AssetInterface) => {
+                const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId);
+                if (gift) {
+                    return {
+                        name: gift.name,
+                        image: gift.image,
+                        currency: currency,
+                        amount: asset.amount,
+                        priceTon: gift.priceTon,
+                        priceUsd: gift.priceUsd,
+                    };
+                }
+                return undefined; 
+
+            }).filter((asset): asset is AssetDisplayInterface => asset !== undefined);
     
             setAssetsArray(updatedAssets);
     
             const totalPrice = updatedAssets.reduce((sum, asset) => {
                 return sum + (currency === 'ton' ? asset.priceTon * asset.amount : asset.priceUsd * asset.amount);
             }, 0);
+            
             setAssetsPrice(totalPrice);
         }
     };
@@ -133,7 +136,7 @@ export default function Account() {
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 </div>
-                : user ?
+                : user._id !== '' ?
                 <>
                     <div className="w-full h-28 flex flex-col justify-center items-center">
                         <div className="flex flex-row items-center">
@@ -177,9 +180,12 @@ export default function Account() {
                         <button className="w-1/3 h-10 box-border bg-slate-800 rounded-lg">
                             Statistics
                         </button>
-                        <button className="w-1/3 h-10 box-border bg-slate-800 rounded-lg">
+                        <Link 
+                            href={'/account/edit-assets'}
+                            className="w-1/3 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
+                        >
                             Edit Assets
-                        </button>
+                        </Link>
                     </div>
 
                     <div className="w-full h-auto">
@@ -268,7 +274,8 @@ export default function Account() {
                         </div>
                     </div>
                 </>
-                : <div className="w-full flex justify-center mt-5">
+                : 
+                <div className="w-full flex justify-center mt-5">
                     <h2 className="text-slate-400">Please connect your wallet</h2>
                 </div>
             }

@@ -11,7 +11,7 @@ export default function NavbarBottom() {
     useEffect(() => {
         if (pathname === '/tools') {
             setSelectedPage('tools');
-        } else if (pathname === '/account') {
+        } else if (pathname.startsWith('/account')) {
             setSelectedPage('account');
         } else {
             setSelectedPage('home');
