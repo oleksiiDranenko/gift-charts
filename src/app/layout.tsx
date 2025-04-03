@@ -1,36 +1,81 @@
-'use client'
+'use client';
 
+import { Inter } from 'next/font/google';
+import { TonConnectUIProvider } from '@tonconnect/ui-react';
+import './globals.css';
+import ReduxProvider from '@/redux/provider';
+import NavbarTop from '@/components/navbar/NavbarTop';
+import NavbarBottom from '@/components/navbar/NavbarBottom';
+import { useEffect, useState } from 'react';
 
-import { Inter } from 'next/font/google'
-import { TonConnectUIProvider } from '@tonconnect/ui-react' 
-import './globals.css'
-import ReduxProvider from '@/redux/provider'
-import NavbarTop from '@/components/navbar/NavbarTop'
-import NavbarBottom from '@/components/navbar/NavbarBottom'
+const inter = Inter({ subsets: ['latin'] });
 
-const inter = Inter({ subsets: ['latin'] })
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const manifestUrl =
+    'https://tomato-rapid-caterpillar-799.mypinata.cloud/ipfs/bafkreigq4ieb3yxtof4sful73y3o4pd2uc72h5aari3ldmiummapzgnhte';
+  const isClient = typeof window !== 'undefined';
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
+  useEffect(() => {
+    if (isClient) {
+      import('@twa-dev/sdk').then((WebApp) => {
+        const telegramWebApp = WebApp.default;
 
-export default function RootLayout({
-  	children,
-}: {
-  	children: React.ReactNode
-}) {
-  	const manifestUrl = "https://tomato-rapid-caterpillar-799.mypinata.cloud/ipfs/bafkreigq4ieb3yxtof4sful73y3o4pd2uc72h5aari3ldmiummapzgnhte";
+        if (telegramWebApp) {
+          telegramWebApp.ready();
 
-  	return (
-    	<html lang="en">
-    	  	<TonConnectUIProvider manifestUrl={manifestUrl}>
-    	    	<body className={inter.className}>
-					<ReduxProvider>
-						<NavbarTop/>
-							<div className='w-screen flex items-center justify-center pt-32'>
-								{children}
-							</div>
-						<NavbarBottom/>
-					</ReduxProvider>
-    	    	</body>
-    	  	</TonConnectUIProvider>
-    	</html>
-  	)
+          if (telegramWebApp.requestFullscreen) {
+            telegramWebApp.requestFullscreen();
+            setIsFullscreen(true);
+            console.log('Requested fullscreen mode.');
+          } else {
+            telegramWebApp.expand();
+            setIsFullscreen(false);
+            console.log('Expanded to full height.');
+          }
+
+          if (telegramWebApp.disableVerticalSwipes) {
+            telegramWebApp.disableVerticalSwipes();
+            console.log('Vertical swipes disabled.');
+          }
+
+          if (telegramWebApp.setHeaderColor) {
+            telegramWebApp.setHeaderColor('#000');
+            console.log('Header set to transparent.');
+          }
+
+          if (telegramWebApp.BackButton) {
+            telegramWebApp.BackButton.hide();
+            console.log('BackButton hidden.');
+          }
+        }
+      }).catch((err) => {
+        console.error('Error loading WebApp SDK:', err);
+      });
+    }
+  }, [isClient]);
+
+  return (
+    <html lang="en">
+      <TonConnectUIProvider manifestUrl={manifestUrl}>
+        <body className={inter.className}>
+          <ReduxProvider>
+            <div className="fixed inset-0 overflow-hidden bg-gradient-to-t from-[#0e1117] to-[#192231]">
+              <div
+                className={`h-full w-full overflow-y-auto ${
+                  isFullscreen ? 'pt-24' : null
+                } flex flex-col`}
+              >
+                <NavbarTop isFullscreen={isFullscreen} />
+                <div className="w-screen flex items-center justify-center flex-grow">
+                  {children}
+                </div>
+                <NavbarBottom />
+              </div>
+            </div>
+          </ReduxProvider>
+        </body>
+      </TonConnectUIProvider>
+    </html>
+  );
 }
