@@ -50,31 +50,34 @@ export default function Page() {
 			  // Signal readiness
 			  telegramWebApp.ready();
 	  
-			  // Attempt fullscreen mode (newer SDK feature)
+			  // Enter fullscreen mode to remove header
 			  if (telegramWebApp.requestFullscreen) {
 				telegramWebApp.requestFullscreen();
 				console.log('Requested fullscreen mode.');
 			  } else {
-				// Fallback to expand if fullscreen isn’t available
-				telegramWebApp.expand();
+				telegramWebApp.expand(); // Fallback
 				console.log('Expanded to full height (fullscreen not available).');
 			  }
 	  
-			  // Make header invisible if possible
+			  // Disable vertical swipes to prevent drag-to-close
+			  if (telegramWebApp.disableVerticalSwipes) {
+				telegramWebApp.disableVerticalSwipes();
+				console.log('Vertical swipes disabled.');
+			  } else {
+				console.warn('disableVerticalSwipes not available.');
+			  }
+	  
+			  // Optional: Make header transparent (if still present)
 			  if (telegramWebApp.setHeaderColor) {
-				telegramWebApp.setHeaderColor('#000'); // Transparent
+				telegramWebApp.setHeaderColor('#000');
 				console.log('Header set to transparent.');
 			  }
 	  
-			  // Hide BackButton to simplify header
+			  // Hide BackButton if it appears
 			  if (telegramWebApp.BackButton) {
 				telegramWebApp.BackButton.hide();
 				console.log('BackButton hidden.');
 			  }
-	  
-			  // Log version and methods for debugging
-			  console.log('SDK Version:', telegramWebApp.version);
-			  console.log('Available Methods:', Object.keys(telegramWebApp));
 			} else {
 			  console.error('Telegram Web App SDK not available.');
 			}
