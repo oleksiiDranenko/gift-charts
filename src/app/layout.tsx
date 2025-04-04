@@ -60,8 +60,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <body className={inter.className}>
           <ReduxProvider>
               <div
-                className={`h-full w-full overflow-y-auto ${
-                  isFullscreen ? 'pt-[112px]' : null
+                className={`h-full w-full overflow-y-auto bg-fixed ${
+                  isFullscreen ? 'pt-[115px]' : null
                 } flex flex-col`}
               >
                 <NavbarTop isFullscreen={isFullscreen} />
