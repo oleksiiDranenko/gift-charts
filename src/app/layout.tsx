@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }
 
           if (telegramWebApp.setHeaderColor) {
-            telegramWebApp.setHeaderColor('#000');
+            telegramWebApp.setHeaderColor('#192231');
             console.log('Header set to transparent.');
           }
 
@@ -60,10 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <TonConnectUIProvider manifestUrl={manifestUrl}>
         <body className={inter.className}>
           <ReduxProvider>
-            <div className="bottom-0 top-0 bg-fixed bg-cover bg-gradient-to-t from-[#0e1117] to-[#192231]">
               <div
                 className={`h-full w-full overflow-y-auto ${
-                  isFullscreen ? 'pt-28' : null
+                  isFullscreen ? 'pt-[100px]' : null
                 } flex flex-col`}
               >
                 <NavbarTop isFullscreen={isFullscreen} />
@@ -72,7 +71,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
                 <NavbarBottom />
               </div>
-            </div>
           </ReduxProvider>
         </body>
       </TonConnectUIProvider>

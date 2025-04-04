@@ -15,4 +15,5 @@ body {
   background-attachment: fixed;
   background-size: cover;
   font-family: Arial, Helvetica, sans-serif;
+  overflow: -moz-hidden-unscrollable;
 }
