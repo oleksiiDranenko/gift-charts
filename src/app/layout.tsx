@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReduxProvider>
               <div
                 className={`h-full w-full overflow-y-auto bg-fixed ${
-                  isFullscreen ? 'pt-[115px]' : null
+                  isFullscreen ? 'pt-[105px]' : null
                 } flex flex-col`}
               >
                 <NavbarTop isFullscreen={isFullscreen} />

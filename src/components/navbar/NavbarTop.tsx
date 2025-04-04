@@ -14,7 +14,7 @@ export default function NavbarTop({ isFullscreen }: NavbarTopProps) {
   return (
     <div
       className={`fixed w-screen top-0 pb-2 h-16 pl-2 pr-2 flex justify-center items-center  ${
-        isFullscreen ? 'pt-[115px]' : null
+        isFullscreen ? 'pt-[120px]' : null
       }`}
     >
         <div className="w-full lg:w-1/2 flex flex-row justify-between items-center">
