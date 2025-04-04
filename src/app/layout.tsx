@@ -48,6 +48,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             telegramWebApp.BackButton.hide();
             console.log('BackButton hidden.');
           }
+
+          // Dynamically adjust height based on Telegram viewport
+          const updateViewportHeight = () => {
+            document.documentElement.style.height = `${telegramWebApp.viewportHeight}px`;
+          };
+          telegramWebApp.onEvent('viewportChanged', updateViewportHeight);
+          updateViewportHeight(); // Initial call
         }
       }).catch((err) => {
         console.error('Error loading WebApp SDK:', err);
@@ -60,14 +67,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <TonConnectUIProvider manifestUrl={manifestUrl}>
         <body className={inter.className}>
           <ReduxProvider>
-            <div className="fixed inset-0 overflow-hidden bg-gradient-to-t from-[#0e1117] to-[#192231]">
+            <div className="bg-fixed bg-cover bg-gradient-to-t from-[#0e1117] to-[#192231] min-h-screen">
               <div
-                className={`h-full w-full overflow-y-auto ${
-                  isFullscreen ? 'pt-24' : null
-                } flex flex-col`}
+                className={`w-full flex flex-col ${
+                  isFullscreen ? 'pt-28' : 'pt-0'
+                }`}
+                style={{ height: isClient ? '100vh' : 'auto' }}
               >
                 <NavbarTop isFullscreen={isFullscreen} />
-                <div className="w-screen flex items-center justify-center flex-grow">
+                <div className="w-screen flex justify-center flex-grow overflow-y-auto">
                   {children}
                 </div>
                 <NavbarBottom />
