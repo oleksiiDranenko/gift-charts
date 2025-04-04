@@ -11,8 +11,7 @@ import { useEffect, useState } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const manifestUrl =
-    'https://tomato-rapid-caterpillar-799.mypinata.cloud/ipfs/bafkreigq4ieb3yxtof4sful73y3o4pd2uc72h5aari3ldmiummapzgnhte';
+  const manifestUrl = 'https://tomato-rapid-caterpillar-799.mypinata.cloud/ipfs/bafkreigq4ieb3yxtof4sful73y3o4pd2uc72h5aari3ldmiummapzgnhte';
   const isClient = typeof window !== 'undefined';
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -62,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReduxProvider>
               <div
                 className={`h-full w-full overflow-y-auto ${
-                  isFullscreen ? 'pt-[100px]' : null
+                  isFullscreen ? 'pt-[112px]' : null
                 } flex flex-col`}
               >
                 <NavbarTop isFullscreen={isFullscreen} />
