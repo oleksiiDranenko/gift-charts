@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <body className={inter.className}>
           <ReduxProvider>
               <div
-                className={`h-full w-full overflow-y-auto bg-fixed ${
+                className={`h-screen w-screen overflow-scroll bg-fixed ${
                   isFullscreen ? 'pt-[105px]' : null
                 } flex flex-col`}
               >
