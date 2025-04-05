@@ -3,15 +3,13 @@
 import GiftInterface from "@/interfaces/GiftInterface"
 import { useAppSelector } from "@/redux/hooks"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import GiftItem from "../giftsList/GiftItem"
 import useVibrate from "@/hooks/useVibrate"
 import { useDispatch } from "react-redux"
 import { setFilters } from "@/redux/slices/filterListSlice"
 
-
 export default function MainPage() {
-
     const vibrate = useVibrate()
 
     const giftsList = useAppSelector((state) => state.giftsList)
@@ -20,9 +18,11 @@ export default function MainPage() {
 
     const [list, setList] = useState<GiftInterface[]>([])
     const [userList, setUserList] = useState<GiftInterface[]>([])
+    const [activeIndex, setActiveIndex] = useState(0)
+    const containerRef = useRef<HTMLDivElement>(null)
 
-    const dispatch = useDispatch() 
-    
+    const dispatch = useDispatch()
+
     useEffect(() => {
         if (giftsList.length > 0) {
             let sortedList = [...giftsList];
@@ -44,7 +44,6 @@ export default function MainPage() {
 
     useEffect(() => {
         if (giftsList.length > 0 && user._id !== '') {
-
             let filteredList = user.savedList.map((item) => {
                 const gift = giftsList.find((gift: GiftInterface) => gift._id === item)
 
@@ -55,8 +54,6 @@ export default function MainPage() {
                 }
             }).filter((gift) => gift !== undefined)
 
-
-
             let sortedList = [...filteredList];
 
             sortedList.sort((a, b) =>
@@ -65,89 +62,151 @@ export default function MainPage() {
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-
             setUserList(sortedList.slice(0, 3));
         }
     }, [filters, giftsList, user]);
-    
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+            const handleScroll = () => {
+                const scrollLeft = container.scrollLeft;
+                const width = container.clientWidth;
+                const newIndex = Math.round(scrollLeft / width);
+                setActiveIndex(newIndex);
+            };
+
+            container.addEventListener('scroll', handleScroll);
+            return () => container.removeEventListener('scroll', handleScroll);
+        }
+    }, []);
+
+
+    const handleSwipe = (index: number) => {
+        console.log('Selected index:', index);
+        const container = containerRef.current;
+        if (container) {
+            const width = container.clientWidth;
+            console.log('Scrolling to:', index * width);
+            container.scrollTo({
+                left: index * width,
+                behavior: 'smooth',
+            });
+        }
+    };
 
     return (
-        <div className="px-3">
-
-            <h1 className="mb-7 text-2xl font-bold">
+        <div className="">
+            <h1 className="mb-7 px-3 text-2xl font-bold">
                 {'Hourly Price updates ⏰'}
             </h1>
 
-            <div className="w-full mb-7 pt-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
-                    <h2
-                        className="text-xl font-bold"
-                    >
-                        📌 Your Watchlist
-                    </h2>
-                    <Link
-                        href={'/gifts-list'}
-                        className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
-                        onClick={() => {
-                            dispatch(setFilters({...filters, chosenGifts: userList}))
-                            vibrate()
-                        }}
-                    >
-                        {'Show all ->'}
-                    </Link>
-                </div>
-                <div>
-                {
-                userList.length > 0 
-                ? 
-                userList.map((item: GiftInterface) => {
+            <div className="max-w-full mx-3 flex items-center justify-between gap-x-3 mb-5">
+                <button
+                    className={`w-1/2 h-10 ${activeIndex === 0 ? 'font-bold bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    onClick={() => {
+                        handleSwipe(0);
+                        vibrate();
+                    }}
+                >
+                    Price Change
+                </button>
+                <button
+                    className={`w-1/2 h-10 ${activeIndex === 1 ? 'font-bold bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    onClick={() => {
+                        handleSwipe(1);
+                        vibrate();
+                    }}
+                >
+                    Watchlist
+                </button>
+            </div>
 
-                    return (
-                        <GiftItem item={item} currency={filters.currency} sortBy={filters.sortBy} key={item._id}/>
-                    )
-                })
-                :
-                <div className="px-3 pt-3 pb-5 text-slate-400">
-                    Your Watchlist is Empty
+            <div
+                ref={containerRef}
+                className="w-full swipe-container flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+            >
+                <div className="flex-none w-full snap-start">
+                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                        <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
+                            <h2 className="text-xl font-bold">
+                                🔥 Top Price Changes
+                            </h2>
+                            <Link
+                                href={'/gifts-list'}
+                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                                onClick={() => {
+                                    dispatch(setFilters({...filters, sortBy: "percentChange"}))
+                                    vibrate()
+                                }}
+                            >
+                                {'Show all ->'}
+                            </Link>
+                        </div>
+                        <div>
+                            {list.length > 0
+                                ? list.map((item: GiftInterface) => (
+                                    <GiftItem
+                                        item={item}
+                                        currency={filters.currency}
+                                        sortBy={filters.sortBy}
+                                        key={item._id}
+                                    />
+                                ))
+                                : null
+                            }
+                        </div>
+                    </div>
                 </div>
-                }
+
+                <div className="flex-none w-full snap-start">
+                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                        <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
+                            <h2 className="text-xl font-bold">
+                                📌 Your Watchlist
+                            </h2>
+                            <Link
+                                href={'/gifts-list'}
+                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                                onClick={() => {
+                                    dispatch(setFilters({...filters, chosenGifts: userList}))
+                                    vibrate()
+                                }}
+                            >
+                                {'Show all ->'}
+                            </Link>
+                        </div>
+                        <div>
+                            {userList.length > 0
+                                ? userList.map((item: GiftInterface) => (
+                                    <GiftItem
+                                        item={item}
+                                        currency={filters.currency}
+                                        sortBy={filters.sortBy}
+                                        key={item._id}
+                                    />
+                                ))
+                                : <div className="px-3 pt-3 pb-5 text-slate-400">
+                                    Your Watchlist is Empty
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
 
-
-            <div className="w-full pt-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
-                    <h2
-                        className="text-xl font-bold"
-                    >
-                        🔥 Top Price Changes 
-                    </h2>
-                    <Link
-                        href={'/gifts-list'}
-                        className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
-                        onClick={() => {
-                            dispatch(setFilters({...filters, sortBy: "percentChange"}))
-                            vibrate()
-                        }}
-                    >
-                        {'Show all ->'}
-                    </Link>
-                </div>
-                <div>
-                {
-                list.length > 0 
-                ? 
-                list.map((item: GiftInterface) => {
-
-                    return (
-                        <GiftItem item={item} currency={filters.currency} sortBy={filters.sortBy} key={item._id}/>
-                    )
-                }) : null
-                }
-                </div>
+            <div className="flex justify-center">
+                <span
+                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
+                        activeIndex === 0 ? 'bg-white' : 'bg-gray-500'
+                    }`}
+                ></span>
+                <span
+                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
+                        activeIndex === 1 ? 'bg-white' : 'bg-gray-500'
+                    }`}
+                ></span>
             </div>
-
-
         </div>
     )
 }
