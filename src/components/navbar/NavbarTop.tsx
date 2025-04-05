@@ -13,7 +13,7 @@ export default function NavbarTop({ isFullscreen }: NavbarTopProps) {
 
   return (
     <div
-      className={`fixed w-screen top-0 pb-2 h-16 pl-2 pr-2 flex justify-center items-center  ${
+      className={`fixed w-screen top-0 pb-1 h-16 pl-3 pr-3 flex justify-center items-center bg-transparent backdrop-blur-md  ${
         isFullscreen ? 'pt-[130px]' : null
       }`}
     >
