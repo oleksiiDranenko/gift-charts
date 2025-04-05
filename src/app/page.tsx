@@ -37,6 +37,12 @@ export default function Page() {
 
         (async () => {
             try {
+				
+				if (giftsList.length === 0) {
+					const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+					dispatch(setGiftsList(giftsRes.data));
+				}
+
                 if(user._id !== '') {
                     setLoading(false)
                 } else {
@@ -48,11 +54,7 @@ export default function Page() {
 
                         const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${walletAddress}`)
                         
-                        if (giftsList.length === 0) {
-                            const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-                            dispatch(setGiftsList(giftsRes.data));
-                            
-                        }
+                    
                     
                         if (userRes.data._id) {
                             dispatch(setUser(userRes.data));

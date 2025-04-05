@@ -92,6 +92,7 @@ export default function MainPage() {
                 left: index * width,
                 behavior: 'smooth',
             });
+            vibrate()
         }
     };
 
@@ -104,19 +105,13 @@ export default function MainPage() {
             <div className="max-w-full mx-3 flex items-center justify-between gap-x-3 mb-5">
                 <button
                     className={`w-1/2 h-10 ${activeIndex === 0 ? 'font-bold bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
-                    onClick={() => {
-                        handleSwipe(0);
-                        vibrate();
-                    }}
+                    onClick={() => handleSwipe(0)}
                 >
-                    Price Change
+                    All Gifts
                 </button>
                 <button
                     className={`w-1/2 h-10 ${activeIndex === 1 ? 'font-bold bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
-                    onClick={() => {
-                        handleSwipe(1);
-                        vibrate();
-                    }}
+                    onClick={() => handleSwipe(1)}
                 >
                     Watchlist
                 </button>
