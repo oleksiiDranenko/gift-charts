@@ -8,36 +8,73 @@ import { useState } from "react"
 import { useAppSelector } from "@/redux/hooks"
 import MainPage from "@/components/mainPage/MainPage"
 import ReactLoading from "react-loading"
+import { TonConnect } from "@tonconnect/ui-react"
+import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
+import { setDefaultFilters } from "@/redux/slices/filterListSlice"
 
 export default function Page() {
+
 	const [isClient, setIsClient] = useState(false);
 
 	const dispatch = useAppDispatch()
 	const giftsList = useAppSelector((item) => item.giftsList)
+	const user = useAppSelector((state) => state.user)
+
+	const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
+
 	const [loading, setLoading] = useState<boolean>(true)
 
 
 	useEffect(() => {
-		const fetchGifts = async () => {
-			if (giftsList.length === 0) {
-				try {
-					const response = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-					dispatch(setGiftsList(response.data));
-					setLoading(false);
-				} catch (error) {
-					console.error("Error fetching gifts:", error);
-				}
-			} else {
-				setLoading(false);
-			}
-		};
-
-		fetchGifts();
-	}, [dispatch, giftsList]);
+        if (typeof window !== 'undefined') {
+            const tc = new TonConnect();
+            setTonConnect(tc);
+        }
+    }, [])
 
 	useEffect(() => {
-		setIsClient(true);
-	}, []);
+        if (!tonConnect) return;
+
+        (async () => {
+            try {
+                if(user._id !== '') {
+                    setLoading(false)
+                } else {
+                    await tonConnect.restoreConnection();
+                    const wallet = tonConnect.wallet;
+                    
+                    if (wallet) {
+                        const walletAddress = wallet.account.address
+
+                        const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${walletAddress}`)
+                        
+                        if (giftsList.length === 0) {
+                            const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+                            dispatch(setGiftsList(giftsRes.data));
+                            
+                        }
+                    
+                        if (userRes.data._id) {
+                            dispatch(setUser(userRes.data));
+                        } else {
+                            dispatch(setDefaultUser());
+                        }
+                        setLoading(false);
+                    } else {
+                        setLoading(false);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setLoading(false);
+            }
+        })();
+    }, [tonConnect, dispatch, giftsList, user])
+
+	useEffect(() => {
+		setIsClient(true)
+		dispatch(setDefaultFilters())
+	}, [])
 
 	useEffect(() => {
 		if (isClient) {

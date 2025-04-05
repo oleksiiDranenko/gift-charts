@@ -4,7 +4,7 @@ import GiftInterface from "@/interfaces/GiftInterface"
 
 import { useAppSelector } from "@/redux/hooks"
 import { useAppDispatch } from "@/redux/hooks"
-import { setFilters } from "@/redux/slices/filterListSlice"
+import { setDefaultFilters, setFilters } from "@/redux/slices/filterListSlice"
 
 import { useEffect, useState } from "react"
 import ReactLoading from 'react-loading'
@@ -15,7 +15,8 @@ import useVibrate from "@/hooks/useVibrate"
 
 
 interface PropsInterface {
-    loading: boolean
+    loading: boolean,
+    userList?: string[] 
 }
 
 export default function GiftsList({loading}: PropsInterface) {
@@ -102,7 +103,10 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 pl-3 pr-3">
                 <button
                     className="w-1/2 h-10 bg-slate-800 rounded-lg"
-                    onClick={() => router.back()}
+                    onClick={() => {
+                        dispatch(setDefaultFilters())
+                        router.back()
+                    }}
                 >
                     {'<- Back'}
                 </button>

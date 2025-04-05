@@ -100,7 +100,7 @@ export default function Account() {
     }, [user, currency, giftsList])
 
     const updateAssetsArray = () => {
-        if (user && giftsList.length > 0) {
+        if (user._id !== '' && giftsList.length > 0) {
             const updatedAssets = user.assets.map((asset: AssetInterface) => {
                 const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId);
                 if (gift) {

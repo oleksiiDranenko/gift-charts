@@ -15,8 +15,9 @@ const filterListSlice = createSlice({
         setFilters: (state, action: PayloadAction<FilterListInterface>) => {
             return action.payload;
         },
+        setDefaultFilters: () => initialState
     }
 });
 
-export const { setFilters } = filterListSlice.actions;
+export const { setFilters, setDefaultFilters } = filterListSlice.actions;
 export default filterListSlice.reducer;
