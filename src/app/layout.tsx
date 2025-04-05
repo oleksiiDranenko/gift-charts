@@ -16,43 +16,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    if (isClient) {
-      import('@twa-dev/sdk').then((WebApp) => {
-        const telegramWebApp = WebApp.default;
+	if (isClient) {
+		import('@twa-dev/sdk').then((WebApp) => {
+			const telegramWebApp = WebApp.default;
 
-        if (telegramWebApp) {
-          telegramWebApp.ready();
+			if (telegramWebApp) {
+				telegramWebApp.ready();
 
-          if (telegramWebApp.requestFullscreen) {
-            telegramWebApp.requestFullscreen();
-            setIsFullscreen(true);
-            console.log('Requested fullscreen mode.');
-          } else {
-            telegramWebApp.expand();
-            setIsFullscreen(false);
-            console.log('Expanded to full height.');
-          }
+				if (telegramWebApp.requestFullscreen) {
+					telegramWebApp.requestFullscreen();
+					setIsFullscreen(true);
+					console.log('Requested fullscreen mode.');
+				} else {
+					telegramWebApp.expand();
+					setIsFullscreen(false);
+					console.log('Expanded to full height.');
+				}
 
-          if (telegramWebApp.disableVerticalSwipes) {
-            telegramWebApp.disableVerticalSwipes();
-            console.log('Vertical swipes disabled.');
-          }
+				if (telegramWebApp.disableVerticalSwipes) {
+					telegramWebApp.disableVerticalSwipes();
+					console.log('Vertical swipes disabled.');
+				}
 
-          if (telegramWebApp.setHeaderColor) {
-            telegramWebApp.setHeaderColor('#192231');
-            console.log('Header set to transparent.');
-          }
+				if (telegramWebApp.setHeaderColor) {
+					telegramWebApp.setHeaderColor('#000');
+					console.log('Header set to transparent.');
+				}
 
-          if (telegramWebApp.BackButton) {
-            telegramWebApp.BackButton.hide();
-            console.log('BackButton hidden.');
-          }
-        }
-      }).catch((err) => {
-        console.error('Error loading WebApp SDK:', err);
-      });
-    }
-  }, [isClient]);
+				if (telegramWebApp.BackButton) {
+					telegramWebApp.BackButton.hide();
+					console.log('BackButton hidden.');
+				}
+
+				// Set height to viewportStableHeight to avoid gaps
+				const updateViewportHeight = () => {
+					const height = telegramWebApp.viewportStableHeight;
+					document.documentElement.style.height = `${height}px`;
+					document.body.style.height = `${height}px`;
+					console.log('Viewport stable height set to:', height);
+				};
+
+				telegramWebApp.onEvent('viewportChanged', updateViewportHeight);
+				updateViewportHeight(); // Initial call
+			}
+		}).catch((err) => {
+			console.error('Error loading WebApp SDK:', err);
+		});
+	}
+}, [isClient]);
 
   return (
     <html lang="en">
@@ -60,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <body className={inter.className}>
           <ReduxProvider>
               <div
-                className={`h-screen w-screen bg-scroll will-change-scroll ${
+                className={`h-screen w-screen overflow-scroll bg-fixed ${
                   isFullscreen ? 'pt-[105px]' : null
                 } flex flex-col`}
               >
