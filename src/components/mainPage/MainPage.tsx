@@ -77,23 +77,22 @@ export default function MainPage() {
             };
 
             container.addEventListener('scroll', handleScroll);
+            vibrate()
             return () => container.removeEventListener('scroll', handleScroll);
         }
     }, []);
 
 
     const handleSwipe = (index: number) => {
-        console.log('Selected index:', index);
         const container = containerRef.current;
         if (container) {
             const width = container.clientWidth;
-            console.log('Scrolling to:', index * width);
             container.scrollTo({
                 left: index * width,
                 behavior: 'smooth',
             });
-            vibrate()
         }
+        vibrate()
     };
 
     return (
