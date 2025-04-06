@@ -46,7 +46,7 @@ export default function SubscriptionMessage({message} : PropsInterface) {
     }
 
     return (
-        <div className="w-full h-full absolute inset-0  z-30 flex items-center justify-center p-3 rounded-lg backdrop-blur-md">
+        <div className="w-full h-full absolute inset-0 z-30 flex items-center justify-center p-3 text-sm rounded-lg backdrop-blur-md">
             <span className="">
                 {message}
             </span>
