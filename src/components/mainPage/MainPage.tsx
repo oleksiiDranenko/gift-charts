@@ -74,6 +74,7 @@ export default function MainPage() {
                 const width = container.clientWidth;
                 const newIndex = Math.round(scrollLeft / width);
                 setActiveIndex(newIndex);
+                vibrate()
             };
 
             container.addEventListener('scroll', handleScroll);
@@ -81,9 +82,6 @@ export default function MainPage() {
         }
     }, []);
 
-    useEffect(() => {
-        vibrate()
-    }, [activeIndex])
 
 
     const handleSwipe = (index: number) => {
@@ -95,6 +93,7 @@ export default function MainPage() {
                 behavior: 'smooth',
             });
         }
+        vibrate()
     };
 
     return (
