@@ -69,7 +69,6 @@ export default function MainPage() {
     useEffect(() => {
         const container = containerRef.current;
         if (container) {
-            vibrate()
             const handleScroll = () => {
                 const scrollLeft = container.scrollLeft;
                 const width = container.clientWidth;
