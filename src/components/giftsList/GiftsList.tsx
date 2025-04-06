@@ -12,6 +12,7 @@ import GiftItem from "./GiftItem"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import useVibrate from "@/hooks/useVibrate"
+import SubscriptionMessage from "../subscription/SubscriptionMessage"
 
 
 interface PropsInterface {
@@ -25,6 +26,7 @@ export default function GiftsList({loading}: PropsInterface) {
 
     const giftsList = useAppSelector((state) => state.giftsList)
     const filters = useAppSelector((state) => state.filters)
+    const subscription = useAppSelector((state) => state.subscription)
     const dispatch = useAppDispatch()
 
     const router = useRouter()
@@ -100,7 +102,7 @@ export default function GiftsList({loading}: PropsInterface) {
     return (
         <div className='w-full h-auto flex flex-col items-center'>
 
-            <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 pl-3 pr-3">
+            <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3 pl-3 pr-3">
                 <button
                     className="w-1/2 h-10 bg-slate-800 rounded-lg"
                     onClick={() => {
@@ -123,85 +125,90 @@ export default function GiftsList({loading}: PropsInterface) {
 
             {
             showFilters ?
-            <>
-            <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 pl-3 pr-3">
-                <div className="w-1/2 gap-2 flex justify-between">
-                    <button
-                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => {
-                            dispatch(setFilters({...filters, currency: 'ton'}))
-                            vibrate()
-                        }}
-                    >
-                        TON
-                    </button>
-                    <button
-                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => {
-                            dispatch(setFilters({...filters, currency: 'usd'}))
-                            vibrate()
-                        }}
-                    >
-                        USD
-                    </button>
-                </div>
 
-                <Link 
-                    href={'/gift-filters'}
-                    className="w-1/2 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
-                    onClick={() => vibrate()}
-                >
-                    ≡ Filter Gifts
-                </Link>
+            <div className="w-full h-auto pt-3 relative">
 
-                
-            </div>
+                {
+                    subscription._id === '' && <SubscriptionMessage message="Unlock for"/>
+                }
 
-            <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3  pl-3 pr-3">
-
-                <div className="w-1/2 flex justify-between items-center">
-                    <span className="w-24 text-slate-500 mr-2 text-sm">
-                        Sort By:
-                    </span>
-                    <select
-                        value={filters.sortBy}
-                        onChange={(e: any) => {
-                            dispatch(setFilters({...filters, sortBy: e.target.value}))
-                            vibrate()
-                        }}
-                        className="w-full px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value={'price'}>Price</option>
-                        <option value={'percentChange'}>Change</option>
-                        <option value={'supply'}>Supply</option>
-                        <option value={'initSupply'}>Init. Supply</option>
-                        <option value={'starsPrice'}>Stars Price</option>
-                    </select>
-                </div>
-
-                <div className="w-1/2 gap-2 flex justify-end">
-                    <button
-                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => {
-                            dispatch(setFilters({...filters, sort: 'lowFirst'}))
-                            vibrate()
-                        }} 
-                    >
-                        Low ↑
-                    </button>
-                    <button
-                        className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
-                        onClick={() => {
-                            dispatch(setFilters({...filters, sort: 'highFirst'}))
-                            vibrate()
-                        }}
+                <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 px-3">
+                    <div className="w-1/2 gap-2 flex justify-between">
+                        <button
+                            className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                            onClick={() => {
+                                dispatch(setFilters({...filters, currency: 'ton'}))
+                                vibrate()
+                            }}
                         >
-                            High ↓
-                    </button>
+                            TON
+                        </button>
+                        <button
+                            className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.currency == 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                            onClick={() => {
+                                dispatch(setFilters({...filters, currency: 'usd'}))
+                                vibrate()
+                            }}
+                        >
+                            USD
+                        </button>
+                    </div>
+
+                    <Link 
+                        href={'/gift-filters'}
+                        className="w-1/2 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
+                        onClick={() => vibrate()}
+                    >
+                        ≡ Filter Gifts
+                    </Link>
+
+                        
+                </div>
+
+                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3  pl-3 pr-3">
+                    <div className="w-1/2 flex justify-between items-center">
+                        <span className="w-24 text-slate-500 mr-2 text-sm">
+                            Sort By:
+                        </span>
+                        <select
+                            value={filters.sortBy}
+                            onChange={(e: any) => {
+                                dispatch(setFilters({...filters, sortBy: e.target.value}))
+                                vibrate()
+                            }}
+                            className="w-full px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value={'price'}>Price</option>
+                            <option value={'percentChange'}>Change</option>
+                            <option value={'supply'}>Supply</option>
+                            <option value={'initSupply'}>Init. Supply</option>
+                            <option value={'starsPrice'}>Stars Price</option>
+                        </select>
+                    </div>
+
+                    <div className="w-1/2 gap-2 flex justify-end">
+                        <button
+                            className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                            onClick={() => {
+                                dispatch(setFilters({...filters, sort: 'lowFirst'}))
+                                vibrate()
+                            }} 
+                        >
+                            Low ↑
+                        </button>
+                        <button
+                            className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                            onClick={() => {
+                                dispatch(setFilters({...filters, sort: 'highFirst'}))
+                                vibrate()
+                            }}
+                            >
+                                High ↓
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            </>
             : null
             }
             

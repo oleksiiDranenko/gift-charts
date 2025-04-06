@@ -11,6 +11,7 @@ import ReactLoading from "react-loading"
 import { TonConnect } from "@tonconnect/ui-react"
 import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
 import { setDefaultFilters } from "@/redux/slices/filterListSlice"
+import { setDefaultSubscription, setSubscription } from "@/redux/slices/subscriptionSlice"
 
 export default function Page() {
 
@@ -19,6 +20,7 @@ export default function Page() {
 	const dispatch = useAppDispatch()
 	const giftsList = useAppSelector((item) => item.giftsList)
 	const user = useAppSelector((state) => state.user)
+	const subscription = useAppSelector((state) => state.subscription)
 
 	const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
 
@@ -33,45 +35,58 @@ export default function Page() {
     }, [])
 
 	useEffect(() => {
-        if (!tonConnect) return;
-
-        (async () => {
-            try {
-				
-				if (giftsList.length === 0) {
-					const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-					dispatch(setGiftsList(giftsRes.data));
+		if (!tonConnect) return;
+	  
+		(async () => {
+		  try {
+			setLoading(true); 
+	  
+			if (giftsList.length === 0) {
+			  const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+			  dispatch(setGiftsList(giftsRes.data));
+			}
+	  
+			await tonConnect.restoreConnection();
+			const wallet = tonConnect.wallet;
+			console.log("Wallet:", wallet);
+	  
+			if (wallet) {
+			  const walletAddress = wallet.account.address;
+			  console.log("Wallet Address:", walletAddress);
+	  
+			  if (subscription._id === '') {
+				const subscriptionRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/subscriptions/check-subscription/${walletAddress}`);
+				console.log("Subscription Response:", subscriptionRes.data);
+	  
+				if (subscriptionRes.data?._id) {
+				  dispatch(setSubscription(subscriptionRes.data));
+	  
+				  if (user._id === '') {
+					const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${walletAddress}`);
+					console.log("User Response:", userRes.data);
+					if (userRes.data?._id) {
+					  dispatch(setUser(userRes.data));
+					} else {
+					  dispatch(setDefaultUser());
+					}
+				  }
+				} else {
+				  dispatch(setDefaultSubscription());
 				}
-
-                if(user._id !== '') {
-                    setLoading(false)
-                } else {
-                    await tonConnect.restoreConnection();
-                    const wallet = tonConnect.wallet;
-                    
-                    if (wallet) {
-                        const walletAddress = wallet.account.address
-
-                        const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${walletAddress}`)
-                        
-                    
-                    
-                        if (userRes.data._id) {
-                            dispatch(setUser(userRes.data));
-                        } else {
-                            dispatch(setDefaultUser());
-                        }
-                        setLoading(false);
-                    } else {
-                        setLoading(false);
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setLoading(false);
-            }
-        })();
-    }, [tonConnect, dispatch, giftsList, user])
+			  }
+			} else {
+			  console.log("No wallet connected, resetting to defaults");
+			  dispatch(setDefaultUser());
+			  dispatch(setDefaultSubscription());
+			}
+		  } catch (error) {
+			console.error("Error fetching data:", error);
+			dispatch(setDefaultSubscription()); // Reset on error
+		  } finally {
+			setLoading(false); // Always stop loading
+		  }
+		})();
+	  }, [tonConnect, dispatch]); // Narrowed dependencies
 
 	useEffect(() => {
 		setIsClient(true)

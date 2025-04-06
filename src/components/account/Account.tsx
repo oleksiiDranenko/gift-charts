@@ -15,6 +15,8 @@ import Link from "next/link"
 import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
 import CreateAccount from "./CreateAccount"
 import useVibrate from "@/hooks/useVibrate"
+import SubscriptionMessage from "../subscription/SubscriptionMessage"
+import { setDefaultSubscription, setSubscription } from "@/redux/slices/subscriptionSlice"
 
 interface AssetDisplayInterface {
     name: string,
@@ -31,6 +33,7 @@ export default function Account() {
 
     const giftsList = useAppSelector((state) => state.giftsList)
     const user = useAppSelector((state) => state.user)
+    const subscription = useAppSelector((state) => state.subscription)
     const dispatch = useAppDispatch()
     
     const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
@@ -53,46 +56,58 @@ export default function Account() {
     }, [])
 
     useEffect(() => {
-        if (!tonConnect) return;
-
-        (async () => {
-            try {
-                if(user._id !== '') {
-                    setLoading(false)
-                } else {
-                    await tonConnect.restoreConnection();
-                    const wallet = tonConnect.wallet;
-                    
-                    if (wallet) {
-                        const walletAddress = wallet.account.address
-                        setWalletId(walletAddress)
-
-                        const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${wallet.account.address}`)
-                        
-                        if (giftsList.length === 0) {
-                            const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-                            dispatch(setGiftsList(giftsRes.data));
-                        
-                            setTon(giftsRes.data[0].priceUsd / giftsRes.data[0].priceTon);
-                            
-                        }
-                    
-                        if (userRes.data._id) {
-                            dispatch(setUser(userRes.data));
-                        } else {
-                            dispatch(setDefaultUser());
-                        }
-                        setLoading(false);
-                    } else {
-                        setLoading(false);
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setLoading(false);
-            }
-        })();
-    }, [tonConnect, dispatch, giftsList, user])
+		if (!tonConnect) return;
+	  
+		(async () => {
+		  try {
+			setLoading(true); 
+	  
+			if (giftsList.length === 0) {
+			  const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+			  dispatch(setGiftsList(giftsRes.data));
+			}
+	  
+			await tonConnect.restoreConnection();
+			const wallet = tonConnect.wallet;
+			console.log("Wallet:", wallet);
+	  
+			if (wallet) {
+			  const walletAddress = wallet.account.address;
+			  setWalletId(walletAddress)
+	  
+			  if (subscription._id === '') {
+				const subscriptionRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/subscriptions/check-subscription/${walletAddress}`);
+				console.log("Subscription Response:", subscriptionRes.data);
+	  
+				if (subscriptionRes.data?._id) {
+				  dispatch(setSubscription(subscriptionRes.data));
+	  
+				  if (user._id === '') {
+					const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${walletAddress}`);
+					console.log("User Response:", userRes.data);
+					if (userRes.data?._id) {
+					  dispatch(setUser(userRes.data));
+					} else {
+					  dispatch(setDefaultUser());
+					}
+				  }
+				} else {
+				  dispatch(setDefaultSubscription());
+				}
+			  }
+			} else {
+			  console.log("No wallet connected, resetting to defaults");
+			  dispatch(setDefaultUser());
+			  dispatch(setDefaultSubscription());
+			}
+		  } catch (error) {
+			console.error("Error fetching data:", error);
+			dispatch(setDefaultSubscription()); 
+		  } finally {
+			setLoading(false); 
+		  }
+		})();
+	  }, [tonConnect, dispatch]);
 
     useEffect(() => {
         setCashPersentages();
@@ -145,7 +160,21 @@ export default function Account() {
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 </div>
-                : user._id !== '' ?
+                :
+                !walletId
+                ?
+                <div className="w-full flex justify-center mt-5">
+                    <h2 className="text-slate-400">Please connect your wallet</h2>
+                </div>
+                : 
+                subscription._id === '' ?
+                <div className="w-full h-28 flex justify-center mt-5 relative">
+                    <SubscriptionMessage message="Unlock for" />
+                </div>
+                :
+                user._id === '' ?
+                <CreateAccount walletId={walletId}/>
+                :
                 <>
                     <div className="w-full h-28 flex flex-col justify-center items-center">
                         <div className="flex flex-row items-center">
@@ -293,18 +322,6 @@ export default function Account() {
                         </div>
                     </div>
                 </>
-                : 
-                user._id === '' ?
-                <div className="w-full flex justify-center mt-5">
-                    <h2 className="text-slate-400">Please connect your wallet</h2>
-                </div>
-                :
-                walletId ?
-                <CreateAccount walletId={walletId}/>
-                :
-                <div className="w-full flex justify-center mt-5">
-                    <h2 className="text-slate-400 w-2/3">There was an error accesing your wallet ID. Please try disconnecting and connecting it again</h2>
-                </div>
             }
         </div>
     )

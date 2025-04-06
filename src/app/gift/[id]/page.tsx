@@ -49,10 +49,13 @@ export default function Page({params}: any) {
             <div className="w-full lg:w-1/2">    
                 {!loading && gift ?
                 <div className="flex flex-col">
-                    <div className="w-full h-10 px-3 flex items-center justify-between">
-                        <button onClick={goBack} className="w-1/3 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
+                    <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
+                        <button onClick={goBack} className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
                             {'<- Back'}
                         </button>
+                        <div className="w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 rounded-lg">
+                            {`Updated: ${weekList[weekList.length -1].time} UTC+2`}
+                        </div>
                     </div>
                     <GiftChart gift={gift} lifeData={lifeList} weekData={weekList}/>
                     <GiftStats gift={gift}/>
