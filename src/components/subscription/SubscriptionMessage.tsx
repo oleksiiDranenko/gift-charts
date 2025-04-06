@@ -1,11 +1,9 @@
 'use client'
 
-import { setSubscription } from "@/redux/slices/subscriptionSlice"
 import { TonConnect } from "@tonconnect/ui-react"
 import axios from "axios"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
 
 interface PropsInterface {
     message: string,
@@ -15,7 +13,6 @@ export default function SubscriptionMessage({message} : PropsInterface) {
 
     const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
 
-    const dispatch = useDispatch()
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -35,7 +32,7 @@ export default function SubscriptionMessage({message} : PropsInterface) {
                 const walletId = wallet.account.address
                 const subscriptionRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/subscriptions/subscribe`, {walletId}) 
                 if(subscriptionRes.data._id) {
-                    dispatch(setSubscription(subscriptionRes.data))
+                    window.location.reload()
                 }
             }
 
