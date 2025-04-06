@@ -7,7 +7,7 @@ const useVibrate = () => {
     // Check if running in Telegram Web App
     if (window.Telegram?.WebApp) {
       console.log("Using Telegram haptic feedback");
-      window.Telegram.WebApp.HapticFeedback.impactOccurred("soft");
+      window.Telegram.WebApp.HapticFeedback.impactOccurred("rigid");
     } else if ("vibrate" in navigator) {
       // Fallback for non-Telegram contexts (e.g., Android browsers)
       navigator.vibrate(duration);

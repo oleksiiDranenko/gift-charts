@@ -69,12 +69,12 @@ export default function MainPage() {
     useEffect(() => {
         const container = containerRef.current;
         if (container) {
+            vibrate()
             const handleScroll = () => {
                 const scrollLeft = container.scrollLeft;
                 const width = container.clientWidth;
                 const newIndex = Math.round(scrollLeft / width);
                 setActiveIndex(newIndex);
-                vibrate()
             };
 
             container.addEventListener('scroll', handleScroll);
