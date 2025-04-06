@@ -77,10 +77,13 @@ export default function MainPage() {
             };
 
             container.addEventListener('scroll', handleScroll);
-            vibrate()
             return () => container.removeEventListener('scroll', handleScroll);
         }
     }, []);
+
+    useEffect(() => {
+        vibrate()
+    }, [activeIndex])
 
 
     const handleSwipe = (index: number) => {
@@ -92,7 +95,6 @@ export default function MainPage() {
                 behavior: 'smooth',
             });
         }
-        vibrate()
     };
 
     return (
