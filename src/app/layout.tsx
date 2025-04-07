@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const manifestUrl = 'https://tomato-rapid-caterpillar-799.mypinata.cloud/ipfs/bafkreigq4ieb3yxtof4sful73y3o4pd2uc72h5aari3ldmiummapzgnhte';
+  const manifestUrl = 'https://tomato-rapid-caterpillar-799.mypinata.cloud/ipfs/bafkreiecn6mko2ck6sv3q3zqwse6unezia6o2cgiy7imw2ztrzf2z5ggxe';
   const isClient = typeof window !== 'undefined';
   const [isFullscreen, setIsFullscreen] = useState(false);
 
