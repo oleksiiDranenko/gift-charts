@@ -3,6 +3,7 @@ import GiftInterface from "./GiftInterface";
 export interface FilterListInterface {
     currency: 'ton' | 'usd',
     sort: 'lowFirst' | 'highFirst',
-    sortBy: 'price' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange',
+    sortBy: 'price' | 'marketCap' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange',
+    displayValue: 'price' | 'marketCap'
     chosenGifts: GiftInterface[]
 }

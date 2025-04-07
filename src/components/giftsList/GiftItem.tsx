@@ -10,10 +10,11 @@ import useVibrate from "@/hooks/useVibrate"
 interface PropsInterface {
     item: GiftInterface,
     currency: 'ton' | 'usd',
-    sortBy: 'price' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange'
+    sortBy: 'price' | 'marketCap' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange',
+    displayValue: 'price' | 'marketCap'
 }
 
-export default function GiftItem({item, currency, sortBy}: PropsInterface) {
+export default function GiftItem({item, currency, sortBy, displayValue}: PropsInterface) {
 
     const vibrate = useVibrate()
 
@@ -32,12 +33,12 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
     }, [currency])
 
     const formatNumber = (number: number) => {
-        if (number >= 1000 && (sortBy === 'price' || sortBy === 'supply' || sortBy === 'percentChange')) {
+        if (number >= 1000 && number < 1000000 ) {
             const shortNumber = (number / 1000).toFixed(1);
             return `${shortNumber}K`;
-        } else if (number >= 1000 && sortBy === 'initSupply') {
-            const shortNumber = (number / 1000).toFixed(0);
-            return `${shortNumber}K`;
+        } else if (number >= 1000000) {
+            const shortNumber = (number / 1000000).toFixed(1);
+            return `${shortNumber}M`;
         }
         return number.toString();
     }
@@ -68,6 +69,8 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
                     <span className="text-slate-500 text-sm font-normal">
                         {
                             sortBy === 'price' ? formatNumber(item.supply) 
+                            : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.supply) : (item.priceUsd * item.supply))
+                            : sortBy === 'marketCap' && displayValue === 'marketCap' ? formatNumber(item.supply)
                             : sortBy === 'percentChange' ? formatNumber(item.supply)
                             : sortBy === 'supply' ? formatNumber(item.supply)
                             : sortBy === 'initSupply' ? formatNumber(item.initSupply)
@@ -92,7 +95,16 @@ export default function GiftItem({item, currency, sortBy}: PropsInterface) {
                             : <span className="mr-1">$</span>
                         }
                         <span className="text-base font-bold">
-                            {currency === 'ton' ? item.priceTon : item.priceUsd}
+                            {currency === 'ton' && displayValue === 'price' ? item.priceTon 
+                            : 
+                            currency === 'ton' && displayValue === 'marketCap' ? formatNumber(item.priceTon * item.supply)
+                            :
+                            currency === 'usd' && displayValue === 'price' ? item.priceUsd
+                            :
+                            currency === 'usd' && displayValue === 'marketCap' ? formatNumber(item.priceUsd * item.supply)
+                            :
+                            null
+                        }
                         </span>
                     </div>
                     

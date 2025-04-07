@@ -36,6 +36,7 @@ export default function GiftsList({loading}: PropsInterface) {
     const [showFilters, setShowFilters] = useState<boolean>(true)
 
 
+
     useEffect(() => {
         if (!loading) {
             setList([...giftsList]);
@@ -64,6 +65,13 @@ export default function GiftsList({loading}: PropsInterface) {
                             : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
                     );
                     break;
+                case 'marketCap':
+                sortedList.sort((a, b) =>
+                    filters.currency === 'ton'
+                        ? filters.sort === 'lowFirst' ? (a.priceTon * a.supply) - (b.priceTon * b.supply): (b.priceTon * b.supply) - (a.priceTon * a.supply)
+                        : filters.sort === 'lowFirst' ? (a.priceUsd * a.supply) - (b.priceUsd * b.supply) : (b.priceUsd * b.supply) - (a.priceUsd * a.supply)
+                );
+                break;
                 case 'supply':
                     sortedList.sort((a, b) =>
                         filters.sort === 'lowFirst' ? a.supply - b.supply : b.supply - a.supply
@@ -101,7 +109,15 @@ export default function GiftsList({loading}: PropsInterface) {
 
     return (
         <div className='w-full h-auto flex flex-col items-center'>
-
+            
+            {
+            loading 
+            ? 
+            <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
+            : 
+            list !== undefined 
+            ? 
+            <>
             <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3 pl-3 pr-3">
                 <button
                     className="w-1/2 h-10 bg-slate-800 rounded-lg"
@@ -167,7 +183,7 @@ export default function GiftsList({loading}: PropsInterface) {
 
                 <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3  pl-3 pr-3">
                     <div className="w-1/2 flex justify-between items-center">
-                        <span className="w-24 text-slate-500 mr-2 text-sm">
+                        <span className=" text-slate-500 mr-2 text-sm whitespace-nowrap">
                             Sort By:
                         </span>
                         <select
@@ -179,6 +195,7 @@ export default function GiftsList({loading}: PropsInterface) {
                             className="w-full px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value={'price'}>Price</option>
+                            <option value={'marketCap'}>Market Cap</option>
                             <option value={'percentChange'}>Change</option>
                             <option value={'supply'}>Supply</option>
                             <option value={'initSupply'}>Init. Supply</option>
@@ -186,6 +203,27 @@ export default function GiftsList({loading}: PropsInterface) {
                         </select>
                     </div>
 
+                    <div className="w-1/2 flex justify-between items-center">
+                        <span className="text-slate-500 mr-2 text-sm">
+                            Value:
+                        </span>
+                        <select
+                            value={filters.displayValue}
+                            onChange={(e: any) => {
+                                dispatch(setFilters({...filters, displayValue: e.target.value}))
+                                vibrate()
+                            }}
+                            className="w-full px-3 h-10 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value={'price'}>Price</option>
+                            <option value={'marketCap'}>Market Cap</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3  pl-3 pr-3">
+                    
                     <div className="w-1/2 gap-2 flex justify-end">
                         <button
                             className={`w-1/2 text-sm  h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
@@ -206,7 +244,20 @@ export default function GiftsList({loading}: PropsInterface) {
                                 High ↓
                         </button>
                     </div>
+
+                    <div className="w-1/2 flex justify-between items-center">
+                        <button
+                            className="w-full h-10 bg-slate-800 rounded-lg"
+                            onClick={() => {
+                                dispatch(setDefaultFilters())
+                                vibrate()
+                            }}
+                        >
+                            ♻️ Clear Filters
+                        </button>
+                    </div>
                 </div>
+
             </div>
 
             : null
@@ -215,32 +266,32 @@ export default function GiftsList({loading}: PropsInterface) {
             <div className="w-full pl-3 pr-3 mb-3 flex flex-row items-center justify-between h-6 text-xs text-slate-500">
                 <div className="">
                     Name / {
-                        filters.sortBy === 'price' || 'supply' || 'percentChange' ? 'Supply' 
+                        filters.sortBy === 'price' || filters.sortBy === 'supply' || filters.sortBy === 'percentChange' ? 'Supply' 
+                        : filters.sortBy === 'marketCap' ? (filters.displayValue === 'marketCap' ? 'Supply' : 'Market Cap')
                         : filters.sortBy === 'initSupply' ? 'Init. Supply'
                         : filters.sortBy === 'starsPrice' ? 'Stars Price'
-                        : null
+                        : null                        
                     }
                 </div>
 
                 <div className="">
-                    Price / 24h change
+                    {filters.displayValue === 'price' ? 'Price' : 'Market Cap'} / 24h change
                 </div>
             </div>
 
-            {   loading 
-                ? 
-                <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
-                : 
-                list !== undefined 
-                ? 
+            {
                 list.map((item: GiftInterface) => {
 
                     return (
-                        <GiftItem item={item} currency={filters.currency} sortBy={filters.sortBy} key={item._id}/>
+                        <GiftItem item={item} currency={filters.currency} sortBy={filters.sortBy} displayValue={filters.displayValue} key={item._id}/>
                     )
-                }) : null
+                }) 
             }
             
+            </>
+            :
+            null
+            }
         </div>
     )
 }

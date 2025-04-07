@@ -52,13 +52,13 @@ export default function EditAssetItem({giftId, amount, giftsList, removeGift, up
         >  
             <div className="flex flex-row items-center">
                 <button
-                    className="h-10 w-10 mr-3 bg-red-500 bg-opacity-30 rounded-lg"
+                    className="h-10 w-10 mr-3"
                     onClick={() => {
                         removeGift(giftId)
                         vibrate()
                     }}
                 >
-                    -
+                    ❌
                 </button>
                 <Image
                     alt="gift image"

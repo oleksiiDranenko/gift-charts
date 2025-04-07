@@ -147,6 +147,7 @@ export default function MainPage() {
                                         item={item}
                                         currency={filters.currency}
                                         sortBy={filters.sortBy}
+                                        displayValue='price'
                                         key={item._id}
                                     />
                                 ))
@@ -183,6 +184,7 @@ export default function MainPage() {
                                         item={item}
                                         currency={filters.currency}
                                         sortBy={filters.sortBy}
+                                        displayValue="price"
                                         key={item._id}
                                     />
                                 ))

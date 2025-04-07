@@ -5,6 +5,7 @@ const initialState: FilterListInterface = {
     currency: 'ton',
     sort: 'highFirst',
     sortBy: 'price',
+    displayValue: 'price',
     chosenGifts: []
 }
   

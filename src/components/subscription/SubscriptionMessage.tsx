@@ -1,5 +1,6 @@
 'use client'
 
+import { useAppSelector } from "@/redux/hooks"
 import { useTonConnectUI } from "@tonconnect/ui-react"
 import axios from "axios"
 import Image from "next/image"
@@ -10,11 +11,16 @@ interface PropsInterface {
 }
 
 export default function SubscriptionMessage({ message }: PropsInterface) {
+    const subscription = useAppSelector((state) => state.subscription)
     const [tonConnectUI] = useTonConnectUI()
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
 
     const handleSubscription = async () => {
+        if(subscription._id !== '') {
+            return
+        } else {
+
         try {
             setLoading(true)
             setError(null)
@@ -80,6 +86,7 @@ export default function SubscriptionMessage({ message }: PropsInterface) {
             }
         } finally {
             setLoading(false)
+        }
         }
     }
 
