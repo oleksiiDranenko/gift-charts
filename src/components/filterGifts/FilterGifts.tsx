@@ -43,12 +43,23 @@ export default function FilterGifts() {
 			if (giftsList.length === 0) {
 				try {
 					const response = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-					dispatch(setGiftsList(response.data));
+                    const sortedGifts = response.data.sort((a: GiftInterface, b: GiftInterface) => 
+                        a.name.localeCompare(b.name)
+                    )
+					dispatch(setGiftsList(sortedGifts));
 					setLoading(false);
 				} catch (error) {
 					console.error("Error fetching gifts:", error);
+                    setLoading(false)
 				}
 			} else {
+                const sortedGifts = [...giftsList].sort((a: GiftInterface, b: GiftInterface) => 
+                    a.name.localeCompare(b.name)
+                )
+                
+                if (JSON.stringify(sortedGifts) !== JSON.stringify(giftsList)) {
+                    dispatch(setGiftsList(sortedGifts))
+                }
 				setLoading(false);
 			}
 		};

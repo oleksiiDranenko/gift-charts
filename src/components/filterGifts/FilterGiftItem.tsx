@@ -27,7 +27,7 @@ export default function FilterGiftItem({ gift, selected, onClick } : PropsInterf
             <div 
                 className='w-10 h-10 mr-3 flex justify-center items-center border border-slate-800 rounded-lg'
             >   
-                {selected && <span className="text-[#0098EA]">{'\u2714'}</span>}
+                {selected && '📌'}
             </div>
             <div className=" flex flex-row items-center">
                 <Image

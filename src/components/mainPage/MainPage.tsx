@@ -64,7 +64,7 @@ export default function MainPage() {
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-            setUserList(sortedList.slice(0, 3));
+            setUserList(sortedList);
         }
     }, [filters, giftsList, user]);
 
@@ -179,7 +179,7 @@ export default function MainPage() {
                         </div>
                         <div>
                             {userList.length > 0
-                                ? userList.map((item: GiftInterface) => (
+                                ? userList.slice(0, 3).map((item: GiftInterface) => (
                                     <GiftItem
                                         item={item}
                                         currency={filters.currency}

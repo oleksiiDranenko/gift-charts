@@ -8,15 +8,14 @@ import axios from "axios"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import { UserInterface } from "@/interfaces/UserInterface"
 import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
-import EditAssetItem from "./EditAssetItem"
 import ReactLoading from "react-loading"
-import AddAssetItem from "../AddListItem"
+import AddListItem from "../AddListItem"
 import GiftInterface from "@/interfaces/GiftInterface"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import useVibrate from "@/hooks/useVibrate"
+import EditWatchlistItem from "./EditWatchlistItem"
 
-export default function EditAssets() {
+export default function EditWatchlist() {
     const vibrate = useVibrate()
     const router = useRouter()
 
@@ -29,9 +28,6 @@ export default function EditAssets() {
     const [editedUser, setEditedUser] = useState<UserInterface>()
     const [loading, setLoading] = useState<boolean>(true)
 
-    const [tonInput, setTonInput] = useState<string>("")
-    const [usdInput, setUsdInput] = useState<string>("")
-
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const tonconnect = new TonConnect();
@@ -41,15 +37,13 @@ export default function EditAssets() {
 
     useEffect(() => {
         setEditedUser(user)
-        setTonInput(user.ton?.toString() || "")
-        setUsdInput(user.usd?.toString() || "")
     }, [user])
 
     useEffect(() => {
         const list = giftsList
-            .filter((gift) => !user.assets.some((asset) => asset.giftId === gift._id))
+            .filter((gift) => !user.savedList.some((item) => item === gift._id))
             .sort((a, b) => a.name.localeCompare(b.name));
-        setAddGiftList(list);
+        setAddGiftList(list)
     }, [user, giftsList])
 
     useEffect(() => {
@@ -91,8 +85,8 @@ export default function EditAssets() {
 
     const removeGift = (id: string) => {
         if (editedUser) {
-            const filteredList = editedUser.assets.filter((item) => item.giftId !== id);
-            setEditedUser({ ...editedUser, assets: filteredList });
+            const filteredList = editedUser.savedList.filter((item) => item !== id);
+            setEditedUser({ ...editedUser, savedList: filteredList });
 
             const removedGift = giftsList.find((gift) => gift._id === id);
             if (removedGift) {
@@ -105,54 +99,22 @@ export default function EditAssets() {
 
     const addGift = (id: string) => {
         if (editedUser) {
-            const newAsset = {
-                giftId: id,
-                amount: 1
-            };
-            setEditedUser({ ...editedUser, assets: [...editedUser.assets, newAsset] });
+            const newGift = id;
+            setEditedUser({ ...editedUser, savedList: [...editedUser.savedList, newGift] });
             setAddGiftList((prevList) => prevList.filter((gift) => gift._id !== id));
         }
     };
 
-    const updateAmount = (id: string, newAmount: number) => {
-        if (editedUser) {
-            const updatedAssets = editedUser.assets.map((asset) =>
-                asset.giftId === id ? { ...asset, amount: newAmount } : asset
-            );
-            setEditedUser({ ...editedUser, assets: updatedAssets });
-        }
-    }
-
-    const handleTon = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setTonInput(value); 
-        if (editedUser) {
-            const numValue = value === "" ? 0 : parseFloat(value);
-            setEditedUser({ ...editedUser, ton: isNaN(numValue) ? 0 : numValue });
-        }
-    }
-    
-    const handleUsd = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setUsdInput(value); 
-        if (editedUser) {
-            const numValue = value === "" ? 0 : parseFloat(value);
-            setEditedUser({ ...editedUser, usd: isNaN(numValue) ? 0 : numValue });
-        }
-    }
 
     const saveChanges = async () => {
         try {
             if (editedUser) {
-                const validAssets = editedUser.assets.filter(
-                    (asset) => asset.amount !== undefined && asset.amount > 0
-                );
-                
+
                 const updatedUser = {
                     savedList: editedUser.savedList,
-                    assets: validAssets,
-                    ton: editedUser.ton !== undefined && !isNaN(editedUser.ton) ? editedUser.ton : 0,
-                    usd: editedUser.usd !== undefined && !isNaN(editedUser.usd) ? editedUser.usd : 0
+                    assets: editedUser.assets,
+                    ton: editedUser.ton,
+                    usd: editedUser.usd
                 };
                 
                 await axios.patch(
@@ -161,7 +123,7 @@ export default function EditAssets() {
                     { headers: { "Content-Type": "application/json" } }
                 );
     
-                dispatch(setUser({ ...editedUser, assets: validAssets }));
+                dispatch(setUser({ ...editedUser, savedList: editedUser.savedList }));
     
                 router.push('/account');
             }
@@ -198,78 +160,28 @@ export default function EditAssets() {
                     </button>
                 </div>
 
-                <div className="w-full mt-5 pr-2">
-                    <h2 className="w-full text-xl font-bold mb-3">
-                        Cash
-                    </h2>
-
-                    <div 
-                        className="w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
-                    >
-                        <div className="flex flex-row items-center">
-                            <Image
-                                alt="gift image"
-                                src={`/images/ton.webp`}
-                                width={50}
-                                height={50}
-                                className={`bg-slate-800 p-4 box-border mr-3 rounded-lg`}
-                            /> 
-                            <div className="flex flex-col">
-                                <span className="text-base font-bold">
-                                    Toncoin
-                                </span>
-                            </div>
-                        </div>
-
-                        <input 
-                            type="number"
-                            step="any" 
-                            value={tonInput}
-                            onChange={handleTon}
-                            className="w-32 h-10 text-center bg-slate-800 rounded-lg focus:outline-none focus:bg-slate-700"
-                        /> 
-                    </div>
-
-                    <div 
-                        className="w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
-                    >
-                        <div className="flex flex-row items-center">
-                            <span className="bg-slate-800 h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-lg">
-                                $
-                            </span>
-                            <div className="flex flex-col">
-                                <span className="text-base font-bold">
-                                    US Dollar
-                                </span>
-                            </div>
-                        </div>
-
-                        <input 
-                            type="number"
-                            step="any" 
-                            value={usdInput}
-                            onChange={handleUsd}
-                            className="w-32 h-10 text-center bg-slate-800 rounded-lg focus:outline-none focus:bg-slate-700"
-                        /> 
-                    </div>
-                </div>
 
                 <div className="w-full mt-5 pr-2">
                     <h2 className="w-full text-xl font-bold mb-3">
-                        Assets
+                        Watchlist
                     </h2>
                     {
-                        editedUser ?
-                            editedUser.assets.map((asset) => (
-                                <EditAssetItem 
-                                    giftId={asset.giftId}
-                                    amount={asset.amount}
-                                    giftsList={giftsList}
-                                    removeGift={removeGift}
-                                    updateAmount={updateAmount}
-                                    key={asset.giftId} 
-                                />
-                            )) : null
+                        editedUser 
+                        ?
+                        editedUser.savedList.length === 0 
+                        ?
+                        <div className="pt-3 pb-5 text-slate-400">
+                            Your Watchlist is Empty
+                        </div>
+                        :
+                        editedUser.savedList.map((gift) => (
+                            <EditWatchlistItem 
+                                giftId={gift}
+                                giftsList={giftsList}
+                                removeGift={removeGift}
+                                key={gift} 
+                            />
+                        )) : null
                     }
                 </div>
 
@@ -279,7 +191,7 @@ export default function EditAssets() {
                     </h2>
                     {
                         addGiftlist.map((gift) => (
-                            <AddAssetItem
+                            <AddListItem
                                 _id={gift._id}
                                 name={gift.name}
                                 image={gift.image}
