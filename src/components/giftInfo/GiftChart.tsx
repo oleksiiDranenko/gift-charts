@@ -14,7 +14,7 @@ import {
 import GiftInterface from "@/interfaces/GiftInterface"
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface"
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
 import { useAppSelector } from "@/redux/hooks";
@@ -33,6 +33,8 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
 
     const vibrate = useVibrate()
 
+    const chartContainerRef = useRef<HTMLDivElement>(null);
+
     const subscription = useAppSelector((state) => state.subscription)
     
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton')
@@ -42,6 +44,42 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
 
     const [low, setLow] = useState<number>()
     const [high, setHigh] = useState<number>()
+
+
+    // prevent scroll when interacting with chart
+    useEffect(() => {
+        const chartContainer = chartContainerRef.current;
+        if (!chartContainer) return;
+    
+        const preventScroll = (e: TouchEvent) => {
+          e.preventDefault();
+        };
+    
+        chartContainer.addEventListener("touchstart", preventScroll, { passive: false });
+        chartContainer.addEventListener("touchmove", preventScroll, { passive: false });
+        chartContainer.addEventListener("touchend", preventScroll, { passive: false });
+
+        const handleClickOutside = (e: MouseEvent) => {
+          const chartCanvas = chartContainer.querySelector("canvas");
+          if (chartCanvas && !chartCanvas.contains(e.target as Node)) {
+            const chartInstance = ChartJS.getChart(chartCanvas);
+            if (chartInstance) {
+              chartInstance.setActiveElements([]);
+              chartInstance.tooltip?.setActiveElements([], { x: 0, y: 0 });
+              chartInstance.update();
+            }
+          }
+        };
+  
+        document.addEventListener("click", handleClickOutside);
+
+        return () => {
+          chartContainer.removeEventListener("touchstart", preventScroll);
+          chartContainer.removeEventListener("touchmove", preventScroll);
+          chartContainer.removeEventListener("touchend", preventScroll);
+          document.removeEventListener("click", handleClickOutside);
+        };
+      }, []);
 
     useEffect(() => {
         if (list.length === 0) return
@@ -286,7 +324,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
         
 
         
-        <div className="relative">
+        <div className="relative" ref={chartContainerRef}>
             <Line 
                 data={data} 
                 options={options}

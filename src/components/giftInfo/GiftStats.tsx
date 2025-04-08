@@ -16,6 +16,13 @@ export default function GiftStats({gift}: PropsInterface) {
         return formattedNumber
     }
 
+    function formatDate(dateStr: string): string {
+        const [day, month, year] = dateStr.split("-").map(Number);
+        const date = new Date(year, month - 1, day); // Month is zero-based in JS
+    
+        return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    }
+
     const countPercentChange = (last: number, current: number) => {
         let percent =  parseFloat(((current - last) / last * 100).toFixed(2))
         if (percent < 0 ) {
@@ -34,7 +41,7 @@ export default function GiftStats({gift}: PropsInterface) {
                         {'Release Date: '}
                     </span>
                     <span className="text-white">
-                        {gift.releaseDate}
+                        {formatDate(gift.releaseDate)}
                     </span>
                 </p>
 

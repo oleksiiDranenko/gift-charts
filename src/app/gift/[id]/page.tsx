@@ -119,7 +119,7 @@ export default function Page({params}: any) {
                             {'<- Back'}
                         </button>
                         <div className="w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 rounded-lg">
-                            {`Updated: ${weekList[weekList.length -1].time} UTC+2`}
+                            {`⏱ ${weekList[weekList.length -1].time} 🇬🇧 London`}
                         </div>
                     </div>
                     <GiftChart gift={gift} lifeData={lifeList} weekData={weekList}/>

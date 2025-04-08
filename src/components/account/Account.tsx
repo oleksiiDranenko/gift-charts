@@ -228,11 +228,11 @@ export default function Account() {
                             Statistics
                         </button>
                         <Link 
-                            href={'/account/edit-assets'}
+                            href={'/account/settings'}
                             className="w-1/3 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
                             onClick={() => vibrate()}
                         >
-                            Edit Assets
+                            Settings
                         </Link>
                     </div>
 
