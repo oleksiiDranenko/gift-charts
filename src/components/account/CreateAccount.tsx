@@ -29,6 +29,7 @@ export default function CreateAccount({walletId}: PropsInterface) {
 
             dispatch(setUser({...user, walletId}))
             setLoading(false)
+            window.location.reload();
             
         } catch (error) {
             console.log(error)
