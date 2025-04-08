@@ -144,9 +144,9 @@ export default function GiftsList({loading}: PropsInterface) {
 
             <div className="w-full h-auto pt-3 relative">
 
-                {
+                {/* {
                     subscription._id === '' && <SubscriptionMessage message="Unlock for"/>
-                }
+                } */}
 
                 <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 px-3">
                     <div className="w-1/2 gap-2 flex justify-between">

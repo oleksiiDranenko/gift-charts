@@ -329,9 +329,9 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 data={data} 
                 options={options}
             />
-            {
+            {/* {
                 subscription._id === '' && listType !== '24h' && <SubscriptionMessage message="Unlock for"/>
-            }
+            } */}
         </div>
 
         
