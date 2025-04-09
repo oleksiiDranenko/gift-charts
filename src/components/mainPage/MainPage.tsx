@@ -19,6 +19,7 @@ export default function MainPage() {
     const [userList, setUserList] = useState<GiftInterface[]>([])
     const [activeIndex, setActiveIndex] = useState(0)
     const containerRef = useRef<HTMLDivElement>(null)
+    const [isMounted, setIsMounted] = useState(false);
 
     const dispatch = useDispatch()
 
@@ -70,6 +71,16 @@ export default function MainPage() {
         }
     }, []);
 
+    useEffect(() => {
+        setIsMounted(true); // Set flag after initial mount
+    }, []);
+
+    useEffect(() => {
+        if (isMounted) { // Only vibrate after mount
+            vibrate();
+        }
+    }, [activeIndex, isMounted]);
+
     const handleSwipe = (index: number) => {
         const container = containerRef.current;
         if (container) {
@@ -79,7 +90,6 @@ export default function MainPage() {
                 behavior: 'smooth',
             });
         }
-        vibrate()
     };
 
     return (

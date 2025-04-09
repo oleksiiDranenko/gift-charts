@@ -140,7 +140,7 @@ export default function Account() {
                             </h1>
                         </div>
                         <span className="text-sm font-bold text-slate-400 mt-1">
-                            Portfolio value
+                            @{user.username}
                         </span>
                     </div>
 
