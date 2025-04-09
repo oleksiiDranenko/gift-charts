@@ -5,7 +5,8 @@ export interface AssetInterface {
 
 export interface UserInterface {
     _id: string,
-    walletId: string,
+    telegramId: string,
+    username: string,
     assets: AssetInterface[],
     savedList: string[],
     ton: number,

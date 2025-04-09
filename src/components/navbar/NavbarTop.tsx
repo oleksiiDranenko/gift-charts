@@ -1,7 +1,7 @@
 'use client';
 
 import useVibrate from '@/hooks/useVibrate';
-import { TonConnectButton } from '@tonconnect/ui-react';
+import { useAppSelector } from '@/redux/hooks';
 import Image from 'next/image';
 
 interface NavbarTopProps {
@@ -10,9 +10,8 @@ interface NavbarTopProps {
 
 
 export default function NavbarTop({ isFullscreen }: NavbarTopProps) {
-  	const vibrate = useVibrate();
 
-	
+	const user = useAppSelector((state) => state.user)
 
   	return (
     	<div
@@ -33,8 +32,10 @@ export default function NavbarTop({ isFullscreen }: NavbarTopProps) {
     	                Gift Charts
     	            </span>
     	        </div>
-    	        <div onClick={() => vibrate()}>
-    	            <TonConnectButton className="bg-[#0098EA] rounded-full border border-[#0098EA]" />
+    	        <div 
+					className='flex flex-row items-center px-3 h-10 bg-slate-800 rounded-lg'
+				>
+    	            @{user.username}
     	        </div>
     	    </div>
     	</div>

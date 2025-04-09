@@ -17,8 +17,6 @@ import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface"
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
-import { useAppSelector } from "@/redux/hooks";
-import SubscriptionMessage from "../subscription/SubscriptionMessage";
 
 
 ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale);
@@ -34,8 +32,6 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
     const vibrate = useVibrate()
 
     const chartContainerRef = useRef<HTMLDivElement>(null);
-
-    const subscription = useAppSelector((state) => state.subscription)
     
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton')
     const [percentChange, setPercentChange] = useState<number>(0)
@@ -329,9 +325,6 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 data={data} 
                 options={options}
             />
-            {/* {
-                subscription._id === '' && listType !== '24h' && <SubscriptionMessage message="Unlock for"/>
-            } */}
         </div>
 
         

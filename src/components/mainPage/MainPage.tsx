@@ -8,15 +8,12 @@ import GiftItem from "../giftsList/GiftItem"
 import useVibrate from "@/hooks/useVibrate"
 import { useDispatch } from "react-redux"
 import { setFilters } from "@/redux/slices/filterListSlice"
-import SubscriptionMessage from "../subscription/SubscriptionMessage"
 
 export default function MainPage() {
     const vibrate = useVibrate()
 
     const giftsList = useAppSelector((state) => state.giftsList)
     const filters = useAppSelector((state) => state.filters)
-    const user = useAppSelector((state) => state.user)
-    const subscription = useAppSelector((state) => state.subscription)
 
     const [list, setList] = useState<GiftInterface[]>([])
     const [userList, setUserList] = useState<GiftInterface[]>([])
@@ -45,18 +42,8 @@ export default function MainPage() {
     }, [filters, giftsList]);
 
     useEffect(() => {
-        if (giftsList.length > 0 && user._id !== '') {
-            let filteredList = user.savedList.map((item) => {
-                const gift = giftsList.find((gift: GiftInterface) => gift._id === item)
-
-                if (gift) {
-                    return gift
-                } else {
-                    return undefined
-                }
-            }).filter((gift) => gift !== undefined)
-
-            let sortedList = [...filteredList];
+        if (giftsList.length > 0) {
+            let sortedList = [...giftsList];
 
             sortedList.sort((a, b) =>
                 filters.currency === 'ton'
@@ -64,9 +51,9 @@ export default function MainPage() {
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-            setUserList(sortedList);
+            setUserList(sortedList); // Simply use giftsList for userList
         }
-    }, [filters, giftsList, user]);
+    }, [filters, giftsList]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -83,8 +70,6 @@ export default function MainPage() {
         }
     }, []);
 
-
-
     const handleSwipe = (index: number) => {
         const container = containerRef.current;
         if (container) {
@@ -98,8 +83,7 @@ export default function MainPage() {
     };
 
     return (
-        <div className="">
-
+        <div>
             <h1 className="mb-7 px-3 text-2xl font-bold">
                 {'Hourly Price updates ⏰'}
             </h1>
@@ -158,10 +142,7 @@ export default function MainPage() {
                 </div>
 
                 <div className="flex-none w-full snap-start">
-                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg relative">
-                        {
-                            subscription._id === '' && <SubscriptionMessage message="Unlock for"/>
-                        }
+                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
                         <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
                             <h2 className="text-xl font-bold">
                                 📌 Your Watchlist
@@ -195,19 +176,19 @@ export default function MainPage() {
                         </div>
                     </div>
                 </div>
-                </div>
-                <div className="flex justify-center">
-                    <span
-                        className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
-                            activeIndex === 0 ? 'bg-white' : 'bg-gray-500'
-                        }`}
-                    ></span>
-                    <span
-                        className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
-                            activeIndex === 1 ? 'bg-white' : 'bg-gray-500'
-                        }`}
-                    ></span>
-                </div>
+            </div>
+            <div className="flex justify-center">
+                <span
+                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
+                        activeIndex === 0 ? 'bg-white' : 'bg-gray-500'
+                    }`}
+                ></span>
+                <span
+                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
+                        activeIndex === 1 ? 'bg-white' : 'bg-gray-500'
+                    }`}
+                ></span>
+            </div>
         </div>
     )
 }

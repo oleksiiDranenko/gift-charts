@@ -2,21 +2,15 @@
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import axios from "axios"
 import Asset from "./Asset"
 import Cash from "./Cash"
-import { TonConnect } from "@tonconnect/sdk";
-import { AssetInterface } from "@/interfaces/UserInterface"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import ReactLoading from "react-loading"
 import Link from "next/link"
-import { setDefaultUser, setUser } from "@/redux/slices/userSlice"
-import CreateAccount from "./CreateAccount"
 import useVibrate from "@/hooks/useVibrate"
-import SubscriptionMessage from "../subscription/SubscriptionMessage"
-import { setDefaultSubscription, setSubscription } from "@/redux/slices/subscriptionSlice"
+import axios from "axios"
 
 interface AssetDisplayInterface {
     name: string,
@@ -28,96 +22,59 @@ interface AssetDisplayInterface {
 }
 
 export default function Account() {
-
     const vibrate = useVibrate()
 
     const giftsList = useAppSelector((state) => state.giftsList)
     const user = useAppSelector((state) => state.user)
-    const subscription = useAppSelector((state) => state.subscription)
     const dispatch = useAppDispatch()
     
-    const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
-    const [walletId, setWalletId] = useState<string | null>(null);
     const [currency, setCurrency] = useState<'ton' | 'usd'>('ton')
     const [loading, setLoading] = useState<boolean>(true)
     
     const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([])
     const [assetsPrice, setAssetsPrice] = useState<number>(0)
 
-    const [ton, setTon] = useState<number>(3.6)
+    const [ton, setTon] = useState<number>(3)
     const [tonPercentage, setTonPercentage] = useState<number>(0)
     const [usdPercentage, setUsdPercentage] = useState<number>(0)
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const tc = new TonConnect();
-            setTonConnect(tc);
+        const fetchGifts = async () => {
+            try {
+                setLoading(true)
+                if (giftsList.length === 0) {
+                    const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`)
+                    dispatch(setGiftsList(giftsRes.data))
+                    setTon(giftsList[(giftsList.length - 1)].priceUsd / giftsList[(giftsList.length - 1)].priceTon)
+                }
+            } catch (error) {
+                console.error("Error fetching gifts:", error)
+            } finally {
+                setLoading(false)
+            }
         }
-    }, [])
+
+        fetchGifts()
+    }, [dispatch, giftsList])
 
     useEffect(() => {
-		if (!tonConnect) return;
-	  
-		(async () => {
-		  try {
-			setLoading(true); 
-	  
-			if (giftsList.length === 0) {
-			  const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-			  dispatch(setGiftsList(giftsRes.data));
-			}
-	  
-			await tonConnect.restoreConnection();
-			const wallet = tonConnect.wallet;
-			console.log("Wallet:", wallet);
-	  
-			if (wallet) {
-			  const walletAddress = wallet.account.address;
-			  setWalletId(walletAddress)
-	  
-			  if (subscription._id === '') {
-				const subscriptionRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/subscriptions/check-subscription/${walletAddress}`);
-				console.log("Subscription Response:", subscriptionRes.data);
-	  
-				if (subscriptionRes.data?._id) {
-				  dispatch(setSubscription(subscriptionRes.data));
-	  
-				  if (user._id === '') {
-					const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${walletAddress}`);
-					console.log("User Response:", userRes.data);
-					if (userRes.data?._id) {
-					  dispatch(setUser(userRes.data));
-					} else {
-					  dispatch(setDefaultUser());
-					}
-				  }
-				} else {
-				  dispatch(setDefaultSubscription());
-				}
-			  }
-			} else {
-			  console.log("No wallet connected, resetting to defaults");
-			  dispatch(setDefaultUser());
-			  dispatch(setDefaultSubscription());
-			}
-		  } catch (error) {
-			console.error("Error fetching data:", error);
-			dispatch(setDefaultSubscription()); 
-		  } finally {
-			setLoading(false); 
-		  }
-		})();
-	  }, [tonConnect, dispatch]);
+        if (giftsList.length > 0) {
+            const latestGift = giftsList[giftsList.length - 1]
+            setTon(latestGift.priceUsd / latestGift.priceTon)
+        }
+        setCashPercentages()
+        updateAssetsArray()
+    }, [user, currency, giftsList])
 
     useEffect(() => {
-        setCashPersentages();
-        updateAssetsArray();
+        setCashPercentages()
+        updateAssetsArray()
     }, [user, currency, giftsList])
 
     const updateAssetsArray = () => {
-        if (user._id !== '' && giftsList.length > 0) {
-            const updatedAssets = user.assets.map((asset: AssetInterface) => {
-                const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId);
+        if (giftsList.length > 0) {
+            const updatedAssets = (user.assets || []).map((asset: { giftId: string, amount: number }) => {
+                const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId)
                 if (gift) {
                     return {
                         name: gift.name,
@@ -126,30 +83,31 @@ export default function Account() {
                         amount: asset.amount,
                         priceTon: gift.priceTon,
                         priceUsd: gift.priceUsd,
-                    };
+                    }
                 }
-                return undefined; 
-
-            }).filter((asset): asset is AssetDisplayInterface => asset !== undefined);
+                return undefined
+            }).filter((asset): asset is AssetDisplayInterface => asset !== undefined)
     
-            setAssetsArray(updatedAssets);
+            setAssetsArray(updatedAssets)
     
             const totalPrice = updatedAssets.reduce((sum, asset) => {
-                return sum + (currency === 'ton' ? asset.priceTon * asset.amount : asset.priceUsd * asset.amount);
-            }, 0);
+                return sum + (currency === 'ton' ? asset.priceTon * asset.amount : asset.priceUsd * asset.amount)
+            }, 0)
             
-            setAssetsPrice(totalPrice);
+            setAssetsPrice(totalPrice)
         }
-    };
+    }
     
-    const setCashPersentages = () => {
+    const setCashPercentages = () => {
         if (user) {
             if (currency === 'ton') {
-                setTonPercentage(Math.round((user.ton / (user.ton + (user.usd / ton))) * 100));
-                setUsdPercentage(Math.round(((user.usd / ton) / (user.ton + (user.usd / ton))) * 100));
+                const totalTon = user.ton + (user.usd / ton)
+                setTonPercentage(totalTon ? Math.round((user.ton / totalTon) * 100) : 0)
+                setUsdPercentage(totalTon ? Math.round(((user.usd / ton) / totalTon) * 100) : 0)
             } else {
-                setTonPercentage(Math.round(((user.ton * ton) / (user.ton * ton + user.usd)) * 100));
-                setUsdPercentage(Math.round((user.usd / (user.ton * ton + user.usd)) * 100));
+                const totalUsd = (user.ton * ton) + user.usd
+                setTonPercentage(totalUsd ? Math.round(((user.ton * ton) / totalUsd) * 100) : 0)
+                setUsdPercentage(totalUsd ? Math.round((user.usd / totalUsd) * 100) : 0)
             }
         }
     }
@@ -160,20 +118,6 @@ export default function Account() {
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 </div>
-                :
-                !walletId
-                ?
-                <div className="w-full flex justify-center mt-5">
-                    <h2 className="text-slate-400">Please connect your wallet</h2>
-                </div>
-                : 
-                subscription._id === '' ?
-                <div className="w-full h-28 flex justify-center mt-5 relative">
-                    <SubscriptionMessage message="Unlock for" />
-                </div>
-                :
-                user._id === '' ?
-                <CreateAccount walletId={walletId}/>
                 :
                 <>
                     <div className="w-full h-28 flex flex-col justify-center items-center">
@@ -237,7 +181,7 @@ export default function Account() {
                     </div>
 
                     <div className="w-full h-auto">
-                        {user?.ton !== 0 || user.usd !== 0 ?
+                        {(user?.ton !== 0 || user.usd !== 0) ?
                             <div className="mb-5">
                                 <div className="w-full flex justify-between items-center text-lg font-bold mb-3 pr-2">
                                     <h2>Cash</h2>

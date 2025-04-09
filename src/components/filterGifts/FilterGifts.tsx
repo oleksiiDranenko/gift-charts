@@ -33,9 +33,6 @@ export default function FilterGifts() {
         }
     };
 
-    useEffect(() => {
-        console.log(filters.chosenGifts)
-    }, [filters])
 
 
     useEffect(() => {

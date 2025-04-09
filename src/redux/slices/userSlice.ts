@@ -3,7 +3,8 @@ import { UserInterface } from '@/interfaces/UserInterface';
 
 const initialState: UserInterface = {
     _id: '',
-    walletId: '',
+    telegramId: '',
+    username: '',
     savedList: [],
     assets: [],
     ton: 0,
