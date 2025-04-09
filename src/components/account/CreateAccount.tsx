@@ -27,7 +27,7 @@ export default function CreateAccount({walletId}: PropsInterface) {
 
             await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {walletId})
 
-            dispatch(setUser({...user, walletId}))
+            
             setLoading(false)
             window.location.reload();
             

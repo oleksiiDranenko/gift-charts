@@ -155,11 +155,11 @@ export default function EditAssets() {
                     usd: editedUser.usd !== undefined && !isNaN(editedUser.usd) ? editedUser.usd : 0
                 };
                 
-                await axios.patch(
-                    `${process.env.NEXT_PUBLIC_API}/users/update-account/${editedUser.walletId}`,
-                    updatedUser,
-                    { headers: { "Content-Type": "application/json" } }
-                );
+                // await axios.patch(
+                //     `${process.env.NEXT_PUBLIC_API}/users/update-account/${editedUser.walletId}`,
+                //     updatedUser,
+                //     { headers: { "Content-Type": "application/json" } }
+                // );
     
                 dispatch(setUser({ ...editedUser, assets: validAssets }));
     

@@ -117,11 +117,11 @@ export default function EditWatchlist() {
                     usd: editedUser.usd
                 };
                 
-                await axios.patch(
-                    `${process.env.NEXT_PUBLIC_API}/users/update-account/${editedUser.walletId}`,
-                    updatedUser,
-                    { headers: { "Content-Type": "application/json" } }
-                );
+                // await axios.patch(
+                //     `${process.env.NEXT_PUBLIC_API}/users/update-account/${editedUser.walletId}`,
+                //     updatedUser,
+                //     { headers: { "Content-Type": "application/json" } }
+                // );
     
                 dispatch(setUser({ ...editedUser, savedList: editedUser.savedList }));
     
