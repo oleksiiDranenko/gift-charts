@@ -11,7 +11,6 @@ import ReactLoading from "react-loading"
 import { setDefaultFilters } from "@/redux/slices/filterListSlice"
 
 export default function Page() {
-    const [isClient, setIsClient] = useState(false)
     const dispatch = useAppDispatch()
     const giftsList = useAppSelector((item) => item.giftsList)
     const [loading, setLoading] = useState<boolean>(true)
@@ -35,12 +34,11 @@ export default function Page() {
     }, [dispatch, giftsList])
 
     useEffect(() => {
-        setIsClient(true)
         dispatch(setDefaultFilters())
     }, [dispatch])
 
     return (
-        <main className="w-full lg:w-1/2 pt-[70px] pb-24 px-3">
+        <main className="w-full lg:w-1/2 pt-[70px] pb-24">
             {loading ?
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
