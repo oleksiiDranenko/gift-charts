@@ -123,10 +123,9 @@ export default function Account() {
             :
             user.username === '_guest'
             ?
-                <div>
-                    <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
-                        Please open this app in Telegram
-                    </div>
+   
+                <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
+                    Please open this app in Telegram
                 </div>
             :
                 <>
