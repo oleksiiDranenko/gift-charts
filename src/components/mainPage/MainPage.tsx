@@ -1,31 +1,28 @@
-'use client'
+'use client';
 
-import GiftInterface from "@/interfaces/GiftInterface"
-import { useAppSelector } from "@/redux/hooks"
-import Link from "next/link"
-import { useEffect, useState, useRef } from "react"
-import GiftItem from "../giftsList/GiftItem"
-import useVibrate from "@/hooks/useVibrate"
-import { useDispatch } from "react-redux"
-import { setFilters } from "@/redux/slices/filterListSlice"
-import axios from "axios"
+import GiftInterface from "@/interfaces/GiftInterface";
+import { useAppSelector } from "@/redux/hooks";
+import Link from "next/link";
+import { useEffect, useState, useRef } from "react";
+import GiftItem from "../giftsList/GiftItem";
+import useVibrate from "@/hooks/useVibrate";
+import { useDispatch } from "react-redux";
+import { setFilters } from "@/redux/slices/filterListSlice";
 
 export default function MainPage() {
-    const vibrate = useVibrate()
+    const vibrate = useVibrate();
 
-    const giftsList = useAppSelector((state) => state.giftsList)
-    const filters = useAppSelector((state) => state.filters)
-    const user = useAppSelector((state) => state.user)
+    const giftsList = useAppSelector((state) => state.giftsList);
+    const filters = useAppSelector((state) => state.filters);
+    const user = useAppSelector((state) => state.user);
 
-    const [list, setList] = useState<GiftInterface[]>([])
-    const [userList, setUserList] = useState<GiftInterface[]>([])
-    const [activeIndex, setActiveIndex] = useState(0)
-    const containerRef = useRef<HTMLDivElement>(null)
+    const [list, setList] = useState<GiftInterface[]>([]);
+    const [userList, setUserList] = useState<GiftInterface[]>([]);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
 
-    const [error, setError] = useState<string>()
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (giftsList.length > 0) {
@@ -47,18 +44,24 @@ export default function MainPage() {
     }, [filters, giftsList]);
 
     useEffect(() => {
-        if (giftsList.length > 0) {
-            let sortedList = [...giftsList];
+        if (giftsList.length > 0 && user.savedList.length > 0) {
 
-            sortedList.sort((a, b) =>
+            let filteredList = giftsList.filter((gift) =>
+                user.savedList.includes(gift._id)
+            );
+
+
+            filteredList.sort((a, b) =>
                 filters.currency === 'ton'
                     ? filters.sort === 'lowFirst' ? a.priceTon - b.priceTon : b.priceTon - a.priceTon
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-            setUserList(sortedList); // Simply use giftsList for userList
+            setUserList(filteredList);
+        } else {
+            setUserList([]); 
         }
-    }, [filters, giftsList]);
+    }, [filters, giftsList, user.savedList]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -80,7 +83,7 @@ export default function MainPage() {
     }, []);
 
     useEffect(() => {
-        if (isMounted) { 
+        if (isMounted) {
             vibrate();
         }
     }, [activeIndex]);
@@ -94,34 +97,10 @@ export default function MainPage() {
                 behavior: 'smooth',
             });
         }
-    }
-
-    const createAccount = async () => {
-        try {
-            const userRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
-                telegramId: user.telegramId,
-                username: user.username
-            })
-
-            setError(userRes.data)
-            
-        } catch (error) {
-            setError(`${error}`)
-        }
-    }
+    };
 
     return (
         <div>
-            <button
-                onClick={createAccount}
-                className="p-3 rounded-lg bg-violet-500"
-            >
-                create account
-            </button>
-
-            <p>
-                {error}
-            </p>
             <h1 className="mb-7 px-3 text-2xl font-bold">
                 {'Hourly Price updates ⏰'}
             </h1>
@@ -155,8 +134,8 @@ export default function MainPage() {
                                 href={'/gifts-list'}
                                 className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                                 onClick={() => {
-                                    dispatch(setFilters({...filters, sortBy: "percentChange"}))
-                                    vibrate()
+                                    dispatch(setFilters({ ...filters, sortBy: "percentChange" }));
+                                    vibrate();
                                 }}
                             >
                                 {'Show all ->'}
@@ -186,14 +165,14 @@ export default function MainPage() {
                                 📌 Your Watchlist
                             </h2>
                             <Link
-                                href={'/gifts-list'}
+                                href={userList.length > 0 ? '/gifts-list' : '/account'}
                                 className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                                 onClick={() => {
-                                    dispatch(setFilters({...filters, chosenGifts: userList}))
-                                    vibrate()
+                                    dispatch(setFilters({ ...filters, chosenGifts: userList }));
+                                    vibrate();
                                 }}
                             >
-                                {'Show all ->'}
+                                {userList.length > 0 ? 'Show all ->' : 'Add Items to Your List ->'}
                             </Link>
                         </div>
                         <div>
@@ -207,9 +186,15 @@ export default function MainPage() {
                                         key={item._id}
                                     />
                                 ))
-                                : <div className="px-3 pt-3 pb-5 text-slate-400">
-                                    Your Watchlist is Empty
-                                </div>
+                                : 
+                                <>
+                                    <div className="px-3 pt-3 pb-1 font-bold text-slate-400">
+                                        Your Watchlist is Empty
+                                    </div>
+                                    <div className="px-3 pt-3 pb-5 text-sm text-slate-400">
+                                        {'Account -> Settings -> Edit Watchlist'}
+                                    </div>
+                                </>
                             }
                         </div>
                     </div>
@@ -228,5 +213,5 @@ export default function MainPage() {
                 ></span>
             </div>
         </div>
-    )
+    );
 }

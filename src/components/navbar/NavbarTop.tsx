@@ -33,7 +33,7 @@ export default function NavbarTop({ isFullscreen }: NavbarTopProps) {
     	            </span>
     	        </div>
     	        <div 
-					className='flex flex-row items-center px-3 h-10 bg-slate-800 rounded-lg'
+					className='flex flex-row items-center px-3 h-10 font-bold bg-slate-800 rounded-lg'
 				>
     	            @{user.username}
     	        </div>
