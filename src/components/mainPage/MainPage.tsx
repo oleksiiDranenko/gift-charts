@@ -98,7 +98,7 @@ export default function MainPage() {
 
     const createAccount = async () => {
         try {
-            const userRes = await axios.patch(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
+            const userRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
                 telegramId: user.telegramId,
                 username: user.username
             })
