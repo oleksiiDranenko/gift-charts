@@ -11,6 +11,7 @@ import ReactLoading from "react-loading"
 import Link from "next/link"
 import useVibrate from "@/hooks/useVibrate"
 import axios from "axios"
+import SubscriptionMessage from "../subscription/SubscriptionMessage"
 
 interface AssetDisplayInterface {
     name: string,
@@ -113,9 +114,14 @@ export default function Account() {
     }
 
     return (
-        <div className="w-full flex flex-col justify-center px-3">
+        <div className="w-full flex flex-col justify-center px-3 relative">
             {
-            user._id === ''
+            loading ? 
+                <div className="w-full flex justify-center">
+                    <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
+                </div>
+            :
+            user.username === '_guest'
             ?
                 <div>
                     <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
@@ -123,12 +129,10 @@ export default function Account() {
                     </div>
                 </div>
             :
-            loading ? 
-                <div className="w-full flex justify-center">
-                    <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
-                </div>
-                :
                 <>
+                {
+                    user.telegramId === '' ? <SubscriptionMessage/> : null
+                }
                     <div className="w-full h-28 flex flex-col justify-center items-center">
                         <div className="flex flex-row items-center">
                             {currency === 'ton' ?

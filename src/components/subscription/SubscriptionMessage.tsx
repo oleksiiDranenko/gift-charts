@@ -1,112 +1,65 @@
-'use client'
+'use client';
 
-import SubscriptionInterface from "@/interfaces/SubscriptionInterface"
-import { TonConnect } from "@tonconnect/ui-react"
-import axios from "axios"
-import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import axios from "axios";
+import { useState } from "react";
+import { setUser } from "@/redux/slices/userSlice";
 
-interface PropsInterface {
-    message: string,
-}
+export default function SubscriptionMessage() {
+    const user = useAppSelector((state) => state.user);
+    const dispatch = useAppDispatch();
 
-export default function SubscriptionMessage({ message }: PropsInterface) {
-    const [subscription, setSubscription] = useState<SubscriptionInterface | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null)
-    const [tonConnect, setTonConnect] = useState<TonConnect | null>(null)
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const tc = new TonConnect();
-            setTonConnect(tc);
+    const handleCreateAccount = async () => {
+        if (!user.telegramId) {
+            setError("No Telegram user data available");
+            return;
         }
-    }, [])
-
-    const handleSubscription = async () => {
-        if (!tonConnect) return;
 
         try {
-            setLoading(true); // Start loading state
-            setError(null);   // Clear any previous errors
+            setLoading(true);
+            setError(null);
 
-            // Restore wallet connection and get wallet address
-            await tonConnect.restoreConnection();
-            const wallet = tonConnect.wallet;
+            const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
+                telegramId: user.telegramId,
+                username: user.username,
+            });
 
-            if (!wallet) {
-                setError("Please connect your wallet first");
-                return;
-            }
+            console.log(createRes.data.message);
 
-            const walletAddress = wallet.account.address;
-            console.log("Wallet Address:", walletAddress);
-
-            // Check if user already has a subscription
-            let subscriptionRes;
-            try {
-                subscriptionRes = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API}/subscriptions/check-subscription/${walletAddress}`
-                );
-                console.log("Subscription Check Response:", subscriptionRes.data);
-                setSubscription(subscriptionRes.data);
-            } catch (err: any) {
-                // Handle 404 as "not subscribed" - proceed to create subscription
-                if (err.response && err.response.status === 404) {
-                    console.log("No subscription found for wallet:", walletAddress);
-                    setSubscription(null);
-                } else {
-                    throw err; // Rethrow other errors
-                }
-            }
-
-            // If subscription exists, stop here
-            if (subscriptionRes && subscriptionRes.data && subscriptionRes.data._id) {
-                console.log("User already subscribed:", subscriptionRes.data);
-                setError("You already have an active subscription!");
-                return;
-            }
-
-            // Create free subscription in the database
-            const subscribeRes = await axios.post(
-                `${process.env.NEXT_PUBLIC_API}/subscriptions/subscribe`,
-                { walletId: walletAddress }
-            );
-
-            if (subscribeRes.data._id) {
-                console.log("Subscription successful:", subscribeRes.data);
-                setSubscription(subscribeRes.data); // Update state with new subscription
-                window.location.reload(); // Refresh to reflect subscription status
+            // Fetch the newly created user to update Redux
+            const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
+            if (userRes.data._id) {
+                dispatch(setUser(userRes.data));
+                window.location.reload(); // Refresh to reflect updated user state
             } else {
-                setError("Subscription creation failed on backend");
+                setError("Account created, but failed to fetch user data");
             }
         } catch (error: any) {
-            console.error("Error in handleSubscription:", error);
-            setError("Failed to process subscription: " + (error.message || "Unknown error"));
+            console.error("Error creating account:", error);
+            setError(error.response?.data?.message || "Failed to create account");
         } finally {
-            setLoading(false); // End loading state
+            setLoading(false);
         }
     };
 
     return (
         <div className="w-full h-full absolute inset-0 z-30 flex items-center justify-center p-3 text-sm rounded-lg backdrop-blur-md">
-            {error ?
+            {error ? (
                 <span className="ml-3 text-red-500">{error}</span>
-            :
+            ) : (
                 <>
-                    <span className="font-bold">Free</span>
-                    <div className="font-bold flex items-center ml-2">
-                        <span>Subscription</span>
-                    </div>
                     <button
                         className="h-10 px-3 ml-4 bg-[#0098EA] rounded-lg disabled:opacity-50"
-                        onClick={handleSubscription}
+                        onClick={handleCreateAccount}
                         disabled={loading}
                     >
-                        {loading ? "Processing..." : "🚀 Subscribe"}
+                        {loading ? "Processing..." : "🚀 Start Tracking"}
                     </button>
                 </>
-            }
+            )}
         </div>
-    )
+    );
 }
