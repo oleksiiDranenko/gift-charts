@@ -5,7 +5,7 @@ import Link from "next/link"
 export default function Page() {
 
     return (
-        <div className="w-full lg:w-1/2 pt-[70px] pb-24 px-3">
+        <div className="w-full lg:w-1/2 pt-[70px] pb-24">
             <Link
                 href={'/account'}
                 className="w-full h-10 mb-5 flex items-center justify-center bg-slate-800 rounded-lg"

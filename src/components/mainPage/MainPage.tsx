@@ -165,14 +165,14 @@ export default function MainPage() {
                                 📌 Your Watchlist
                             </h2>
                             <Link
-                                href={userList.length > 0 ? '/gifts-list' : '/account'}
+                                href={userList.length > 0 ? '/gifts-list' : '/account/settings/edit-walchlist'}
                                 className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                                 onClick={() => {
                                     dispatch(setFilters({ ...filters, chosenGifts: userList }));
                                     vibrate();
                                 }}
                             >
-                                {userList.length > 0 ? 'Show all ->' : 'Add Items to Your List ->'}
+                                {userList.length > 0 ? 'Show all ->' : 'Add Items ->'}
                             </Link>
                         </div>
                         <div>
