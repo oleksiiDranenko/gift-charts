@@ -15,6 +15,7 @@ export default function MainPage() {
 
     const giftsList = useAppSelector((state) => state.giftsList)
     const filters = useAppSelector((state) => state.filters)
+    const user = useAppSelector((state) => state.user)
 
     const [list, setList] = useState<GiftInterface[]>([])
     const [userList, setUserList] = useState<GiftInterface[]>([])
@@ -93,9 +94,25 @@ export default function MainPage() {
         }
     }
 
+    const createAccount = async () => {
+        try {
+            const userRes = await axios.patch(`${process.env.NEXT_PUBLIC_API}/users/create-acount`, {
+                telegramId: user.telegramId,
+                username: user.username
+            })
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div>
+            <button
+                onClick={createAccount}
+            >
+                create account
+            </button>
             <h1 className="mb-7 px-3 text-2xl font-bold">
                 {'Hourly Price updates ⏰'}
             </h1>
