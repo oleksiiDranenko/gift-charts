@@ -23,6 +23,8 @@ export default function MainPage() {
     const containerRef = useRef<HTMLDivElement>(null)
     const [isMounted, setIsMounted] = useState(false);
 
+    const [error, setError] = useState<string>()
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -100,9 +102,11 @@ export default function MainPage() {
                 telegramId: user.telegramId,
                 username: user.username
             })
+
+            setError(userRes.data)
             
         } catch (error) {
-            console.log(error)
+            setError(`${error}`)
         }
     }
 
@@ -110,9 +114,14 @@ export default function MainPage() {
         <div>
             <button
                 onClick={createAccount}
+                className="p-3 rounded-lg bg-violet-500"
             >
                 create account
             </button>
+
+            <p>
+                {error}
+            </p>
             <h1 className="mb-7 px-3 text-2xl font-bold">
                 {'Hourly Price updates ⏰'}
             </h1>
