@@ -40,14 +40,17 @@ export default function Page() {
     }, [dispatch])
 
     return (
-        <main className="w-full lg:w-1/2 pt-[70px] pb-24">
-            {loading ?
+        <main className="w-full lg:w-1/2 pt-[70px] pb-24 px-3">
+            {/* {loading ?
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 </div>
                 :
                 <MainPage/>
-            }
+            } */}
+            <div className="w-full p-3 bg-slate-800 rounded-lg">
+                App is Currently Unavaliable. Working on new functionality...
+            </div>
         </main>
     )
 }

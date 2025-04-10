@@ -8,6 +8,7 @@ import GiftItem from "../giftsList/GiftItem"
 import useVibrate from "@/hooks/useVibrate"
 import { useDispatch } from "react-redux"
 import { setFilters } from "@/redux/slices/filterListSlice"
+import axios from "axios"
 
 export default function MainPage() {
     const vibrate = useVibrate()
@@ -72,14 +73,14 @@ export default function MainPage() {
     }, []);
 
     useEffect(() => {
-        setIsMounted(true); // Set flag after initial mount
+        setIsMounted(true);
     }, []);
 
     useEffect(() => {
-        if (isMounted) { // Only vibrate after mount
+        if (isMounted) { 
             vibrate();
         }
-    }, [activeIndex, isMounted]);
+    }, [activeIndex]);
 
     const handleSwipe = (index: number) => {
         const container = containerRef.current;
@@ -90,7 +91,8 @@ export default function MainPage() {
                 behavior: 'smooth',
             });
         }
-    };
+    }
+
 
     return (
         <div>

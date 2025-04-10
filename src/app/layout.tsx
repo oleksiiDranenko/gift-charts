@@ -8,17 +8,19 @@ import NavbarBottom from '@/components/navbar/NavbarBottom';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/slices/userSlice';
+import axios from 'axios';
 
 const inter = Inter({ subsets: ['latin'] });
 
 // Inner component to handle Telegram and Redux logic
 function AppInitializer({ children }: { children: React.ReactNode }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const dispatch = useDispatch(); // Now safe within ReduxProvider
+    const dispatch = useDispatch();
 
     useEffect(() => {
+        
         if (typeof window !== 'undefined') {
-            import('@twa-dev/sdk').then((WebApp) => {
+            import('@twa-dev/sdk').then(async (WebApp) => {
                 const telegramWebApp = WebApp.default;
 
                 if (telegramWebApp) {
@@ -61,23 +63,38 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
                     updateViewportHeight(); // Initial call
 
                     // Get Telegram user data and update Redux
-                    const user = telegramWebApp.initDataUnsafe?.user;
-                    if (user) {
-                        dispatch(setUser({
-                            _id: '', // Default, update later if fetched from backend
-                            telegramId: user.id.toString(), // Telegram user ID
-                            username: user.username || user.first_name || 'User', // Username or fallback
-                            assets: [], // Default empty
-                            savedList: [], // Default empty
-                            ton: 0, // Default, update later if needed
-                            usd: 0, // Default, update later if needed
-                        }));
-                        console.log('Telegram User stored in Redux:', user);
+                    const telegramUser = telegramWebApp.initDataUnsafe?.user;
+                   
+                    if (telegramUser) {
+                        const initialUser = {
+                            _id: '',
+                            telegramId: telegramUser.id.toString(),
+                            username: telegramUser.username || telegramUser.first_name || 'User',
+                            assets: [],
+                            savedList: [],
+                            ton: 0,
+                            usd: 0,
+                        };
+                        dispatch(setUser(initialUser));
+                        console.log('Initial Telegram User stored in Redux:', telegramUser);
+
+                        // Fetch full user data from backend
+                        try {
+                            const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${telegramUser.id}`);
+                            if (userRes.data?._id) {
+                                dispatch(setUser(userRes.data));
+                                console.log('Fetched User stored in Redux:', userRes.data);
+                            } else {
+                                console.log('No user found in backend, keeping initial state');
+                            }
+                        } catch (err) {
+                            console.error('Error fetching user from backend:', err);
+                        }
                     } else {
                         dispatch(setUser({
                             _id: '',
                             telegramId: '',
-                            username: 'Guest',
+                            username: '_guest',
                             assets: [],
                             savedList: [],
                             ton: 0,
@@ -90,7 +107,7 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
                 dispatch(setUser({
                     _id: '',
                     telegramId: '',
-                    username: 'Guest',
+                    username: '_guest',
                     assets: [],
                     savedList: [],
                     ton: 0,
@@ -99,7 +116,7 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
                 console.error('Error loading WebApp SDK:', err);
             });
         }
-    }, [dispatch]); // Only dispatch in dependencies now
+    }, [dispatch]);
 
     return (
         <div
