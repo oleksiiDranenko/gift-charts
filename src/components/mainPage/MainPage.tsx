@@ -3,6 +3,7 @@
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import GiftItem from "../giftsList/GiftItem";
 import useVibrate from "@/hooks/useVibrate";
@@ -211,6 +212,29 @@ export default function MainPage() {
                         activeIndex === 1 ? 'bg-white' : 'bg-gray-500'
                     }`}
                 ></span>
+            </div>
+            
+            <div className="max-w-full flex justify-between items-center p-3 mt-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                <span className="text-xl font-bold">
+                    📣 Latest News
+                </span>
+
+                <a 
+                    className="flex flex-row items-center justify-center p-3 gap-x-2 rounded-lg bg-slate-800"
+                    href="https://t.me/gift_charts"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                >
+                    <Image
+                        src={'/images/telegram.webp'}
+                        alt="telegram logo"
+                        height={25}
+                        width={25}
+                    />
+                    <span className="font-bold">
+                        Gift Charts
+                    </span>
+                </a>
             </div>
         </div>
     );
