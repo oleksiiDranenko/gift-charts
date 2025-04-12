@@ -58,7 +58,7 @@ export default function Page({ params }: any) {
                                 {'<- Back'}
                             </button>
                             <div className="w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 rounded-lg">
-                                {`⏱ ${weekList[weekList.length - 1].time} 🇬🇧 London`}
+                                {weekList.length > 0 ? `⏱ ${weekList[weekList.length - 1].time} 🇬🇧 London` : 'No time data'}
                             </div>
                         </div>
                         <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
