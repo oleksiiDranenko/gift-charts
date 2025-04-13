@@ -121,7 +121,7 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
     return (
         <div
             className={`h-screen w-screen pb-5 overflow-scroll bg-fixed ${
-                isFullscreen ? 'pt-[20px]' : null
+                isFullscreen ? 'pt-[40px]' : null
             } flex flex-col`}
         >
             {/* <NavbarTop isFullscreen={isFullscreen} /> */}
