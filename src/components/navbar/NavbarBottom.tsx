@@ -23,10 +23,10 @@ export default function NavbarBottom() {
     }, [pathname]);
 
     return (
-        <div className="fixed bottom-0 mb-0 w-screen z-50 flex justify-center gap-3 pt-2 pb-10 px-3 backdrop-blur-md items-center">
-            <div className="w-full lg:w-1/2 flex flex-row justify-between p-3 gap-x-3  rounded-2xl">
+        <div className="fixed bottom-0 mb-0 w-screen z-50 flex justify-center gap-3 pt-2 pb-10 px-3 items-center">
+            <div className="w-full lg:w-1/2 flex flex-row justify-between p-3 backdrop-blur-md rounded-2xl">
                 <Link
-                    className={`w-1/3 h-10 flex justify-center items-center box-border ${selectedPage === 'home' ? 'bg-[#0098EA] rounded-lg' : ''}`}
+                    className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'home' ? 'bg-[#0098EA] rounded-lg' : ''}`}
                     href="/"
                     onClick={() => {
                         setSelectedPage('home')
@@ -36,7 +36,7 @@ export default function NavbarBottom() {
                     Home
                 </Link>
                 <Link
-                    className={`w-1/3 h-10 flex justify-center items-center box-border ${selectedPage === 'tools' ? 'bg-[#0098EA] rounded-lg' : ''}`}
+                    className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'tools' ? 'bg-[#0098EA] rounded-lg' : ''}`}
                     href="/tools"
                     onClick={() => {
                         setSelectedPage('tools')
@@ -46,7 +46,7 @@ export default function NavbarBottom() {
                     Tools
                 </Link>
                 <Link
-                    className={`w-1/3 h-10 flex justify-center items-center box-border ${selectedPage === 'account' ? 'bg-[#0098EA] rounded-lg' : ''}`}
+                    className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'account' ? 'bg-[#0098EA] rounded-lg' : ''}`}
                     href="/account"
                     onClick={() => {
                         setSelectedPage('account')
