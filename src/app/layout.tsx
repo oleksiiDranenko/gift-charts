@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/slices/userSlice';
 import axios from 'axios';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -140,6 +141,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ReduxProvider>
                     <AppInitializer>
                         {children}
+                        <Analytics />
                     </AppInitializer>
                 </ReduxProvider>
             </body>
