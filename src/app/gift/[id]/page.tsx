@@ -49,7 +49,7 @@ export default function Page({ params }: any) {
     };
 
     return (
-        <div className="w-screen pt-16 pb-24 flex justify-center">
+        <div className="w-screen pt-[70px] pb-24 flex justify-center">
             <div className="w-full lg:w-1/2">
                 {!loading && gift ?
                     <div className="flex flex-col">

@@ -122,10 +122,10 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
     return (
         <div
             className={`h-screen w-screen pb-5 overflow-scroll bg-fixed ${
-                isFullscreen ? 'pt-[105px]' : null
+                isFullscreen ? 'pt-[40px]' : null
             } flex flex-col`}
         >
-            <NavbarTop isFullscreen={isFullscreen} />
+            {/* <NavbarTop isFullscreen={isFullscreen} /> */}
             <div className="w-screen flex justify-center flex-grow">
                 {children}
             </div>
