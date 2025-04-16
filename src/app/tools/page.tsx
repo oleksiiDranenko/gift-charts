@@ -7,7 +7,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import ReactLoading from "react-loading"
 
-export default function page() {
+export default function Page() {
     const dispatch = useAppDispatch()
     const giftsList = useAppSelector((item) => item.giftsList)
     const [loading, setLoading] = useState<boolean>(true)
