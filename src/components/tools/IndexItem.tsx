@@ -80,7 +80,6 @@ export default function IndexItem({index}: PropsInterface) {
     return (
         <Link 
             className="w-full h-20 flex flex-row items-center justify-between" 
-            key={index._id}
             href={`/tools/index/${index._id}`}
             onClick={() => vibrate()}
         >

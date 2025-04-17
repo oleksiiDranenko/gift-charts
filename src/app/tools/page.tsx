@@ -55,6 +55,7 @@ export default function Page() {
                             if(index.shortName !== 'TMC') {
                                 return (
                                     <IndexItem 
+                                        key={index._id}
                                         index={index} 
                                     />
                                 )
