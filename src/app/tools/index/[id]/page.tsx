@@ -9,7 +9,7 @@ import ReactLoading from 'react-loading'
 import { useRouter } from 'next/navigation'
 
 
-export default function page({ params }: any) {
+export default function Page({ params }: any) {
 
     const [index, setIndex] = useState<IndexInterface>()
     const [data, setData] = useState<IndexDataInterface[]>([])
