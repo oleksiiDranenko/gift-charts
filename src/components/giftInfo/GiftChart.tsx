@@ -24,7 +24,7 @@ ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale)
 interface PropsInterface {
     gift: GiftInterface | null,
     weekData: GiftWeekDataInterface[],
-    lifeData: GiftLifeDataInterface[]
+    lifeData: GiftLifeDataInterface[],
 }
 
 export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
@@ -75,12 +75,13 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
           chartContainer.removeEventListener("touchend", preventScroll);
           document.removeEventListener("click", handleClickOutside);
         };
-      }, []);
+    }, []);
+
 
     useEffect(() => {
         if (list.length === 0) return
 
-        const prices = list.map(item => selectedPrice === 'ton' ? item.priceTon : item.priceUsd);
+        const prices = list.map((item) => selectedPrice === 'ton' ? item.priceTon : item.priceUsd);
 
         if (selectedPrice === 'ton') {
             const firstData = list[0].priceTon;
@@ -231,17 +232,17 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
             },
             ticks: { color: "rgba(255, 255, 255, 0.6)", padding: 10 },
             position: "right",
-            suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
-            suggestedMin: Math.min(...data.datasets[0].data) * 0.95,
+            suggestedMax: Math.max(...data.datasets[0].data) * 1.01,
+            suggestedMin: Math.min(...data.datasets[0].data) * 0.99,
         },
     }
   };
   
 
-  return (
+    return (
     <div className="h-auto w-full pl-3 pr-3">
 
-        <div className="w-full h-16 mt-3 flex flex-row justify-between items-center">
+        <div className="w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center">
             <div className="h-full flex items-center">
                 <Image 
                     alt="gift"
@@ -308,8 +309,8 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 </button>
             </div>
             
-            <div className="w-1/3 h-10 flex items-center justify-center">
-                <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <div className="w-1/2 h-10 flex items-center justify-center">
+                <span className={` text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {
                         (percentChange > 0 ? '+' : '') + percentChange + '%'
                     }
@@ -343,9 +344,9 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
 
 
         <div className="mb-1 mt-5 flex flex-col">
-            <div className="w-full flex flex-row justify-between">
+            <div className="w-full flex flex-row justify-between gap-x-3">
                 <button 
-                    className={`w-1/5 text-sm  h-10  ${listType == 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                    className={`w-full text-sm  h-10  ${listType == 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
                     onClick={() => {
                         lifeData.length > 0 ? setListType('all') : null
                         vibrate()
@@ -354,7 +355,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                     All
                 </button>
                 <button 
-                    className={`w-1/5 text-sm  h-10 ${listType == '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                    className={`w-full text-sm  h-10 ${listType == '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
                     onClick={() => {
                         lifeData.length > 0 ? setListType('1m') : null
                         vibrate()
@@ -363,7 +364,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                     1m
                 </button>
                 <button 
-                    className={`w-1/5 text-sm h-10  ${listType == '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                    className={`w-full text-sm h-10  ${listType == '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
                     onClick={() => {
                         setListType('1w')
                         vibrate()
@@ -372,7 +373,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                     1w
                 </button>
                 <button 
-                    className={`w-1/5 text-sm  h-10  ${listType == '24h' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                    className={`w-full text-sm  h-10  ${listType == '24h' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
                     onClick={() => {
                         setListType('24h')
                         vibrate(0)

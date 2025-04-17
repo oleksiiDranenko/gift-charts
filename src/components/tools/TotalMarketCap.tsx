@@ -62,7 +62,7 @@ export default function TotalMarketCap() {
                         {formatNumber(marketCap)}
                     </span>
                 </div>
-                <span className="text-sm font-bold text-green-500">
+                <span className={`text-sm font-bold ${marketCap - previousMarketCap >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {marketCap - previousMarketCap >= 0 ? '+' : null}
                     {countPercentChange(previousMarketCap, marketCap)}%
                 </span>

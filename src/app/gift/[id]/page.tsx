@@ -38,7 +38,7 @@ export default function Page({ params }: any) {
                 setLoading(false);
             }
         })();
-    }, [params.id]); // Dependency on params.id to refetch if it changes
+    }, [params.id]);
 
     const goBack = () => {
         if (window.history.length > 1) {
