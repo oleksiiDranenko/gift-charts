@@ -321,8 +321,8 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 }
             },
             position: "right",
-            suggestedMax: Math.max(...data.datasets[0].data) * 1.01,
-            suggestedMin: Math.min(...data.datasets[0].data) * 0.99,
+            suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
+            suggestedMin: Math.min(...data.datasets[0].data) * 0.9,
         },
     }
   };

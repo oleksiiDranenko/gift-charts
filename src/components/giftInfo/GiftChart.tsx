@@ -232,8 +232,8 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
             },
             ticks: { color: "rgba(255, 255, 255, 0.6)", padding: 10 },
             position: "right",
-            suggestedMax: Math.max(...data.datasets[0].data) * 1.01,
-            suggestedMin: Math.min(...data.datasets[0].data) * 0.99,
+            suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
+            suggestedMin: Math.min(...data.datasets[0].data) * 0.9,
         },
     }
   };
