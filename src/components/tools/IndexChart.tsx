@@ -5,7 +5,6 @@ import { IndexDataInterface } from "@/interfaces/IndexDataInterface"
 import { IndexInterface } from "@/interfaces/IndexInterface"
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -15,34 +14,32 @@ import {
   Tooltip,
   CategoryScale,
   ChartOptions,
+  Filler, // Add Filler for area fill
 } from "chart.js";
 import { useAppSelector } from "@/redux/hooks"
 
-ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale);
+ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Filler);
 
 interface PropsInterface {
     index: IndexInterface,
     indexData: IndexDataInterface[]
 }
 
-
 export default function IndexChart({ index, indexData }: PropsInterface) {
-
     const vibrate = useVibrate()
-
     const giftsList = useAppSelector((state) => state.giftsList)
-
     const chartContainerRef = useRef<HTMLDivElement>(null);
+    const chartRef = useRef<ChartJS<"line">>(null); // Add ref for chart instance
     
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton')
     const [percentChange, setPercentChange] = useState<number>(0)
     const [list, setList] = useState<IndexDataInterface[]>(indexData)
     const [listType, setListType] = useState<'1m' | '3m' | 'all'>('1m')
-
     const [low, setLow] = useState<number>()
     const [high, setHigh] = useState<number>()
+    const [gradient, setGradient] = useState<CanvasGradient | null>(null); // State for gradient
 
-    // prevent scroll when interacting with chart
+    // Prevent scroll when interacting with chart
     useEffect(() => {
         const chartContainer = chartContainerRef.current;
         if (!chartContainer) return;
@@ -56,15 +53,15 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         chartContainer.addEventListener("touchend", preventScroll, { passive: false });
 
         const handleClickOutside = (e: MouseEvent) => {
-          const chartCanvas = chartContainer.querySelector("canvas");
-          if (chartCanvas && !chartCanvas.contains(e.target as Node)) {
+            const chartCanvas = chartContainer.querySelector("canvas");
+            if (chartCanvas && !chartCanvas.contains(e.target as Node)) {
                 const chartInstance = ChartJS.getChart(chartCanvas);
                 if (chartInstance) {
                     chartInstance.setActiveElements([]);
                     chartInstance.tooltip?.setActiveElements([], { x: 0, y: 0 });
                     chartInstance.update();
                 }
-          }
+            }
         };
   
         document.addEventListener("click", handleClickOutside);
@@ -77,23 +74,37 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         };
     }, [])
 
+    // Create gradient when percentChange changes
     useEffect(() => {
+        const chart = chartRef.current;
+        if (!chart) return;
+
+        const ctx = chart.ctx;
+        const chartArea = chart.chartArea;
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
         
+        const topColor = percentChange >= 0 ? 'rgba(34, 197, 94, 1)' : 'rgba(239, 68, 68, 1)';
+        const bottomColor = percentChange >= 0 ? 'rgba(34, 197, 94, 0)' : 'rgba(239, 68, 68, 0)';
+        
+        gradient.addColorStop(0, topColor); // Top: Match line color
+        gradient.addColorStop(1, bottomColor); // Bottom: Transparent
+
+        setGradient(gradient);
+    }, [percentChange]);
+
+    useEffect(() => {
         if (index.shortName === 'TMI') {
             let totalSupply = 0;
-        
             for (let gift of giftsList) {
                 totalSupply += gift.supply;
             }
         
             let currentTon = 0;
             let currentUsd = 0;
-        
             for (let gift of giftsList) {
                 const supply = gift.supply || 0;
                 const priceTon = gift.priceTon || 0;
                 const priceUsd = gift.priceUsd || 0;
-        
                 currentTon += (priceTon * supply * 100) / totalSupply;
                 currentUsd += (priceUsd * supply * 100) / totalSupply;
             }
@@ -108,13 +119,10 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 priceTon: currentTon,
                 priceUsd: currentUsd
             };
-            
             setList(prev => [...prev, newData]);
         } 
-        
         else if (index.shortName === 'R10') {
             let totalSupply = 0;
-        
             for (let gift of giftsList) {
                 if (gift.supply <= 10000) {
                     totalSupply += gift.supply;
@@ -123,13 +131,11 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         
             let currentTon = 0;
             let currentUsd = 0;
-        
             for (let gift of giftsList) {
                 if (gift.supply <= 10000) {
                     const supply = gift.supply || 0;
                     const priceTon = gift.priceTon || 0;
                     const priceUsd = gift.priceUsd || 0;
-        
                     currentTon += (priceTon * supply * 10) / totalSupply;
                     currentUsd += (priceUsd * supply * 10) / totalSupply;
                 }
@@ -145,18 +151,15 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 priceTon: currentTon,
                 priceUsd: currentUsd
             };
-            
             setList(prev => [...prev, newData]);
         }    
         else if (index.shortName === 'TMC') {
             let currentTon = 0;
             let currentUsd = 0;
-
             for (let gift of giftsList) {
                 const supply = gift.supply || 0;
                 const priceTon = gift.priceTon || 0;
                 const priceUsd = gift.priceUsd || 0;
-
                 currentTon += priceTon * supply
                 currentUsd += priceUsd * supply
             }
@@ -168,12 +171,9 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 priceTon: currentTon,
                 priceUsd: currentUsd
             };
-            
             setList(prev => [...prev, newData]);
         }
-        
-
-    }, [])
+    }, [giftsList, index])
 
     useEffect(() => {
         if (list.length === 0) return
@@ -197,8 +197,6 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         }
     }, [selectedPrice, list])
 
-
-
     const formatNumber = (number: number) => {
         if (number >= 1000 && number < 1000000 ) {
             const shortNumber = (number / 1000).toFixed(1);
@@ -215,15 +213,13 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         return formattedNumber
     }
 
-
     const data = {
         labels: list.map((item) => {
             return item.date.slice(0,5)
         }),
-
         datasets: [
             {
-                label: "Gift Price",
+                label: "Index Price",
                 data: list.map((item) => {
                     return selectedPrice === 'ton' ? item.priceTon : item.priceUsd
                 }),                
@@ -233,12 +229,13 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 pointRadius: 0,
                 pointHoverRadius: 6,
                 fill: true,
+                backgroundColor: gradient || (percentChange >= 0 
+                    ? "rgba(34, 197, 94, 0.2)" 
+                    : "rgba(239, 68, 68, 0.2)"), // Use gradient or fallback
                 pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
             },
-          ],
-
+        ],
     };
-
 
     const options: ChartOptions<"line"> = {
         responsive: true,
@@ -252,7 +249,6 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 callbacks: {
                     title: function (tooltipItems) {
                         const item = list[tooltipItems[0].dataIndex]
-                        
                         return item.date;
                     },
                     label: function (tooltipItem) {
@@ -260,186 +256,152 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                     },
                 },
                 external: function (context) {
-                
                     const { chart, tooltip } = context;
                     const ctx = chart.ctx;
-
                     if (!tooltip || !tooltip.opacity) {
-                      return;
+                        return;
                     }
-
                     const tooltipX = tooltip.caretX;
                     const tooltipY = tooltip.caretY;
-
                     ctx.save();
                     ctx.beginPath();
                     ctx.setLineDash([5, 5]);
                     ctx.lineWidth = 1;
                     ctx.strokeStyle = "rgba(255, 255, 255, 0.5)"; 
-
                     ctx.moveTo(tooltipX, chart.chartArea.top);
                     ctx.lineTo(tooltipX, chart.chartArea.bottom);
-
                     ctx.moveTo(chart.chartArea.left, tooltipY);
                     ctx.lineTo(chart.chartArea.right, tooltipY);
-
                     ctx.stroke();
                     ctx.restore();
-            },
-          },
-    },
-
-    interaction: {
-        mode: "index",
-        intersect: false,
-    },
-
-    scales: {
-        x: {
-            grid: { color: "rgba(255, 255, 255, 0.1)" },
-            ticks: {
-                color: "rgba(255, 255, 255, 0.6)",
-                padding: 0,
-                autoSkip: true,
-                maxTicksLimit: 3,
-                maxRotation: 0,
-                minRotation: 0,
+                },
             },
         },
-        
-        y: {
-            grid: {
-                color: "rgba(255, 255, 255, 0.1)",
-                drawTicks: true, 
-                tickLength: 10, 
-            },
-            ticks: {
-                color: "rgba(255, 255, 255, 0.6)",
-                padding: 10,
-                callback: function (value) {
-                  return formatNumber(Number(value));
-                }
-            },
-            position: "right",
-            suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
-            suggestedMin: Math.min(...data.datasets[0].data) * 0.9,
+        interaction: {
+            mode: "index",
+            intersect: false,
         },
-    }
-  };
-
-
-
+        scales: {
+            x: {
+                grid: { color: "rgba(255, 255, 255, 0.05)" },
+                ticks: {
+                    color: "rgba(255, 255, 255, 0.6)",
+                    padding: 0,
+                    autoSkip: true,
+                    maxTicksLimit: 3,
+                    maxRotation: 0,
+                    minRotation: 0,
+                },
+            },
+            y: {
+                grid: {
+                    color: "rgba(255, 255, 255, 0.05)",
+                    drawTicks: true, 
+                    tickLength: 10, 
+                },
+                ticks: {
+                    color: "rgba(255, 255, 255, 0.6)",
+                    padding: 10,
+                    callback: function (value) {
+                        return formatNumber(Number(value));
+                    }
+                },
+                position: "right",
+                suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
+                suggestedMin: Math.min(...data.datasets[0].data) * 0.9,
+            },
+        }
+    };
 
     return (
         <div className="h-auto w-full pl-3 pr-3">
-        
-                <div className="w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center">
-                    <div className="h-full flex items-center">
-                        <h1 className="flex flex-col">
-                            <span className="text-xl font-bold">
-                                {'📊 ' + index.shortName}
-                            </span>
-                            <span className="text-slate-500 text-sm flex justify-start">
-                                {index.name}
-                            </span>
-                        </h1>
-                    </div>
-                    <div className="w-1/2 h-14 flex flex-row items-center justify-center bg-slate-800 bg-opacity-50 rounded-lg">
+            <div className="w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center">
+                <div className="h-full flex items-center">
+                    <h1 className="flex flex-col">
+                        <span className="text-xl font-bold">
+                            {'📊 ' + index.shortName}
+                        </span>
+                        <span className="text-slate-500 text-sm flex justify-start">
+                            {index.name}
+                        </span>
+                    </h1>
+                </div>
+                <div className="w-1/2 h-14 flex flex-row items-center justify-center bg-slate-800 bg-opacity-50 rounded-lg">
+                    {
+                        selectedPrice == 'ton' 
+                        ? <Image 
+                            alt="ton logo"
+                            src='/images/ton.webp'
+                            width={14}
+                            height={14}
+                            className="mr-1"
+                          /> 
+                        : <span className="text-base font-extrabold mr-1">$</span>
+                    }
+                    <span className="text-base font-extrabold">
                         {
                             selectedPrice == 'ton' 
-                            ?
-                            <Image 
-                                alt="ton logo"
-                                src='/images/ton.webp'
-                                width={14}
-                                height={14}
-                                className="mr-1"
-                            /> 
-                            :
-                            <span className="text-base font-extrabold mr-1">
-                                $
-                            </span>
+                            ? formatNumberWithDots(Number(list[list.length -1]?.priceTon))
+                            : formatNumberWithDots(Number(list[list.length -1]?.priceUsd))
                         }
-                        <span className="text-base font-extrabold">
-                            {
-                                selectedPrice == 'ton' 
-                                ? formatNumberWithDots(Number(list[list.length -1]?.priceTon))
-                                : formatNumberWithDots(Number(list[list.length -1]?.priceUsd))
-                            }
-                        </span>
-                    </div>
-                </div>
-        
-        
-                <div className="w-full mb-2 mt-5 flex flex-row justify-between">
-                    <div className="w-1/2 flex flex-row box-border">
-                        <button 
-                            className={`w-2/5 text-sm  h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                            onClick={() => {
-                                setSelectedPrice('ton')
-                                vibrate()
-                            }}
-                        >
-                            TON
-                        </button>
-                        <button 
-                            className={`w-2/5 text-sm  h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
-                            onClick={() => {
-                                setSelectedPrice('usd')
-                                vibrate()
-                            }}
-                        >
-                            USD
-                        </button>
-                    </div>
-                    
-                    <div className="w-1/3 h-10 flex items-center justify-center">
-                        <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                            {
-                                (percentChange > 0 ? '+' : '') + percentChange + '%'
-                            }
-                        </span>
-                    </div>
-                    
-                </div>
-                
-        
-                
-                <div className="w-full" ref={chartContainerRef}>
-                    <Line 
-                        data={data} 
-                        options={options}
-                    />
-                    
-                </div>
-        
-                
-        
-                
-        
-                <div className="w-full flex flex-row justify-between mt-3 gap-x-3">
-                    <span className="w-1/2 flex justify-center items-center h-10 bg-red-600 bg-opacity-40 rounded-lg">
-                        Low: {low ? formatNumberWithDots(low) : null}
-                    </span>
-                    <span className="w-1/2 flex justify-center items-center h-10 bg-green-600 bg-opacity-40 rounded-lg">
-                        High: {high ? formatNumberWithDots(high) : null}
                     </span>
                 </div>
-                
-        
-        
-                <div className="w-full p-3 mt-5 bg-slate-800 bg-opacity-50 rounded-lg">
-                    <h1 className="font-bold text-lg">
-                        {index.name}
-                    </h1>
-                    <p className="font-light mt-3 text-slate-500">
-                        {index.description}
-                    </p>
-                </div>
-
-
-
-                
             </div>
+        
+            <div className="w-full mb-2 mt-5 flex flex-row justify-between">
+                <div className="w-1/2 flex flex-row box-border">
+                    <button 
+                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => {
+                            setSelectedPrice('ton')
+                            vibrate()
+                        }}
+                    >
+                        TON
+                    </button>
+                    <button 
+                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        onClick={() => {
+                            setSelectedPrice('usd')
+                            vibrate()
+                        }}
+                    >
+                        USD
+                    </button>
+                </div>
+                
+                <div className="w-1/3 h-10 flex items-center justify-center">
+                    <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {(percentChange > 0 ? '+' : '') + percentChange + '%'}
+                    </span>
+                </div>
+            </div>
+                
+            <div className="w-full" ref={chartContainerRef}>
+                <Line 
+                    ref={chartRef} // Attach ref to Line component
+                    data={data} 
+                    options={options}
+                />
+            </div>
+        
+            <div className="w-full flex flex-row justify-between mt-3 gap-x-3">
+                <span className="w-1/2 flex justify-center items-center h-10 bg-red-600 bg-opacity-40 rounded-lg">
+                    Low: {low ? formatNumberWithDots(low) : null}
+                </span>
+                <span className="w-1/2 flex justify-center items-center h-10 bg-green-600 bg-opacity-40 rounded-lg">
+                    High: {high ? formatNumberWithDots(high) : null}
+                </span>
+            </div>
+        
+            <div className="w-full p-3 mt-5 bg-slate-800 bg-opacity-50 rounded-lg">
+                <h1 className="font-bold text-lg">
+                    {index.name}
+                </h1>
+                <p className="font-light mt-3 text-slate-500">
+                    {index.description}
+                </p>
+            </div>
+        </div>
     )
 }
