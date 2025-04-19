@@ -11,7 +11,6 @@ import ReactLoading from "react-loading"
 import Link from "next/link"
 import useVibrate from "@/hooks/useVibrate"
 import axios from "axios"
-import SubscriptionMessage from "../subscription/SubscriptionMessage"
 
 interface AssetDisplayInterface {
     name: string,
@@ -129,9 +128,6 @@ export default function Account() {
                 </div>
             :
                 <>
-                {
-                    user.telegramId === '' ? <SubscriptionMessage/> : null
-                }
                     <div className="w-full h-28 flex flex-col justify-center items-center">
                         <div className="flex flex-row items-center">
                             {currency === 'ton' ?
