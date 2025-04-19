@@ -83,7 +83,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
         const chartArea = chart.chartArea;
         const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
         
-        const topColor = percentChange >= 0 ? 'rgba(34, 197, 94, 1)' : 'rgba(239, 68, 68, 1)';
+        const topColor = percentChange >= 0 ? 'rgba(34, 197, 94, 0.5)' : 'rgba(239, 68, 68, 0.5)';
         const bottomColor = percentChange >= 0 ? 'rgba(34, 197, 94, 0)' : 'rgba(239, 68, 68, 0)';
         
         gradient.addColorStop(0, topColor); 
@@ -151,7 +151,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                 data: list.map((item) => selectedPrice === 'ton' ? item.priceTon : item.priceUsd),
                 borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444", 
                 borderWidth: 1,
-                tension: 0.2,
+                tension: 0,
                 pointRadius: 0,
                 pointHoverRadius: 6,
                 fill: true,

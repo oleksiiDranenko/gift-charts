@@ -83,7 +83,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         const chartArea = chart.chartArea;
         const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
         
-        const topColor = percentChange >= 0 ? 'rgba(34, 197, 94, 1)' : 'rgba(239, 68, 68, 1)';
+        const topColor = percentChange >= 0 ? 'rgba(34, 197, 94, 0.5)' : 'rgba(239, 68, 68, 0.5)';
         const bottomColor = percentChange >= 0 ? 'rgba(34, 197, 94, 0)' : 'rgba(239, 68, 68, 0)';
         
         gradient.addColorStop(0, topColor); // Top: Match line color
