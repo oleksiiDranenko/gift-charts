@@ -102,7 +102,12 @@ export default function GiftsList({ loading }: PropsInterface) {
                 gift.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '').includes(value.toLowerCase().trim().replace(/[^a-zA-Z0-9]/g, ''))
             )
         })
-        dispatch(setFilters({...filters, chosenGifts: filteredList}))
+        
+        if(filteredList.length === giftsList.length) {
+            dispatch(setFilters({...filters, chosenGifts: []}))
+        } else {
+            dispatch(setFilters({...filters, chosenGifts: filteredList}))
+        }
     }, [value])
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
