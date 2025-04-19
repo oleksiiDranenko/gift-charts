@@ -142,7 +142,7 @@ export default function MainPage() {
                                 {'Show all ->'}
                             </Link>
                         </div>
-                        <div>
+                        <div className="px-3">
                             {list.length > 0
                                 ? list.map((item: GiftInterface) => (
                                     <GiftItem
@@ -176,7 +176,7 @@ export default function MainPage() {
                                 {userList.length > 0 ? 'Show all ->' : 'Add Items ->'}
                             </Link>
                         </div>
-                        <div>
+                        <div className="px-3">
                             {userList.length > 0
                                 ? userList.slice(0, 3).map((item: GiftInterface) => (
                                     <GiftItem

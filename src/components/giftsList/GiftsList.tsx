@@ -25,16 +25,13 @@ export default function GiftsList({ loading }: PropsInterface) {
     const router = useRouter()
     
     const [list, setList] = useState<GiftInterface[]>([])
-    const [ton, setTon] = useState<number>(0)
     const [showFilters, setShowFilters] = useState<boolean>(true)
+
+    const [value, setValue] = useState<string>('')
 
     useEffect(() => {
         if (!loading) {
             setList([...giftsList]);
-
-            const priceTon = giftsList[0].priceTon;
-            const priceUsd = giftsList[0].priceUsd;
-            setTon(parseFloat((priceUsd/priceTon).toFixed(2)))
         }
     }, [loading, giftsList]);
     
@@ -96,14 +93,35 @@ export default function GiftsList({ loading }: PropsInterface) {
         }
     }, [filters, loading, giftsList]);
 
+
+    useEffect(() => {
+
+        setShowFilters(false)
+
+        const filteredList = giftsList.filter((gift) => {
+            return (
+                gift.name.toLowerCase().slice(0, value.length).replace(/[^a-zA-Z0-9]/g, '') === value.toLowerCase().trim().replace(/[^a-zA-Z0-9]/g, '')
+                || 
+                gift.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '').includes(value.toLowerCase().trim().replace(/[^a-zA-Z0-9]/g, ''))
+            )
+        })
+
+        dispatch(setFilters({...filters, chosenGifts: filteredList}))
+    }, [value])
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value)
+    }
+    
+
     return (
-        <div className='w-full h-auto flex flex-col items-center'>
+        <div className='w-full h-auto flex flex-col items-center px-3'>
             {loading ? 
                 <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
             : 
                 list !== undefined ? 
                     <>
-                        <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3 pl-3 pr-3">
+                        <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
                             <button
                                 className="w-1/2 h-10 bg-slate-800 rounded-lg"
                                 onClick={() => {
@@ -124,9 +142,30 @@ export default function GiftsList({ loading }: PropsInterface) {
                             </button>
                         </div>
 
+
+                        <div className="w-full my-3 gap-x-3 flex flex-row">
+                            <input 
+                                type="text" 
+                                className="w-full h-10 px-3 bg-slate-800 bg-opacity-50 rounded-lg outline-none focus:bg-opacity-100"
+                                placeholder="Enter Gift name..."
+                                value={value}
+                                onChange={handleInput}
+                            />
+                            <button
+                                className="h-10 px-3 bg-slate-800 rounded-lg"
+                                onClick={() => {
+                                    dispatch(setFilters({...filters, chosenGifts: giftsList}))
+                                    setValue('')
+                                }}
+                            >
+                                Clear
+                            </button>
+                        </div>
+
+
                         {showFilters ?
                             <div className="w-full h-auto pt-3">
-                                <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3 px-3">
+                                <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3">
                                     <div className="w-1/2 gap-2 flex justify-between">
                                         <button
                                             className={`w-1/2 text-sm h-10 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
@@ -157,7 +196,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                     </Link>
                                 </div>
 
-                                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3 pl-3 pr-3">
+                                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3">
                                     <div className="w-1/2 flex justify-between items-center">
                                         <span className="text-slate-500 mr-2 text-sm whitespace-nowrap">
                                             Sort By:
@@ -197,7 +236,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                     </div>
                                 </div>
 
-                                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3 pl-3 pr-3">
+                                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3">
                                     <div className="w-1/2 gap-2 flex justify-end">
                                         <button
                                             className={`w-1/2 text-sm h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}

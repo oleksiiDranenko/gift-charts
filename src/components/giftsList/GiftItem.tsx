@@ -49,7 +49,7 @@ export default function GiftItem({item, currency, sortBy, displayValue}: PropsIn
 
     return (
         <Link 
-            className="w-full h-20 pl-3 pr-3 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
+            className="w-full h-20 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}
