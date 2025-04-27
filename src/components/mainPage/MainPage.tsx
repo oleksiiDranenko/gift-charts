@@ -75,7 +75,7 @@ export default function MainPage() {
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-            setUserList(filteredList.slice(0, 3));
+            setUserList(filteredList);
         } else {
             setUserList([]); 
         }
@@ -196,7 +196,7 @@ export default function MainPage() {
                                 href={'/gifts-list'}
                                 className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                                 onClick={() => {
-                                    dispatch(setFilters({ ...filters, sortBy: "percentChange" }));
+                                    dispatch(setFilters({ ...filters, sortBy: "price" }));
                                     vibrate();
                                 }}
                             >
@@ -233,7 +233,7 @@ export default function MainPage() {
                                 href={userList.length > 0 ? '/gifts-list' : '/account/settings/'}
                                 className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                                 onClick={() => {
-                                    dispatch(setFilters({ ...filters, chosenGifts: userList }));
+                                    dispatch(setFilters({ ...filters, chosenGifts: list.slice(0,3) }));
                                     vibrate();
                                 }}
                             >
