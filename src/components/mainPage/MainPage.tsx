@@ -233,7 +233,7 @@ export default function MainPage() {
                                 href={userList.length > 0 ? '/gifts-list' : '/account/settings/'}
                                 className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                                 onClick={() => {
-                                    dispatch(setFilters({ ...filters, sortBy: "supply" }));
+                                    dispatch(setFilters({ ...filters, chosenGifts: userList }));
                                     vibrate();
                                 }}
                             >

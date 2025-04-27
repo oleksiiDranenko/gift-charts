@@ -95,6 +95,10 @@ export default function GiftsList({ loading }: PropsInterface) {
 
 
     useEffect(() => {
+        if (value.trim() === '') {
+            return;
+        }
+    
         const filteredList = giftsList.filter((gift) => {
             return (
                 gift.name.toLowerCase().slice(0, value.length).replace(/[^a-zA-Z0-9]/g, '') === value.toLowerCase().trim().replace(/[^a-zA-Z0-9]/g, '')
@@ -103,12 +107,12 @@ export default function GiftsList({ loading }: PropsInterface) {
             )
         })
         
-        if(filteredList.length === giftsList.length) {
-            dispatch(setFilters({...filters, chosenGifts: []}))
-        } else {
-            dispatch(setFilters({...filters, chosenGifts: filteredList}))
-        }
+        dispatch(setFilters({
+            ...filters,
+            chosenGifts: filteredList,
+        }))
     }, [value])
+    
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setShowFilters(false)
