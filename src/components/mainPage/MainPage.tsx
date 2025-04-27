@@ -75,7 +75,7 @@ export default function MainPage() {
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-            setUserList(filteredList);
+            setUserList(filteredList.slice(0, 3));
         } else {
             setUserList([]); 
         }
