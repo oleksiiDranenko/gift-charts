@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import { setIndexList } from "@/redux/slices/indexListSlice"
 import axios from "axios"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import ReactLoading from "react-loading"
 
@@ -62,6 +63,20 @@ export default function Page() {
                             }
                         })}
                     </div>
+
+                    {/* <div className="w-full p-3 mt-7 bg-slate-800 bg-opacity-50 rounded-lg">
+                        <div className="w-full flex flex-row justify-between items-center">
+                            <h1 className="font-bold text-xl">
+                            🧠 Comapre Charts
+                            </h1>
+                            <Link
+                                href={'/tools/compare-charts'}
+                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                            >
+                                {'Try it Now ->'}
+                            </Link>
+                        </div>                        
+                    </div> */}
                 </>
             }
 			

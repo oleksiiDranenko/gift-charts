@@ -153,7 +153,7 @@ export default function Account() {
                     </div>
 
                     <div className="w-full flex justify-between items-center h-14 mb-5 gap-x-3">
-                        <div className="w-1/3 flex justify-between gap-x-2">
+                        <div className="w-1/2 flex justify-between gap-x-2">
                             <button 
                                 className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800'}`}
                                 onClick={() => {
@@ -173,15 +173,15 @@ export default function Account() {
                                 USD
                             </button>
                         </div>
-                        <button 
+                        {/* <button 
                             className="w-1/3 h-10 box-border bg-slate-800 rounded-lg"
                             onClick={() => vibrate()}
                         >
                             Statistics
-                        </button>
+                        </button> */}
                         <Link 
                             href={'/account/settings'}
-                            className="w-1/3 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
+                            className="w-1/2 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
                             onClick={() => vibrate()}
                         >
                             Settings

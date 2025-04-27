@@ -9,6 +9,7 @@ import GiftItem from "../giftsList/GiftItem";
 import useVibrate from "@/hooks/useVibrate";
 import { useDispatch } from "react-redux";
 import { setFilters } from "@/redux/slices/filterListSlice";
+import ChartHandler from "./ChartHandler";
 
 export default function MainPage() {
     const vibrate = useVibrate();
@@ -18,6 +19,7 @@ export default function MainPage() {
     const user = useAppSelector((state) => state.user);
 
     const [list, setList] = useState<GiftInterface[]>([]);
+    const [topList, setTopList] = useState<GiftInterface[]>([]);
     const [userList, setUserList] = useState<GiftInterface[]>([]);
     const [activeIndex, setActiveIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -41,6 +43,21 @@ export default function MainPage() {
             });
 
             setList(sortedList.slice(0, 3));
+        }
+    }, [filters, giftsList]);
+
+
+    useEffect(() => {
+        if (giftsList.length > 0) {
+            let sortedList = [...giftsList];
+
+            sortedList.sort((a, b) =>
+                filters.currency === 'ton'
+                    ? filters.sort === 'lowFirst' ? a.priceTon - b.priceTon : b.priceTon - a.priceTon
+                    : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
+            );
+
+            setTopList(sortedList.slice(0, 3));
         }
     }, [filters, giftsList]);
 
@@ -108,18 +125,25 @@ export default function MainPage() {
 
             <div className="max-w-full mx-3 flex items-center justify-between gap-x-3 mb-5">
                 <button
-                    className={`w-1/2 h-10 ${activeIndex === 0 ? 'font-bold bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-1/3 text-sm text-slate-400 h-10 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(0)}
                 >
-                    All Gifts
+                    Top Changes
                 </button>
                 <button
-                    className={`w-1/2 h-10 ${activeIndex === 1 ? 'font-bold bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-1/3 text-sm text-slate-400 h-10 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(1)}
+                >
+                    Top Gifts
+                </button>
+                <button
+                    className={`w-1/3 text-sm text-slate-400 h-10 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    onClick={() => handleSwipe(2)}
                 >
                     Watchlist
                 </button>
             </div>
+
 
             <div
                 ref={containerRef}
@@ -142,9 +166,49 @@ export default function MainPage() {
                                 {'Show all ->'}
                             </Link>
                         </div>
+
+                        <ChartHandler giftsList={list}/>
+
                         <div className="px-3">
                             {list.length > 0
                                 ? list.map((item: GiftInterface) => (
+                                    <GiftItem
+                                        item={item}
+                                        currency={filters.currency}
+                                        sortBy={filters.sortBy}
+                                        displayValue='price'
+                                        key={item._id}
+                                    />
+                                ))
+                                : null
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex-none w-full snap-start">
+                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                        <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
+                            <h2 className="text-xl font-bold">
+                                🔥 Top Gifts
+                            </h2>
+                            <Link
+                                href={'/gifts-list'}
+                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                                onClick={() => {
+                                    dispatch(setFilters({ ...filters, sortBy: "percentChange" }));
+                                    vibrate();
+                                }}
+                            >
+                                {'Show all ->'}
+                            </Link>
+                        </div>
+                        
+                        <ChartHandler giftsList={topList}/>
+
+                        <div className="px-3">
+                            {list.length > 0
+                                ? topList.map((item: GiftInterface) => (
                                     <GiftItem
                                         item={item}
                                         currency={filters.currency}
@@ -176,6 +240,9 @@ export default function MainPage() {
                                 {userList.length > 0 ? 'Show all ->' : 'Add Items ->'}
                             </Link>
                         </div>
+
+                        {userList.length !== 0 && <ChartHandler giftsList={userList}/>}
+
                         <div className="px-3">
                             {userList.length > 0
                                 ? userList.slice(0, 3).map((item: GiftInterface) => (
@@ -210,6 +277,11 @@ export default function MainPage() {
                 <span
                     className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
                         activeIndex === 1 ? 'bg-white' : 'bg-gray-500'
+                    }`}
+                ></span>
+                <span
+                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
+                        activeIndex === 2 ? 'bg-white' : 'bg-gray-500'
                     }`}
                 ></span>
             </div>
