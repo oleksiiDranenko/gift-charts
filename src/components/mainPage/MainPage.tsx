@@ -27,6 +27,14 @@ export default function MainPage() {
 
     const dispatch = useDispatch();
 
+    const [colors, setColors] = useState<string[]>([
+        "#22c55e", 
+        "#0098EA", 
+        "#f43f5e", 
+        "#d946ef", 
+        "#f59e0b", 
+    ])
+
     useEffect(() => {
         if (giftsList.length > 0) {
             let sortedList = [...giftsList];
@@ -171,13 +179,14 @@ export default function MainPage() {
 
                         <div className="px-3">
                             {list.length > 0
-                                ? list.map((item: GiftInterface) => (
+                                ? list.map((item: GiftInterface, index) => (
                                     <GiftItem
                                         item={item}
                                         currency={filters.currency}
                                         sortBy={filters.sortBy}
                                         displayValue='price'
                                         key={item._id}
+                                        borderColor={colors[index]}
                                     />
                                 ))
                                 : null
@@ -208,13 +217,14 @@ export default function MainPage() {
 
                         <div className="px-3">
                             {list.length > 0
-                                ? topList.map((item: GiftInterface) => (
+                                ? topList.map((item: GiftInterface, index) => (
                                     <GiftItem
                                         item={item}
                                         currency={filters.currency}
                                         sortBy={filters.sortBy}
                                         displayValue='price'
                                         key={item._id}
+                                        borderColor={colors[index]}
                                     />
                                 ))
                                 : null
@@ -245,13 +255,14 @@ export default function MainPage() {
 
                         <div className="px-3">
                             {userList.length > 0
-                                ? userList.slice(0, 3).map((item: GiftInterface) => (
+                                ? userList.slice(0, 3).map((item: GiftInterface, index) => (
                                     <GiftItem
                                         item={item}
                                         currency={filters.currency}
                                         sortBy={filters.sortBy}
-                                        displayValue="price"
+                                        displayValue='price'
                                         key={item._id}
+                                        borderColor={colors[index]}
                                     />
                                 ))
                                 : 

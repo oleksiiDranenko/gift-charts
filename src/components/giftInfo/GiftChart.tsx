@@ -310,7 +310,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                     </button>
                 </div>
                 
-                <div className="w-1/2 h-10 flex items-center justify-center">
+                <div className="w-1/3 h-10 flex items-center justify-center">
                     <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                         {(percentChange > 0 ? '+' : '') + percentChange + '%'}
                     </span>

@@ -11,10 +11,11 @@ interface PropsInterface {
     item: GiftInterface,
     currency: 'ton' | 'usd',
     sortBy: 'price' | 'marketCap' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange',
-    displayValue: 'price' | 'marketCap'
+    displayValue: 'price' | 'marketCap',
+    borderColor?: string
 }
 
-export default function GiftItem({item, currency, sortBy, displayValue}: PropsInterface) {
+export default function GiftItem({item, currency, sortBy, displayValue, borderColor}: PropsInterface) {
 
     const vibrate = useVibrate()
 
@@ -55,13 +56,16 @@ export default function GiftItem({item, currency, sortBy, displayValue}: PropsIn
             onClick={() => vibrate()}
         >
             <div className=" flex flex-row items-center">
-                <Image
-                    alt="gift image"
-                    src={`/gifts/${item.image}.webp`}
-                    width={50}
-                    height={50}
-                    className={`bg-slate-800 p-1 mr-3 rounded-lg ${item.staked && 'shadow-md shadow-[#0098EA]'}`}
-                />
+            <Image
+                alt="gift image"
+                src={`/gifts/${item.image}.webp`}
+                width={50}
+                height={50}
+                className={`bg-slate-800 p-1 mr-3 rounded-lg ${borderColor ? 'border' : ''} ${
+                  item.staked && 'shadow-md shadow-[#0098EA]'
+                }`}
+                style={borderColor ? { borderColor: `${borderColor}80` } : {}}
+            />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">
                         {item.name}
