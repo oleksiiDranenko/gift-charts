@@ -68,7 +68,7 @@ export default function ChartHandler({ giftsList }: PropsInterface) {
                 gifts={gifts}
                 weekData={weekData}
                 lifeData={lifeData}
-                isInfoHidden={false}
+                isInfoHidden={true}
             />
             }
         </div>

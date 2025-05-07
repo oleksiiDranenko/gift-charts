@@ -288,48 +288,46 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden 
                 )}
             </div>
 
-            {!isInfoHidden && 
-                <div className="mb-1 mt-5 flex flex-col">
-                    <div className="w-full flex flex-row justify-between gap-x-3">
-                        <button
-                            className={`w-full text-sm h-10 ${listType === 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
-                            onClick={() => {
-                                if (lifeData.length > 0) setListType('all');
-                                vibrate();
-                            }}
-                        >
-                            All
-                        </button>
-                        <button
-                            className={`w-full text-sm h-10 ${listType === '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
-                            onClick={() => {
-                                if (lifeData.length > 0) setListType('1m');
-                                vibrate();
-                            }}
-                        >
-                            1m
-                        </button>
-                        <button
-                            className={`w-full text-sm h-10 ${listType === '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
-                            onClick={() => {
-                                if (weekData.length > 0) setListType('1w');
-                                vibrate();
-                            }}
-                        >
-                            1w
-                        </button>
-                        <button
-                            className={`w-full text-sm h-10 ${listType === '24h' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
-                            onClick={() => {
-                                if (weekData.length > 0) setListType('24h');
-                                vibrate();
-                            }}
-                        >
-                            24h
-                        </button>
-                    </div>
+            <div className="mb-1 mt-5 flex flex-col">
+                <div className="w-full flex flex-row justify-between gap-x-3">
+                    <button
+                        className={`w-full text-sm h-10 ${listType === 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                        onClick={() => {
+                            if (lifeData.length > 0) setListType('all');
+                            vibrate();
+                        }}
+                    >
+                        All
+                    </button>
+                    <button
+                        className={`w-full text-sm h-10 ${listType === '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                        onClick={() => {
+                            if (lifeData.length > 0) setListType('1m');
+                            vibrate();
+                        }}
+                    >
+                        1m
+                    </button>
+                    <button
+                        className={`w-full text-sm h-10 ${listType === '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                        onClick={() => {
+                            if (weekData.length > 0) setListType('1w');
+                            vibrate();
+                        }}
+                    >
+                        1w
+                    </button>
+                    <button
+                        className={`w-full text-sm h-10 ${listType === '24h' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                        onClick={() => {
+                            if (weekData.length > 0) setListType('24h');
+                            vibrate();
+                        }}
+                    >
+                        24h
+                    </button>
                 </div>
-            }
+            </div>
         </div>
     );
 }
