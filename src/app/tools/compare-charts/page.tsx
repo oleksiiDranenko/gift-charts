@@ -104,6 +104,8 @@ export default function Page() {
                         </div>
                     </div>
                     <CompareCharts 
+                        listType="1w"
+                        setListType={() => console.log()}
                         gifts={gifts} 
                         weekData={weekData} 
                         lifeData={lifeData}
