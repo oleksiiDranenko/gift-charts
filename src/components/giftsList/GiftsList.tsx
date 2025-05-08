@@ -26,7 +26,7 @@ export default function GiftsList({ loading }: PropsInterface) {
     
     const [list, setList] = useState<GiftInterface[]>([])
     const [showFilters, setShowFilters] = useState<boolean>(true)
-    const [timeGap, setTimeGap] = useState<'24h' | '1w' | '1m' | 'all'>('1w')
+    const [timeGap, setTimeGap] = useState<'24h' | '1w' | '1m' | 'all'>('24h')
 
     const [value, setValue] = useState<string>('')
 
@@ -337,7 +337,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                             </div>
 
                             <div className="">
-                                {filters.displayValue === 'price' ? 'Price' : 'Market Cap'} / 24h change
+                                {filters.displayValue === 'price' ? 'Price' : 'Market Cap'} / {timeGap === '24h' ? '24h ' : timeGap === '1w' ? '1w ' : '1m '} change
                             </div>
                         </div>
 
