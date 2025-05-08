@@ -7,16 +7,33 @@ import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import ReactLoading from "react-loading"
+import GiftItem from "../giftsList/GiftItem"
+import { FilterListInterface } from "@/interfaces/FilterListInterface"
 
 interface PropsInterface {
-    giftsList: GiftInterface[]
+    giftsList: GiftInterface[],
+    filters: FilterListInterface
 }
 
-export default function ChartHandler({ giftsList }: PropsInterface) {
+export default function ChartHandler({ giftsList, filters }: PropsInterface) {
     const [gifts, setGifts] = useState<GiftInterface[]>([])
     const [weekData, setWeekData] = useState<(GiftWeekDataInterface[])[]>([])
     const [lifeData, setLifeData] = useState<(GiftLifeDataInterface[])[]>([])
     const [loading, setLoading] = useState<boolean>(true)
+
+    const [listType, setListType] = useState<'24h' | '1w' | '1m' | 'all'>('24h');
+
+    const handleListType = (input: '24h' | '1w' | '1m' | 'all') => {
+        setListType(input)
+    }
+
+    const colors = [
+        "#22c55e", 
+        "#0098EA", 
+        "#f43f5e", 
+        "#d946ef", 
+        "#f59e0b", 
+    ]
 
     const getChartData = async () => {
         setLoading(true) // Ensure loading is true at the start
@@ -64,12 +81,33 @@ export default function ChartHandler({ giftsList }: PropsInterface) {
                 <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5" />
             </div>
             :
-            <CompareCharts 
-                gifts={gifts}
-                weekData={weekData}
-                lifeData={lifeData}
-                isInfoHidden={true}
-            />
+            <div>
+                <CompareCharts 
+                    gifts={gifts}
+                    weekData={weekData}
+                    lifeData={lifeData}
+                    isInfoHidden={true}
+                    listType={listType}
+                    setListType={handleListType}
+                />
+
+                <div className="px-3">
+                    {giftsList.length > 0
+                        ? giftsList.map((item: GiftInterface, index) => (
+                            <GiftItem
+                                item={item}
+                                currency={filters.currency}
+                                sortBy={filters.sortBy}
+                                displayValue='price'
+                                key={item._id}
+                                borderColor={colors[index]}
+                                timeGap={listType}
+                            />
+                        ))
+                        : null
+                    }
+                </div>
+            </div>
             }
         </div>
     )

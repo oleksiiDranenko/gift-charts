@@ -23,7 +23,9 @@ interface PropsInterface {
     gifts: GiftInterface[] | null;
     weekData: (GiftWeekDataInterface[])[];
     lifeData: (GiftLifeDataInterface[])[];
-    isInfoHidden: boolean
+    isInfoHidden: boolean,
+	listType: '24h' | '1w' | '1m' | 'all',
+	setListType(input: '24h' | '1w' | '1m' | 'all'): void
 }
 
 interface DatasetInterface {
@@ -39,13 +41,12 @@ interface DatasetInterface {
     backgroundColor: string | CanvasGradient;
 }
 
-export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden }: PropsInterface) {
+export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden, listType, setListType }: PropsInterface) {
     const vibrate = useVibrate();
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const chartRef = useRef<ChartJS<"line">>(null);
 
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton');
-    const [listType, setListType] = useState<'1m' | 'all' | '1w' | '24h'>('24h');
     const [list, setList] = useState<(GiftLifeDataInterface[] | GiftWeekDataInterface[])[]>([]);
     const [datasets, setDatasets] = useState<DatasetInterface[]>([]);
 

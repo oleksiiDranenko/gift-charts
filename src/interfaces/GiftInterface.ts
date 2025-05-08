@@ -11,6 +11,10 @@ export default interface GiftInterface {
     initUsdPrice: number,
     tonPrice24hAgo?: number,
     usdPrice24hAgo?: number,
+    tonPriceWeekAgo?: number,
+    usdPriceWeekAgo?: number,
+    tonPriceMonthAgo?: number,
+    usdPriceMonthAgo?: number,
     priceTon: number,
     priceUsd: number,
     staked?: boolean

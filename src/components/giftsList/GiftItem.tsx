@@ -12,10 +12,11 @@ interface PropsInterface {
     currency: 'ton' | 'usd',
     sortBy: 'price' | 'marketCap' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange',
     displayValue: 'price' | 'marketCap',
-    borderColor?: string
+    borderColor?: string,
+    timeGap: '24h' | '1w' | '1m' | 'all'
 }
 
-export default function GiftItem({item, currency, sortBy, displayValue, borderColor}: PropsInterface) {
+export default function GiftItem({item, currency, sortBy, displayValue, borderColor, timeGap}: PropsInterface) {
 
     const vibrate = useVibrate()
 
@@ -24,14 +25,34 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
     useEffect(() => {
         if(item.tonPrice24hAgo && item.usdPrice24hAgo){
             if(currency === 'ton') {
-                setPercentChange(countPercentChange(item.tonPrice24hAgo, item.priceTon))
+                if(timeGap === '24h') {
+                    setPercentChange(countPercentChange(item.tonPrice24hAgo, item.priceTon))
+                } else if(timeGap === '1w') {
+                    item.tonPriceWeekAgo ? 
+                        setPercentChange(countPercentChange(item.tonPriceWeekAgo, item.priceTon)) 
+                        : setPercentChange('no data')
+                } else if(timeGap === '1m') {
+                    item.tonPriceMonthAgo ? 
+                        setPercentChange(countPercentChange(item.tonPriceMonthAgo, item.priceTon)) 
+                        : setPercentChange('no data')
+                }
             } else {
-                setPercentChange(countPercentChange(item.usdPrice24hAgo, item.priceUsd))
+                if(timeGap === '24h') {
+                    setPercentChange(countPercentChange(item.usdPrice24hAgo, item.priceTon))
+                } else if(timeGap === '1w') {
+                    item.usdPriceWeekAgo ? 
+                        setPercentChange(countPercentChange(item.usdPriceWeekAgo, item.priceTon)) 
+                        : setPercentChange('no data')
+                } else if(timeGap === '1m' || timeGap === 'all') {
+                    item.usdPriceMonthAgo ? 
+                        setPercentChange(countPercentChange(item.usdPriceMonthAgo, item.priceTon)) 
+                        : setPercentChange('no data')
+                }
             }
         } else {
             setPercentChange('no data')
         }
-    }, [currency])
+    }, [currency, timeGap])
 
     const formatNumber = (number: number) => {
         if (number >= 1000 && number < 1000000 ) {

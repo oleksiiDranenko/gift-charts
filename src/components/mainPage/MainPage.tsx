@@ -27,14 +27,6 @@ export default function MainPage() {
 
     const dispatch = useDispatch();
 
-    const [colors, setColors] = useState<string[]>([
-        "#22c55e", 
-        "#0098EA", 
-        "#f43f5e", 
-        "#d946ef", 
-        "#f59e0b", 
-    ])
-
     useEffect(() => {
         if (giftsList.length > 0) {
             let sortedList = [...giftsList];
@@ -175,23 +167,9 @@ export default function MainPage() {
                             </Link>
                         </div>
 
-                        <ChartHandler giftsList={list}/>
+                        <ChartHandler giftsList={list} filters={filters}/>
 
-                        <div className="px-3">
-                            {list.length > 0
-                                ? list.map((item: GiftInterface, index) => (
-                                    <GiftItem
-                                        item={item}
-                                        currency={filters.currency}
-                                        sortBy={filters.sortBy}
-                                        displayValue='price'
-                                        key={item._id}
-                                        borderColor={colors[index]}
-                                    />
-                                ))
-                                : null
-                            }
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -213,23 +191,7 @@ export default function MainPage() {
                             </Link>
                         </div>
                         
-                        <ChartHandler giftsList={topList}/>
-
-                        <div className="px-3">
-                            {list.length > 0
-                                ? topList.map((item: GiftInterface, index) => (
-                                    <GiftItem
-                                        item={item}
-                                        currency={filters.currency}
-                                        sortBy={filters.sortBy}
-                                        displayValue='price'
-                                        key={item._id}
-                                        borderColor={colors[index]}
-                                    />
-                                ))
-                                : null
-                            }
-                        </div>
+                        <ChartHandler giftsList={topList} filters={filters}/>
                     </div>
                 </div>
 
@@ -251,31 +213,20 @@ export default function MainPage() {
                             </Link>
                         </div>
 
-                        {userList.length !== 0 && <ChartHandler giftsList={userList}/>}
+                        {userList.length !== 0 ?
+                         <ChartHandler giftsList={userList.slice(0, 3)} filters={filters}/>
+                         : 
+                         <>
+                             <div className="px-3 pt-3 pb-1 font-bold text-slate-400">
+                                 Your Watchlist is Empty
+                             </div>
+                             <div className="px-3 pt-3 pb-5 text-sm text-slate-400">
+                                 {'Account -> Settings -> Edit Watchlist'}
+                             </div>
+                         </>
+                        }
 
-                        <div className="px-3">
-                            {userList.length > 0
-                                ? userList.slice(0, 3).map((item: GiftInterface, index) => (
-                                    <GiftItem
-                                        item={item}
-                                        currency={filters.currency}
-                                        sortBy={filters.sortBy}
-                                        displayValue='price'
-                                        key={item._id}
-                                        borderColor={colors[index]}
-                                    />
-                                ))
-                                : 
-                                <>
-                                    <div className="px-3 pt-3 pb-1 font-bold text-slate-400">
-                                        Your Watchlist is Empty
-                                    </div>
-                                    <div className="px-3 pt-3 pb-5 text-sm text-slate-400">
-                                        {'Account -> Settings -> Edit Watchlist'}
-                                    </div>
-                                </>
-                            }
-                        </div>
+                        
                     </div>
                 </div>
             </div>

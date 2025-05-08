@@ -26,6 +26,7 @@ export default function GiftsList({ loading }: PropsInterface) {
     
     const [list, setList] = useState<GiftInterface[]>([])
     const [showFilters, setShowFilters] = useState<boolean>(true)
+    const [timeGap, setTimeGap] = useState<'24h' | '1w' | '1m' | 'all'>('1w')
 
     const [value, setValue] = useState<string>('')
 
@@ -37,6 +38,7 @@ export default function GiftsList({ loading }: PropsInterface) {
     
     useEffect(() => {
         if (!loading) {
+            console.log(giftsList)
             let filteredList = [...giftsList];
 
             if (filters.chosenGifts.length !== 0) {
@@ -279,6 +281,50 @@ export default function GiftsList({ loading }: PropsInterface) {
                             </div>
                         : null}
 
+                        <div className="w-full bg-slate-800 rounded-lg bg-opacity-50">
+                            <div className="w-full mb-1 flex flex-col">
+                                <div className="w-full flex flex-row justify-between gap-x-3">
+                                    <button
+                                        className={`w-full text-sm h-10 ${timeGap === 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                                        onClick={() => {
+                                            setTimeGap('all');
+                                            vibrate();
+                                        }}
+                                    >
+                                        All
+                                    </button>
+                                    <button
+                                        className={`w-full text-sm h-10 ${timeGap === '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                                        onClick={() => {
+                                            setTimeGap('1m');
+                                            vibrate();
+                                        }}
+                                    >
+                                        1m
+                                    </button>
+                                    <button
+                                        className={`w-full text-sm h-10 ${timeGap === '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                                        onClick={() => {
+                                            setTimeGap('1w');
+                                            vibrate();
+                                        }}
+                                    >
+                                        1w
+                                    </button>
+                                    <button
+                                        className={`w-full text-sm h-10 ${timeGap === '24h' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
+                                        onClick={() => {
+                                            setTimeGap('24h');
+                                            vibrate();
+                                        }}
+                                    >
+                                        24h
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div className="w-full pl-3 pr-3 mb-3 flex flex-row items-center justify-between h-6 text-xs text-slate-500">
                             <div className="">
                                 Name / {
@@ -302,6 +348,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                 sortBy={filters.sortBy} 
                                 displayValue={filters.displayValue} 
                                 key={item._id}
+                                timeGap={timeGap}
                             />
                         ))}
                     </>
