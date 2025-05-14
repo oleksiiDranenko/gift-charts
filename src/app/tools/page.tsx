@@ -67,10 +67,10 @@ export default function Page() {
                     {/* <div className="w-full p-3 mt-7 bg-slate-800 bg-opacity-50 rounded-lg">
                         <div className="w-full flex flex-row justify-between items-center">
                             <h1 className="font-bold text-xl">
-                            🧠 Comapre Charts
+                                📊 Treemap
                             </h1>
                             <Link
-                                href={'/tools/compare-charts'}
+                                href={'/tools/treemap'}
                                 className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                             >
                                 {'Try it Now ->'}
