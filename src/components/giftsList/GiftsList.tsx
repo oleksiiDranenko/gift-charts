@@ -38,7 +38,6 @@ export default function GiftsList({ loading }: PropsInterface) {
     
     useEffect(() => {
         if (!loading) {
-            console.log(giftsList)
             let filteredList = [...giftsList];
 
             if (filters.chosenGifts.length !== 0) {

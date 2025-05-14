@@ -93,12 +93,12 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                     </span>
                     <span className="text-slate-500 text-sm font-normal">
                         {
-                            sortBy === 'price' ? formatNumber(item.supply) 
+                            sortBy === 'price' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
                             : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.supply) : (item.priceUsd * item.supply))
-                            : sortBy === 'marketCap' && displayValue === 'marketCap' ? formatNumber(item.supply)
-                            : sortBy === 'percentChange' ? formatNumber(item.supply)
-                            : sortBy === 'supply' ? formatNumber(item.supply)
-                            : sortBy === 'initSupply' ? formatNumber(item.initSupply)
+                            : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
+                            : sortBy === 'percentChange' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
+                            : sortBy === 'supply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
+                            : sortBy === 'initSupply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply))
                             : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`
                             : null
                         }

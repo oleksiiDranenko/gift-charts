@@ -23,9 +23,9 @@ interface PropsInterface {
     gifts: GiftInterface[] | null;
     weekData: (GiftWeekDataInterface[])[];
     lifeData: (GiftLifeDataInterface[])[];
-    isInfoHidden: boolean,
-	listType: '24h' | '1w' | '1m' | 'all',
-	setListType(input: '24h' | '1w' | '1m' | 'all'): void
+    isInfoHidden: boolean;
+    listType: '24h' | '1w' | '1m' | 'all';
+    setListType(input: '24h' | '1w' | '1m' | 'all'): void;
 }
 
 interface DatasetInterface {
@@ -44,12 +44,12 @@ interface DatasetInterface {
 export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden, listType, setListType }: PropsInterface) {
     const vibrate = useVibrate();
     const chartContainerRef = useRef<HTMLDivElement>(null);
-    const chartRef = useRef<ChartJS<"line">>(null);
-
+    const chartRef = useRef<ChartJS<"line"> | null>(null);
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton');
     const [list, setList] = useState<(GiftLifeDataInterface[] | GiftWeekDataInterface[])[]>([]);
     const [datasets, setDatasets] = useState<DatasetInterface[]>([]);
 
+    // Cleanup chart and event listeners on unmount
     useEffect(() => {
         const chartContainer = chartContainerRef.current;
         if (!chartContainer) return;
@@ -58,22 +58,18 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
             e.preventDefault();
         };
 
-        chartContainer.addEventListener("touchstart", preventScroll, { passive: false });
-        chartContainer.addEventListener("touchmove", preventScroll, { passive: false });
-        chartContainer.addEventListener("touchend", preventScroll, { passive: false });
-
         const handleClickOutside = (e: MouseEvent) => {
             const chartCanvas = chartContainer.querySelector("canvas");
-            if (chartCanvas && !chartCanvas.contains(e.target as Node)) {
-                const chartInstance = ChartJS.getChart(chartCanvas);
-                if (chartInstance) {
-                    chartInstance.setActiveElements([]);
-                    chartInstance.tooltip?.setActiveElements([], { x: 0, y: 0 });
-                    chartInstance.update();
-                }
+            if (chartCanvas && !chartCanvas.contains(e.target as Node) && chartRef.current) {
+                chartRef.current.setActiveElements([]);
+                chartRef.current.tooltip?.setActiveElements([], { x: 0, y: 0 });
+                chartRef.current.update();
             }
         };
 
+        chartContainer.addEventListener("touchstart", preventScroll, { passive: false });
+        chartContainer.addEventListener("touchmove", preventScroll, { passive: false });
+        chartContainer.addEventListener("touchend", preventScroll, { passive: false });
         document.addEventListener("click", handleClickOutside);
 
         return () => {
@@ -81,9 +77,14 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
             chartContainer.removeEventListener("touchmove", preventScroll);
             chartContainer.removeEventListener("touchend", preventScroll);
             document.removeEventListener("click", handleClickOutside);
+            if (chartRef.current) {
+                chartRef.current.destroy();
+                chartRef.current = null;
+            }
         };
     }, []);
 
+    // Update list based on listType
     useEffect(() => {
         if (!weekData.length && !lifeData.length) {
             setList([]);
@@ -107,7 +108,6 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
         }
 
         const maxLength = Math.max(...newList.map(data => data.length));
-
         newList = newList.map(data => {
             const paddingLength = maxLength - data.length;
             const padding = Array(paddingLength).fill(null);
@@ -117,19 +117,18 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
         setList(newList);
     }, [listType, weekData, lifeData]);
 
-    useEffect(() => {  
+    // Update datasets and cleanup chart on change
+    useEffect(() => {
         if (!list.length || !gifts?.length) {
             setDatasets([]);
+            if (chartRef.current) {
+                chartRef.current.destroy();
+                chartRef.current = null;
+            }
             return;
         }
 
-        const colors = [
-            "#22c55e",
-            "#0098EA",
-            "#f43f5e",
-            "#d946ef",
-            "#f59e0b",
-        ];
+        const colors = ["#22c55e", "#0098EA", "#f43f5e", "#d946ef", "#f59e0b"];
 
         const newDatasets: DatasetInterface[] = list.map((data, index) => {
             const color = colors[index % colors.length];
@@ -162,13 +161,19 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
         });
 
         setDatasets(newDatasets);
+
+        // Cleanup previous chart instance
+        if (chartRef.current) {
+            chartRef.current.destroy();
+            chartRef.current = null;
+        }
     }, [list, selectedPrice, gifts]);
 
-    let index = list.findIndex(subArray =>
+    const index = list.findIndex(subArray =>
         subArray.every(item => item !== null && item.date !== undefined && typeof item.date === 'string')
     );
 
-    const labels = list[index]?.map((item: any) => listType === '24h' && item.time ? item.time.slice(0,5) : item.date.slice(0, 5)) || [];
+    const labels = list[index]?.map((item: any) => listType === '24h' && item.time ? item.time.slice(0, 5) : item.date.slice(0, 5)) || [];
 
     const formatNumber = (number: number) => {
         if (number >= 1000) {
@@ -186,7 +191,10 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
     const options: ChartOptions<"line"> = {
         responsive: true,
         plugins: {
-            legend: { display: true },
+            // Tie legend visibility to isInfoHidden
+            legend: {
+                display: !isInfoHidden, // Hide legend when isInfoHidden is true
+            },
             title: { display: false },
             tooltip: {
                 enabled: true,
@@ -202,21 +210,21 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
                     const { chart, tooltip } = context;
                     const ctx = chart.ctx;
 
-                    if (!tooltip || !tooltip.opacity) {
+                    if (!tooltip.opacity) {
+                        chart.setActiveElements([]);
+                        chart.tooltip?.setActiveElements([], { x: 0, y: 0 });
+                        chart.update();
                         return;
                     }
 
                     const tooltipX = tooltip.caretX;
-                    
                     ctx.save();
                     ctx.beginPath();
                     ctx.setLineDash([5, 5]);
                     ctx.lineWidth = 1;
                     ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-
                     ctx.moveTo(tooltipX, chart.chartArea.top);
                     ctx.lineTo(tooltipX, chart.chartArea.bottom);
-
                     ctx.stroke();
                     ctx.restore();
                 },
@@ -256,7 +264,7 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
 
     return (
         <div className="h-auto w-full">
-            {!isInfoHidden &&
+            {!isInfoHidden && (
                 <div className="w-full mb-2 flex flex-row justify-between">
                     <div className="w-1/2 flex flex-row box-border">
                         <button
@@ -279,13 +287,25 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
                         </button>
                     </div>
                 </div>
-            }
+            )}
 
             <div className="relative" ref={chartContainerRef}>
                 {datasets.length === 0 ? (
                     <div>No data available</div>
                 ) : (
-                    <Line ref={chartRef} data={data} options={options} />
+                    <Line
+                        key={`${listType}-${selectedPrice}`} // Force re-render on key change
+                        ref={(el) => {
+                            if (el) {
+                                if (chartRef.current) {
+                                    chartRef.current.destroy();
+                                }
+                                chartRef.current = el;
+                            }
+                        }}
+                        data={data}
+                        options={options}
+                    />
                 )}
             </div>
 

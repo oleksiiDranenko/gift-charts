@@ -67,7 +67,7 @@ export default function Page() {
                     <div className="w-full p-3 mt-7 bg-slate-800 bg-opacity-50 rounded-lg">
                         <div className="w-full flex flex-row justify-between items-center">
                             <h1 className="font-bold text-xl">
-                                📊 Treemap
+                                {'📊 Treemap (Beta)'}
                             </h1>
                             <Link
                                 href={'/tools/treemap'}

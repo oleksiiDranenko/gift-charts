@@ -27,6 +27,20 @@ export default function MainPage() {
 
     const dispatch = useDispatch();
 
+    const [copied, setCopied] = useState(false);
+    const walletAddress = "UQBs_lO45Mcj5oxXtUmu-ZLpC-4cUBWUNKUm7QpPSsx0U28S";
+
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(walletAddress);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 3000);
+        } catch (err) {
+            console.error("Failed to copy!", err);
+        }
+    };
+
+
     useEffect(() => {
         if (giftsList.length > 0) {
             let sortedList = [...giftsList];
@@ -269,6 +283,27 @@ export default function MainPage() {
                         Gift Charts
                     </span>
                 </a>
+            </div>
+
+            <div className="max-w-full flex justify-between items-center p-3 mt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                <span className="text-xl font-bold">
+                    🤝 Support
+                </span>
+
+                <button
+                    onClick={handleCopy}
+                    className="flex flex-row items-center justify-center font-bold p-3 gap-x-2 rounded-lg bg-slate-800"
+                    title="Copy to clipboard"
+                >
+                    <Image
+                        src={'/images/ton.webp'}
+                        alt="ton logo"
+                        height={16}
+                        width={16}
+                    />
+
+                    {copied ? 'Copied!' : 'Copy Address'}
+                </button>
             </div>
         </div>
     );
