@@ -228,7 +228,7 @@ export default function MainPage() {
                         </div>
 
                         {userList.length !== 0 ?
-                         <ChartHandler giftsList={userList.slice(0, 3)} filters={filters}/>
+                         <ChartHandler giftsList={userList.slice(0, 5)} filters={filters}/>
                          : 
                          <>
                              <div className="px-3 pt-3 pb-1 font-bold text-slate-400">

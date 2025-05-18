@@ -14,7 +14,7 @@ export default function Page() {
 
     const giftsList = useAppSelector((state) => state.giftsList);
     const [list, setList] = useState<GiftInterface[]>([]);
-    const [listType, setListType] = useState<'change' | 'marketCap' | 'supply' | 'price'>('change')
+    const [listType, setListType] = useState<'change' | 'marketCap'>('change')
 
     useEffect(() => {
         let sortedList = [...giftsList];
@@ -36,18 +36,18 @@ export default function Page() {
                     (b.priceTon * b.supply) - (a.priceTon * a.supply)
                 );
                 break;
-            case 'supply':
-                sortedList.sort((a, b) =>
-                    b.supply - a.supply
-                );
-                break;
+            // case 'supply':
+            //     sortedList.sort((a, b) =>
+            //         b.supply - a.supply
+            //     );
+            //     break;
         }
 
         setList(sortedList);
-    }, [giftsList]);
+    }, [giftsList, listType]);
 
     return (
-        <div className="w-screen pt-[70px] px-3 pb-4 mb-10 flex justify-center min-h-screen overflow-visible">
+        <div className="w-screen pt-[70px] px-3 pb-24 flex justify-center min-h-screen overflow-visible">
             <div className="w-full lg:w-1/2">
 				<div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
 					<button
@@ -61,10 +61,29 @@ export default function Page() {
 					</button>
 					
 				</div>
-				<h1 className="w-full text-center font-bold text-xl mb-5 mt-5">
-					{'📊 Top 25 Changes (last 24h)'}
-				</h1>
-                <TreemapChart data={list.slice(0, 25)} />
+
+				<div className="w-full gap-2 mt-5 mb-5 flex justify-end">
+                    <button
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'change' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        onClick={() => {
+                            setListType('change')
+                            vibrate()
+                        }} 
+                    >
+                        Change
+                    </button>
+                    <button
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'marketCap' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        onClick={() => {
+                            setListType('marketCap')
+                            vibrate()
+                        }}
+                    >
+                        Market Cap
+                    </button>
+                </div>
+
+                <TreemapChart data={list.slice(0, 25)} chartType={listType}/>
             </div>
         </div>
     )
