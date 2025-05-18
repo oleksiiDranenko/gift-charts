@@ -56,7 +56,7 @@ export default function MainPage() {
                 return filters.sort === 'lowFirst' ? aChange - bChange : bChange - aChange;
             });
 
-            setList(sortedList.slice(0, 3));
+            setList(sortedList.slice(0, 5));
         }
     }, [filters, giftsList]);
 
@@ -71,7 +71,7 @@ export default function MainPage() {
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-            setTopList(sortedList.slice(0, 3));
+            setTopList(sortedList.slice(0, 5));
         }
     }, [filters, giftsList]);
 
@@ -133,8 +133,8 @@ export default function MainPage() {
 
     return (
         <div>
-            <h1 className="mb-7 px-3 text-2xl font-bold">
-                {'Hourly Price updates ⏰'}
+            <h1 className="mb-5 px-3 text-2xl font-bold">
+                {'Hourly Price Updates ⏰'}
             </h1>
 
             <div className="max-w-full mx-3 flex items-center justify-between gap-x-3 mb-5">
@@ -165,7 +165,7 @@ export default function MainPage() {
             >
                 <div className="flex-none w-full snap-start">
                     <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                        <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
+                        <div className="w-full mb-1 px-3 flex flex-row justify-between items-center">
                             <h2 className="text-xl font-bold">
                                 🔥 Top Price Changes
                             </h2>
@@ -189,7 +189,7 @@ export default function MainPage() {
 
                 <div className="flex-none w-full snap-start">
                     <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                        <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
+                        <div className="w-full mb-1 px-3 flex flex-row justify-between items-center">
                             <h2 className="text-xl font-bold">
                                 🔥 Top Gifts
                             </h2>
@@ -211,7 +211,7 @@ export default function MainPage() {
 
                 <div className="flex-none w-full snap-start">
                     <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                        <div className="w-full mb-3 px-3 flex flex-row justify-between items-center">
+                        <div className="w-full mb-1 px-3 flex flex-row justify-between items-center">
                             <h2 className="text-xl font-bold">
                                 📌 Your Watchlist
                             </h2>
@@ -287,7 +287,7 @@ export default function MainPage() {
 
             <div className="max-w-full flex justify-between items-center p-3 mt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
                 <span className="text-xl font-bold">
-                    🤝 Support
+                    🤝 Donate
                 </span>
 
                 <button

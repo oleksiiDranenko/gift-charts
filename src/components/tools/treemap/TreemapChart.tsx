@@ -91,7 +91,6 @@ const imagePlugin = {
 
         ctx.drawImage(img, imageX, imageY, drawWidth, drawHeight);
 
-        ctx.font = `${fontSize}px sans-serif`;
         ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
 
@@ -99,7 +98,12 @@ const imagePlugin = {
         const textY1 = imageY + drawHeight + fontSize + lineSpacing / 2;
         const textY2 = textY1 + fontSize + lineSpacing;
 
+        // Bold font for item name
+        ctx.font = `bold ${fontSize}px sans-serif`;
         ctx.fillText(item.name, centerX, textY1);
+
+        // Regular font for percentChange
+        ctx.font = `${fontSize}px sans-serif`;
         ctx.fillText(`${item.percentChange}%`, centerX, textY2);
       }
     });
@@ -144,11 +148,11 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data }) => {
   imageMap,
   backgroundColor: (context: any) => {
     const percent = context.raw?._data?.percentChange || 0;
-    return percent >= 0 ? '#008000' : '#FF0000';  // Green for positive, Red for negative
+    return percent >= 0 ? '#008000' : '#E50000';  // Green for positive, Red for negative
   },
   spacing: 0,
   borderWidth: 0.5,
-  borderColor: '#F9F6EE',
+  borderColor: '#000',
 };
 
 

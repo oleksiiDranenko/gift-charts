@@ -87,13 +87,19 @@ export default function Account() {
                 }
                 return undefined
             }).filter((asset): asset is AssetDisplayInterface => asset !== undefined)
-    
+
+            updatedAssets.sort((a, b) => {
+                const valueA = currency === 'ton' ? a.priceTon * a.amount : a.priceUsd * a.amount
+                const valueB = currency === 'ton' ? b.priceTon * b.amount : b.priceUsd * b.amount
+                return valueB - valueA
+            })
+
             setAssetsArray(updatedAssets)
-    
+
             const totalPrice = updatedAssets.reduce((sum, asset) => {
                 return sum + (currency === 'ton' ? asset.priceTon * asset.amount : asset.priceUsd * asset.amount)
             }, 0)
-            
+
             setAssetsPrice(totalPrice)
         }
     }

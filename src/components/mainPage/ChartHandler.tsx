@@ -91,7 +91,7 @@ export default function ChartHandler({ giftsList, filters }: PropsInterface) {
                     setListType={handleListType}
                 />
 
-                <div className="px-3">
+                <div>
                     {giftsList.length > 0
                         ? giftsList.map((item: GiftInterface, index) => (
                             <GiftItem

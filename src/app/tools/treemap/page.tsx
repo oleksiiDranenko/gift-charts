@@ -47,11 +47,11 @@ export default function Page() {
     }, [giftsList]);
 
     return (
-        <div className="w-screen pt-[70px] px-3 pb-4 mb-5 flex justify-center min-h-screen overflow-visible">
+        <div className="w-screen pt-[70px] pb-4 mb-10 flex justify-center min-h-screen overflow-visible">
             <div className="w-full lg:w-1/2">
 				<div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
 					<button
-						className="w-full h-10 bg-slate-800 rounded-lg"
+						className="w-full mx-3 h-10 bg-slate-800 rounded-lg"
 						onClick={() => {
 							router.back()
 							vibrate()

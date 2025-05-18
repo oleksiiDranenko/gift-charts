@@ -71,7 +71,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
 
     return (
         <Link 
-            className="w-full h-20 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
+            className="w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}

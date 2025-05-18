@@ -20,12 +20,12 @@ import useVibrate from "@/hooks/useVibrate";
 ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Filler);
 
 interface PropsInterface {
-    gifts: GiftInterface[] | null;
+    gifts: GiftInterface[] |  null;
     weekData: (GiftWeekDataInterface[])[];
     lifeData: (GiftLifeDataInterface[])[];
     isInfoHidden: boolean,
-	listType: '24h' | '1w' | '1m' | 'all',
-	setListType(input: '24h' | '1w' | '1m' | 'all'): void
+    listType: '24h' | '1w' | '1m' | 'all',
+    setListType(input: '24h' | '1w' | '1m' | 'all'): void
 }
 
 interface DatasetInterface {
@@ -81,6 +81,10 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
             chartContainer.removeEventListener("touchmove", preventScroll);
             chartContainer.removeEventListener("touchend", preventScroll);
             document.removeEventListener("click", handleClickOutside);
+            // Destroy chart instance on unmount
+            if (chartRef.current) {
+                chartRef.current.destroy();
+            }
         };
     }, []);
 
@@ -186,7 +190,7 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
     const options: ChartOptions<"line"> = {
         responsive: true,
         plugins: {
-            legend: { display: true },
+            legend: { display: false }, // Explicitly disable legend
             title: { display: false },
             tooltip: {
                 enabled: true,
@@ -289,7 +293,7 @@ export default function CompareCharts({ gifts, weekData, lifeData, isInfoHidden,
                 )}
             </div>
 
-            <div className="mb-1 mt-5 flex flex-col">
+            <div className="mb-2 mt-3 flex flex-col">
                 <div className="w-full flex flex-row justify-between gap-x-3">
                     <button
                         className={`w-full text-sm h-10 ${listType === 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : ''}`}
