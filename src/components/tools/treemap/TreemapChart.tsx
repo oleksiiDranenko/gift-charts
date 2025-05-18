@@ -179,8 +179,11 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ width: '100%', minHeight: '600px' }}>
-      <canvas ref={canvasRef} />
+    <div className='relative' style={{ width: '100%', minHeight: '600px' }}>
+      <p className='z-50 absolute top-0 left-0 text-xs opacity-30'>
+        @gift_charts
+      </p>
+      <canvas ref={canvasRef}/>
     </div>
   );
 };
