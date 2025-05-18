@@ -121,7 +121,7 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
 
                 ctx.font = `${fontSize}px sans-serif`;
                 if (chartType === 'change') {
-                    ctx.fillText(`${item.percentChange}%`, centerX, textY2);
+                    ctx.fillText(`${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX, textY2);
                 } else {
                     const marketCapK = (item.marketCap ?? 0) / 1000;
                     const displayText = marketCapK >= 1000 
@@ -131,7 +131,11 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
                 }
 
                 ctx.font = `${priceFontSize}px sans-serif`;
-                ctx.fillText(`${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX, textY3);
+                if (chartType === 'change') {
+                    ctx.fillText(`${item.price.toFixed(2)} 💎`, centerX, textY3);
+                } else {
+                    ctx.fillText(`${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX, textY3);
+                }
             }
         });
     },
