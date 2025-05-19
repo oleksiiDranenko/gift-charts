@@ -68,8 +68,8 @@ export default function Page() {
 
     return (
         <div className="w-screen pt-[70px] px-3 pb-24 flex justify-center min-h-screen overflow-visible">
-            <div className="w-full lg:w-1/2">
-				<div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
+            <div className="w-full flex flex-col items-center">
+				<div className="w-full lg:w-1/2 flex flex-row justify-between items-center mb-3 gap-x-3">
 					<button
 						className="w-full h-10 bg-slate-800 rounded-lg"
 						onClick={() => {
@@ -82,7 +82,7 @@ export default function Page() {
 					
 				</div>
 
-				<div className="w-full gap-2 mt-5 mb-3 flex justify-end">
+				<div className="w-1/2 gap-2 mt-5 mb-3 flex justify-end">
                     <button
                         className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'change' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => {
@@ -103,7 +103,7 @@ export default function Page() {
                     </button>
                 </div>
 
-                <div className="w-full mb-3 bg-slate-800 rounded-lg bg-opacity-50">
+                <div className="w-full lg:w-1/2 mb-3 bg-slate-800 rounded-lg bg-opacity-50">
                     <div className="w-full mb-1 flex flex-col">
                         <div className="w-full flex flex-row justify-between gap-x-3">
                             
@@ -138,7 +138,7 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className="w-full mb-5 bg-slate-800 rounded-lg bg-opacity-50">
+                <div className="w-full lg:w-1/2 mb-5 bg-slate-800 rounded-lg bg-opacity-50">
                     <div className="w-full mb-1 flex flex-col">
                         <div className="w-full flex flex-row justify-between gap-x-3">
                             
