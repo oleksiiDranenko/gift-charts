@@ -32,10 +32,27 @@ interface CustomTreemapDataset extends ChartDataset<'treemap', TreemapDataPoint[
     hoverBorderColor?: string;
 }
 
-const transformGiftData = (gifts: GiftInterface[], chartType: 'change' | 'marketCap'): GiftData[] => {
+const transformGiftData = (
+    gifts: GiftInterface[],
+    chartType: 'change' | 'marketCap',
+    timeGap: '24h' | '1w' | '1m'
+): GiftData[] => {
     return gifts.map((gift) => {
         const now = gift.priceTon ?? 0;
-        const then = gift.tonPrice24hAgo ?? now;
+        let then: number;
+        switch (timeGap) {
+            case '24h':
+                then = gift.tonPrice24hAgo ?? now;
+                break;
+            case '1w':
+                then = gift.tonPriceWeekAgo ?? now;
+                break;
+            case '1m':
+                then = gift.tonPriceMonthAgo ?? now;
+                break;
+            default:
+                then = now;
+        }
         const percentChange = then === 0 ? 0 : ((now - then) / then) * 100;
         let size: number;
         let marketCap: number | undefined;
@@ -144,9 +161,10 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
 interface TreemapChartProps {
     data: GiftInterface[];
     chartType: 'change' | 'marketCap';
+    timeGap: '24h' | '1w' | '1m';
 }
 
-const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType }) => {
+const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const chartRef = useRef<Chart<'treemap', TreemapDataPoint[], unknown> | null>(null);
 
@@ -160,7 +178,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType }) => {
             chartRef.current.destroy();
         }
 
-        const transformed = transformGiftData(data, chartType);
+        const transformed = transformGiftData(data, chartType, timeGap);
         const imageMap = preloadImages(transformed);
 
         const dataset: CustomTreemapDataset = {
@@ -205,7 +223,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType }) => {
             chartRef.current?.destroy();
             chartRef.current = null;
         };
-    }, [data, chartType]);
+    }, [data, chartType, timeGap]);
 
     return (
         <div className='relative' style={{ width: '100%', minHeight: '600px' }}>
