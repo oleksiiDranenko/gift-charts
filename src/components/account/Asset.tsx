@@ -54,7 +54,7 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                             : <span className="mr-1">$</span>
                         }
                         <span className="text-base font-bold">
-                            {currency === 'ton' ? priceTon * amount : priceUsd * amount}
+                            {(currency === 'ton' ? priceTon * amount : priceUsd * amount).toFixed(2)}
                         </span>
                     </div>
                     
