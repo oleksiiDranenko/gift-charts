@@ -67,7 +67,7 @@ export default function Page({ params }: any) {
                             giftUrlList.map((item) => {
                                 if(item.name === gift.name) {
                                     return (
-                                        <div className="flex justify-center text-[#0098EA] mt-5 p-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                                        <div key={gift._id} className="flex justify-center text-[#0098EA] mt-5 p-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
                                             <a href={`https://t.me/tonnel_network_bot/gifts?startapp=ref_754292445=${item.path}`}>
                                                 Open Gift on Tonnel Marketplace
                                             </a>
