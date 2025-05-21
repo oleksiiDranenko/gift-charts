@@ -82,7 +82,7 @@ export default function Page() {
 					
 				</div>
 
-				<div className="w-1/2 gap-2 mt-5 mb-3 flex justify-end">
+				<div className="w-full lg:w-1/2 gap-2 mt-5 mb-3 flex justify-end">
                     <button
                         className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'change' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
                         onClick={() => {

@@ -9,6 +9,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 import { useRouter } from "next/navigation";
+import { giftUrlList } from "@/tonnelUrl/giftUrlList";
 
 export default function Page({ params }: any) {
     const [gift, setGift] = useState<GiftInterface | null>(null);
@@ -62,6 +63,19 @@ export default function Page({ params }: any) {
                             </div>
                         </div>
                         <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
+                        {
+                            giftUrlList.map((item) => {
+                                if(item.name === gift.name) {
+                                    return (
+                                        <div className="flex justify-center text-[#0098EA] mt-5 p-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                                            <a href={`https://t.me/tonnel_network_bot/gifts?startapp=ref_754292445=${item.path}`}>
+                                                Open Gift on Tonnel Marketplace
+                                            </a>
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
                         <GiftStats gift={gift} />
                     </div>
                     :

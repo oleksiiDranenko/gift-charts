@@ -102,7 +102,7 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
             const { x, y, width, height } = meta;
             const img = imageMap.get(item.imageName);
             if (img && img.complete && width > 0 && height > 0) {
-                const baseSize = Math.min(Math.max(width / 6, 16), 300);
+                const baseSize = Math.min(Math.max(width / 6, 3), 300);
                 const imgAspect = img.width / img.height;
 
                 let drawWidth = baseSize;
@@ -112,7 +112,7 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
                     drawWidth = baseSize * imgAspect;
                 }
 
-                const fontSize = Math.min(Math.max(width / 10, 8), 18);
+                const fontSize = Math.min(Math.max(width / 10, 2), 18);
                 const priceFontSize = fontSize * 0.8;
                 const textLines = 3;
                 const lineSpacing = 4;
