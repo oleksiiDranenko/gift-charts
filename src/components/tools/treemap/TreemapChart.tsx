@@ -153,6 +153,18 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
                 } else {
                     ctx.fillText(`${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX, textY3);
                 }
+
+                // Add watermark to the bottom-right corner of the first gift's square
+                if (index === 0) {
+                    const watermarkFontSize = Math.min(Math.max(width / 12, 10), 14);
+                    ctx.font = `${watermarkFontSize}px sans-serif`;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; // Semi-transparent white
+                    ctx.textAlign = 'right';
+                    const watermarkText = '@gift_charts';
+                    const watermarkX = x + width - 5; // 5px padding from right edge
+                    const watermarkY = y + height - 5; // 5px padding from bottom edge
+                    ctx.fillText(watermarkText, watermarkX, watermarkY);
+                }
             }
         });
     },
@@ -226,10 +238,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
     }, [data, chartType, timeGap]);
 
     return (
-        <div className='relative' style={{ width: '100%', minHeight: '600px' }}>
-            <p className='z-50 absolute top-0 left-0 text-xs opacity-50'>
-                @gift_charts
-            </p>
+        <div style={{ width: '100%', minHeight: '600px' }}>
             <canvas ref={canvasRef} />
         </div>
     );
