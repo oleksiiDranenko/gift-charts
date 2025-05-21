@@ -137,6 +137,20 @@ export default function MainPage() {
                 {'Hourly Price Updates ⏰'}
             </h1>
 
+            <div className=" p-3 mt-5 mb-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                <div className="w-full flex flex-row justify-between items-center">
+                    <h1 className="font-bold text-xl">
+                        {'📊 Treemap '} <span className="text-sm ml-3 text-yellow-400">New!</span>
+                    </h1>
+                    <Link
+                        href={'/tools/treemap'}
+                        className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                    >
+                        {'Try it Now ->'}
+                    </Link>
+                </div>                        
+            </div>
+
             <div className="max-w-full mx-3 flex items-center justify-between gap-x-3 mb-5">
                 <button
                     className={`w-1/3 text-sm text-slate-400 h-10 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
