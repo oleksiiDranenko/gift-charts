@@ -122,8 +122,8 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
 
                 const fontSize = Math.min(Math.max(width / 10, 1), 18);
                 const priceFontSize = fontSize * 0.8;
-                const textLines = 3; // Corrected to 3 to match the three text lines
-                const lineSpacing = Math.min(Math.max(width / 20, 2), 8); // Improved spacing
+                const textLines = 3;
+                const lineSpacing = Math.min(Math.max(width / 20, 2), 8);
                 const textHeight = (fontSize * 2 + priceFontSize) + lineSpacing * 2;
                 const totalContentHeight = drawHeight + textHeight + lineSpacing;
 
