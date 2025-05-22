@@ -258,6 +258,14 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                 },
                                 pinch: {
                                     enabled: true,
+                                    // Custom pinch handler to enforce proportional zooming
+                                    modifier: (chart: any, event: any) => {
+                                        const { scale } = event;
+                                        // Use the same scale factor for both axes
+                                        const zoomFactor = scale > 1 ? 1.1 : 0.9; // Adjust zoom speed
+                                        chart.zoom(zoomFactor); // Apply uniform zoom
+                                        return false; // Prevent default non-proportional zoom
+                                    },
                                 },
                                 mode: 'xy',
                             },
