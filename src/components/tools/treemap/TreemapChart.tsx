@@ -268,9 +268,10 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                     },
                                     mode: 'xy',
                                     limits: {
-                                        x: { min: 'original', max: 'original', minRange: 1, maxRange: 5 },
-                                        y: { min: 'original', max: 'original', minRange: 1, maxRange: 5 },
+                                        x: { min: 1, max: 5 },
+                                        y: { min: 1, max: 5 },
                                     },
+
                                 },
                                 pan: {
                                     enabled: true,
@@ -341,7 +342,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                     className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
                     onClick={() => chartRef.current?.resetZoom()}
                 >
-                    Reset Zoom
+                    Reset Zoom v2
                 </button>
             </div>
             <div style={{ width: '100%', minHeight: '600px' }}>
