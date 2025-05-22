@@ -105,20 +105,22 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
 
             const img = imageMap.get(item.imageName);
             if (img && img.complete && width > 0 && height > 0) {
-                const baseSize = Math.min(Math.max(width / 6, 5), 500);
-                const imgAspect = img.width / img.height;
+                const minSize = Math.min(width, height);
 
+                const baseSize = Math.min(Math.max(minSize / 6, 5), 500);
+                const imgAspect = img.width / img.height;
+                            
                 let drawWidth = baseSize;
                 let drawHeight = baseSize / imgAspect;
                 if (drawHeight > baseSize) {
                     drawHeight = baseSize;
                     drawWidth = baseSize * imgAspect;
                 }
-
-                const fontSize = Math.min(Math.max(width / 10, 1), 18);
+                
+                const fontSize = Math.min(Math.max(minSize / 10, 1), 18);
                 const priceFontSize = fontSize * 0.8;
-                const textLines = 3;
-                const lineSpacing = Math.min(Math.max(width / 20, 2), 8);
+                const lineSpacing = Math.min(Math.max(minSize / 20, 2), 8);
+
                 const textHeight = (fontSize * 2 + priceFontSize) + lineSpacing * 2;
                 const totalContentHeight = drawHeight + textHeight + lineSpacing;
 
@@ -285,7 +287,37 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                 pan: {
                                     enabled: true,
                                     mode: 'xy',
+                                    onPan: (ctx: { chart: any }) => {
+                                        const chart = ctx.chart;
+                                        const panLevel = chart.getZoomLevel?.() ?? 1;
+                                    
+                                        // Optional: auto-reset if panned too far (fallback)
+                                        if (panLevel <= 1) {
+                                            chart.resetZoom();
+                                        }
+                                    },
+                                    beforePan: (ctx: { chart: any }, delta: any) => {
+                                        const chart = ctx.chart;
+                                        const scale = chart.getZoomLevel?.() ?? 1;
+                                    
+                                        if (scale <= 1) {
+                                            return false; // Don't allow pan when fully zoomed out
+                                        }
+                                    
+                                        // Clamp pan to prevent moving beyond bounds
+                                        const panDeltaX = delta.x ?? 0;
+                                        const panDeltaY = delta.y ?? 0;
+                                    
+                                        const maxPan = 1000; // adjust this if needed depending on zoom scale
+                                    
+                                        if (Math.abs(panDeltaX) > maxPan || Math.abs(panDeltaY) > maxPan) {
+                                            return false;
+                                        }
+                                    
+                                        return true;
+                                    },
                                 },
+
                             },
 
 
