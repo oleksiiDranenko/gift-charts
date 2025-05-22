@@ -122,8 +122,8 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
 
                 const fontSize = Math.min(Math.max(width / 10, 1), 18);
                 const priceFontSize = fontSize * 0.8;
-                const textLines = 1;
-                const lineSpacing = Math.min(Math.max(width / 20, 0), 5);
+                const textLines = 3; // Corrected to 3 to match the three text lines
+                const lineSpacing = Math.min(Math.max(width / 20, 2), 8); // Improved spacing
                 const textHeight = (fontSize * 2 + priceFontSize) + lineSpacing * 2;
                 const totalContentHeight = drawHeight + textHeight + lineSpacing;
 
@@ -264,12 +264,16 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                 chartRef.current.resetZoom();
             }
         };
-        window.addEventListener('keydown', handleKeydown);
+        if (typeof window !== 'undefined') {
+            window.addEventListener('keydown', handleKeydown);
+        }
 
         return () => {
             chartRef.current?.destroy();
             chartRef.current = null;
-            window.removeEventListener('keydown', handleKeydown);
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('keydown', handleKeydown);
+            }
         };
     }, [data, chartType, timeGap]);
 
