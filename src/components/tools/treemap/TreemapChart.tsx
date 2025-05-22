@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Hammer from 'hammerjs';
 import type GiftInterface from '@/interfaces/GiftInterface';
 import type { TreemapDataPoint, TreemapScriptableContext } from 'chartjs-chart-treemap';
 
@@ -186,10 +185,9 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
     const chartRef = useRef<any>(null);
 
     useEffect(() => {
-        let Chart: any, TreemapController: any, TreemapElement: any, chartjsPluginZoom: any;
-        let hammer: HammerManager | null = null;
+        let Chart: any, TreemapController: any, TreemapElement: any, chartjsPluginZoom: any, Hammer: any;
 
-        // Dynamically import Chart.js and plugins only on the client side
+        // Dynamically import Chart.js, plugins, and Hammer.js only on the client side
         const initializeChart = async () => {
             if (typeof window === 'undefined') {
                 console.log('Skipping chart initialization on server');
@@ -198,104 +196,117 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
 
             console.log('Initializing chart on client');
 
-            // Dynamic imports
-            const chartModule = await import('chart.js/auto');
-            const treemapModule = await import('chartjs-chart-treemap');
-            const zoomModule = await import('chartjs-plugin-zoom');
+            try {
+                // Dynamic imports with logging
+                console.log('Loading chart.js');
+                const chartModule = await import('chart.js/auto');
+                console.log('Loading chartjs-chart-treemap');
+                const treemapModule = await import('chartjs-chart-treemap');
+                console.log('Loading chartjs-plugin-zoom');
+                const zoomModule = await import('chartjs-plugin-zoom');
+                console.log('Loading hammerjs');
+                const hammerModule = await import('hammerjs');
 
-            Chart = chartModule.default;
-            TreemapController = treemapModule.TreemapController;
-            TreemapElement = treemapModule.TreemapElement;
-            chartjsPluginZoom = zoomModule.default;
+                Chart = chartModule.default;
+                TreemapController = treemapModule.TreemapController;
+                TreemapElement = treemapModule.TreemapElement;
+                chartjsPluginZoom = zoomModule.default;
+                Hammer = hammerModule.default;
 
-            // Register plugins
-            Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
+                // Register plugins
+                Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
 
-            if (!canvasRef.current || !data || data.length === 0) return;
+                if (!canvasRef.current || !data || data.length === 0) return;
 
-            const ctx = canvasRef.current.getContext('2d');
-            if (!ctx) return;
+                const ctx = canvasRef.current.getContext('2d');
+                if (!ctx) return;
 
-            if (chartRef.current) {
-                chartRef.current.destroy();
-            }
+                if (chartRef.current) {
+                    chartRef.current.destroy();
+                }
 
-            const transformed = transformGiftData(data, chartType, timeGap);
-            const imageMap = preloadImages(transformed);
+                const transformed = transformGiftData(data, chartType, timeGap);
+                const imageMap = preloadImages(transformed);
 
-            const dataset: CustomTreemapDataset = {
-                data: [],
-                tree: transformed,
-                key: 'size',
-                imageMap,
-                backgroundColor: (ctx: TreemapScriptableContext) => {
-                    const dataset = ctx.dataset as CustomTreemapDataset;
-                    const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                    return percent >= 0 ? '#008000' : '#E50000';
-                },
-                spacing: 0,
-                borderWidth: 0.5,
-                borderColor: '#000',
-                hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
-                    const dataset = ctx.dataset as CustomTreemapDataset;
-                    const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                    return percent >= 0 ? '#008000' : '#E50000';
-                },
-                hoverBorderColor: '#000',
-            };
+                const dataset: CustomTreemapDataset = {
+                    data: [],
+                    tree: transformed,
+                    key: 'size',
+                    imageMap,
+                    backgroundColor: (ctx: TreemapScriptableContext) => {
+                        const dataset = ctx.dataset as CustomTreemapDataset;
+                        const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                        return percent >= 0 ? '#008000' : '#E50000';
+                    },
+                    spacing: 0,
+                    borderWidth: 0.5,
+                    borderColor: '#000',
+                    hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
+                        const dataset = ctx.dataset as CustomTreemapDataset;
+                        const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                        return percent >= 0 ? '#008000' : '#E50000';
+                    },
+                    hoverBorderColor: '#000',
+                };
 
-            const config: any = {
-                type: 'treemap',
-                data: { datasets: [dataset] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false },
-                        zoom: {
+                const config: any = {
+                    type: 'treemap',
+                    data: { datasets: [dataset] },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false },
                             zoom: {
-                                wheel: {
+                                zoom: {
+                                    wheel: {
+                                        enabled: true,
+                                    },
+                                    pinch: {
+                                        enabled: false, // Disable chartjs-plugin-zoom pinch handling
+                                    },
+                                    mode: 'xy',
+                                    limits: {
+                                        x: { min: 'original', max: 'original', minRange: 0.5, maxRange: 5 },
+                                        y: { min: 'original', max: 'original', minRange: 0.5, maxRange: 5 },
+                                    },
+                                },
+                                pan: {
                                     enabled: true,
+                                    mode: 'xy',
                                 },
-                                pinch: {
-                                    enabled: false, // Disable chartjs-plugin-zoom pinch handling
-                                },
-                                mode: 'xy',
-                            },
-                            pan: {
-                                enabled: true,
-                                mode: 'xy',
-                            },
-                            limits: {
-                                x: { min: 'original', max: 'original', minRange: 0.5, maxRange: 5 },
-                                y: { min: 'original', max: 'original', minRange: 0.5, maxRange: 5 },
                             },
                         },
+                        events: ['wheel', 'touchstart', 'touchmove', 'touchend'],
                     },
-                    events: ['wheel', 'touchstart', 'touchmove', 'touchend'],
-                },
-                plugins: [imagePlugin(chartType)],
-            };
+                    plugins: [imagePlugin(chartType)],
+                };
 
-            chartRef.current = new Chart(ctx, config);
+                chartRef.current = new Chart(ctx, config);
 
-            // Set up Hammer.js for custom pinch handling
-            if (canvasRef.current) {
-                hammer = new Hammer(canvasRef.current);
-                hammer.get('pinch').set({ enable: true });
-                hammer.on('pinch', (e) => {
-                    console.log('Hammer pinch event:', e);
-                    const scale = e.scale;
-                    const zoomFactor = scale > 1 ? 1.1 : 0.9; // Adjust zoom speed
-                    console.log('Applying zoomFactor:', zoomFactor);
-                    if (chartRef.current) {
-                        chartRef.current.zoom(zoomFactor, {
-                            x: chartRef.current.width / 2,
-                            y: chartRef.current.height / 2,
-                        });
-                    }
-                });
+                // Set up Hammer.js for custom pinch handling
+                if (canvasRef.current) {
+                    console.log('Initializing Hammer.js');
+                    const hammer = new Hammer(canvasRef.current);
+                    hammer.get('pinch').set({ enable: true });
+                    hammer.on('pinch', (e: any) => {
+                        console.log('Hammer pinch event:', e);
+                        const scale = e.scale;
+                        const zoomFactor = scale > 1 ? 1.1 : 0.9;
+                        console.log('Applying zoomFactor:', zoomFactor);
+                        if (chartRef.current) {
+                            chartRef.current.zoom(zoomFactor, {
+                                x: chartRef.current.width / 2,
+                                y: chartRef.current.height / 2,
+                            });
+                        }
+                    });
+                    // Store hammer instance for cleanup
+                    (canvasRef.current as any).__hammer = hammer;
+                }
+            } catch (error) {
+                console.error('Error initializing chart:', error);
             }
         };
 
@@ -313,8 +324,10 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
         return () => {
             chartRef.current?.destroy();
             chartRef.current = null;
-            hammer?.destroy();
-            hammer = null;
+            if (canvasRef.current && (canvasRef.current as any).__hammer) {
+                (canvasRef.current as any).__hammer.destroy();
+                (canvasRef.current as any).__hammer = null;
+            }
             if (typeof window !== 'undefined') {
                 window.removeEventListener('keydown', handleKeydown);
             }
@@ -328,7 +341,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                     className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
                     onClick={() => chartRef.current?.resetZoom()}
                 >
-                    Reset Zoom
+                    Reset Zoom v1
                 </button>
             </div>
             <div style={{ width: '100%', minHeight: '600px' }}>
