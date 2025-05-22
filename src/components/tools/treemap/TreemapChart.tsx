@@ -264,20 +264,31 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                         enabled: true,
                                     },
                                     pinch: {
-                                        enabled: false, // Disable chartjs-plugin-zoom pinch handling
+                                        enabled: false,
                                     },
                                     mode: 'xy',
-                                    limits: {
-                                        x: { min: 1, max: 5 },
-                                        y: { min: 1, max: 5 },
+                                    beforeZoom: (ctx: { chart: any }, zoom: any) => {
+                                        const zoomLevel = ctx.chart.getZoomLevel?.() ?? 1;
+                                        const nextZoomLevel = zoomLevel * zoom.scale;
+                                        if (nextZoomLevel < 1) {
+                                            return false; // prevent zoom out beyond initial size
+                                        }
+                                        return true;
                                     },
-
+                                    onZoom: (ctx: { chart: any }) => {
+                                        const zoomLevel = ctx.chart.getZoomLevel?.() ?? 1;
+                                        if (zoomLevel < 1) {
+                                            ctx.chart.resetZoom();
+                                        }
+                                    },
                                 },
                                 pan: {
                                     enabled: true,
                                     mode: 'xy',
                                 },
                             },
+
+
                         },
                         events: ['wheel', 'touchstart', 'touchmove', 'touchend'],
                     },
@@ -342,7 +353,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                     className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
                     onClick={() => chartRef.current?.resetZoom()}
                 >
-                    Reset Zoom v2
+                    Reset Zoom
                 </button>
             </div>
             <div style={{ width: '100%', minHeight: '600px' }}>
