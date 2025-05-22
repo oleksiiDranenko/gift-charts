@@ -1,3 +1,4 @@
+// Full implementation with interactivity disabled at default zoom level
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -27,60 +28,62 @@ interface CustomTreemapDataset {
     hoverBorderColor?: string;
 }
 
-const transformGiftData = (
-    gifts: GiftInterface[],
-    chartType: 'change' | 'marketCap',
-    timeGap: '24h' | '1w' | '1m'
-): GiftData[] => {
+const updateInteractivity = (chart: any) => {
+  const zoomLevel = chart.getZoomLevel?.() ?? 1;
+  chart.options.plugins.zoom.pan.enabled = zoomLevel > 1;
+  chart.options.events = zoomLevel > 1
+    ? ['mousemove', 'click', 'touchstart', 'touchmove', 'touchend']
+    : [];
+  
+  const canvas = chart.canvas as HTMLCanvasElement;
+  if (canvas) {
+    canvas.style.cursor = zoomLevel > 1 ? 'pointer' : 'default';
+  }
+
+  chart.update('none');
+};
+
+
+const transformGiftData = (gifts: GiftInterface[], chartType: 'change' | 'marketCap', timeGap: '24h' | '1w' | '1m'): GiftData[] => {
     return gifts.map((gift) => {
         const now = gift.priceTon ?? 0;
         let then: number;
         switch (timeGap) {
-            case '24h':
-                then = gift.tonPrice24hAgo ?? now;
-                break;
-            case '1w':
-                then = gift.tonPriceWeekAgo ?? now;
-                break;
-            case '1m':
-                then = gift.tonPriceMonthAgo ?? now;
-                break;
-            default:
-                then = now;
+            case '24h': then = gift.tonPrice24hAgo ?? now; break;
+            case '1w': then = gift.tonPriceWeekAgo ?? now; break;
+            case '1m': then = gift.tonPriceMonthAgo ?? now; break;
+            default: then = now;
         }
         const percentChange = then === 0 ? 0 : ((now - then) / then) * 100;
         let size: number;
         let marketCap: number | undefined;
 
         if (chartType === 'change') {
-            size = Math.abs(percentChange) + 1;
-            size = Math.pow(size, 1.5);
-            size *= 2;
+            size = Math.pow(Math.abs(percentChange) + 1, 1.5) * 2;
         } else {
             marketCap = now * (gift.supply ?? 0);
-            size = marketCap / 1000;
-            size = Math.max(size, 1);
+            size = Math.max(marketCap / 1000, 1);
         }
 
         return {
             name: gift.name,
             percentChange: Number(percentChange.toFixed(2)),
-            size: size,
+            size,
             imageName: gift.image,
             price: now,
-            marketCap: marketCap,
+            marketCap,
         };
     });
 };
 
 const preloadImages = (data: GiftData[]): Map<string, HTMLImageElement> => {
-    const imageMap = new Map<string, HTMLImageElement>();
-    data.forEach((item) => {
+    const map = new Map();
+    data.forEach(({ imageName }) => {
         const img = new Image();
-        img.src = `/gifts/${item.imageName}.webp`;
-        imageMap.set(item.imageName, img);
+        img.src = `/gifts/${imageName}.webp`;
+        map.set(imageName, img);
     });
-    return imageMap;
+    return map;
 };
 
 const imagePlugin = (chartType: 'change' | 'marketCap') => ({
@@ -89,86 +92,60 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
         const { ctx, data } = chart;
         const dataset = data.datasets[0] as any;
         const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
-
         const scale = chart.getZoomLevel ? chart.getZoomLevel() : 1;
+
         ctx.save();
         ctx.scale(scale, scale);
 
         dataset.tree.forEach((item: GiftData, index: number) => {
             const meta = chart.getDatasetMeta(0).data[index] as any;
             if (!meta) return;
-
-            const x = meta.x / scale;
-            const y = meta.y / scale;
-            const width = meta.width / scale;
-            const height = meta.height / scale;
-
+            const x = meta.x / scale, y = meta.y / scale;
+            const width = meta.width / scale, height = meta.height / scale;
             const img = imageMap.get(item.imageName);
-            if (img && img.complete && width > 0 && height > 0) {
-                const minSize = Math.min(width, height);
+            if (!img?.complete || width <= 0 || height <= 0) return;
 
-                const baseSize = Math.min(Math.max(minSize / 6, 5), 500);
-                const imgAspect = img.width / img.height;
-                            
-                let drawWidth = baseSize;
-                let drawHeight = baseSize / imgAspect;
-                if (drawHeight > baseSize) {
-                    drawHeight = baseSize;
-                    drawWidth = baseSize * imgAspect;
-                }
-                
-                const fontSize = Math.min(Math.max(minSize / 10, 1), 18);
-                const priceFontSize = fontSize * 0.8;
-                const lineSpacing = Math.min(Math.max(minSize / 20, 2), 8);
+            const minSize = Math.min(width, height);
+            const baseSize = Math.min(Math.max(minSize / 6, 5), 500);
+            const imgAspect = img.width / img.height;
+            let drawWidth = baseSize, drawHeight = baseSize / imgAspect;
+            if (drawHeight > baseSize) {
+                drawHeight = baseSize;
+                drawWidth = baseSize * imgAspect;
+            }
 
-                const textHeight = (fontSize * 2 + priceFontSize) + lineSpacing * 2;
-                const totalContentHeight = drawHeight + textHeight + lineSpacing;
+            const fontSize = Math.min(Math.max(minSize / 10, 1), 18);
+            const priceFontSize = fontSize * 0.8;
+            const lineSpacing = Math.min(Math.max(minSize / 20, 2), 8);
+            const totalContentHeight = drawHeight + (fontSize * 2 + priceFontSize) + lineSpacing * 3;
+            const startY = y + (height - totalContentHeight) / 2;
+            const centerX = x + width / 2;
 
-                const startY = y + (height - totalContentHeight) / 2;
-                const imageX = x + (width - drawWidth) / 2;
-                const imageY = startY;
+            ctx.drawImage(img, x + (width - drawWidth) / 2, startY, drawWidth, drawHeight);
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
 
-                ctx.drawImage(img, imageX, imageY, drawWidth, drawHeight);
+            ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.fillText(item.name, centerX, startY + drawHeight + fontSize + lineSpacing);
 
-                ctx.fillStyle = 'white';
-                ctx.textAlign = 'center';
+            ctx.font = `${fontSize}px sans-serif`;
+            ctx.fillText(chartType === 'change' ? `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%` :
+                ((item.marketCap ?? 0) / 1000 >= 1000
+                    ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M 💎`
+                    : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K 💎`),
+                centerX, startY + drawHeight + fontSize * 2 + lineSpacing * 2);
 
-                const centerX = x + width / 2;
-                const textY1 = imageY + drawHeight + fontSize + lineSpacing / 2;
-                const textY2 = textY1 + fontSize + lineSpacing;
-                const textY3 = textY2 + priceFontSize + lineSpacing;
+            ctx.font = `${priceFontSize}px sans-serif`;
+            ctx.fillText(chartType === 'change'
+                ? `${item.price.toFixed(2)} 💎`
+                : `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX,
+                startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
 
-                ctx.font = `bold ${fontSize}px sans-serif`;
-                ctx.fillText(item.name, centerX, textY1);
-
-                ctx.font = `${fontSize}px sans-serif`;
-                if (chartType === 'change') {
-                    ctx.fillText(`${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX, textY2);
-                } else {
-                    const marketCapK = (item.marketCap ?? 0) / 1000;
-                    const displayText = marketCapK >= 1000 
-                        ? `${(marketCapK / 1000).toFixed(1)}M 💎`
-                        : `${marketCapK.toFixed(1)}K 💎`;
-                    ctx.fillText(displayText, centerX, textY2);
-                }
-
-                ctx.font = `${priceFontSize}px sans-serif`;
-                if (chartType === 'change') {
-                    ctx.fillText(`${item.price.toFixed(2)} 💎`, centerX, textY3);
-                } else {
-                    ctx.fillText(`${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX, textY3);
-                }
-
-                if (index === 0) {
-                    const watermarkFontSize = Math.min(Math.max(width / 12, 10), 14);
-                    ctx.font = `${watermarkFontSize}px sans-serif`;
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                    ctx.textAlign = 'right';
-                    const watermarkText = '@gift_charts';
-                    const watermarkX = x + width - 5;
-                    const watermarkY = y + height - 5;
-                    ctx.fillText(watermarkText, watermarkX, watermarkY);
-                }
+            if (index === 0) {
+                ctx.font = `14px sans-serif`;
+                ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                ctx.textAlign = 'right';
+                ctx.fillText('@gift_charts', x + width - 5, y + height - 5);
             }
         });
 
@@ -189,24 +166,12 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
     useEffect(() => {
         let Chart: any, TreemapController: any, TreemapElement: any, chartjsPluginZoom: any, Hammer: any;
 
-        // Dynamically import Chart.js, plugins, and Hammer.js only on the client side
         const initializeChart = async () => {
-            if (typeof window === 'undefined') {
-                console.log('Skipping chart initialization on server');
-                return;
-            }
-
-            console.log('Initializing chart on client');
-
+            if (!window) return;
             try {
-                // Dynamic imports with logging
-                console.log('Loading chart.js');
                 const chartModule = await import('chart.js/auto');
-                console.log('Loading chartjs-chart-treemap');
                 const treemapModule = await import('chartjs-chart-treemap');
-                console.log('Loading chartjs-plugin-zoom');
                 const zoomModule = await import('chartjs-plugin-zoom');
-                console.log('Loading hammerjs');
                 const hammerModule = await import('hammerjs');
 
                 Chart = chartModule.default;
@@ -215,45 +180,36 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                 chartjsPluginZoom = zoomModule.default;
                 Hammer = hammerModule.default;
 
-                // Register plugins
                 Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
 
-                if (!canvasRef.current || !data || data.length === 0) return;
+                const ctx = canvasRef.current?.getContext('2d');
+                if (!ctx || !data?.length) return;
 
-                const ctx = canvasRef.current.getContext('2d');
-                if (!ctx) return;
-
-                if (chartRef.current) {
-                    chartRef.current.destroy();
-                }
+                chartRef.current?.destroy();
 
                 const transformed = transformGiftData(data, chartType, timeGap);
                 const imageMap = preloadImages(transformed);
 
-                const dataset: CustomTreemapDataset = {
-                    data: [],
-                    tree: transformed,
-                    key: 'size',
-                    imageMap,
-                    backgroundColor: (ctx: TreemapScriptableContext) => {
-                        const dataset = ctx.dataset as CustomTreemapDataset;
-                        const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                        return percent >= 0 ? '#008000' : '#E50000';
-                    },
-                    spacing: 0,
-                    borderWidth: 0.5,
-                    borderColor: '#000',
-                    hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
-                        const dataset = ctx.dataset as CustomTreemapDataset;
-                        const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                        return percent >= 0 ? '#008000' : '#E50000';
-                    },
-                    hoverBorderColor: '#000',
-                };
-
                 const config: any = {
                     type: 'treemap',
-                    data: { datasets: [dataset] },
+                    data: { datasets: [{
+                        data: [],
+                        tree: transformed,
+                        key: 'size',
+                        imageMap,
+                        backgroundColor: (ctx: TreemapScriptableContext) => {
+                          const dataset = ctx.dataset as CustomTreemapDataset;
+                          const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                          return val >= 0 ? '#008000' : '#E50000';
+                        },
+                        hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
+                          const dataset = ctx.dataset as CustomTreemapDataset;
+                          const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                          return val >= 0 ? '#008000' : '#E50000';
+                        },
+
+                        hoverBorderColor: '#000'
+                    }] },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
@@ -261,152 +217,84 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                             legend: { display: false },
                             tooltip: { enabled: false },
                             zoom: {
-                                zoom: {
-                                    wheel: {
-                                        enabled: true,
-                                        speed: 0.01,
-                                    },
-                                    pinch: {
-                                        enabled: false,
-                                        speed: 0.01,
-                                    },
-                                    mode: 'xy',
-                                    beforeZoom: (ctx: { chart: any }, zoom: any) => {
-                                        const zoomLevel = ctx.chart.getZoomLevel?.() ?? 1;
-                                        const nextZoomLevel = zoomLevel * zoom.scale;
-                                        if (nextZoomLevel < 1) {
-                                            return false; // prevent zoom out beyond initial size
-                                        }
-                                        return true;
-                                    },
-                                    onZoom: (ctx: { chart: any }) => {
-                                        const zoomLevel = ctx.chart.getZoomLevel?.() ?? 1;
-                                        if (zoomLevel < 1) {
-                                            ctx.chart.resetZoom();
-                                        }
-                                    },
-                                },
+                                zoom: { wheel: { enabled: false }, pinch: { enabled: false }, mode: 'xy' },
                                 pan: {
-                                    enabled: true,
+                                    enabled: false,
                                     mode: 'xy',
-                                    onPan: (ctx: { chart: any }) => {
-                                        const chart = ctx.chart;
-                                        const panLevel = chart.getZoomLevel?.() ?? 1;
-                                    
-                                        // Optional: auto-reset if panned too far (fallback)
-                                        if (panLevel <= 1) {
-                                            chart.resetZoom();
-                                        }
-                                    },
-                                    beforePan: (ctx: { chart: any }, delta: any) => {
-                                      const chart = ctx.chart;
-                                      const scale = chart.getZoomLevel?.() ?? 1;
-                                                                        
-                                      if (scale <= 1) {
-                                        // No pan allowed when zoomed out or at base scale
-                                        return false;
-                                      }
-                                    
-                                      // Get chart dimensions and current pan offset
-                                      const chartArea = chart.chartArea;
-                                      const meta = chart.getDatasetMeta(0);
-                                    
-                                      // Calculate visible bounds
-                                      const maxPanX = (scale - 1) * chart.width / scale;
-                                      const maxPanY = (scale - 1) * chart.height / scale;
-                                    
-                                      // Current pan offsets
-                                      const currentPanX = chart.panX ?? 0;
-                                      const currentPanY = chart.panY ?? 0;
-                                    
-                                      // Calculate proposed new pan offsets
-                                      let newPanX = currentPanX + delta.x;
-                                      let newPanY = currentPanY + delta.y;
-                                    
-                                      // Clamp pan offsets so chart doesn't move beyond edges
-                                      if (newPanX > maxPanX) newPanX = maxPanX;
-                                      if (newPanX < -maxPanX) newPanX = -maxPanX;
-                                      if (newPanY > maxPanY) newPanY = maxPanY;
-                                      if (newPanY < -maxPanY) newPanY = -maxPanY;
-                                    
-                                      // Adjust delta to reflect clamped pan offsets
-                                      delta.x = newPanX - currentPanX;
-                                      delta.y = newPanY - currentPanY;
-                                    
-                                      return true;
-                                    }
-
+                                    onPan: ({ chart }: any) => updateInteractivity(chart),
+                                    beforePan: ({ chart }: any) => (chart.getZoomLevel?.() ?? 1) > 1,
                                 },
-
                             },
-
-
                         },
-                        events: ['wheel', 'touchstart', 'touchmove', 'touchend'],
+                        events: [],
                     },
-                    plugins: [imagePlugin(chartType)],
+                    plugins: [imagePlugin(chartType)]
                 };
 
                 chartRef.current = new Chart(ctx, config);
+                updateInteractivity(chartRef.current);
 
-                // Set up Hammer.js for custom pinch handling
-                if (canvasRef.current) {
-                    console.log('Initializing Hammer.js');
-                    const hammer = new Hammer(canvasRef.current);
-                    hammer.get('pinch').set({ enable: true });
-                    hammer.on('pinch', (e: any) => {
-                        console.log('Hammer pinch event:', e);
-                        const scale = e.scale;
-                        const zoomFactor = scale > 1 ? 1.1 : 0.9;
-                        console.log('Applying zoomFactor:', zoomFactor);
-                        if (chartRef.current) {
-                            chartRef.current.zoom(zoomFactor, {
-                                x: chartRef.current.width / 2,
-                                y: chartRef.current.height / 2,
-                            });
-                        }
+                const hammer = new Hammer(canvasRef.current!);
+                hammer.get('pinch').set({ enable: true });
+                hammer.on('pinch', (e: any) => {
+                    const zoomFactor = e.scale > 1 ? 1.1 : 0.9;
+                    chartRef.current.zoom(zoomFactor, {
+                        x: chartRef.current.width / 2,
+                        y: chartRef.current.height / 2,
                     });
-                    // Store hammer instance for cleanup
-                    (canvasRef.current as any).__hammer = hammer;
-                }
-            } catch (error) {
-                console.error('Error initializing chart:', error);
+                    updateInteractivity(chartRef.current);
+                });
+                (canvasRef.current as any).__hammer = hammer;
+            } catch (err) {
+                console.error(err);
             }
         };
 
         initializeChart();
-
-        const handleKeydown = (event: KeyboardEvent) => {
-            if (event.key.toLowerCase() === 'r' && chartRef.current) {
-                chartRef.current.resetZoom();
-            }
-        };
-        if (typeof window !== 'undefined') {
-            window.addEventListener('keydown', handleKeydown);
-        }
-
         return () => {
             chartRef.current?.destroy();
-            chartRef.current = null;
-            if (canvasRef.current && (canvasRef.current as any).__hammer) {
-                (canvasRef.current as any).__hammer.destroy();
-                (canvasRef.current as any).__hammer = null;
-            }
-            if (typeof window !== 'undefined') {
-                window.removeEventListener('keydown', handleKeydown);
-            }
+            const canvas = canvasRef.current as any;
+            if (canvas?.__hammer) canvas.__hammer.destroy();
         };
     }, [data, chartType, timeGap]);
 
     return (
         <div className='w-full'>
-            <div className='mb-3'>
+            <div className='mb-3 flex gap-2'>
                 <button
-                    className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
-                    onClick={() => chartRef.current?.resetZoom()}
-                >
-                    Reset Zoom
+                  className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                  onClick={() => {
+                    chartRef.current?.resetZoom();
+                    chartRef.current?.update('none');
+                    updateInteractivity(chartRef.current);
+                  }}>
+                  Reset Zoom
                 </button>
+              
+                <div className='w-full flex flex-row gap-x-2'>
+                    <button
+                      className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                      onClick={() => {
+                        const zoom = chartRef.current.getZoomLevel?.() ?? 1;
+                        const newZoom = Math.max(1, zoom - 0.5);
+                        chartRef.current.zoom(newZoom / zoom);
+                        chartRef.current?.update('none');
+                        updateInteractivity(chartRef.current);
+                      }}>-
+                    </button>
+                  
+                    <button
+                      className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                      onClick={() => {
+                        const zoom = chartRef.current.getZoomLevel?.() ?? 1;
+                        const newZoom = Math.min(10, zoom + 0.3);
+                        chartRef.current.zoom(newZoom / zoom);
+                        chartRef.current?.update('none');
+                        updateInteractivity(chartRef.current);
+                      }}>+
+                    </button>
+                </div>
+
             </div>
             <div style={{ width: '100%', minHeight: '600px' }}>
                 <canvas ref={canvasRef} />
