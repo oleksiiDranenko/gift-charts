@@ -8,8 +8,6 @@ import type { ChartConfiguration, ChartDataset } from 'chart.js';
 import type { TreemapDataPoint, TreemapScriptableContext } from 'chartjs-chart-treemap';
 import type GiftInterface from '@/interfaces/GiftInterface';
 
-Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
-
 interface GiftData {
     name: string;
     percentChange: number;
@@ -190,6 +188,11 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
     const chartRef = useRef<Chart<'treemap', TreemapDataPoint[], unknown> | null>(null);
 
     useEffect(() => {
+        // Register Chart.js plugins only on the client side
+        if (typeof window !== 'undefined') {
+            Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
+        }
+
         if (!canvasRef.current || !data || data.length === 0) return;
 
         const ctx = canvasRef.current.getContext('2d');
