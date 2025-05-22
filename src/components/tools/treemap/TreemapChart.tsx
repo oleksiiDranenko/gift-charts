@@ -1,12 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
-import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
-import chartjsPluginZoom from 'chartjs-plugin-zoom';
-import type { ChartConfiguration, ChartDataset } from 'chart.js';
-import type { TreemapDataPoint, TreemapScriptableContext } from 'chartjs-chart-treemap';
 import type GiftInterface from '@/interfaces/GiftInterface';
+import type { TreemapDataPoint, TreemapScriptableContext } from 'chartjs-chart-treemap';
 
 interface GiftData {
     name: string;
@@ -18,7 +14,8 @@ interface GiftData {
     [key: string]: any;
 }
 
-interface CustomTreemapDataset extends ChartDataset<'treemap', TreemapDataPoint[]> {
+interface CustomTreemapDataset {
+    data: TreemapDataPoint[];
     tree: GiftData[];
     key: string;
     imageMap?: Map<string, HTMLImageElement>;
@@ -88,7 +85,7 @@ const preloadImages = (data: GiftData[]): Map<string, HTMLImageElement> => {
 
 const imagePlugin = (chartType: 'change' | 'marketCap') => ({
     id: 'treemapImages',
-    afterDatasetDraw(chart: Chart) {
+    afterDatasetDraw(chart: any) {
         const { ctx, data } = chart;
         const dataset = data.datasets[0] as any;
         const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
@@ -185,82 +182,104 @@ interface TreemapChartProps {
 
 const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const chartRef = useRef<Chart<'treemap', TreemapDataPoint[], unknown> | null>(null);
+    const chartRef = useRef<any>(null);
 
     useEffect(() => {
-        // Register Chart.js plugins only on the client side
-        if (typeof window !== 'undefined') {
+        let Chart: any, TreemapController: any, TreemapElement: any, chartjsPluginZoom: any;
+
+        // Dynamically import Chart.js and plugins only on the client side
+        const initializeChart = async () => {
+            if (typeof window === 'undefined') {
+                console.log('Skipping chart initialization on server');
+                return;
+            }
+
+            console.log('Initializing chart on client');
+
+            // Dynamic imports
+            const chartModule = await import('chart.js/auto');
+            const treemapModule = await import('chartjs-chart-treemap');
+            const zoomModule = await import('chartjs-plugin-zoom');
+
+            Chart = chartModule.default;
+            TreemapController = treemapModule.TreemapController;
+            TreemapElement = treemapModule.TreemapElement;
+            chartjsPluginZoom = zoomModule.default;
+
+            // Register plugins
             Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
-        }
 
-        if (!canvasRef.current || !data || data.length === 0) return;
+            if (!canvasRef.current || !data || data.length === 0) return;
 
-        const ctx = canvasRef.current.getContext('2d');
-        if (!ctx) return;
+            const ctx = canvasRef.current.getContext('2d');
+            if (!ctx) return;
 
-        if (chartRef.current) {
-            chartRef.current.destroy();
-        }
+            if (chartRef.current) {
+                chartRef.current.destroy();
+            }
 
-        const transformed = transformGiftData(data, chartType, timeGap);
-        const imageMap = preloadImages(transformed);
+            const transformed = transformGiftData(data, chartType, timeGap);
+            const imageMap = preloadImages(transformed);
 
-        const dataset: CustomTreemapDataset = {
-            data: [],
-            tree: transformed,
-            key: 'size',
-            imageMap,
-            backgroundColor: (ctx: TreemapScriptableContext) => {
-                const dataset = ctx.dataset as CustomTreemapDataset;
-                const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                return percent >= 0 ? '#008000' : '#E50000';
-            },
-            spacing: 0,
-            borderWidth: 0.5,
-            borderColor: '#000',
-            hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
-                const dataset = ctx.dataset as CustomTreemapDataset;
-                const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                return percent >= 0 ? '#008000' : '#E50000';
-            },
-            hoverBorderColor: '#000',
-        };
+            const dataset: CustomTreemapDataset = {
+                data: [],
+                tree: transformed,
+                key: 'size',
+                imageMap,
+                backgroundColor: (ctx: TreemapScriptableContext) => {
+                    const dataset = ctx.dataset as CustomTreemapDataset;
+                    const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                    return percent >= 0 ? '#008000' : '#E50000';
+                },
+                spacing: 0,
+                borderWidth: 0.5,
+                borderColor: '#000',
+                hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
+                    const dataset = ctx.dataset as CustomTreemapDataset;
+                    const percent = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                    return percent >= 0 ? '#008000' : '#E50000';
+                },
+                hoverBorderColor: '#000',
+            };
 
-        const config: ChartConfiguration<'treemap', TreemapDataPoint[], unknown> = {
-            type: 'treemap',
-            data: { datasets: [dataset] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false },
-                    zoom: {
+            const config: any = {
+                type: 'treemap',
+                data: { datasets: [dataset] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false },
                         zoom: {
-                            wheel: {
-                                enabled: true,
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                },
+                                pinch: {
+                                    enabled: true,
+                                },
+                                mode: 'xy',
                             },
-                            pinch: {
+                            pan: {
                                 enabled: true,
+                                mode: 'xy',
                             },
-                            mode: 'xy',
-                        },
-                        pan: {
-                            enabled: true,
-                            mode: 'xy',
-                        },
-                        limits: {
-                            x: { min: 'original', max: 'original' },
-                            y: { min: 'original', max: 'original' },
+                            limits: {
+                                x: { min: 'original', max: 'original' },
+                                y: { min: 'original', max: 'original' },
+                            },
                         },
                     },
+                    events: ['wheel', 'touchstart', 'touchmove', 'touchend'],
                 },
-                events: ['wheel', 'touchstart', 'touchmove', 'touchend'],
-            },
-            plugins: [imagePlugin(chartType)],
+                plugins: [imagePlugin(chartType)],
+            };
+
+            chartRef.current = new Chart(ctx, config);
         };
 
-        chartRef.current = new Chart(ctx, config);
+        initializeChart();
 
         const handleKeydown = (event: KeyboardEvent) => {
             if (event.key.toLowerCase() === 'r' && chartRef.current) {
