@@ -264,9 +264,11 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                 zoom: {
                                     wheel: {
                                         enabled: true,
+                                        speed: 0.01,
                                     },
                                     pinch: {
                                         enabled: false,
+                                        speed: 0.01,
                                     },
                                     mode: 'xy',
                                     beforeZoom: (ctx: { chart: any }, zoom: any) => {
@@ -297,25 +299,43 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                         }
                                     },
                                     beforePan: (ctx: { chart: any }, delta: any) => {
-                                        const chart = ctx.chart;
-                                        const scale = chart.getZoomLevel?.() ?? 1;
+                                      const chart = ctx.chart;
+                                      const scale = chart.getZoomLevel?.() ?? 1;
+                                                                        
+                                      if (scale <= 1) {
+                                        // No pan allowed when zoomed out or at base scale
+                                        return false;
+                                      }
                                     
-                                        if (scale <= 1) {
-                                            return false; // Don't allow pan when fully zoomed out
-                                        }
+                                      // Get chart dimensions and current pan offset
+                                      const chartArea = chart.chartArea;
+                                      const meta = chart.getDatasetMeta(0);
                                     
-                                        // Clamp pan to prevent moving beyond bounds
-                                        const panDeltaX = delta.x ?? 0;
-                                        const panDeltaY = delta.y ?? 0;
+                                      // Calculate visible bounds
+                                      const maxPanX = (scale - 1) * chart.width / scale;
+                                      const maxPanY = (scale - 1) * chart.height / scale;
                                     
-                                        const maxPan = 1000; // adjust this if needed depending on zoom scale
+                                      // Current pan offsets
+                                      const currentPanX = chart.panX ?? 0;
+                                      const currentPanY = chart.panY ?? 0;
                                     
-                                        if (Math.abs(panDeltaX) > maxPan || Math.abs(panDeltaY) > maxPan) {
-                                            return false;
-                                        }
+                                      // Calculate proposed new pan offsets
+                                      let newPanX = currentPanX + delta.x;
+                                      let newPanY = currentPanY + delta.y;
                                     
-                                        return true;
-                                    },
+                                      // Clamp pan offsets so chart doesn't move beyond edges
+                                      if (newPanX > maxPanX) newPanX = maxPanX;
+                                      if (newPanX < -maxPanX) newPanX = -maxPanX;
+                                      if (newPanY > maxPanY) newPanY = maxPanY;
+                                      if (newPanY < -maxPanY) newPanY = -maxPanY;
+                                    
+                                      // Adjust delta to reflect clamped pan offsets
+                                      delta.x = newPanX - currentPanX;
+                                      delta.y = newPanY - currentPanY;
+                                    
+                                      return true;
+                                    }
+
                                 },
 
                             },
