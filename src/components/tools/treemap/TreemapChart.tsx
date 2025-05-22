@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import Hammer from 'hammerjs';
 import type GiftInterface from '@/interfaces/GiftInterface';
 import type { TreemapDataPoint, TreemapScriptableContext } from 'chartjs-chart-treemap';
 
@@ -186,6 +187,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
 
     useEffect(() => {
         let Chart: any, TreemapController: any, TreemapElement: any, chartjsPluginZoom: any;
+        let hammer: HammerManager | null = null;
 
         // Dynamically import Chart.js and plugins only on the client side
         const initializeChart = async () => {
@@ -257,15 +259,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                     enabled: true,
                                 },
                                 pinch: {
-                                    enabled: true,
-                                },
-                                onPinch: (chart: any, event: any) => {
-                                    console.log('Pinch event:', event);
-                                    const { scale } = event;
-                                    // Calculate a uniform zoom factor
-                                    const zoomFactor = scale > 1 ? 1.1 : 0.9; // Adjust zoom speed
-                                    console.log('Applying zoomFactor:', zoomFactor);
-                                    chart.zoom(zoomFactor, { x: chart.width / 2, y: chart.height / 2 });
+                                    enabled: false, // Disable chartjs-plugin-zoom pinch handling
                                 },
                                 mode: 'xy',
                             },
@@ -274,8 +268,8 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                 mode: 'xy',
                             },
                             limits: {
-                                x: { min: 'original', max: 'original' },
-                                y: { min: 'original', max: 'original' },
+                                x: { min: 'original', max: 'original', minRange: 0.5, maxRange: 5 },
+                                y: { min: 'original', max: 'original', minRange: 0.5, maxRange: 5 },
                             },
                         },
                     },
@@ -285,6 +279,24 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
             };
 
             chartRef.current = new Chart(ctx, config);
+
+            // Set up Hammer.js for custom pinch handling
+            if (canvasRef.current) {
+                hammer = new Hammer(canvasRef.current);
+                hammer.get('pinch').set({ enable: true });
+                hammer.on('pinch', (e) => {
+                    console.log('Hammer pinch event:', e);
+                    const scale = e.scale;
+                    const zoomFactor = scale > 1 ? 1.1 : 0.9; // Adjust zoom speed
+                    console.log('Applying zoomFactor:', zoomFactor);
+                    if (chartRef.current) {
+                        chartRef.current.zoom(zoomFactor, {
+                            x: chartRef.current.width / 2,
+                            y: chartRef.current.height / 2,
+                        });
+                    }
+                });
+            }
         };
 
         initializeChart();
@@ -301,6 +313,8 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
         return () => {
             chartRef.current?.destroy();
             chartRef.current = null;
+            hammer?.destroy();
+            hammer = null;
             if (typeof window !== 'undefined') {
                 window.removeEventListener('keydown', handleKeydown);
             }
@@ -314,7 +328,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                     className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
                     onClick={() => chartRef.current?.resetZoom()}
                 >
-                    Reset Zoom v2
+                    Reset Zoom
                 </button>
             </div>
             <div style={{ width: '100%', minHeight: '600px' }}>
