@@ -3,11 +3,12 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
+import chartjsPluginZoom from 'chartjs-plugin-zoom';
 import type { ChartConfiguration, ChartDataset } from 'chart.js';
 import type { TreemapDataPoint, TreemapScriptableContext } from 'chartjs-chart-treemap';
 import type GiftInterface from '@/interfaces/GiftInterface';
 
-Chart.register(TreemapController, TreemapElement);
+Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
 
 interface GiftData {
     name: string;
@@ -19,7 +20,6 @@ interface GiftData {
     [key: string]: any;
 }
 
-// Define a custom dataset interface to avoid circular reference
 interface CustomTreemapDataset extends ChartDataset<'treemap', TreemapDataPoint[]> {
     tree: GiftData[];
     key: string;
@@ -95,14 +95,22 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
         const dataset = data.datasets[0] as any;
         const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
 
+        const scale = chart.getZoomLevel ? chart.getZoomLevel() : 1;
+        ctx.save();
+        ctx.scale(scale, scale);
+
         dataset.tree.forEach((item: GiftData, index: number) => {
             const meta = chart.getDatasetMeta(0).data[index] as any;
             if (!meta) return;
 
-            const { x, y, width, height } = meta;
+            const x = meta.x / scale;
+            const y = meta.y / scale;
+            const width = meta.width / scale;
+            const height = meta.height / scale;
+
             const img = imageMap.get(item.imageName);
             if (img && img.complete && width > 0 && height > 0) {
-                const baseSize = Math.min(Math.max(width / 6, 3), 300);
+                const baseSize = Math.min(Math.max(width / 6, 5), 500);
                 const imgAspect = img.width / img.height;
 
                 let drawWidth = baseSize;
@@ -112,10 +120,10 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
                     drawWidth = baseSize * imgAspect;
                 }
 
-                const fontSize = Math.min(Math.max(width / 10, 2), 18);
+                const fontSize = Math.min(Math.max(width / 10, 1), 18);
                 const priceFontSize = fontSize * 0.8;
-                const textLines = 3;
-                const lineSpacing = 4;
+                const textLines = 1;
+                const lineSpacing = Math.min(Math.max(width / 20, 0), 5);
                 const textHeight = (fontSize * 2 + priceFontSize) + lineSpacing * 2;
                 const totalContentHeight = drawHeight + textHeight + lineSpacing;
 
@@ -154,19 +162,20 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
                     ctx.fillText(`${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX, textY3);
                 }
 
-                // Add watermark to the bottom-right corner of the first gift's square
                 if (index === 0) {
                     const watermarkFontSize = Math.min(Math.max(width / 12, 10), 14);
                     ctx.font = `${watermarkFontSize}px sans-serif`;
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; // Semi-transparent white
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                     ctx.textAlign = 'right';
                     const watermarkText = '@gift_charts';
-                    const watermarkX = x + width - 5; // 5px padding from right edge
-                    const watermarkY = y + height - 5; // 5px padding from bottom edge
+                    const watermarkX = x + width - 5;
+                    const watermarkY = y + height - 5;
                     ctx.fillText(watermarkText, watermarkX, watermarkY);
                 }
             }
         });
+
+        ctx.restore();
     },
 });
 
@@ -223,23 +232,60 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                 plugins: {
                     legend: { display: false },
                     tooltip: { enabled: false },
+                    zoom: {
+                        zoom: {
+                            wheel: {
+                                enabled: true,
+                            },
+                            pinch: {
+                                enabled: true,
+                            },
+                            mode: 'xy',
+                        },
+                        pan: {
+                            enabled: true,
+                            mode: 'xy',
+                        },
+                        limits: {
+                            x: { min: 'original', max: 'original' },
+                            y: { min: 'original', max: 'original' },
+                        },
+                    },
                 },
-                events: [], // Disable all mouse events (including hover)
+                events: ['wheel', 'touchstart', 'touchmove', 'touchend'],
             },
             plugins: [imagePlugin(chartType)],
         };
 
         chartRef.current = new Chart(ctx, config);
 
+        const handleKeydown = (event: KeyboardEvent) => {
+            if (event.key.toLowerCase() === 'r' && chartRef.current) {
+                chartRef.current.resetZoom();
+            }
+        };
+        window.addEventListener('keydown', handleKeydown);
+
         return () => {
             chartRef.current?.destroy();
             chartRef.current = null;
+            window.removeEventListener('keydown', handleKeydown);
         };
     }, [data, chartType, timeGap]);
 
     return (
-        <div style={{ width: '100%', minHeight: '600px' }}>
-            <canvas ref={canvasRef} />
+        <div className='w-full'>
+            <div className='mb-3'>
+                <button
+                    className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                    onClick={() => chartRef.current?.resetZoom()}
+                >
+                    Reset Zoom
+                </button>
+            </div>
+            <div style={{ width: '100%', minHeight: '600px' }}>
+                <canvas ref={canvasRef} />
+            </div>
         </div>
     );
 };

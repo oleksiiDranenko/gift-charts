@@ -138,7 +138,7 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className="w-full lg:w-1/2 mb-5 bg-slate-800 rounded-lg bg-opacity-50">
+                <div className="w-full lg:w-1/2 mb-3 bg-slate-800 rounded-lg bg-opacity-50">
                     <div className="w-full mb-1 flex flex-col">
                         <div className="w-full flex flex-row justify-between gap-x-3">
                             
