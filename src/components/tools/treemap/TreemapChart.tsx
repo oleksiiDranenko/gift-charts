@@ -258,14 +258,14 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                                 },
                                 pinch: {
                                     enabled: true,
-                                    // Custom pinch handler to enforce proportional zooming
-                                    modifier: (chart: any, event: any) => {
-                                        const { scale } = event;
-                                        // Use the same scale factor for both axes
-                                        const zoomFactor = scale > 1 ? 1.1 : 0.9; // Adjust zoom speed
-                                        chart.zoom(zoomFactor); // Apply uniform zoom
-                                        return false; // Prevent default non-proportional zoom
-                                    },
+                                },
+                                onPinch: (chart: any, event: any) => {
+                                    console.log('Pinch event:', event);
+                                    const { scale } = event;
+                                    // Calculate a uniform zoom factor
+                                    const zoomFactor = scale > 1 ? 1.1 : 0.9; // Adjust zoom speed
+                                    console.log('Applying zoomFactor:', zoomFactor);
+                                    chart.zoom(zoomFactor, { x: chart.width / 2, y: chart.height / 2 });
                                 },
                                 mode: 'xy',
                             },
@@ -314,7 +314,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                     className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
                     onClick={() => chartRef.current?.resetZoom()}
                 >
-                    Reset Zoom
+                    Reset Zoom v2
                 </button>
             </div>
             <div style={{ width: '100%', minHeight: '600px' }}>
