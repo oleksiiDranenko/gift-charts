@@ -3,9 +3,12 @@
 import TreemapChart from "@/components/tools/treemap/TreemapChart"
 import useVibrate from "@/hooks/useVibrate"
 import GiftInterface from "@/interfaces/GiftInterface"
-import { useAppSelector } from "@/redux/hooks"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import { setGiftsList } from "@/redux/slices/giftsListSlice"
+import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import ReactLoading from "react-loading"
 
 export default function Page() {
 	const vibrate = useVibrate()
@@ -18,6 +21,24 @@ export default function Page() {
     const [timeGap, setTimeGap] = useState<'24h' | '1w' | '1m'>('24h')
 
     const [amount, setAmount] = useState<number>(25)
+    const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                setLoading(true);
+                if (giftsList.length === 0) {
+                    const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+                    dispatch(setGiftsList(giftsRes.data));
+                }
+            } catch (error) {
+                console.error("Error fetching gifts:", error);
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, [dispatch, giftsList]);
 
     useEffect(() => {
         let sortedList = [...giftsList];
@@ -182,7 +203,10 @@ export default function Page() {
                     </div>
                 </div>
 
-                <TreemapChart data={list.slice(0, amount)} chartType={listType} timeGap={timeGap}/>
+                {loading 
+                ? <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5" /> 
+                : <TreemapChart data={list.slice(0, amount)} chartType={listType} timeGap={timeGap}/>
+                }
             </div>
         </div>
     )

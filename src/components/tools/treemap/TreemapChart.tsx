@@ -258,7 +258,11 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                       onClick={() => {
                         const zoom = chartRef.current.getZoomLevel?.() ?? 1;
                         const newZoom = Math.max(1, zoom - 0.5);
-                        chartRef.current.zoom(newZoom / zoom);
+                        if (newZoom === 1) {
+                          chartRef.current?.resetZoom();
+                        } else {
+                          chartRef.current.zoom(newZoom / zoom);
+                        }
                         chartRef.current?.update('none');
                         updateInteractivity(chartRef.current);
                       }}>-
