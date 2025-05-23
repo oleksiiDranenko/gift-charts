@@ -1,4 +1,3 @@
-// Full implementation with interactivity disabled at default zoom level
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -42,7 +41,6 @@ const updateInteractivity = (chart: any) => {
 
   chart.update('none');
 };
-
 
 const transformGiftData = (gifts: GiftInterface[], chartType: 'change' | 'marketCap', timeGap: '24h' | '1w' | '1m'): GiftData[] => {
     return gifts.map((gift) => {
@@ -164,7 +162,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
     const chartRef = useRef<any>(null);
 
     useEffect(() => {
-        let Chart: any, TreemapController: any, TreemapElement: any, chartjsPluginZoom: any, Hammer: any;
+        let Chart: any, TreemapController: any, TreemapElement: any, chartjsPluginZoom: any;
 
         const initializeChart = async () => {
             if (!window) return;
@@ -172,13 +170,11 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                 const chartModule = await import('chart.js/auto');
                 const treemapModule = await import('chartjs-chart-treemap');
                 const zoomModule = await import('chartjs-plugin-zoom');
-                const hammerModule = await import('hammerjs');
 
                 Chart = chartModule.default;
                 TreemapController = treemapModule.TreemapController;
                 TreemapElement = treemapModule.TreemapElement;
                 chartjsPluginZoom = zoomModule.default;
-                Hammer = hammerModule.default;
 
                 Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
 
@@ -207,7 +203,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                           const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
                           return val >= 0 ? '#008000' : '#E50000';
                         },
-
                         hoverBorderColor: '#000'
                     }] },
                     options: {
@@ -233,18 +228,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
 
                 chartRef.current = new Chart(ctx, config);
                 updateInteractivity(chartRef.current);
-
-                const hammer = new Hammer(canvasRef.current!);
-                hammer.get('pinch').set({ enable: true });
-                hammer.on('pinch', (e: any) => {
-                    const zoomFactor = e.scale > 1 ? 1.1 : 0.9;
-                    chartRef.current.zoom(zoomFactor, {
-                        x: chartRef.current.width / 2,
-                        y: chartRef.current.height / 2,
-                    });
-                    updateInteractivity(chartRef.current);
-                });
-                (canvasRef.current as any).__hammer = hammer;
             } catch (err) {
                 console.error(err);
             }
@@ -253,8 +236,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
         initializeChart();
         return () => {
             chartRef.current?.destroy();
-            const canvas = canvasRef.current as any;
-            if (canvas?.__hammer) canvas.__hammer.destroy();
         };
     }, [data, chartType, timeGap]);
 
@@ -294,7 +275,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                       }}>+
                     </button>
                 </div>
-
             </div>
             <div style={{ width: '100%', minHeight: '600px' }}>
                 <canvas ref={canvasRef} />
