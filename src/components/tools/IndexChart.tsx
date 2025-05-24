@@ -14,7 +14,7 @@ import {
   Tooltip,
   CategoryScale,
   ChartOptions,
-  Filler, // Add Filler for area fill
+  Filler,
 } from "chart.js";
 import { useAppSelector } from "@/redux/hooks"
 
@@ -29,7 +29,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const vibrate = useVibrate()
     const giftsList = useAppSelector((state) => state.giftsList)
     const chartContainerRef = useRef<HTMLDivElement>(null);
-    const chartRef = useRef<ChartJS<"line">>(null); // Add ref for chart instance
+    const chartRef = useRef<ChartJS<"line">>(null);
     
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton')
     const [percentChange, setPercentChange] = useState<number>(0)
@@ -37,7 +37,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const [listType, setListType] = useState<'1m' | '3m' | 'all'>('1m')
     const [low, setLow] = useState<number>()
     const [high, setHigh] = useState<number>()
-    const [gradient, setGradient] = useState<CanvasGradient | null>(null); // State for gradient
+    const [gradient, setGradient] = useState<CanvasGradient | null>(null);
 
     // Prevent scroll when interacting with chart
     useEffect(() => {
@@ -86,22 +86,36 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         const topColor = percentChange >= 0 ? 'rgba(34, 197, 94, 0.5)' : 'rgba(239, 68, 68, 0.5)';
         const bottomColor = percentChange >= 0 ? 'rgba(34, 197, 94, 0)' : 'rgba(239, 68, 68, 0)';
         
-        gradient.addColorStop(0, topColor); // Top: Match line color
-        gradient.addColorStop(1, bottomColor); // Bottom: Transparent
+        gradient.addColorStop(0, topColor);
+        gradient.addColorStop(1, bottomColor);
 
         setGradient(gradient);
     }, [percentChange]);
 
     useEffect(() => {
+        // Filter out preSale gifts
+        const nonPreSaleGifts = giftsList.filter(gift => !gift.preSale);
+
         if (index.shortName === 'TMI') {
             let totalSupply = 0;
-            for (let gift of giftsList) {
-                totalSupply += gift.supply;
+            for (let gift of nonPreSaleGifts) {
+                totalSupply += gift.supply || 0;
             }
         
+            if (totalSupply === 0) {
+                setList(prev => [...prev, {
+                    _id: index._id,
+                    indexId: index._id,
+                    date: 'today',
+                    priceTon: 0,
+                    priceUsd: 0
+                }]);
+                return;
+            }
+
             let currentTon = 0;
             let currentUsd = 0;
-            for (let gift of giftsList) {
+            for (let gift of nonPreSaleGifts) {
                 const supply = gift.supply || 0;
                 const priceTon = gift.priceTon || 0;
                 const priceUsd = gift.priceUsd || 0;
@@ -123,15 +137,26 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         } 
         else if (index.shortName === 'R10') {
             let totalSupply = 0;
-            for (let gift of giftsList) {
+            for (let gift of nonPreSaleGifts) {
                 if (gift.supply <= 10000) {
-                    totalSupply += gift.supply;
+                    totalSupply += gift.supply || 0;
                 }
             }
         
+            if (totalSupply === 0) {
+                setList(prev => [...prev, {
+                    _id: index._id,
+                    indexId: index._id,
+                    date: 'today',
+                    priceTon: 0,
+                    priceUsd: 0
+                }]);
+                return;
+            }
+
             let currentTon = 0;
             let currentUsd = 0;
-            for (let gift of giftsList) {
+            for (let gift of nonPreSaleGifts) {
                 if (gift.supply <= 10000) {
                     const supply = gift.supply || 0;
                     const priceTon = gift.priceTon || 0;
@@ -156,12 +181,12 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         else if (index.shortName === 'TMC') {
             let currentTon = 0;
             let currentUsd = 0;
-            for (let gift of giftsList) {
+            for (let gift of nonPreSaleGifts) {
                 const supply = gift.supply || 0;
                 const priceTon = gift.priceTon || 0;
                 const priceUsd = gift.priceUsd || 0;
-                currentTon += priceTon * supply
-                currentUsd += priceUsd * supply
+                currentTon += priceTon * supply;
+                currentUsd += priceUsd * supply;
             }
 
             const newData: IndexDataInterface = {
@@ -183,14 +208,14 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         if (selectedPrice === 'ton') {
             const firstData = list[0].priceTon;
             const lastData = list[list.length - 1].priceTon;
-            const result = parseFloat(((lastData - firstData) / firstData * 100).toFixed(2));
+            const result = firstData === 0 ? 0 : parseFloat(((lastData - firstData) / firstData * 100).toFixed(2));
             setPercentChange(result);
             setLow(Math.min(...prices));
             setHigh(Math.max(...prices));
         } else {
             const firstData = list[0].priceUsd;
             const lastData = list[list.length - 1].priceUsd;
-            const result = parseFloat(((lastData - firstData) / firstData * 100).toFixed(2));
+            const result = firstData === 0 ? 0 : parseFloat(((lastData - firstData) / firstData * 100).toFixed(2));
             setPercentChange(result);
             setLow(Math.min(...prices));
             setHigh(Math.max(...prices));
@@ -231,7 +256,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 fill: true,
                 backgroundColor: gradient || (percentChange >= 0 
                     ? "rgba(34, 197, 94, 0.2)" 
-                    : "rgba(239, 68, 68, 0.2)"), // Use gradient or fallback
+                    : "rgba(239, 68, 68, 0.2)"),
                 pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
             },
         ],
@@ -379,7 +404,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 
             <div className="w-full" ref={chartContainerRef}>
                 <Line 
-                    ref={chartRef} // Attach ref to Line component
+                    ref={chartRef}
                     data={data} 
                     options={options}
                 />

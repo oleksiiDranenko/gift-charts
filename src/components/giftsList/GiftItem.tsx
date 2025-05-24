@@ -83,7 +83,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                 width={50}
                 height={50}
                 className={` p-1 mr-3 rounded-lg ${borderColor ? 'border' : ''} ${
-                  item.staked && 'shadow-md shadow-[#0098EA]'
+                  item.staked && 'shadow-md shadow-blue-500'
                 } ${item.preSale ? 'bg-cyan-800 ' : 'bg-slate-800'}`}
                 style={borderColor ? { borderColor: `${borderColor}80` } : {}}
             />
@@ -91,6 +91,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                     <span className="text-base font-bold">
                         {item.name}
                         {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
+                        {item.staked && (<span className="text-xs text-blue-500 ml-2">Staking!</span>)}
                     </span>
                     <span className="text-slate-500 text-sm font-normal">
                         {

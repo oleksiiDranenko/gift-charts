@@ -6,7 +6,6 @@ import { useAppSelector } from "@/redux/hooks"
 import { useEffect, useState } from "react"
 
 export default function TotalMarketCap() {
-
     const giftsList = useAppSelector((state) => state.giftsList)
 
     const [marketCap, setMarketCap] = useState<number>(0)
@@ -15,7 +14,10 @@ export default function TotalMarketCap() {
     useEffect(() => {
         let totalMarketCap = 0
         let prevTotalMarketCap = 0
-        giftsList.map((gift) => {
+
+        const nonPreSaleGifts = giftsList.filter(gift => !gift.preSale)
+        
+        nonPreSaleGifts.map((gift) => {
             const giftMarketCap = gift.priceTon * gift.supply
             const giftPrevMarketCap = (gift.tonPrice24hAgo || 0) * gift.supply
 
@@ -25,7 +27,7 @@ export default function TotalMarketCap() {
 
         setMarketCap(totalMarketCap)
         setPreviousMarketCap(prevTotalMarketCap)
-    }, [])
+    }, [giftsList]) 
 
     const countPercentChange = (last24: number, current: number) => {
         return parseFloat(((current - last24) / last24 * 100).toFixed(2))
