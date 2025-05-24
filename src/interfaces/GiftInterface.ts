@@ -17,5 +17,6 @@ export default interface GiftInterface {
     usdPriceMonthAgo?: number,
     priceTon: number,
     priceUsd: number,
-    staked?: boolean
+    staked?: boolean,
+    preSale?: boolean
 }
