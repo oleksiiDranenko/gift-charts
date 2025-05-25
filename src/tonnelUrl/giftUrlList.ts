@@ -61,5 +61,17 @@ export const giftUrlList = [
   { name: "Vintage Cigar", path: "ZmlsdGVyOztbIlZpbnRhZ2UgQ2lnYXIiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
   { name: "Voodoo Doll", path: "ZmlsdGVyOztbIlZvb2RvbyBEb2xsIl07W107W107W107VE9OO1siIiwiIl07" },
   { name: "Winter Wreath", path: "ZmlsdGVyOztbIldpbnRlciBXcmVhdGgiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
-  { name: "Witch Hat", path: "ZmlsdGVyOztbIldpdGNoIEhhdCJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" }
+  { name: "Witch Hat", path: "ZmlsdGVyOztbIldpdGNoIEhhdCJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" },
+  { name: "Holiday Drink", path: "ZmlsdGVyOztbIkhvbGlkYXkgRHJpbmsiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
+  { name: "Xmas Stocking", path: "ZmlsdGVyOztbIlhtYXMgU3RvY2tpbmciXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
+  { name: "Snake Box", path: "ZmlsdGVyOztbIlNuYWtlIEJveCJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" },
+  { name: "Pet Snake", path: "ZmlsdGVyOztbIlBldCBTbmFrZSJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" },
+  { name: "Big Year", path: "ZmlsdGVyOztbIkJpZyBZZWFyIl07W107W107W107VE9OO1siIiwiIl07" },
+  { name: "Bonded Ring", path: "ZmlsdGVyOztbIkJvbmRlZCBSaW5nIl07W107W107W107VE9OO1siIiwiIl07" },
+  { name: "Light Sword", path: "ZmlsdGVyOztbIkxpZ2h0IFN3b3JkIl07W107W107W107VE9OO1siIiwiIl07" },
+  { name: "Gem Signet", path: "ZmlsdGVyOztbIkdlbSBTaWduZXQiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
+  { name: "Nail Bracelet", path: "ZmlsdGVyOztbIk5haWwgQnJhY2VsZXQiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
+  { name: "Restless Jar", path: "ZmlsdGVyOztbIlJlc3RsZXNzIEphciJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" },
+  { name: "Bow Tie", path: "ZmlsdGVyOztbIkJvdyBUaWUiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
+  { name: "Heroic Helmet", path: "ZmlsdGVyOztbIkhlcm9pYyBIZWxtZXQiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" }
 ];

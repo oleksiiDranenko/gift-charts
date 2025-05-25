@@ -77,35 +77,35 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
             onClick={() => vibrate()}
         >
             <div className=" flex flex-row items-center">
-            <Image
-                alt="gift image"
-                src={`/gifts/${item.image}.webp`}
-                width={50}
-                height={50}
-                className={` p-1 mr-3 rounded-lg ${borderColor ? 'border' : ''} ${
-                  item.staked && 'shadow-md shadow-blue-500'
-                } ${item.preSale ? 'bg-cyan-800 ' : 'bg-slate-800'}`}
-                style={borderColor ? { borderColor: `${borderColor}80` } : {}}
-            />
-                <div className="flex flex-col">
-                    <span className="text-base font-bold">
-                        {item.name}
-                        {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
-                        {item.staked && (<span className="text-xs text-blue-500 ml-2">Staking!</span>)}
-                    </span>
-                    <span className="text-slate-500 text-sm font-normal">
-                        {
-                            sortBy === 'price' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                            : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.supply) : (item.priceUsd * item.supply))
-                            : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                            : sortBy === 'percentChange' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                            : sortBy === 'supply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                            : sortBy === 'initSupply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply))
-                            : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`
-                            : null
-                        }
-                    </span>
-                </div>
+                <Image
+                    alt="gift image"
+                    src={`/gifts/${item.image}.webp`}
+                    width={50}
+                    height={50}
+                    className={` p-1 mr-3 bg-opacity-50 rounded-lg ${borderColor ? 'border' : ''} ${
+                      item.staked && 'shadow-md shadow-blue-500'
+                    } ${item.preSale ? 'bg-cyan-800' : 'bg-slate-800'}`}
+                    style={borderColor ? { borderColor: `${borderColor}80` } : {}}
+                />
+                    <div className="flex flex-col">
+                        <span className="text-base font-bold">
+                            {item.name}
+                            {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
+                            {item.staked && (<span className="text-xs text-blue-500 ml-2">Staking!</span>)}
+                        </span>
+                        <span className="text-slate-500 text-sm font-normal">
+                            {
+                                sortBy === 'price' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
+                                : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.supply) : (item.priceUsd * item.supply))
+                                : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
+                                : sortBy === 'percentChange' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
+                                : sortBy === 'supply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
+                                : sortBy === 'initSupply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply))
+                                : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`
+                                : null
+                            }
+                        </span>
+                    </div>
             </div>
 
             <div className=" flex flex-row items-center justify-end">
@@ -139,7 +139,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                         {percentChange}{percentChange !== 'no data' ? '%' : null}
                     </span>
                 </div>
-                
+                    
             </div>
         </Link>
     )

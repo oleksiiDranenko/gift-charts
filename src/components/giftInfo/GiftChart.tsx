@@ -251,7 +251,7 @@ export default function GiftChart ({gift, weekData, lifeData}: PropsInterface) {
                         src={`/gifts/${gift?.image}.webp`}
                         width={55}
                         height={55}
-                        className={`mr-3 bg-slate-800 p-1 rounded-lg ${gift?.staked && 'shadow-md shadow-[#0098EA]'}`}
+                        className={`mr-3  p-1 rounded-lg ${gift?.staked && 'shadow-md shadow-[#0098EA]'} ${gift?.preSale ? 'bg-cyan-800 ' : 'bg-slate-800'}`}
                     />
                     <h1 className="flex flex-col">
                         <span className="text-xl font-bold">

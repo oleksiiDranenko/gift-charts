@@ -76,12 +76,13 @@ export default function ChartHandler({ giftsList, filters }: PropsInterface) {
 
     return (
         <div className="p-3">
-            {loading ?
-            <div className="w-full flex justify-center">
-                <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5" />
-            </div>
-            :
+            
             <div>
+                {loading ?
+                <div className="w-full mb-3 flex justify-center">
+                    <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5" />
+                </div>
+                :
                 <CompareCharts 
                     gifts={gifts}
                     weekData={weekData}
@@ -90,6 +91,7 @@ export default function ChartHandler({ giftsList, filters }: PropsInterface) {
                     listType={listType}
                     setListType={handleListType}
                 />
+                }
 
                 <div>
                     {giftsList.length > 0
@@ -103,12 +105,10 @@ export default function ChartHandler({ giftsList, filters }: PropsInterface) {
                                 borderColor={colors[index]}
                                 timeGap={listType}
                             />
-                        ))
-                        : null
+                        )) : null
                     }
                 </div>
             </div>
-            }
         </div>
     )
 }
