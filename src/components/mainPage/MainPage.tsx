@@ -27,18 +27,6 @@ export default function MainPage() {
 
     const dispatch = useDispatch();
 
-    const [copied, setCopied] = useState(false);
-    const walletAddress = "UQBs_lO45Mcj5oxXtUmu-ZLpC-4cUBWUNKUm7QpPSsx0U28S";
-
-    const handleCopy = async () => {
-        try {
-            await navigator.clipboard.writeText(walletAddress);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 3000);
-        } catch (err) {
-            console.error("Failed to copy!", err);
-        }
-    };
 
 
     useEffect(() => {
@@ -133,14 +121,21 @@ export default function MainPage() {
 
     return (
         <div>
-            <h1 className="mb-5 px-3 text-2xl font-bold">
+            <h1 className="mb-3 px-3 text-2xl font-bold">
                 {'Hourly Price Updates ⏰'}
             </h1>
 
-            <div className=" p-3 mt-5 mb-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+            <div className=" p-2 mx-3 bg-slate-800 bg-opacity-30 rounded-lg">
+                <span className="text-slate-300">
+                    ✨ App is <span className="font-bold text-white">Free</span> but you can <Link href='/donate' className="font-bold text-[#0098EA] underline">Donate!</Link>
+                </span>
+            </div>
+            
+
+            <div className=" p-3 mt-3 mb-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
                 <div className="w-full flex flex-row justify-between items-center">
                     <h1 className="font-bold text-xl">
-                        {'📊 Treemap '} <span className="text-sm ml-3 text-yellow-400">New!</span>
+                        {'📊 Treemap '} <span className="text-sm ml-3 text-yellow-400">Popular!</span>
                     </h1>
                     <Link
                         href={'/tools/treemap'}
@@ -297,27 +292,6 @@ export default function MainPage() {
                         Gift Charts
                     </span>
                 </a>
-            </div>
-
-            <div className="max-w-full flex justify-between items-center p-3 mt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                <span className="text-xl font-bold">
-                    🤝 Donate
-                </span>
-
-                <button
-                    onClick={handleCopy}
-                    className="flex flex-row items-center justify-center font-bold p-3 gap-x-2 rounded-lg bg-slate-800"
-                    title="Copy to clipboard"
-                >
-                    <Image
-                        src={'/images/ton.webp'}
-                        alt="ton logo"
-                        height={16}
-                        width={16}
-                    />
-
-                    {copied ? 'Copied!' : 'Copy Address'}
-                </button>
             </div>
         </div>
     );
