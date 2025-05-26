@@ -140,8 +140,8 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
                 startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
 
             if (index === 0) {
-                ctx.font = `14px sans-serif`;
-                ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                ctx.font = `15px sans-serif`;
+                ctx.fillStyle = 'rgba(255,255,255,0.6)';
                 ctx.textAlign = 'right';
                 ctx.fillText('@gift_charts', x + width - 5, y + height - 5);
             }
