@@ -5,4 +5,8 @@ export default interface GiftLifeDataInterface {
     time?: string,
     priceTon: number,
     priceUsd: number,
+    openTon?: number,
+    closeTon?: number,
+    highTon?: number,
+    lowTon?: number
 }
