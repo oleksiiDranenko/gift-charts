@@ -38,14 +38,14 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                 }
             } else {
                 if(timeGap === '24h') {
-                    setPercentChange(countPercentChange(item.usdPrice24hAgo, item.priceTon))
+                    setPercentChange(countPercentChange(item.usdPrice24hAgo, item.priceUsd))
                 } else if(timeGap === '1w') {
                     item.usdPriceWeekAgo ? 
-                        setPercentChange(countPercentChange(item.usdPriceWeekAgo, item.priceTon)) 
+                        setPercentChange(countPercentChange(item.usdPriceWeekAgo, item.priceUsd)) 
                         : setPercentChange('no data')
                 } else if(timeGap === '1m' || timeGap === 'all') {
                     item.usdPriceMonthAgo ? 
-                        setPercentChange(countPercentChange(item.usdPriceMonthAgo, item.priceTon)) 
+                        setPercentChange(countPercentChange(item.usdPriceMonthAgo, item.priceUsd)) 
                         : setPercentChange('no data')
                 }
             }
