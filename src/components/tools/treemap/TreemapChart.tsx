@@ -42,15 +42,27 @@ const updateInteractivity = (chart: any) => {
   chart.update('none');
 };
 
-const transformGiftData = (gifts: GiftInterface[], chartType: 'change' | 'marketCap', timeGap: '24h' | '1w' | '1m'): GiftData[] => {
+const transformGiftData = (
+  gifts: GiftInterface[],
+  chartType: 'change' | 'marketCap',
+  timeGap: '24h' | '1w' | '1m',
+  currency: 'ton' | 'usd'
+): GiftData[] => {
     return gifts.map((gift) => {
-        const now = gift.priceTon ?? 0;
+        const now = currency === 'ton' ? (gift.priceTon ?? 0) : (gift.priceUsd ?? 0);
         let then: number;
         switch (timeGap) {
-            case '24h': then = gift.tonPrice24hAgo ?? now; break;
-            case '1w': then = gift.tonPriceWeekAgo ?? now; break;
-            case '1m': then = gift.tonPriceMonthAgo ?? now; break;
-            default: then = now;
+            case '24h':
+                then = currency === 'ton' ? (gift.tonPrice24hAgo ?? now) : (gift.usdPrice24hAgo ?? now);
+                break;
+            case '1w':
+                then = currency === 'ton' ? (gift.tonPriceWeekAgo ?? now) : (gift.usdPriceWeekAgo ?? now);
+                break;
+            case '1m':
+                then = currency === 'ton' ? (gift.tonPriceMonthAgo ?? now) : (gift.usdPriceMonthAgo ?? now);
+                break;
+            default:
+                then = now;
         }
         const percentChange = then === 0 ? 0 : ((now - then) / then) * 100;
         let size: number;
@@ -84,7 +96,7 @@ const preloadImages = (data: GiftData[]): Map<string, HTMLImageElement> => {
     return map;
 };
 
-const imagePlugin = (chartType: 'change' | 'marketCap') => ({
+const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd') => ({
     id: 'treemapImages',
     afterDatasetDraw(chart: any) {
         const { ctx, data } = chart;
@@ -114,7 +126,7 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
 
             const fontSize = Math.min(Math.max(minSize / 10, 1), 18);
             const priceFontSize = fontSize * 0.8;
-            const lineSpacing = Math.min(Math.max(minSize / 40, 1), 8); // Adjusted for smaller spacing in small rectangles
+            const lineSpacing = Math.min(Math.max(minSize / 40, 1), 8);
             const totalContentHeight = drawHeight + (fontSize * 2 + priceFontSize) + lineSpacing * 3;
             const startY = y + (height - totalContentHeight) / 2;
             const centerX = x + width / 2;
@@ -129,13 +141,13 @@ const imagePlugin = (chartType: 'change' | 'marketCap') => ({
             ctx.font = `${fontSize}px sans-serif`;
             ctx.fillText(chartType === 'change' ? `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%` :
                 ((item.marketCap ?? 0) / 1000 >= 1000
-                    ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M 💎`
-                    : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K 💎`),
+                    ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${currency === 'ton' ? '💎' : '$'}`
+                    : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${currency === 'ton' ? '💎' : '$'}`),
                 centerX, startY + drawHeight + fontSize * 2 + lineSpacing * 2);
 
             ctx.font = `${priceFontSize}px sans-serif`;
             ctx.fillText(chartType === 'change'
-                ? `${item.price.toFixed(2)} 💎`
+                ? `${item.price.toFixed(2)} ${currency === 'ton' ? '💎' : '$'}`
                 : `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX,
                 startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
 
@@ -155,9 +167,10 @@ interface TreemapChartProps {
     data: GiftInterface[];
     chartType: 'change' | 'marketCap';
     timeGap: '24h' | '1w' | '1m';
+    currency: 'ton' | 'usd';
 }
 
-const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap }) => {
+const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, currency }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const chartRef = useRef<any>(null);
 
@@ -183,7 +196,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
 
                 chartRef.current?.destroy();
 
-                const transformed = transformGiftData(data, chartType, timeGap);
+                const transformed = transformGiftData(data, chartType, timeGap, currency);
                 const imageMap = preloadImages(transformed);
 
                 const config: any = {
@@ -223,7 +236,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
                         },
                         events: [],
                     },
-                    plugins: [imagePlugin(chartType)]
+                    plugins: [imagePlugin(chartType, currency)]
                 };
 
                 chartRef.current = new Chart(ctx, config);
@@ -237,11 +250,11 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap })
         return () => {
             chartRef.current?.destroy();
         };
-    }, [data, chartType, timeGap]);
+    }, [data, chartType, timeGap, currency]);
 
     return (
-        <div className='w-full'>
-            <div className='mb-3 flex gap-2'>
+        <div className='w-full flex flex-col items-center'>
+            <div className='w-full lg:w-1/2 mb-3 flex gap-2'>
                 <button
                   className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
                   onClick={() => {

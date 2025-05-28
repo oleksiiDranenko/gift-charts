@@ -19,6 +19,7 @@ export default function Page() {
     const [list, setList] = useState<GiftInterface[]>([]);
     const [listType, setListType] = useState<'change' | 'marketCap'>('change')
     const [timeGap, setTimeGap] = useState<'24h' | '1w' | '1m'>('24h')
+    const [currency, setCurrency] = useState<'ton' | 'usd'>('ton')
 
     const [amount, setAmount] = useState<number>(25)
     const dispatch = useAppDispatch();
@@ -124,6 +125,27 @@ export default function Page() {
                     </button>
                 </div>
 
+                <div className="w-full lg:w-1/2 gap-2 mb-3 flex justify-end">
+                    <button
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        onClick={() => {
+                            setCurrency('ton')
+                            vibrate()
+                        }} 
+                    >
+                        TON
+                    </button>
+                    <button
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        onClick={() => {
+                            setCurrency('usd')
+                            vibrate()
+                        }}
+                    >
+                        USD
+                    </button>
+                </div>
+
                 <div className="w-full lg:w-1/2 mb-3 bg-slate-800 rounded-lg bg-opacity-50">
                     <div className="w-full mb-1 flex flex-col">
                         <div className="w-full flex flex-row justify-between gap-x-3">
@@ -205,7 +227,7 @@ export default function Page() {
 
                 {loading 
                 ? <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5" /> 
-                : <TreemapChart data={list.slice(0, amount)} chartType={listType} timeGap={timeGap}/>
+                : <TreemapChart data={list.slice(0, amount)} chartType={listType} timeGap={timeGap} currency={currency}/>
                 }
             </div>
         </div>
