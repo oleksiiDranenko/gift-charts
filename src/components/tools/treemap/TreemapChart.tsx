@@ -209,7 +209,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
                         backgroundColor: (ctx: TreemapScriptableContext) => {
                           const dataset = ctx.dataset as CustomTreemapDataset;
                           const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                          return val >= 0 ? '#008000' : '#E50000';
+                          return val > 0 ? '#008000' : val < 0 ?'#E50000' : "#808080";
                         },
                         hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
                           const dataset = ctx.dataset as CustomTreemapDataset;

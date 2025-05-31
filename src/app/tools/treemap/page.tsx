@@ -101,12 +101,15 @@ export default function Page() {
 					>
 						{'<- Back'}
 					</button>
-					
 				</div>
 
-				<div className="w-full lg:w-1/2 gap-2 mt-5 mb-3 flex justify-end">
+                <div className="w-full lg:w-1/2 mx-3 p-3 text-xs text-slate-400 bg-slate-800 bg-opacity-50 rounded-lg">
+                    😇 If you use this chart in your Channel, please mention @gift_charts_bot
+                </div>
+
+				<div className="w-full lg:w-1/2 gap-2 mt-3 mb-3 flex justify-end">
                     <button
-                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'change' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'change' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800 bg-opacity-50' }`}
                         onClick={() => {
                             setListType('change')
                             vibrate()
@@ -115,7 +118,7 @@ export default function Page() {
                         Change
                     </button>
                     <button
-                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'marketCap' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${listType === 'marketCap' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800 bg-opacity-50' }`}
                         onClick={() => {
                             setListType('marketCap')
                             vibrate()
@@ -127,7 +130,7 @@ export default function Page() {
 
                 <div className="w-full lg:w-1/2 gap-2 mb-3 flex justify-end">
                     <button
-                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800 bg-opacity-50' }`}
                         onClick={() => {
                             setCurrency('ton')
                             vibrate()
@@ -136,7 +139,7 @@ export default function Page() {
                         TON
                     </button>
                     <button
-                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800' }`}
+                        className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800 bg-opacity-50' }`}
                         onClick={() => {
                             setCurrency('usd')
                             vibrate()

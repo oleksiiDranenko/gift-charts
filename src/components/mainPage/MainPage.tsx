@@ -135,7 +135,7 @@ export default function MainPage() {
             <div className=" p-3 mt-3 mb-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
                 <div className="w-full flex flex-row justify-between items-center">
                     <h1 className="font-bold text-xl">
-                        {'📊 Treemap '} <span className="text-sm ml-3 text-yellow-400">Popular!</span>
+                        {'📊 Heatmap '} <span className="text-sm ml-3 text-yellow-400">Popular!</span>
                     </h1>
                     <Link
                         href={'/tools/treemap'}

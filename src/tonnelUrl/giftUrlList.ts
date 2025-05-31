@@ -73,5 +73,6 @@ export const giftUrlList = [
   { name: "Nail Bracelet", path: "ZmlsdGVyOztbIk5haWwgQnJhY2VsZXQiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
   { name: "Restless Jar", path: "ZmlsdGVyOztbIlJlc3RsZXNzIEphciJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" },
   { name: "Bow Tie", path: "ZmlsdGVyOztbIkJvdyBUaWUiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
-  { name: "Heroic Helmet", path: "ZmlsdGVyOztbIkhlcm9pYyBIZWxtZXQiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" }
+  { name: "Heroic Helmet", path: "ZmlsdGVyOztbIkhlcm9pYyBIZWxtZXQiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
+  { name: "Heart Locket", path: "ZmlsdGVyOztbIkhlYXJ0IExvY2tldCJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw"}
 ];

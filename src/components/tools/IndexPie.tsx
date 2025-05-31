@@ -27,10 +27,6 @@ export default function IndexPie() {
   const values = giftsList.map((gift) => (gift.priceTon || 0) * (gift.supply || 0));
   const backgroundColors = labels.map(() => generateRandomColor());
 
-  useEffect(() => {
-    console.log(giftsList);
-  }, []);
-
   const data = {
     labels,
     datasets: [
