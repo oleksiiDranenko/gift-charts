@@ -31,15 +31,15 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                         {name}
                     </span>
                     <span className="text-slate-500 text-sm font-normal">
-                        <span>
+                        <span className="text-slate-300">
                             {amount} {amount > 1 ? 'gifts' : 'gift'}
                         </span>
                         {
                             currency === 'ton' ?
-                                ` (${Math.round( ((priceTon * amount) / assetsPrice) * 100 )})`
+                                ` (${Math.round( ((priceTon * amount) / assetsPrice) * 100 )}%)`
                             :
-                                Math.round( ((priceUsd * amount) / assetsPrice) * 100 )
-                        }%
+                                ` (${Math.round( ((priceUsd * amount) / assetsPrice) * 100 )}%)`
+                        }
                     </span>
                 </div>
             </div>
@@ -63,7 +63,7 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                     </div>
                     
                     <span className={percentChange >= 0 ? 'text-green-500' : 'text-red-500'}>
-                        {percentChange}
+                        {percentChange >= 0 && '+'}{percentChange}%
                     </span>
                 </div>
                     
