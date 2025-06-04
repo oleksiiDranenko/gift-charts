@@ -9,10 +9,11 @@ interface PropsInterface {
     amount: number,
     priceTon: number,
     priceUsd: number,
-    assetsPrice: number
+    assetsPrice: number,
+    percentChange: number
 }
 
-export default function Asset({name, image, currency, amount, priceTon, priceUsd, assetsPrice } : PropsInterface) {
+export default function Asset({name, image, currency, amount, priceTon, priceUsd, assetsPrice, percentChange } : PropsInterface) {
     return (
         <div 
             className="w-full h-20 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
@@ -30,9 +31,12 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                         {name}
                     </span>
                     <span className="text-slate-500 text-sm font-normal">
+                        <span>
+                            {amount} {amount > 1 ? 'gifts' : 'gift'}
+                        </span>
                         {
                             currency === 'ton' ?
-                                Math.round( ((priceTon * amount) / assetsPrice) * 100 )
+                                ` (${Math.round( ((priceTon * amount) / assetsPrice) * 100 )})`
                             :
                                 Math.round( ((priceUsd * amount) / assetsPrice) * 100 )
                         }%
@@ -58,8 +62,8 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                         </span>
                     </div>
                     
-                    <span className={`text-sm font-light `}>
-                        {amount} {amount > 1 ? 'Gifts' : 'Gift'}
+                    <span className={percentChange >= 0 ? 'text-green-500' : 'text-red-500'}>
+                        {percentChange}
                     </span>
                 </div>
                     

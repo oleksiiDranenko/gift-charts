@@ -181,7 +181,7 @@ export default function Account() {
                                 {portfolioValue}                                
                             </h1>
                         </div>
-                        <span className={`mt-1 ${countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0 ? 'text-green-400' : 'text-red-500'}`}>
+                        <span className={`mt-1 ${countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                             {countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0 && '+'}
                             {countPercentChange(portfolioValue24hAgo, portfolioValue)}%
                         </span>
@@ -298,6 +298,7 @@ export default function Account() {
                                         priceTon={asset.priceTon}
                                         priceUsd={asset.priceUsd}
                                         assetsPrice={currency === 'ton' ? assetsPriceTon : assetsPriceUsd}
+                                        percentChange={currency === 'ton' ? countPercentChange(asset.tonPrice24hAgo, asset.priceTon) : countPercentChange(asset.usdPrice24hAgo, asset.priceUsd)}
                                         key={asset.name}
                                     />
                                 ))
