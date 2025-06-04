@@ -120,15 +120,11 @@ export default function Account() {
 
         // Calculate portfolio values immediately with fresh data
         if (currency === 'ton') {
-            const current = parseInt((totalPriceTon + user.ton + (user.usd / ton)).toFixed(2))
-            const past = parseInt((totalPriceTon24Ago + user.ton + (user.usd / ton)).toFixed(2))
-            setPortfolioValue(current)
-            setPortfolioValue24hAgo(past)
+            setPortfolioValue(parseFloat((assetsPriceTon + user.ton + (user.usd / ton)).toFixed(2)))
+            setPortfolioValue24hAgo(parseFloat((assetsPriceTon24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
         } else {
-            const current = parseInt((totalPriceUsd + (user.ton * ton) + user.usd).toFixed(2))
-            const past = parseInt((totalPriceUsd24Ago + (user.ton * ton) + user.usd).toFixed(2))
-            setPortfolioValue(current)
-            setPortfolioValue24hAgo(past)
+            setPortfolioValue(parseFloat((assetsPriceUsd + (user.ton * ton) + user.usd).toFixed(2)))
+            setPortfolioValue24hAgo(parseFloat((assetsPriceUsd24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
         }
         }
     }
