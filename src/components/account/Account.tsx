@@ -78,75 +78,62 @@ export default function Account() {
     useEffect(() => {
         setCashPercentages()
         updateAssetsArray()
-        updatePortfolioValue()
     }, [user, currency, giftsList])
     
 
     const updateAssetsArray = () => {
-        if (giftsList.length > 0) {
-            const updatedAssets = (user.assets || []).map((asset: { giftId: string, amount: number }) => {
-                const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId)
-                if (gift) {
-                    return {
-                        name: gift.name,
-                        image: gift.image,
-                        currency: currency,
-                        amount: asset.amount,
-                        priceTon: gift.priceTon,
-                        priceUsd: gift.priceUsd,
-                        tonPrice24hAgo: gift.tonPrice24hAgo,
-                        usdPrice24hAgo: gift.usdPrice24hAgo
-                    }
+    if (giftsList.length > 0) {
+        const updatedAssets = (user.assets || []).map((asset: { giftId: string, amount: number }) => {
+            const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId)
+            if (gift) {
+                return {
+                    name: gift.name,
+                    image: gift.image,
+                    currency: currency,
+                    amount: asset.amount,
+                    priceTon: gift.priceTon,
+                    priceUsd: gift.priceUsd,
+                    tonPrice24hAgo: gift.tonPrice24hAgo,
+                    usdPrice24hAgo: gift.usdPrice24hAgo
                 }
-                return undefined
-            }).filter((asset): asset is AssetDisplayInterface => asset !== undefined)
+            }
+            return undefined
+        }).filter((asset): asset is AssetDisplayInterface => asset !== undefined)
 
-            updatedAssets.sort((a, b) => {
-                const valueA = currency === 'ton' ? a.priceTon * a.amount : a.priceUsd * a.amount
-                const valueB = currency === 'ton' ? b.priceTon * b.amount : b.priceUsd * b.amount
-                return valueB - valueA
-            })
+        updatedAssets.sort((a, b) => {
+            const valueA = currency === 'ton' ? a.priceTon * a.amount : a.priceUsd * a.amount
+            const valueB = currency === 'ton' ? b.priceTon * b.amount : b.priceUsd * b.amount
+            return valueB - valueA
+        })
 
-            setAssetsArray(updatedAssets)
+        setAssetsArray(updatedAssets)
 
-            const totalPriceTon = updatedAssets.reduce((sum, asset) => {
-                return sum + asset.priceTon * asset.amount
-            }, 0)
-            const totalPriceUsd = updatedAssets.reduce((sum, asset) => {
-                return sum + asset.priceUsd * asset.amount
-            }, 0)
+        const totalPriceTon = updatedAssets.reduce((sum, asset) => sum + asset.priceTon * asset.amount, 0)
+        const totalPriceUsd = updatedAssets.reduce((sum, asset) => sum + asset.priceUsd * asset.amount, 0)
+        const totalPriceTon24Ago = updatedAssets.reduce((sum, asset) => sum + asset.tonPrice24hAgo * asset.amount, 0)
+        const totalPriceUsd24Ago = updatedAssets.reduce((sum, asset) => sum + asset.usdPrice24hAgo * asset.amount, 0)
 
-            const totalPriceTon24Ago = updatedAssets.reduce((sum, asset) => {
-                return sum + asset.tonPrice24hAgo * asset.amount
-            }, 0)
-            const totalPriceUsd24Ago = updatedAssets.reduce((sum, asset) => {
-                return sum + asset.usdPrice24hAgo * asset.amount
-            }, 0)
+        setAssetsPriceTon(totalPriceTon)
+        setAssetsPriceUsd(totalPriceUsd)
+        setAssetsPriceTon24hAgo(totalPriceTon24Ago)
+        setAssetsPriceUsd24hAgo(totalPriceUsd24Ago)
 
-            setAssetsPriceTon(totalPriceTon)
-            setAssetsPriceUsd(totalPriceUsd)
-            setAssetsPriceTon24hAgo(totalPriceTon24Ago)
-            setAssetsPriceUsd24hAgo(totalPriceUsd24Ago)
-
-            currency === 'ton' 
-            ? setPortfolioValue(parseInt((assetsPriceTon + user.ton + (user.usd / ton)).toFixed(2)))
-            : setPortfolioValue(parseInt((assetsPriceUsd + (user.ton * ton) + user.usd).toFixed(2)))
-            
-            currency === 'ton' 
-            ? setPortfolioValue24hAgo(parseInt((assetsPriceTon24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
-            : setPortfolioValue24hAgo(parseInt((assetsPriceUsd24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
+        // Calculate portfolio values immediately with fresh data
+        if (currency === 'ton') {
+            const current = parseInt((totalPriceTon + user.ton + (user.usd / ton)).toFixed(2))
+            const past = parseInt((totalPriceTon24Ago + user.ton + (user.usd / ton)).toFixed(2))
+            setPortfolioValue(current)
+            setPortfolioValue24hAgo(past)
+        } else {
+            const current = parseInt((totalPriceUsd + (user.ton * ton) + user.usd).toFixed(2))
+            const past = parseInt((totalPriceUsd24Ago + (user.ton * ton) + user.usd).toFixed(2))
+            setPortfolioValue(current)
+            setPortfolioValue24hAgo(past)
+        }
         }
     }
 
-    const updatePortfolioValue = () => {
-        currency === 'ton' 
-        ? setPortfolioValue(parseInt((assetsPriceTon + user.ton + (user.usd / ton)).toFixed(2)))
-        : setPortfolioValue(parseInt((assetsPriceUsd + (user.ton * ton) + user.usd).toFixed(2)))
 
-        currency === 'ton' 
-        ? setPortfolioValue24hAgo(parseInt((assetsPriceTon24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
-        : setPortfolioValue24hAgo(parseInt((assetsPriceUsd24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
-    }
     
     const setCashPercentages = () => {
         if (user) {
