@@ -120,11 +120,15 @@ export default function Account() {
 
         // Calculate portfolio values immediately with fresh data
         if (currency === 'ton') {
-            setPortfolioValue(parseFloat((assetsPriceTon + user.ton + (user.usd / ton)).toFixed(2)))
-            setPortfolioValue24hAgo(parseFloat((assetsPriceTon24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
+            const current = parseFloat((totalPriceTon + user.ton + (user.usd / ton)).toFixed(2))
+            const past = parseFloat((totalPriceTon24Ago + user.ton + (user.usd / ton)).toFixed(2))
+            setPortfolioValue(current)
+            setPortfolioValue24hAgo(past)
         } else {
-            setPortfolioValue(parseFloat((assetsPriceUsd + (user.ton * ton) + user.usd).toFixed(2)))
-            setPortfolioValue24hAgo(parseFloat((assetsPriceUsd24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
+            const current = parseFloat((totalPriceUsd + (user.ton * ton) + user.usd).toFixed(2))
+            const past = parseFloat((totalPriceUsd24Ago + (user.ton * ton) + user.usd).toFixed(2))
+            setPortfolioValue(current)
+            setPortfolioValue24hAgo(past)
         }
         }
     }
@@ -177,7 +181,7 @@ export default function Account() {
                                 {portfolioValue}                                
                             </h1>
                         </div>
-                        <span className=" text-green-400 mt-1">
+                        <span className={`mt-1 ${countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0 ? 'text-green-400' : 'text-red-500'}`}>
                             {countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0 && '+'}
                             {countPercentChange(portfolioValue24hAgo, portfolioValue)}%
                         </span>
