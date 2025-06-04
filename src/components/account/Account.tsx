@@ -35,8 +35,10 @@ export default function Account() {
     const [loading, setLoading] = useState<boolean>(true)
     
     const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([])
-    const [assetsPrice, setAssetsPrice] = useState<number>(0)
-    const [assetsPrice24hAgo, setAssetsPrice24hAgo] = useState<number>(0)
+    const [assetsPriceTon, setAssetsPriceTon] = useState<number>(0)
+    const [assetsPriceUsd, setAssetsPriceUsd] = useState<number>(0)
+    const [assetsPriceTon24hAgo, setAssetsPriceTon24hAgo] = useState<number>(0)
+    const [assetsPriceUsd24hAgo, setAssetsPriceUsd24hAgo] = useState<number>(0)
 
     const [ton, setTon] = useState<number>(3)
     const [tonPercentage, setTonPercentage] = useState<number>(0)
@@ -76,6 +78,7 @@ export default function Account() {
     useEffect(() => {
         setCashPercentages()
         updateAssetsArray()
+        updatePortfolioValue()
     }, [user, currency, giftsList])
 
     const updateAssetsArray = () => {
@@ -105,28 +108,36 @@ export default function Account() {
 
             setAssetsArray(updatedAssets)
 
-            const totalPrice = updatedAssets.reduce((sum, asset) => {
-                return sum + (currency === 'ton' ? asset.priceTon * asset.amount : asset.priceUsd * asset.amount)
+            const totalPriceTon = updatedAssets.reduce((sum, asset) => {
+                return sum + asset.priceTon * asset.amount
+            }, 0)
+            const totalPriceUsd = updatedAssets.reduce((sum, asset) => {
+                return sum + asset.priceUsd * asset.amount
             }, 0)
 
-            const totalPrice24Ago = updatedAssets.reduce((sum, asset) => {
-                return sum + (currency === 'ton' ? asset.tonPrice24hAgo * asset.amount : asset.usdPrice24hAgo * asset.amount)
+            const totalPriceTon24Ago = updatedAssets.reduce((sum, asset) => {
+                return sum + asset.tonPrice24hAgo * asset.amount
+            }, 0)
+            const totalPriceUsd24Ago = updatedAssets.reduce((sum, asset) => {
+                return sum + asset.usdPrice24hAgo * asset.amount
             }, 0)
 
-            setAssetsPrice(totalPrice)
-            setAssetsPrice24hAgo(totalPrice24Ago)
+            setAssetsPriceTon(totalPriceTon)
+            setAssetsPriceUsd(totalPriceUsd)
+            setAssetsPriceTon24hAgo(totalPriceTon24Ago)
+            setAssetsPriceUsd24hAgo(totalPriceUsd24Ago)
         }
     }
 
-    useEffect(() => {
+    const updatePortfolioValue = () => {
         currency === 'ton' 
-        ? setPortfolioValue(parseInt((assetsPrice + user.ton + (user.usd / ton)).toFixed(2)))
-        : setPortfolioValue(parseInt((assetsPrice + (user.ton * ton) + user.usd).toFixed(2)))
+        ? setPortfolioValue(parseInt((assetsPriceTon + user.ton + (user.usd / ton)).toFixed(2)))
+        : setPortfolioValue(parseInt((assetsPriceUsd + (user.ton * ton) + user.usd).toFixed(2)))
 
         currency === 'ton' 
-        ? setPortfolioValue24hAgo(parseInt((assetsPrice24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
-        : setPortfolioValue24hAgo(parseInt((assetsPrice24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
-    }, [giftsList, currency])
+        ? setPortfolioValue24hAgo(parseInt((assetsPriceTon24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
+        : setPortfolioValue24hAgo(parseInt((assetsPriceUsd24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
+    }
     
     const setCashPercentages = () => {
         if (user) {
@@ -275,7 +286,7 @@ export default function Account() {
                                         <span className="mr-1">$</span>
                                     }
                                     <span>
-                                        {assetsPrice.toFixed(2)}
+                                        {currency === 'ton' ? assetsPriceTon.toFixed(2) : assetsPriceUsd.toFixed(2)}
                                     </span>
                                 </div>
                             </div>
@@ -289,7 +300,7 @@ export default function Account() {
                                         amount={asset.amount}
                                         priceTon={asset.priceTon}
                                         priceUsd={asset.priceUsd}
-                                        assetsPrice={assetsPrice}
+                                        assetsPrice={currency === 'ton' ? assetsPriceTon : assetsPriceUsd}
                                         key={asset.name}
                                     />
                                 ))
