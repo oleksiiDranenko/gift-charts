@@ -60,6 +60,7 @@ export default function Account() {
                 console.error("Error fetching gifts:", error)
             } finally {
                 setLoading(false)
+                updatePortfolioValue()
             }
         }
 
@@ -80,6 +81,7 @@ export default function Account() {
         updateAssetsArray()
         updatePortfolioValue()
     }, [user, currency, giftsList])
+    
 
     const updateAssetsArray = () => {
         if (giftsList.length > 0) {
@@ -186,7 +188,8 @@ export default function Account() {
                             </h1>
                         </div>
                         <span className=" text-green-400 mt-1">
-                            {countPercentChange(portfolioValue24hAgo, portfolioValue)}
+                            {countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0 && '+'}
+                            {countPercentChange(portfolioValue24hAgo, portfolioValue)}%
                         </span>
                     </div>
 
