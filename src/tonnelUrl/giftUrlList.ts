@@ -8,7 +8,7 @@ export const giftUrlList = [
   { name: "Crystal Ball", path: "ZmlsdGVyOztbIkNyeXN0YWwgQmFsbCJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" },
   { name: "Desk Calendar", path: "ZmlsdGVyOztbIkRlc2sgQ2FsZW5kYXIiXTtbXTtbXTtbXTtUT047WyIiLCIiXTs" },
   { name: "Diamond Ring", path: "ZmlsdGVyOztbIkRpYW1vbmQgUmluZyJdO1tdO1tdO1tdO1RPTjtbIiIsIiJdOw" },
-  { name: "Durov’s Cap", path: "ZmlsdGVyOztbIkR1cm92J3MgQ2FwIl07W107W107W107VE9OO1siIiwiIl07" },
+  { name: "Durov's Cap", path: "ZmlsdGVyOztbIkR1cm92J3MgQ2FwIl07W107W107W107VE9OO1siIiwiIl07" },
   { name: "Easter Egg", path: "ZmlsdGVyOztbIkR1cm92J3MgQ2FwIl07W107W107W107VE9OO1siIiwiIl07" },
   { name: "Electric Skull", path: "ZmlsdGVyOztbIkVsZWN0cmljIFNrdWxsIl07W107W107W107VE9OO1siIiwiIl07" },
   { name: "Eternal Candle", path: "ZmlsdGVyOztbIkV0ZXJuYWwgQ2FuZGxlIl07W107W107W107VE9OO1siIiwiIl07" },

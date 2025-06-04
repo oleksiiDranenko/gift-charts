@@ -11,6 +11,7 @@ import ReactLoading from "react-loading"
 import Link from "next/link"
 import useVibrate from "@/hooks/useVibrate"
 import axios from "axios"
+import { countPercentChange } from "@/numberFormat/functions"
 
 interface AssetDisplayInterface {
     name: string,
@@ -18,7 +19,9 @@ interface AssetDisplayInterface {
     currency: 'ton' | 'usd',
     amount: number,
     priceTon: number,
-    priceUsd: number
+    priceUsd: number,
+    tonPrice24hAgo: number,
+    usdPrice24hAgo: number
 }
 
 export default function Account() {
@@ -33,10 +36,14 @@ export default function Account() {
     
     const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([])
     const [assetsPrice, setAssetsPrice] = useState<number>(0)
+    const [assetsPrice24hAgo, setAssetsPrice24hAgo] = useState<number>(0)
 
     const [ton, setTon] = useState<number>(3)
     const [tonPercentage, setTonPercentage] = useState<number>(0)
     const [usdPercentage, setUsdPercentage] = useState<number>(0)
+
+    const [portfolioValue, setPortfolioValue] = useState<number>(0)
+    const [portfolioValue24hAgo, setPortfolioValue24hAgo] = useState<number>(0)
 
     useEffect(() => {
         const fetchGifts = async () => {
@@ -83,6 +90,8 @@ export default function Account() {
                         amount: asset.amount,
                         priceTon: gift.priceTon,
                         priceUsd: gift.priceUsd,
+                        tonPrice24hAgo: gift.tonPrice24hAgo,
+                        usdPrice24hAgo: gift.usdPrice24hAgo
                     }
                 }
                 return undefined
@@ -100,9 +109,24 @@ export default function Account() {
                 return sum + (currency === 'ton' ? asset.priceTon * asset.amount : asset.priceUsd * asset.amount)
             }, 0)
 
+            const totalPrice24Ago = updatedAssets.reduce((sum, asset) => {
+                return sum + (currency === 'ton' ? asset.tonPrice24hAgo * asset.amount : asset.usdPrice24hAgo * asset.amount)
+            }, 0)
+
             setAssetsPrice(totalPrice)
+            setAssetsPrice24hAgo(totalPrice24Ago)
         }
     }
+
+    useEffect(() => {
+        currency === 'ton' 
+        ? setPortfolioValue(parseInt((assetsPrice + user.ton + (user.usd / ton)).toFixed(2)))
+        : setPortfolioValue(parseInt((assetsPrice + (user.ton * ton) + user.usd).toFixed(2)))
+
+        currency === 'ton' 
+        ? setPortfolioValue24hAgo(parseInt((assetsPrice24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
+        : setPortfolioValue24hAgo(parseInt((assetsPrice24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
+    }, [giftsList, currency])
     
     const setCashPercentages = () => {
         if (user) {
@@ -126,13 +150,13 @@ export default function Account() {
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 </div>
             :
-            user.username === '_guest'
-            ?
+            // user.username === '_guest'
+            // ?
    
-                <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
-                    Please open this app in Telegram
-                </div>
-            :
+            //     <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
+            //         Please open this app in Telegram
+            //     </div>
+            // :
                 <>
                     <div className="w-full h-28 flex flex-col justify-center items-center">
                         <div className="flex flex-row items-center">
@@ -147,14 +171,11 @@ export default function Account() {
                                 <span className="text-4xl font-bold mr-1">$</span>
                             }
                             <h1 className="text-4xl font-bold">
-                                {currency === 'ton' 
-                                    ? (assetsPrice + user.ton + (user.usd / ton)).toFixed(2)
-                                    : (assetsPrice + (user.ton * ton) + user.usd).toFixed(2)
-                                }
+                                {portfolioValue}                                
                             </h1>
                         </div>
-                        <span className="text-sm font-bold text-slate-400 mt-1">
-                            @{user.username}
+                        <span className=" text-green-400 mt-1">
+                            {countPercentChange(portfolioValue24hAgo, portfolioValue)}
                         </span>
                     </div>
 

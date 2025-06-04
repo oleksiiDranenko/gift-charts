@@ -59,7 +59,7 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                     </div>
                     
                     <span className={`text-sm font-light `}>
-                        x {amount}
+                        {amount} {amount > 1 ? 'Gifts' : 'Gift'}
                     </span>
                 </div>
                     
