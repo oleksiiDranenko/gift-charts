@@ -157,13 +157,13 @@ export default function Account() {
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
                 </div>
             :
-            // user.username === '_guest'
-            // ?
+            user.username === '_guest'
+            ?
    
-            //     <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
-            //         Please open this app in Telegram
-            //     </div>
-            // :
+                <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
+                    Please open this app in Telegram
+                </div>
+            :
                 <>
                     <div className="w-full h-28 flex flex-col justify-center items-center">
                         <div className="flex flex-row items-center">
