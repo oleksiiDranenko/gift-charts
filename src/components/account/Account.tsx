@@ -60,7 +60,6 @@ export default function Account() {
                 console.error("Error fetching gifts:", error)
             } finally {
                 setLoading(false)
-                updatePortfolioValue()
             }
         }
 
@@ -128,6 +127,14 @@ export default function Account() {
             setAssetsPriceUsd(totalPriceUsd)
             setAssetsPriceTon24hAgo(totalPriceTon24Ago)
             setAssetsPriceUsd24hAgo(totalPriceUsd24Ago)
+
+            currency === 'ton' 
+            ? setPortfolioValue(parseInt((assetsPriceTon + user.ton + (user.usd / ton)).toFixed(2)))
+            : setPortfolioValue(parseInt((assetsPriceUsd + (user.ton * ton) + user.usd).toFixed(2)))
+            
+            currency === 'ton' 
+            ? setPortfolioValue24hAgo(parseInt((assetsPriceTon24hAgo + user.ton + (user.usd / ton)).toFixed(2)))
+            : setPortfolioValue24hAgo(parseInt((assetsPriceUsd24hAgo + (user.ton * ton) + user.usd).toFixed(2)))
         }
     }
 
