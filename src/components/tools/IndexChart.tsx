@@ -34,10 +34,12 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton')
     const [percentChange, setPercentChange] = useState<number>(0)
     const [list, setList] = useState<IndexDataInterface[]>(indexData)
-    const [listType, setListType] = useState<'1m' | '3m' | 'all'>('1m')
+    const [listType, setListType] = useState<'1w' | '1m' | '3m' | 'all'>('all')
     const [low, setLow] = useState<number>()
     const [high, setHigh] = useState<number>()
     const [gradient, setGradient] = useState<CanvasGradient | null>(null);
+
+    const [newData, setNewData] = useState<IndexDataInterface>()
 
     // Prevent scroll when interacting with chart
     useEffect(() => {
@@ -126,14 +128,17 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             currentTon = parseFloat(currentTon.toFixed(4));
             currentUsd = parseFloat(currentUsd.toFixed(4));
         
-            const newData: IndexDataInterface = {
+            setNewData({
                 _id: index._id,
                 indexId: index._id,
                 date: 'today',
                 priceTon: currentTon,
                 priceUsd: currentUsd
-            };
-            setList(prev => [...prev, newData]);
+            })
+            
+            if(newData){
+                setList(prev => [...prev, newData]);
+            }
         } 
         else if (index.shortName === 'R10') {
             let totalSupply = 0;
@@ -169,14 +174,17 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             currentTon = parseFloat(currentTon.toFixed(4));
             currentUsd = parseFloat(currentUsd.toFixed(4));
 
-            const newData: IndexDataInterface = {
+            setNewData({
                 _id: index._id,
                 indexId: index._id,
                 date: 'today',
                 priceTon: currentTon,
                 priceUsd: currentUsd
-            };
-            setList(prev => [...prev, newData]);
+            })
+            
+            if(newData){
+                setList(prev => [...prev, newData]);
+            }
         }    
         else if (index.shortName === 'TMC') {
             let currentTon = 0;
@@ -189,15 +197,20 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 currentUsd += priceUsd * supply;
             }
 
-            const newData: IndexDataInterface = {
+            setNewData({
                 _id: index._id,
                 indexId: index._id,
                 date: 'today',
                 priceTon: currentTon,
                 priceUsd: currentUsd
-            };
-            setList(prev => [...prev, newData]);
+            })
+            
+            if(newData){
+                setList(prev => [...prev, newData]);
+            }
         }
+
+
     }, [giftsList, index])
 
     useEffect(() => {
@@ -221,6 +234,27 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             setHigh(Math.max(...prices));
         }
     }, [selectedPrice, list])
+
+    useEffect(() => {
+    if(newData) {
+            switch (listType) {
+            case '1w':
+                setList([...indexData.slice(-7), newData])
+                break;
+            case '1m':
+                setList([...indexData.slice(-30), newData])
+                break;
+            case '3m':
+                setList([...indexData.slice(-90), newData])
+                break;
+            case 'all':
+                setList([...indexData, newData])
+            default:
+                break;
+        }
+    }
+}, [listType, indexData]);
+
 
     const formatNumber = (number: number) => {
         if (number >= 1000 && number < 1000000 ) {
@@ -417,6 +451,47 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 <span className="w-1/2 flex justify-center items-center h-10 bg-green-600 bg-opacity-40 rounded-lg">
                     High: {high ? formatNumberWithDots(high) : null}
                 </span>
+            </div>
+
+            <div className="mb-1 mt-5 flex flex-col">
+                <div className="w-full flex flex-row justify-between gap-x-3">
+                    <button
+                        className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        onClick={() => {
+                            setListType('all')
+                            vibrate()
+                        }}
+                    >
+                        All
+                    </button>
+                    <button
+                        className={`w-full text-sm h-10 ${listType == '3m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        onClick={() => {
+                            setListType('3m')
+                            vibrate()
+                        }}
+                    >
+                        3m
+                    </button>
+                    <button
+                        className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        onClick={() => {
+                            setListType('1m')
+                            vibrate()
+                        }}
+                    >
+                        1m
+                    </button>
+                    <button
+                        className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        onClick={() => {
+                            setListType('1w')
+                            vibrate()
+                        }}
+                    >
+                        1w
+                    </button>
+                </div>
             </div>
         
             <div className="w-full p-3 mt-5 bg-slate-800 bg-opacity-50 rounded-lg">

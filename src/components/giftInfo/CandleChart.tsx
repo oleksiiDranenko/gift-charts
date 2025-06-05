@@ -34,8 +34,8 @@ export default function CandleChart({ data }: PropsInterface) {
                     };
                 }),
                 borderColor: '#ffffff',
-                upColor: '#00ff00',
-                downColor: '#ff0000',
+                upColor: '#14cc00',
+                downColor: '#ff0303',
             } as any,
         ],
     };

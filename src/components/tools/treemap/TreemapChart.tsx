@@ -96,6 +96,16 @@ const preloadImages = (data: GiftData[]): Map<string, HTMLImageElement> => {
     return map;
 };
 
+const darkenColor = (hex: string, amount: number): string => {
+    const num = parseInt(hex.slice(1), 16);
+    const r = Math.max(0, Math.floor((num >> 16) - 255 * amount));
+    const g = Math.max(0, Math.floor(((num >> 8) & 0x00FF) - 255 * amount));
+    const b = Math.max(0, Math.floor((num & 0x0000FF) - 255 * amount));
+    return `rgb(${r}, ${g}, ${b})`;
+};
+
+
+
 const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd') => ({
     id: 'treemapImages',
     afterDatasetDraw(chart: any) {
@@ -110,10 +120,22 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
         dataset.tree.forEach((item: GiftData, index: number) => {
             const meta = chart.getDatasetMeta(0).data[index] as any;
             if (!meta) return;
+
             const x = meta.x / scale, y = meta.y / scale;
             const width = meta.width / scale, height = meta.height / scale;
+            if (width <= 0 || height <= 0) return;
+
+            // --- Gradient background ---
+            const baseColor = item.percentChange > 0 ? '#008000' :
+                              item.percentChange < 0 ? '#E50000' : '#808080';
+            const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
+            gradient.addColorStop(0, darkenColor(baseColor,  0.2));
+            gradient.addColorStop(1, baseColor);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x, y, width, height);
+
             const img = imageMap.get(item.imageName);
-            if (!img?.complete || width <= 0 || height <= 0) return;
+            if (!img?.complete) return;
 
             const minSize = Math.min(width, height);
             const baseSize = Math.min(Math.max(minSize / 6, 5), 500);
@@ -162,6 +184,7 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
         ctx.restore();
     },
 });
+
 
 interface TreemapChartProps {
     data: GiftInterface[];
@@ -214,7 +237,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
                         hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
                           const dataset = ctx.dataset as CustomTreemapDataset;
                           const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                          return val >= 0 ? '#008000' : '#E50000';
+                          return val > 0 ? '#008000' : val < 0 ?'#E50000' : "#808080";
                         },
                         hoverBorderColor: '#000'
                     }] },
