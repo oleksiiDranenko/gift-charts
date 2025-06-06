@@ -129,7 +129,7 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
             const baseColor = item.percentChange > 0 ? '#008000' :
                               item.percentChange < 0 ? '#E50000' : '#808080';
             const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-            gradient.addColorStop(0, darkenColor(baseColor,  0.2));
+            gradient.addColorStop(0, darkenColor(baseColor,  0.05));
             gradient.addColorStop(1, baseColor);
             ctx.fillStyle = gradient;
             ctx.fillRect(x, y, width, height);
