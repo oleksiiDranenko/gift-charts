@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { UserInterface } from "@/interfaces/UserInterface";
@@ -30,6 +30,8 @@ export default function EditAssets() {
     const [tonInput, setTonInput] = useState<string>("");
     const [usdInput, setUsdInput] = useState<string>("");
 
+    const hasInitialized = useRef(false);
+
     useEffect(() => {
         setEditedUser(user);
         setTonInput(user.ton?.toString() || "");
@@ -44,48 +46,47 @@ export default function EditAssets() {
     }, [user, giftsList]);
 
     useEffect(() => {
-        (async () => {
-            try {
-                setLoading(true);
+    if (hasInitialized.current) return; // ⛔ Prevent loop
+    hasInitialized.current = true;
 
-                // Fetch gifts if not already loaded
-                if (giftsList.length === 0) {
-                    const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-                    dispatch(setGiftsList(giftsRes.data));
-                }
+    (async () => {
+        try {
+            setLoading(true);
 
-                // If user has a telegramId, check or create account
-                if (user.telegramId) {
-                    const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
-                    
-                    if (userRes.data._id) {
-                        // User exists, update Redux with full data
-                        dispatch(setUser(userRes.data));
-                        setEditedUser(userRes.data);
-                    } else if (!userRes.data.exists) {
-                        // User doesn't exist, create a new account
-                        const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
-                            telegramId: user.telegramId,
-                            username: user.username,
-                        });
-                        console.log(createRes.data.message);
-                        // Fetch the newly created user to get full data
-                        const newUserRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
-                        dispatch(setUser(newUserRes.data));
-                        setEditedUser(newUserRes.data);
-                    }
-                } else {
-                    // No telegramId (e.g., Guest), use default user
-                    dispatch(setDefaultUser());
-                }
-            } catch (error) {
-                console.error("Error fetching or creating user:", error);
-                dispatch(setDefaultUser());
-            } finally {
-                setLoading(false);
+            if (giftsList.length === 0) {
+                const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+                dispatch(setGiftsList(giftsRes.data));
             }
-        })();
-    }, [dispatch, giftsList, user.telegramId, user.username]);
+
+            if (user.telegramId) {
+                const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
+
+                if (userRes.data._id) {
+                    dispatch(setUser(userRes.data));
+                    setEditedUser(userRes.data);
+                } else if (!userRes.data.exists) {
+                    const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
+                        telegramId: user.telegramId,
+                        username: user.username,
+                    });
+                    console.log(createRes.data.message);
+
+                    const newUserRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
+                    dispatch(setUser(newUserRes.data));
+                    setEditedUser(newUserRes.data);
+                }
+            } else {
+                dispatch(setDefaultUser());
+            }
+
+        } catch (error) {
+            console.error("Error fetching or creating user:", error);
+            dispatch(setDefaultUser());
+        } finally {
+            setLoading(false);
+        }
+    })();
+    }, []);
 
     const removeGift = (id: string) => {
         if (editedUser) {

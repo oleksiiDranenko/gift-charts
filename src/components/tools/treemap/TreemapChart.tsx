@@ -157,21 +157,30 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
             ctx.fillStyle = 'white';
             ctx.textAlign = 'center';
 
+            // Draw name
             ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 0.5;
+            ctx.strokeText(item.name, centerX, startY + drawHeight + fontSize + lineSpacing);
             ctx.fillText(item.name, centerX, startY + drawHeight + fontSize + lineSpacing);
 
+            // Draw % change or market cap
             ctx.font = `${fontSize}px sans-serif`;
-            ctx.fillText(chartType === 'change' ? `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%` :
-                ((item.marketCap ?? 0) / 1000 >= 1000
-                    ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${currency === 'ton' ? '💎' : '$'}`
-                    : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${currency === 'ton' ? '💎' : '$'}`),
-                centerX, startY + drawHeight + fontSize * 2 + lineSpacing * 2);
+            const valueText = chartType === 'change'
+              ? `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`
+              : ((item.marketCap ?? 0) / 1000 >= 1000
+                  ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${currency === 'ton' ? '💎' : '$'}`
+                  : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${currency === 'ton' ? '💎' : '$'}`);
+            ctx.strokeText(valueText, centerX, startY + drawHeight + fontSize * 2 + lineSpacing * 2);
+            ctx.fillText(valueText, centerX, startY + drawHeight + fontSize * 2 + lineSpacing * 2);
 
+            // Draw price or % change again
             ctx.font = `${priceFontSize}px sans-serif`;
-            ctx.fillText(chartType === 'change'
-                ? `${item.price.toFixed(2)} ${currency === 'ton' ? '💎' : '$'}`
-                : `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`, centerX,
-                startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
+            const bottomText = chartType === 'change'
+              ? `${item.price.toFixed(2)} ${currency === 'ton' ? '💎' : '$'}`
+              : `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`;
+            ctx.strokeText(bottomText, centerX, startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
+            ctx.fillText(bottomText, centerX, startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
 
             if (index === 0) {
                 ctx.font = `15px sans-serif`;
