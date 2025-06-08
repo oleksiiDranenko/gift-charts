@@ -22,63 +22,75 @@ export default function EditWatchlist() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user);
 
-    const [addGiftlist, setAddGiftList] = useState<GiftInterface[]>([]);
+    const [addGiftList, setAddGiftList] = useState<GiftInterface[]>([]);
     const [editedUser, setEditedUser] = useState<UserInterface | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     const hasInitialized = useRef(false);
 
     useEffect(() => {
-        setEditedUser(user);
-    }, [user]);
+        if (!user.telegramId) {
+            setError("No Telegram ID provided. Please log in.");
+            setLoading(false);
+            router.push('/login');
+            return;
+        }
+
+        if (hasInitialized.current) return;
+        hasInitialized.current = true;
+
+        (async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                console.log('API Base URL:', process.env.NEXT_PUBLIC_API);
+
+                // Fetch gifts if not already loaded
+                if (giftsList.length === 0) {
+                    const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+                    dispatch(setGiftsList(giftsRes.data));
+                }
+
+                // Check or create user account
+                const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
+                
+                if (userRes.data._id) {
+                    // User exists, update Redux with full data
+                    dispatch(setUser(userRes.data));
+                    setEditedUser(userRes.data);
+                } else if (userRes.data.exists === false) {
+                    // User doesn't exist, create a new account
+                    const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
+                        telegramId: user.telegramId,
+                        username: user.username || 'Anonymous',
+                    });
+                    if (createRes.data.user) {
+                        dispatch(setUser(createRes.data.user));
+                        setEditedUser(createRes.data.user);
+                    } else {
+                        throw new Error(createRes.data.message || 'Failed to create account');
+                    }
+                } else {
+                    throw new Error('Unexpected response from check-account endpoint');
+                }
+            } catch (error) {
+                console.error("Error fetching or creating user:", error);
+                setError("Failed to load or create account. Please try again.");
+                dispatch(setDefaultUser());
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, [dispatch, giftsList, user.telegramId, user.username, router]);
 
     useEffect(() => {
         const list = giftsList
-            .filter((gift) => !user.savedList.some((item) => item === gift._id))
+            .filter((gift) => !editedUser?.savedList.some((item) => item === gift._id))
             .sort((a, b) => a.name.localeCompare(b.name));
         setAddGiftList(list);
-    }, [user, giftsList]);
-
-    useEffect(() => {
-    if (!user.telegramId || hasInitialized.current) return;
-    hasInitialized.current = true;
-
-    (async () => {
-        try {
-            setLoading(true);
-
-            if (giftsList.length === 0) {
-                const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-                dispatch(setGiftsList(giftsRes.data));
-            }
-
-            const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
-
-            if (userRes.data._id) {
-                const newUser = {...userRes.data, telegramId: user.telegramId}
-                dispatch(setUser(newUser));
-                setEditedUser(newUser);
-            } else if (!userRes.data.exists) {
-                const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
-                    telegramId: user.telegramId,
-                    username: user.username,
-                });
-                console.log(createRes.data.message);
-
-                const newUserRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
-                const newUser = {...newUserRes.data, telegramId: user.telegramId}
-                dispatch(setUser(newUser));
-                setEditedUser(newUser);
-            }
-        } catch (error) {
-            console.error("Error fetching or creating user:", error);
-            dispatch(setDefaultUser());
-        } finally {
-            setLoading(false);
-        }
-    })();
-}, [user.telegramId]);
-
+    }, [editedUser, giftsList]);
 
     const removeGift = (id: string) => {
         if (editedUser) {
@@ -104,7 +116,7 @@ export default function EditWatchlist() {
 
     const saveChanges = async () => {
         try {
-            if (editedUser && editedUser.telegramId) {
+            if (editedUser && user.telegramId) {
                 const updatedUser = {
                     username: editedUser.username,
                     savedList: editedUser.savedList,
@@ -114,16 +126,20 @@ export default function EditWatchlist() {
                 };
 
                 const updateRes = await axios.patch(
-                    `${process.env.NEXT_PUBLIC_API}/users/update-account/${editedUser.telegramId}`,
+                    `${process.env.NEXT_PUBLIC_API}/users/update-account/${user.telegramId}`,
                     updatedUser,
                     { headers: { "Content-Type": "application/json" } }
                 );
 
                 dispatch(setUser(updateRes.data.user));
                 router.push('/account');
+                alert('Changes saved successfully!');
+            } else {
+                setError('Cannot save changes: No user data or Telegram ID available.');
             }
         } catch (error) {
-            console.log("Error updating user:", error);
+            console.error("Error updating user:", error);
+            setError('Failed to save changes. Please try again.');
         }
     };
 
@@ -132,6 +148,10 @@ export default function EditWatchlist() {
             {loading ? (
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5" />
+                </div>
+            ) : error ? (
+                <div className="w-full text-center text-red-500">
+                    {error}
                 </div>
             ) : (
                 <>
@@ -180,7 +200,7 @@ export default function EditWatchlist() {
                         <h2 className="w-full text-xl font-bold mb-3">
                             Add Gifts:
                         </h2>
-                        {addGiftlist.map((gift) => (
+                        {addGiftList.map((gift) => (
                             <AddListItem
                                 _id={gift._id}
                                 name={gift.name}
