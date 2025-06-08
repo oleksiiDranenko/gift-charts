@@ -154,7 +154,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
 
     const data = {
         labels: list.map((item) => {
-            if ('time' in item && (listType === '24h' || listType === '1w')) {
+            if ('time' in item && listType === '24h') {
                 return item.time;
             }
             return item.date.slice(0, 5);

@@ -28,25 +28,25 @@ interface CustomTreemapDataset {
 }
 
 const updateInteractivity = (chart: any) => {
-  const zoomLevel = chart.getZoomLevel?.() ?? 1;
-  chart.options.plugins.zoom.pan.enabled = zoomLevel > 1;
-  chart.options.events = zoomLevel > 1
-    ? ['mousemove', 'click', 'touchstart', 'touchmove', 'touchend']
-    : [];
-  
-  const canvas = chart.canvas as HTMLCanvasElement;
-  if (canvas) {
-    canvas.style.cursor = zoomLevel > 1 ? 'pointer' : 'default';
-  }
+    const zoomLevel = chart.getZoomLevel?.() ?? 1;
+    chart.options.plugins.zoom.pan.enabled = zoomLevel > 1;
+    chart.options.events = zoomLevel > 1
+        ? ['mousemove', 'click', 'touchstart', 'touchmove', 'touchend']
+        : [];
 
-  chart.update('none');
+    const canvas = chart.canvas as HTMLCanvasElement;
+    if (canvas) {
+        canvas.style.cursor = zoomLevel > 1 ? 'pointer' : 'default';
+    }
+
+    chart.update('none');
 };
 
 const transformGiftData = (
-  gifts: GiftInterface[],
-  chartType: 'change' | 'marketCap',
-  timeGap: '24h' | '1w' | '1m',
-  currency: 'ton' | 'usd'
+    gifts: GiftInterface[],
+    chartType: 'change' | 'marketCap',
+    timeGap: '24h' | '1w' | '1m',
+    currency: 'ton' | 'usd'
 ): GiftData[] => {
     return gifts.map((gift) => {
         const now = currency === 'ton' ? (gift.priceTon ?? 0) : (gift.priceUsd ?? 0);
@@ -104,8 +104,6 @@ const darkenColor = (hex: string, amount: number): string => {
     return `rgb(${r}, ${g}, ${b})`;
 };
 
-
-
 const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd') => ({
     id: 'treemapImages',
     afterDatasetDraw(chart: any) {
@@ -126,10 +124,13 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
             if (width <= 0 || height <= 0) return;
 
             // --- Gradient background ---
-            const baseColor = item.percentChange > 0 ? '#008000' :
-                              item.percentChange < 0 ? '#E50000' : '#808080';
+            const baseColor = item.percentChange > 0 && item.percentChange < 100 ? '#2e8c2e' :
+                              item.percentChange > 100 ? '#008200' :
+                              item.percentChange < 0 && item.percentChange > -100 ? '#e33d3d' : 
+                              item.percentChange < -100 ? '#E50000' :
+                              '#919191';
             const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-            gradient.addColorStop(0, darkenColor(baseColor,  0.05));
+            gradient.addColorStop(0, darkenColor(baseColor, 0.05));
             gradient.addColorStop(1, baseColor);
             ctx.fillStyle = gradient;
             ctx.fillRect(x, y, width, height);
@@ -138,7 +139,7 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
             if (!img?.complete) return;
 
             const minSize = Math.min(width, height);
-            const baseSize = Math.min(Math.max(minSize / 6, 5), 500);
+            const baseSize = Math.min(Math.max(minSize / 4, 5), 1000);
             const imgAspect = img.width / img.height;
             let drawWidth = baseSize, drawHeight = baseSize / imgAspect;
             if (drawHeight > baseSize) {
@@ -159,27 +160,22 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
 
             // Draw name
             ctx.font = `bold ${fontSize}px sans-serif`;
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 0.5;
-            ctx.strokeText(item.name, centerX, startY + drawHeight + fontSize + lineSpacing);
             ctx.fillText(item.name, centerX, startY + drawHeight + fontSize + lineSpacing);
 
             // Draw % change or market cap
             ctx.font = `${fontSize}px sans-serif`;
             const valueText = chartType === 'change'
-              ? `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`
-              : ((item.marketCap ?? 0) / 1000 >= 1000
-                  ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${currency === 'ton' ? '💎' : '$'}`
-                  : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${currency === 'ton' ? '💎' : '$'}`);
-            ctx.strokeText(valueText, centerX, startY + drawHeight + fontSize * 2 + lineSpacing * 2);
+                ? `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`
+                : ((item.marketCap ?? 0) / 1000 >= 1000
+                    ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${currency === 'ton' ? '💎' : '$'}`
+                    : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${currency === 'ton' ? '💎' : '$'}`);
             ctx.fillText(valueText, centerX, startY + drawHeight + fontSize * 2 + lineSpacing * 2);
 
-            // Draw price or % change again
+            // Draw price or % change
             ctx.font = `${priceFontSize}px sans-serif`;
             const bottomText = chartType === 'change'
-              ? `${item.price.toFixed(2)} ${currency === 'ton' ? '💎' : '$'}`
-              : `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`;
-            ctx.strokeText(bottomText, centerX, startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
+                ? `${item.price.toFixed(2)} ${currency === 'ton' ? '💎' : '$'}`
+                : `${item.percentChange >= 0 ? '+' : ''}${item.percentChange}%`;
             ctx.fillText(bottomText, centerX, startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3);
 
             if (index === 0) {
@@ -193,7 +189,6 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
         ctx.restore();
     },
 });
-
 
 interface TreemapChartProps {
     data: GiftInterface[];
@@ -233,23 +228,25 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
 
                 const config: any = {
                     type: 'treemap',
-                    data: { datasets: [{
-                        data: [],
-                        tree: transformed,
-                        key: 'size',
-                        imageMap,
-                        backgroundColor: (ctx: TreemapScriptableContext) => {
-                          const dataset = ctx.dataset as CustomTreemapDataset;
-                          const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                          return val > 0 ? '#008000' : val < 0 ?'#E50000' : "#808080";
-                        },
-                        hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
-                          const dataset = ctx.dataset as CustomTreemapDataset;
-                          const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                          return val > 0 ? '#008000' : val < 0 ?'#E50000' : "#808080";
-                        },
-                        hoverBorderColor: '#000'
-                    }] },
+                    data: {
+                        datasets: [{
+                            data: [],
+                            tree: transformed,
+                            key: 'size',
+                            imageMap,
+                            backgroundColor: (ctx: TreemapScriptableContext) => {
+                                const dataset = ctx.dataset as CustomTreemapDataset;
+                                const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                                return val > 0 ? '#008000' : val < 0 ? '#E50000' : '#808080';
+                            },
+                            hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
+                                const dataset = ctx.dataset as CustomTreemapDataset;
+                                const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+                                return val > 0 ? '#008000' : val < 0 ? '#E50000' : '#808080';
+                            },
+                            hoverBorderColor: '#000'
+                        }]
+                    },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
@@ -288,40 +285,38 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
         <div className='w-full flex flex-col items-center'>
             <div className='w-full lg:w-1/2 mb-3 flex gap-2'>
                 <button
-                  className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
-                  onClick={() => {
-                    chartRef.current?.resetZoom();
-                    chartRef.current?.update('none');
-                    updateInteractivity(chartRef.current);
-                  }}>
-                  Reset Zoom
+                    className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                    onClick={() => {
+                        chartRef.current?.resetZoom();
+                        chartRef.current?.update('none');
+                        updateInteractivity(chartRef.current);
+                    }}>
+                    Reset Zoom
                 </button>
-              
                 <div className='w-full flex flex-row gap-x-2'>
                     <button
-                      className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
-                      onClick={() => {
-                        const zoom = chartRef.current.getZoomLevel?.() ?? 1;
-                        const newZoom = Math.max(1, zoom - 0.5);
-                        if (newZoom === 1) {
-                          chartRef.current?.resetZoom();
-                        } else {
-                          chartRef.current.zoom(newZoom / zoom);
-                        }
-                        chartRef.current?.update('none');
-                        updateInteractivity(chartRef.current);
-                      }}>-
+                        className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                        onClick={() => {
+                            const zoom = chartRef.current.getZoomLevel?.() ?? 1;
+                            const newZoom = Math.max(1, zoom - 0.5);
+                            if (newZoom === 1) {
+                                chartRef.current?.resetZoom();
+                            } else {
+                                chartRef.current.zoom(newZoom / zoom);
+                            }
+                            chartRef.current?.update('none');
+                            updateInteractivity(chartRef.current);
+                        }}>-
                     </button>
-                  
                     <button
-                      className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
-                      onClick={() => {
-                        const zoom = chartRef.current.getZoomLevel?.() ?? 1;
-                        const newZoom = Math.min(10, zoom + 0.3);
-                        chartRef.current.zoom(newZoom / zoom);
-                        chartRef.current?.update('none');
-                        updateInteractivity(chartRef.current);
-                      }}>+
+                        className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                        onClick={() => {
+                            const zoom = chartRef.current.getZoomLevel?.() ?? 1;
+                            const newZoom = Math.min(10, zoom + 0.3);
+                            chartRef.current.zoom(newZoom / zoom);
+                            chartRef.current?.update('none');
+                            updateInteractivity(chartRef.current);
+                        }}>+
                     </button>
                 </div>
             </div>
