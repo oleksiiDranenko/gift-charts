@@ -55,8 +55,9 @@ export default function EditWatchlist() {
             const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
 
             if (userRes.data._id) {
-                dispatch(setUser(userRes.data));
-                setEditedUser(userRes.data);
+                const newUser = {...userRes.data, telegramId: user.telegramId}
+                dispatch(setUser(newUser));
+                setEditedUser(newUser);
             } else if (!userRes.data.exists) {
                 const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
                     telegramId: user.telegramId,
@@ -65,8 +66,9 @@ export default function EditWatchlist() {
                 console.log(createRes.data.message);
 
                 const newUserRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
-                dispatch(setUser(newUserRes.data));
-                setEditedUser(newUserRes.data);
+                const newUser = {...newUserRes.data, telegramId: user.telegramId}
+                dispatch(setUser(newUser));
+                setEditedUser(newUser);
             }
         } catch (error) {
             console.error("Error fetching or creating user:", error);
