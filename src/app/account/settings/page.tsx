@@ -12,7 +12,7 @@ export default function Page() {
             >
                 {'<- Back'}
             </Link>
-            <div className="w-full flex flex-col items-center">
+            {/* <div className="w-full flex flex-col items-center">
                 <Link
                     href={'/account/settings/edit-assets'}
                     className="w-full h-14 px-3 mb-3 flex justify-between items-center font-bold bg-slate-800 bg-opacity-50 rounded-lg"
@@ -41,7 +41,7 @@ export default function Page() {
                         {'->'}
                     </span>
                 </Link>
-            </div>
+            </div> */}
         </div>
     )
 }
