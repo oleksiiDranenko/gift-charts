@@ -23,9 +23,10 @@ export default function EditAssets() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user);
 
-    const [addGiftlist, setAddGiftList] = useState<GiftInterface[]>([]);
+    const [addGiftList, setAddGiftList] = useState<GiftInterface[]>([]);
     const [editedUser, setEditedUser] = useState<UserInterface | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     const [tonInput, setTonInput] = useState<string>("");
     const [usdInput, setUsdInput] = useState<string>("");
@@ -33,22 +34,20 @@ export default function EditAssets() {
     const hasInitialized = useRef(false);
 
     useEffect(() => {
-        setEditedUser(user);
-        setTonInput(user.ton?.toString() || "");
-        setUsdInput(user.usd?.toString() || "");
-    }, [user]);
+        if (!user.telegramId) {
+            setError("No Telegram ID provided. Please log in.");
+            setLoading(false);
+            router.push('/login'); // Redirect to login page if no telegramId
+            return;
+        }
 
-    useEffect(() => {
-        const list = giftsList
-            .filter((gift) => !user.assets.some((asset) => asset.giftId === gift._id))
-            .sort((a, b) => a.name.localeCompare(b.name));
-        setAddGiftList(list);
-    }, [user, giftsList]);
-
-    useEffect(() => {
         (async () => {
             try {
                 setLoading(true);
+                setError(null);
+
+                // Log API URL for debugging
+                console.log('API Base URL:', process.env.NEXT_PUBLIC_API);
 
                 // Fetch gifts if not already loaded
                 if (giftsList.length === 0) {
@@ -56,40 +55,48 @@ export default function EditAssets() {
                     dispatch(setGiftsList(giftsRes.data));
                 }
 
-                // If user has a telegramId, check or create account
-                if (user.telegramId) {
-                    const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
-                    
-                    if (userRes.data._id) {
-                        // User exists, update Redux with full data
-                        const newUser = {...userRes.data, telegramId: user.telegramId}
-                        dispatch(setUser(newUser));
-                        setEditedUser(newUser);
-                    } else if (!userRes.data.exists) {
-                        // User doesn't exist, create a new account
-                        const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
-                            telegramId: user.telegramId,
-                            username: user.username,
-                        });
-                        console.log(createRes.data.message);
-                        // Fetch the newly created user to get full data
-                        const newUserRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
-                        const newUser = {...newUserRes.data, telegramId: user.telegramId}
-                        dispatch(setUser(newUser));
-                        setEditedUser(newUser);
+                // Check or create user account
+                const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
+                
+                if (userRes.data._id) {
+                    // User exists, update Redux with full data
+                    dispatch(setUser(userRes.data));
+                    setEditedUser(userRes.data);
+                    setTonInput(userRes.data.ton?.toString() || "");
+                    setUsdInput(userRes.data.usd?.toString() || "");
+                } else if (userRes.data.exists === false) {
+                    // User doesn't exist, create a new account
+                    const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
+                        telegramId: user.telegramId,
+                        username: user.username || 'Anonymous',
+                    });
+                    if (createRes.data.user) {
+                        dispatch(setUser(createRes.data.user));
+                        setEditedUser(createRes.data.user);
+                        setTonInput(createRes.data.user.ton?.toString() || "");
+                        setUsdInput(createRes.data.user.usd?.toString() || "");
+                    } else {
+                        throw new Error(createRes.data.message || 'Failed to create account');
                     }
                 } else {
-                    // No telegramId (e.g., Guest), use default user
-                    dispatch(setDefaultUser());
+                    throw new Error('Unexpected response from check-account endpoint');
                 }
             } catch (error) {
                 console.error("Error fetching or creating user:", error);
+                setError("Failed to load or create account. Please try again.");
                 dispatch(setDefaultUser());
             } finally {
                 setLoading(false);
             }
         })();
-    }, [dispatch, giftsList, user.telegramId, user.username]);
+    }, [dispatch, giftsList, user.telegramId, user.username, router]);
+
+    useEffect(() => {
+        const list = giftsList
+            .filter((gift) => !editedUser?.assets.some((asset) => asset.giftId === gift._id))
+            .sort((a, b) => a.name.localeCompare(b.name));
+        setAddGiftList(list);
+    }, [editedUser, giftsList]);
 
     const removeGift = (id: string) => {
         if (editedUser) {
@@ -166,9 +173,13 @@ export default function EditAssets() {
 
                 dispatch(setUser(updateRes.data.user));
                 router.push('/account');
+                alert('Changes saved successfully!');
+            } else {
+                setError('Cannot save changes: No user data available.');
             }
         } catch (error) {
-            console.log("Error updating user:", error);
+            console.error("Error updating user:", error);
+            setError('Failed to save changes. Please try again.');
         }
     };
 
@@ -177,6 +188,10 @@ export default function EditAssets() {
             {loading ? (
                 <div className="w-full flex justify-center">
                     <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5" />
+                </div>
+            ) : error ? (
+                <div className="w-full text-center text-red-500">
+                    {error}
                 </div>
             ) : (
                 <>
@@ -209,7 +224,7 @@ export default function EditAssets() {
                         >
                             <div className="flex flex-row items-center">
                                 <Image
-                                    alt="gift image"
+                                    alt="Toncoin image"
                                     src={`/images/ton.webp`}
                                     width={50}
                                     height={50}
@@ -228,6 +243,7 @@ export default function EditAssets() {
                                 value={tonInput}
                                 onChange={handleTon}
                                 className="w-32 h-10 text-center bg-slate-800 rounded-lg focus:outline-none focus:bg-slate-700"
+                                placeholder="0"
                             />
                         </div>
 
@@ -251,6 +267,7 @@ export default function EditAssets() {
                                 value={usdInput}
                                 onChange={handleUsd}
                                 className="w-32 h-10 text-center bg-slate-800 rounded-lg focus:outline-none focus:bg-slate-700"
+                                placeholder="0"
                             />
                         </div>
                     </div>
@@ -275,7 +292,7 @@ export default function EditAssets() {
                         <h2 className="w-full text-xl font-bold mb-3">
                             Add Gifts:
                         </h2>
-                        {addGiftlist.map((gift) => (
+                        {addGiftList.map((gift) => (
                             <AddAssetItem
                                 _id={gift._id}
                                 name={gift.name}
