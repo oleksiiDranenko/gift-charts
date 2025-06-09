@@ -38,7 +38,6 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const [low, setLow] = useState<number>()
     const [high, setHigh] = useState<number>()
     const [gradient, setGradient] = useState<CanvasGradient | null>(null);
-
     const [newData, setNewData] = useState<IndexDataInterface>()
 
     // Prevent scroll when interacting with chart
@@ -94,6 +93,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         setGradient(gradient);
     }, [percentChange]);
 
+    // Calculate newData and append it to list on mount
     useEffect(() => {
         // Filter out preSale gifts
         const nonPreSaleGifts = giftsList.filter(gift => !gift.preSale);
@@ -105,13 +105,15 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             }
         
             if (totalSupply === 0) {
-                setList(prev => [...prev, {
+                const zeroData = {
                     _id: index._id,
                     indexId: index._id,
                     date: 'today',
                     priceTon: 0,
                     priceUsd: 0
-                }]);
+                };
+                setList([...indexData, zeroData]);
+                setNewData(zeroData);
                 return;
             }
 
@@ -128,17 +130,16 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             currentTon = parseFloat(currentTon.toFixed(4));
             currentUsd = parseFloat(currentUsd.toFixed(4));
         
-            setNewData({
+            const newDataPoint = {
                 _id: index._id,
                 indexId: index._id,
                 date: 'today',
                 priceTon: currentTon,
                 priceUsd: currentUsd
-            })
+            };
             
-            if(newData){
-                setList(prev => [...prev, newData]);
-            }
+            setNewData(newDataPoint);
+            setList([...indexData, newDataPoint]); // Append newData on mount
         } 
         else if (index.shortName === 'R10') {
             let totalSupply = 0;
@@ -149,13 +150,15 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             }
         
             if (totalSupply === 0) {
-                setList(prev => [...prev, {
+                const zeroData = {
                     _id: index._id,
                     indexId: index._id,
                     date: 'today',
                     priceTon: 0,
                     priceUsd: 0
-                }]);
+                };
+                setList([...indexData, zeroData]);
+                setNewData(zeroData);
                 return;
             }
 
@@ -174,17 +177,16 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             currentTon = parseFloat(currentTon.toFixed(4));
             currentUsd = parseFloat(currentUsd.toFixed(4));
 
-            setNewData({
+            const newDataPoint = {
                 _id: index._id,
                 indexId: index._id,
                 date: 'today',
                 priceTon: currentTon,
                 priceUsd: currentUsd
-            })
+            };
             
-            if(newData){
-                setList(prev => [...prev, newData]);
-            }
+            setNewData(newDataPoint);
+            setList([...indexData, newDataPoint]); // Append newData on mount
         }    
         else if (index.shortName === 'TMC') {
             let currentTon = 0;
@@ -197,24 +199,43 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 currentUsd += priceUsd * supply;
             }
 
-            setNewData({
+            const newDataPoint = {
                 _id: index._id,
                 indexId: index._id,
                 date: 'today',
                 priceTon: currentTon,
                 priceUsd: currentUsd
-            })
+            };
             
-            if(newData){
-                setList(prev => [...prev, newData]);
-            }
+            setNewData(newDataPoint);
+            setList([...indexData, newDataPoint]); // Append newData on mount
         }
+    }, [giftsList, index, indexData]);
 
+    // Update list based on listType
+    useEffect(() => {
+        if (!newData) return;
 
-    }, [giftsList, index])
+        switch (listType) {
+            case '1w':
+                setList([...indexData.slice(-7), newData]);
+                break;
+            case '1m':
+                setList([...indexData.slice(-30), newData]);
+                break;
+            case '3m':
+                setList([...indexData.slice(-90), newData]);
+                break;
+            case 'all':
+                setList([...indexData, newData]);
+                break;
+            default:
+                break;
+        }
+    }, [listType, indexData, newData]);
 
     useEffect(() => {
-        if (list.length === 0) return
+        if (list.length === 0) return;
 
         const prices = list.map((item) => selectedPrice === 'ton' ? item.priceTon : item.priceUsd);
 
@@ -233,34 +254,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             setLow(Math.min(...prices));
             setHigh(Math.max(...prices));
         }
-    }, [selectedPrice, list])
-
-    useEffect(() => {
-        if(newData) {
-            setList([...indexData, newData])
-        }
-    }, [])
-
-    useEffect(() => {
-        if(newData) {
-                switch (listType) {
-                case '1w':
-                    setList([...indexData.slice(-7), newData])
-                    break;
-                case '1m':
-                    setList([...indexData.slice(-30), newData])
-                    break;
-                case '3m':
-                    setList([...indexData.slice(-90), newData])
-                    break;
-                case 'all':
-                    setList([...indexData, newData])
-                default:
-                    break;
-            }
-        }
-    }, [listType, indexData]);
-
+    }, [selectedPrice, list]);
 
     const formatNumber = (number: number) => {
         if (number >= 1000 && number < 1000000 ) {
@@ -275,18 +269,18 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
 
     const formatNumberWithDots = (number: number) => {
         const formattedNumber = new Intl.NumberFormat('de-DE').format(number);
-        return formattedNumber
+        return formattedNumber;
     }
 
     const data = {
         labels: list.map((item) => {
-            return item.date.slice(0,5)
+            return item.date.slice(0,5);
         }),
         datasets: [
             {
                 label: "Index Price",
                 data: list.map((item) => {
-                    return selectedPrice === 'ton' ? item.priceTon : item.priceUsd
+                    return selectedPrice === 'ton' ? item.priceTon : item.priceUsd;
                 }),                
                 borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444", 
                 borderWidth: 1,
@@ -313,7 +307,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 intersect: false, 
                 callbacks: {
                     title: function (tooltipItems) {
-                        const item = list[tooltipItems[0].dataIndex]
+                        const item = list[tooltipItems[0].dataIndex];
                         return item.date;
                     },
                     label: function (tooltipItem) {
