@@ -26,6 +26,7 @@ interface AssetDisplayInterface {
 
 export default function Account() {
     const vibrate = useVibrate()
+
     const giftsList = useAppSelector((state) => state.giftsList)
     const user = useAppSelector((state) => state.user)
     const dispatch = useAppDispatch()
@@ -39,14 +40,13 @@ export default function Account() {
     const [assetsPriceTon24hAgo, setAssetsPriceTon24hAgo] = useState<number>(0)
     const [assetsPriceUsd24hAgo, setAssetsPriceUsd24hAgo] = useState<number>(0)
 
-    const [ton, setTon] = useState<number>(0) // Initialize to 0 to avoid NaN
+    const [ton, setTon] = useState<number>(3)
     const [tonPercentage, setTonPercentage] = useState<number>(0)
     const [usdPercentage, setUsdPercentage] = useState<number>(0)
 
     const [portfolioValue, setPortfolioValue] = useState<number>(0)
     const [portfolioValue24hAgo, setPortfolioValue24hAgo] = useState<number>(0)
 
-    // Fetch gifts data
     useEffect(() => {
         const fetchGifts = async () => {
             try {
@@ -54,6 +54,7 @@ export default function Account() {
                 if (giftsList.length === 0) {
                     const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`)
                     dispatch(setGiftsList(giftsRes.data))
+                    setTon(giftsList[(giftsList.length - 1)].priceUsd / giftsList[(giftsList.length - 1)].priceTon)
                 }
             } catch (error) {
                 console.error("Error fetching gifts:", error)
@@ -65,79 +66,84 @@ export default function Account() {
         fetchGifts()
     }, [dispatch, giftsList])
 
-    // Update ton, assets, and percentages
     useEffect(() => {
         if (giftsList.length > 0) {
             const latestGift = giftsList[giftsList.length - 1]
-            // Prevent division by zero or invalid ton calculation
-            const tonRate = latestGift.priceTon !== 0 ? latestGift.priceUsd / latestGift.priceTon : 0
-            setTon(tonRate)
-            updateAssetsArray(tonRate)
-            setCashPercentages(tonRate)
+            setTon(latestGift.priceUsd / latestGift.priceTon)
         }
+        setCashPercentages()
+        updateAssetsArray()
     }, [user, currency, giftsList])
 
-    const updateAssetsArray = (tonRate: number) => {
-        if (giftsList.length > 0) {
-            const updatedAssets = (user.assets || []).map((asset: { giftId: string, amount: number }) => {
-                const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId)
-                if (gift) {
-                    return {
-                        name: gift.name,
-                        image: gift.image,
-                        currency: currency,
-                        amount: asset.amount,
-                        priceTon: gift.priceTon,
-                        priceUsd: gift.priceUsd,
-                        tonPrice24hAgo: gift.tonPrice24hAgo,
-                        usdPrice24hAgo: gift.usdPrice24hAgo
-                    }
+    useEffect(() => {
+        setCashPercentages()
+        updateAssetsArray()
+    }, [user, currency, giftsList])
+    
+
+    const updateAssetsArray = () => {
+    if (giftsList.length > 0) {
+        const updatedAssets = (user.assets || []).map((asset: { giftId: string, amount: number }) => {
+            const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId)
+            if (gift) {
+                return {
+                    name: gift.name,
+                    image: gift.image,
+                    currency: currency,
+                    amount: asset.amount,
+                    priceTon: gift.priceTon,
+                    priceUsd: gift.priceUsd,
+                    tonPrice24hAgo: gift.tonPrice24hAgo,
+                    usdPrice24hAgo: gift.usdPrice24hAgo
                 }
-                return undefined
-            }).filter((asset): asset is AssetDisplayInterface => asset !== undefined)
-
-            updatedAssets.sort((a, b) => {
-                const valueA = currency === 'ton' ? a.priceTon * a.amount : a.priceUsd * a.amount
-                const valueB = currency === 'ton' ? b.priceTon * b.amount : b.priceUsd * b.amount
-                return valueB - valueA
-            })
-
-            setAssetsArray(updatedAssets)
-
-            const totalPriceTon = updatedAssets.reduce((sum, asset) => sum + asset.priceTon * asset.amount, 0)
-            const totalPriceUsd = updatedAssets.reduce((sum, asset) => sum + asset.priceUsd * asset.amount, 0)
-            const totalPriceTon24hAgo = updatedAssets.reduce((sum, asset) => sum + asset.tonPrice24hAgo * asset.amount, 0)
-            const totalPriceUsd24hAgo = updatedAssets.reduce((sum, asset) => sum + asset.usdPrice24hAgo * asset.amount, 0)
-
-            setAssetsPriceTon(totalPriceTon)
-            setAssetsPriceUsd(totalPriceUsd)
-            setAssetsPriceTon24hAgo(totalPriceTon24hAgo)
-            setAssetsPriceUsd24hAgo(totalPriceUsd24hAgo)
-
-            // Calculate portfolio values
-            if (currency === 'ton') {
-                const current = tonRate !== 0 ? parseFloat((totalPriceTon + user.ton + (user.usd / tonRate)).toFixed(2)) : 0
-                const past = tonRate !== 0 ? parseFloat((totalPriceTon24hAgo + user.ton + (user.usd / tonRate)).toFixed(2)) : 0
-                setPortfolioValue(current)
-                setPortfolioValue24hAgo(past)
-            } else {
-                const current = parseFloat((totalPriceUsd + (user.ton * tonRate) + user.usd).toFixed(2))
-                const past = parseFloat((totalPriceUsd24hAgo + (user.ton * tonRate) + user.usd).toFixed(2))
-                setPortfolioValue(current)
-                setPortfolioValue24hAgo(past)
             }
+            return undefined
+        }).filter((asset): asset is AssetDisplayInterface => asset !== undefined)
+
+        updatedAssets.sort((a, b) => {
+            const valueA = currency === 'ton' ? a.priceTon * a.amount : a.priceUsd * a.amount
+            const valueB = currency === 'ton' ? b.priceTon * b.amount : b.priceUsd * b.amount
+            return valueB - valueA
+        })
+
+        setAssetsArray(updatedAssets)
+
+        const totalPriceTon = updatedAssets.reduce((sum, asset) => sum + asset.priceTon * asset.amount, 0)
+        const totalPriceUsd = updatedAssets.reduce((sum, asset) => sum + asset.priceUsd * asset.amount, 0)
+        const totalPriceTon24Ago = updatedAssets.reduce((sum, asset) => sum + asset.tonPrice24hAgo * asset.amount, 0)
+        const totalPriceUsd24Ago = updatedAssets.reduce((sum, asset) => sum + asset.usdPrice24hAgo * asset.amount, 0)
+
+        setAssetsPriceTon(totalPriceTon)
+        setAssetsPriceUsd(totalPriceUsd)
+        setAssetsPriceTon24hAgo(totalPriceTon24Ago)
+        setAssetsPriceUsd24hAgo(totalPriceUsd24Ago)
+
+        // Calculate portfolio values immediately with fresh data
+        if (currency === 'ton') {
+            const current = parseFloat((totalPriceTon + user.ton + (user.usd / ton)).toFixed(2))
+            const past = parseFloat((totalPriceTon24Ago + user.ton + (user.usd / ton)).toFixed(2))
+            setPortfolioValue(current)
+            setPortfolioValue24hAgo(past)
+        } else {
+            const current = parseFloat((totalPriceUsd + (user.ton * ton) + user.usd).toFixed(2))
+            const past = parseFloat((totalPriceUsd24Ago + (user.ton * ton) + user.usd).toFixed(2))
+            setPortfolioValue(current)
+            setPortfolioValue24hAgo(past)
+        }
         }
     }
 
-    const setCashPercentages = (tonRate: number) => {
+
+    
+    const setCashPercentages = () => {
         if (user) {
             if (currency === 'ton') {
-                const totalTon = tonRate !== 0 ? user.ton + (user.usd / tonRate) : 0
+                const totalTon = user.ton + (user.usd / ton)
                 setTonPercentage(totalTon ? Math.round((user.ton / totalTon) * 100) : 0)
-                setUsdPercentage(totalTon ? Math.round(((user.usd / tonRate) / totalTon) * 100) : 0)
+                setUsdPercentage(totalTon ? Math.round(((user.usd / ton) / totalTon) * 100) : 0)
             } else {
-                const totalUsd = (user.ton * tonRate) + user.usd
-                setTonPercentage(totalUsd ? Math.round(((user.ton * tonRate) / totalUsd) * 100) : 0)
+                const totalUsd = (user.ton * ton) + user.usd
+                setTonPercentage(totalUsd ? Math.round(((user.ton * ton) / totalUsd) * 100) : 0)
                 setUsdPercentage(totalUsd ? Math.round((user.usd / totalUsd) * 100) : 0)
             }
         }
@@ -153,6 +159,7 @@ export default function Account() {
             :
             user.username === '_guest'
             ?
+   
                 <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
                     Please open this app in Telegram
                 </div>
@@ -171,7 +178,7 @@ export default function Account() {
                                 <span className="text-4xl font-bold mr-1">$</span>
                             }
                             <h1 className="text-4xl font-bold">
-                                {portfolioValue.toFixed(2)}                                
+                                {portfolioValue}                                
                             </h1>
                         </div>
                         <span className={`mt-1 ${countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
@@ -201,6 +208,12 @@ export default function Account() {
                                 USD
                             </button>
                         </div>
+                        {/* <button 
+                            className="w-1/3 h-10 box-border bg-slate-800 rounded-lg"
+                            onClick={() => vibrate()}
+                        >
+                            Statistics
+                        </button> */}
                         <Link 
                             href={'/account/settings'}
                             className="w-1/2 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
@@ -228,8 +241,8 @@ export default function Account() {
                                         }
                                         <span>
                                             {currency === 'ton' 
-                                                ? (ton !== 0 ? (user.ton + (user.usd / ton)).toFixed(2) : '0.00')
-                                                : ((user.ton * ton) + user.usd).toFixed(2)
+                                                ? (user.ton + (user.usd / ton)).toFixed(2)
+                                                : (user.ton * ton + user.usd).toFixed(2)
                                             }
                                         </span>
                                     </div>
@@ -280,7 +293,7 @@ export default function Account() {
                                     <Asset 
                                         name={asset.name}
                                         image={asset.image}
-                                        currency={asset.currency}
+                                        currency={currency}
                                         amount={asset.amount}
                                         priceTon={asset.priceTon}
                                         priceUsd={asset.priceUsd}
