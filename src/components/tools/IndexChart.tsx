@@ -236,24 +236,30 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     }, [selectedPrice, list])
 
     useEffect(() => {
-    if(newData) {
-            switch (listType) {
-            case '1w':
-                setList([...indexData.slice(-7), newData])
-                break;
-            case '1m':
-                setList([...indexData.slice(-30), newData])
-                break;
-            case '3m':
-                setList([...indexData.slice(-90), newData])
-                break;
-            case 'all':
-                setList([...indexData, newData])
-            default:
-                break;
+        if(newData) {
+            setList([...indexData, newData])
         }
-    }
-}, [listType, indexData]);
+    }, [])
+
+    useEffect(() => {
+        if(newData) {
+                switch (listType) {
+                case '1w':
+                    setList([...indexData.slice(-7), newData])
+                    break;
+                case '1m':
+                    setList([...indexData.slice(-30), newData])
+                    break;
+                case '3m':
+                    setList([...indexData.slice(-90), newData])
+                    break;
+                case 'all':
+                    setList([...indexData, newData])
+                default:
+                    break;
+            }
+        }
+    }, [listType, indexData]);
 
 
     const formatNumber = (number: number) => {
