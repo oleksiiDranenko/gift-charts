@@ -37,8 +37,6 @@ export default function Account() {
     const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([])
     const [assetsPriceTon, setAssetsPriceTon] = useState<number>(0)
     const [assetsPriceUsd, setAssetsPriceUsd] = useState<number>(0)
-    const [assetsPriceTon24hAgo, setAssetsPriceTon24hAgo] = useState<number>(0)
-    const [assetsPriceUsd24hAgo, setAssetsPriceUsd24hAgo] = useState<number>(0)
 
     const [ton, setTon] = useState<number>(3)
     const [tonPercentage, setTonPercentage] = useState<number>(0)
@@ -54,7 +52,7 @@ export default function Account() {
                 if (giftsList.length === 0) {
                     const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`)
                     dispatch(setGiftsList(giftsRes.data))
-                    setTon(giftsList[(giftsList.length - 1)].priceUsd / giftsList[(giftsList.length - 1)].priceTon)
+                    setTon(giftsList[0].priceUsd / giftsList[(giftsList.length - 1)].priceTon)
                 }
             } catch (error) {
                 console.error("Error fetching gifts:", error)
@@ -115,8 +113,6 @@ export default function Account() {
 
         setAssetsPriceTon(totalPriceTon)
         setAssetsPriceUsd(totalPriceUsd)
-        setAssetsPriceTon24hAgo(totalPriceTon24Ago)
-        setAssetsPriceUsd24hAgo(totalPriceUsd24Ago)
 
         // Calculate portfolio values immediately with fresh data
         if (currency === 'ton') {
