@@ -34,7 +34,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const [selectedPrice, setSelectedPrice] = useState<'ton' | 'usd'>('ton')
     const [percentChange, setPercentChange] = useState<number>(0)
     const [list, setList] = useState<IndexDataInterface[]>(indexData)
-    const [listType, setListType] = useState<'1w' | '1m' | '3m' | 'all'>('all')
+    const [listType, setListType] = useState<'1w' | '1m' | '3m' | 'all'>('1w')
     const [low, setLow] = useState<number>()
     const [high, setHigh] = useState<number>()
     const [gradient, setGradient] = useState<CanvasGradient | null>(null);
