@@ -28,9 +28,11 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
                     telegramWebApp.ready();
 
                     if (telegramWebApp.requestFullscreen) {
-                        telegramWebApp.requestFullscreen();
-                        setIsFullscreen(true);
-                        console.log('Requested fullscreen mode.');
+                        if(screen.width < 1024) {
+                            telegramWebApp.requestFullscreen();
+                            setIsFullscreen(true);
+                            console.log('Requested fullscreen mode.');
+                        }
                     } else {
                         telegramWebApp.expand();
                         setIsFullscreen(false);
