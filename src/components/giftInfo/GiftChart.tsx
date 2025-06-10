@@ -272,7 +272,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                             {gift?.name}
                         </span>
                         <span className="text-slate-500 text-sm flex justify-start">
-                            {gift ? formatNumber(gift?.supply) : null}
+                            {gift ? formatNumber(gift?.upgradedSupply) : null}
                         </span>
                     </h1>
                 </div>

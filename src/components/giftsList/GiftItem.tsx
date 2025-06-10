@@ -54,16 +54,19 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
         }
     }, [currency, timeGap])
 
-    const formatNumber = (number: number) => {
-        if (number >= 1000 && number < 1000000 ) {
-            const shortNumber = (number / 1000).toFixed(1);
-            return `${shortNumber}K`;
-        } else if (number >= 1000000) {
-            const shortNumber = (number / 1000000).toFixed(1);
-            return `${shortNumber}M`;
-        }
-        return number.toString();
+    const formatNumber = (number: number | undefined | null) => {
+    if (number == null) {
+        return "N/A"; // Or another fallback value like "0" or ""
     }
+    if (number >= 1000 && number < 1000000) {
+        const shortNumber = (number / 1000).toFixed(1);
+        return `${shortNumber}K`;
+    } else if (number >= 1000000) {
+        const shortNumber = (number / 1000000).toFixed(1);
+        return `${shortNumber}M`;
+    }
+    return number.toString();
+};
 
     const countPercentChange = (last24: number, current: number) => {
         return parseFloat(((current - last24) / last24 * 100).toFixed(2))
@@ -95,12 +98,12 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                         </span>
                         <span className="text-slate-500 text-sm font-normal">
                             {
-                                sortBy === 'price' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                                : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.supply) : (item.priceUsd * item.supply))
-                                : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                                : sortBy === 'percentChange' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                                : sortBy === 'supply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply)) 
-                                : sortBy === 'initSupply' ? (formatNumber(item.supply) + ' / ' + formatNumber(item.initSupply))
+                                sortBy === 'price' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                                : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.upgradedSupply) : (item.priceUsd * item.upgradedSupply))
+                                : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                                : sortBy === 'percentChange' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                                : sortBy === 'supply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                                : sortBy === 'initSupply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.initSupply))
                                 : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`
                                 : null
                             }
@@ -124,11 +127,11 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                         <span className="text-base font-bold">
                             {currency === 'ton' && displayValue === 'price' ? item.priceTon 
                             : 
-                            currency === 'ton' && displayValue === 'marketCap' ? formatNumber(item.priceTon * item.supply)
+                            currency === 'ton' && displayValue === 'marketCap' ? formatNumber(item.priceTon * item.upgradedSupply)
                             :
                             currency === 'usd' && displayValue === 'price' ? item.priceUsd
                             :
-                            currency === 'usd' && displayValue === 'marketCap' ? formatNumber(item.priceUsd * item.supply)
+                            currency === 'usd' && displayValue === 'marketCap' ? formatNumber(item.priceUsd * item.upgradedSupply)
                             :
                             null
                         }

@@ -13,13 +13,16 @@ import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
-// Inner component to handle Telegram and Redux logic
 function AppInitializer({ children }: { children: React.ReactNode }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const dispatch = useDispatch();
 
+    // Define isDesktop function outside useEffect
+    const isDesktop = () => {
+        return typeof window !== 'undefined' && window.innerWidth > 1024; // Adjust threshold as needed
+    };
+
     useEffect(() => {
-        
         if (typeof window !== 'undefined') {
             import('@twa-dev/sdk').then(async (WebApp) => {
                 const telegramWebApp = WebApp.default;
@@ -27,14 +30,19 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
                 if (telegramWebApp) {
                     telegramWebApp.ready();
 
-                    if (telegramWebApp.requestFullscreen) {
-                        telegramWebApp.requestFullscreen();
-                        setIsFullscreen(true);
-                        console.log('Requested fullscreen mode.');
+                    // Only apply fullscreen or expand on non-desktop devices
+                    if (!isDesktop()) {
+                        if (telegramWebApp.requestFullscreen) {
+                            telegramWebApp.requestFullscreen();
+                            setIsFullscreen(true);
+                            console.log('Requested fullscreen mode.');
+                        } else {
+                            telegramWebApp.expand();
+                            setIsFullscreen(false);
+                            console.log('Expanded to full height.');
+                        }
                     } else {
-                        telegramWebApp.expand();
-                        setIsFullscreen(false);
-                        console.log('Expanded to full height.');
+                        console.log('Fullscreen/expand skipped on desktop.');
                     }
 
                     if (telegramWebApp.disableVerticalSwipes) {
@@ -65,7 +73,7 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
 
                     // Get Telegram user data and update Redux
                     const telegramUser = telegramWebApp.initDataUnsafe?.user;
-                   
+
                     if (telegramUser) {
                         const initialUser = {
                             _id: '',
@@ -122,10 +130,10 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
     return (
         <div
             className={`h-screen w-screen pb-5 overflow-scroll bg-fixed ${
-                isFullscreen ? 'pt-[40px]' : null
+                isFullscreen && !isDesktop() ? 'pt-[40px]' : ''
             } flex flex-col`}
         >
-            {/* <NavbarTop isFullscreen={isFullscreen} /> */}
+            {/* <NavbarTop isFullscreen={isFullscreen && !isDesktop()} /> */}
             <div className="w-screen flex justify-center flex-grow">
                 {children}
             </div>

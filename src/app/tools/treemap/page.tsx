@@ -79,7 +79,7 @@ export default function Page() {
                 break;
             case 'marketCap':
                 sortedList.sort((a, b) =>
-                    (b.priceTon * b.supply) - (a.priceTon * a.supply)
+                    (b.priceTon * b.upgradedSupply) - (a.priceTon * a.upgradedSupply)
                 );
                 break;
 

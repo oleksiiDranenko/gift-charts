@@ -71,7 +71,7 @@ const transformGiftData = (
         if (chartType === 'change') {
             size = Math.pow(Math.abs(percentChange) + 1, 1.5) * 2;
         } else {
-            marketCap = now * (gift.supply ?? 0);
+            marketCap = now * (gift.upgradedSupply ?? 0);
             size = Math.max(marketCap / 1000, 1);
         }
 

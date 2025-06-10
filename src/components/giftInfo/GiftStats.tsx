@@ -122,6 +122,14 @@ export default function GiftStats({gift}: PropsInterface) {
                 </p>
                 <p className="mb-3 w-full flex justify-between">
                     <span className="font-light">
+                        {'Upgraded Supply: '}
+                    </span>
+                    <span className="text-white">
+                        {formatNumber(gift.upgradedSupply)}
+                    </span>
+                </p>
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
                         {'Amount Burnt: '}
                     </span>
                     <span className="text-white">
@@ -135,6 +143,15 @@ export default function GiftStats({gift}: PropsInterface) {
                     </span>
                     <span className="text-white">
                         {countPercentChange(gift.initSupply, gift.supply)+ '%'}
+                    </span>
+                </p>
+
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
+                        {'Percent Upgraded: '}
+                    </span>
+                    <span className="text-white">
+                        {100 - countPercentChange(gift.supply, gift.upgradedSupply)+ '%'}
                     </span>
                 </p>
 

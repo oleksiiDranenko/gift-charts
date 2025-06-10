@@ -4,6 +4,7 @@ export default interface GiftInterface {
     image: string,
     supply: number,
     initSupply: number,
+    upgradedSupply: number
     releaseDate: string,
     starsPrice: number,
     upgradePrice: number,
