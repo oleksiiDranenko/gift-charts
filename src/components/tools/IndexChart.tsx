@@ -188,11 +188,32 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             setNewData(newDataPoint);
             setList([...indexData, newDataPoint]); // Append newData on mount
         }    
-        else if (index.shortName === 'TMC') {
+        else if (index.shortName === 'FDV') {
             let currentTon = 0;
             let currentUsd = 0;
             for (let gift of nonPreSaleGifts) {
                 const supply = gift.supply || 0;
+                const priceTon = gift.priceTon || 0;
+                const priceUsd = gift.priceUsd || 0;
+                currentTon += priceTon * supply;
+                currentUsd += priceUsd * supply;
+            }
+
+            const newDataPoint = {
+                _id: index._id,
+                indexId: index._id,
+                date: 'today',
+                priceTon: currentTon,
+                priceUsd: currentUsd
+            };
+            
+            setNewData(newDataPoint);
+            setList([...indexData, newDataPoint]); // Append newData on mount
+        } else if (index.shortName === 'TMC') {
+            let currentTon = 0;
+            let currentUsd = 0;
+            for (let gift of nonPreSaleGifts) {
+                const supply = gift.upgradedSupply || 0;
                 const priceTon = gift.priceTon || 0;
                 const priceUsd = gift.priceUsd || 0;
                 currentTon += priceTon * supply;

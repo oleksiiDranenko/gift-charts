@@ -57,7 +57,7 @@ export default function Page() {
             ) : (
                 <>
                     <TotalMarketCap />
-                    <div className="w-full p-3 mt-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                    {/* <div className="w-full p-3 mt-3 bg-slate-800 bg-opacity-50 rounded-lg">
                         <h1 className="font-bold text-xl">📊 Gift Indexes</h1>
                         {indexList.map((index: IndexInterface) => {
                             if (index.shortName !== 'TMC') {
@@ -65,7 +65,7 @@ export default function Page() {
                             }
                             return null;
                         })}
-                    </div>
+                    </div> */}
 
                     <div className="w-full p-3 mt-7 bg-slate-800 bg-opacity-50 rounded-lg">
                         <div className="w-full flex flex-row justify-between items-center">

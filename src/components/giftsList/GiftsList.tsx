@@ -57,13 +57,13 @@ export default function GiftsList({ loading }: PropsInterface) {
                 case 'marketCap':
                     sortedList.sort((a, b) =>
                         filters.currency === 'ton'
-                            ? filters.sort === 'lowFirst' ? (a.priceTon * a.supply) - (b.priceTon * b.supply) : (b.priceTon * b.supply) - (a.priceTon * a.supply)
-                            : filters.sort === 'lowFirst' ? (a.priceUsd * a.supply) - (b.priceUsd * b.supply) : (b.priceUsd * b.supply) - (a.priceUsd * a.supply)
+                            ? filters.sort === 'lowFirst' ? (a.priceTon * a.upgradedSupply) - (b.priceTon * b.upgradedSupply) : (b.priceTon * b.upgradedSupply) - (a.priceTon * a.upgradedSupply)
+                            : filters.sort === 'lowFirst' ? (a.priceUsd * a.upgradedSupply) - (b.priceUsd * b.upgradedSupply) : (b.priceUsd * b.upgradedSupply) - (a.priceUsd * a.upgradedSupply)
                     );
                     break;
                 case 'supply':
                     sortedList.sort((a, b) =>
-                        filters.sort === 'lowFirst' ? a.supply - b.supply : b.supply - a.supply
+                        filters.sort === 'lowFirst' ? a.upgradedSupply - b.upgradedSupply : b.upgradedSupply - a.upgradedSupply
                     );
                     break;
                 case 'initSupply':

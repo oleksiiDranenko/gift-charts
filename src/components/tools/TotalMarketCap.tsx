@@ -18,8 +18,8 @@ export default function TotalMarketCap() {
         const nonPreSaleGifts = giftsList.filter(gift => !gift.preSale)
         
         nonPreSaleGifts.map((gift) => {
-            const giftMarketCap = gift.priceTon * gift.supply
-            const giftPrevMarketCap = (gift.tonPrice24hAgo || 0) * gift.supply
+            const giftMarketCap = gift.priceTon * gift.upgradedSupply
+            const giftPrevMarketCap = (gift.tonPrice24hAgo || 0) * gift.upgradedSupply
 
             totalMarketCap += giftMarketCap
             prevTotalMarketCap += giftPrevMarketCap
@@ -44,12 +44,12 @@ export default function TotalMarketCap() {
                 <h1 className="font-bold text-xl">
                 🌍 Total Market Cap
                 </h1>
-                <Link
+                {/* <Link
                     href={'/tools/index/67faf0d0634d6e48d48360bc'}
                     className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
                 >
                     {'Show Chart ->'}
-                </Link>
+                </Link> */}
             </div>
             <div className="w-full mt-4 mb-2 flex flex-row justify-between items-center bg-slate-800 p-3 rounded-lg">
                 <div className="flex flex-row items-center">
@@ -68,6 +68,10 @@ export default function TotalMarketCap() {
                     {marketCap - previousMarketCap >= 0 ? '+' : null}
                     {countPercentChange(previousMarketCap, marketCap)}%
                 </span>
+            </div>
+
+            <div className="w-full p-3 mt-3 rounded-lg text-sm text-slate-400">
+                ℹ️ Note: Market Cap chart is currently being reworked...
             </div>
         </div>
     )
