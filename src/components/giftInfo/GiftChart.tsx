@@ -130,7 +130,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
 
         switch (listType) {
             case '24h':
-                setList(weekData.slice(-24))
+                setList(weekData.slice(-48))
                 break;
             case '1w':
                 setList(weekData)
