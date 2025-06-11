@@ -59,13 +59,13 @@ export default function Page({ params }: any) {
                                     </div>
                                 </div>
                                 <IndexChart index={index} indexData={data}/>
-                                {
+                                {/* {
                                     index.shortName === 'TMC'
                                     &&
                                     <div className='p-3'>
                                         <IndexPie />
                                     </div>
-                                }
+                                } */}
                             </div>
                             :
                             <div className="w-full flex justify-center">

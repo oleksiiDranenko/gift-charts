@@ -22,53 +22,22 @@ export default function IndexItem({index}: PropsInterface) {
         // Filter out preSale gifts
         const nonPreSaleGifts = giftsList.filter(gift => !gift.preSale)
         
-        if(index.shortName === 'TMI') {
-            let totalSupply = 0
-
-            for(let gift of nonPreSaleGifts) {
-                totalSupply += gift.supply
-            }
-            
+        if(index.shortName === 'FDV') {
             let current = 0
             let previous = 0
             for (let gift of nonPreSaleGifts) {
                 const priceTon = gift.priceTon || 0;
                 const prevPriceTon = gift.tonPrice24hAgo || 0
                 const supply = gift.supply || 0;
-                current += (priceTon * supply * 100) / totalSupply;
-                previous += (prevPriceTon * supply * 100) / totalSupply;
+                current += priceTon * supply;
+                previous += prevPriceTon * supply;
             }
         
             current = parseFloat(current.toFixed(4));
             setCurrentValue(current);
             setPercentChange(countPercentChange(previous, current))
-
         } 
-        else if (index.shortName === 'R10') {
-            let totalSupply = 0
-
-            for(let gift of nonPreSaleGifts) {
-                if(gift.supply <= 10000) {
-                    totalSupply += gift.supply
-                }
-            }
-            
-            let current = 0
-            let previous = 0
-            for (let gift of nonPreSaleGifts) {
-                if(gift.supply <= 10000) {
-                    const priceTon = gift.priceTon || 0;
-                    const prevPriceTon = gift.tonPrice24hAgo || 0
-                    const supply = gift.supply || 0;
-                    current += (priceTon * supply * 10) / totalSupply;
-                    previous += (prevPriceTon * supply * 10) / totalSupply;
-                } 
-            }
         
-            current = parseFloat(current.toFixed(4));
-            setCurrentValue(current);
-            setPercentChange(countPercentChange(previous, current))
-        }
     }, [giftsList]) // Add giftsList as a dependency
 
     const countPercentChange = (last24: number, current: number) => {

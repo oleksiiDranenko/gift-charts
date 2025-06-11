@@ -1,7 +1,6 @@
 'use client';
 
 import IndexItem from '@/components/tools/IndexItem';
-import TotalMarketCap from '@/components/tools/TotalMarketCap';
 import { IndexInterface } from '@/interfaces/IndexInterface';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setGiftsList } from '@/redux/slices/giftsListSlice';
@@ -10,6 +9,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import LoadingBar from 'react-top-loading-bar';
+import IndexBlock from '@/components/tools/IndexBlock';
 
 export default function Page() {
     const dispatch = useAppDispatch();
@@ -56,18 +56,12 @@ export default function Page() {
                 </div>
             ) : (
                 <>
-                    <TotalMarketCap />
-                    {/* <div className="w-full p-3 mt-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                        <h1 className="font-bold text-xl">📊 Gift Indexes</h1>
-                        {indexList.map((index: IndexInterface) => {
-                            if (index.shortName !== 'TMC') {
-                                return <IndexItem key={index._id} index={index} />;
-                            }
-                            return null;
-                        })}
-                    </div> */}
+                    <div className='w-full h-auto flex flex-col gap-3'>
+                        <IndexBlock name='Market Cap' id='68493d064b37eed02b7ae5af'/>
+                        <IndexBlock name='FDV' id='67faf0d0634d6e48d48360bc'/>
+                    </div>
 
-                    <div className="w-full p-3 mt-7 bg-slate-800 bg-opacity-50 rounded-lg">
+                    <div className="w-full p-3 mt-3 bg-slate-800 bg-opacity-50 rounded-lg">
                         <div className="w-full flex flex-row justify-between items-center">
                             <h1 className="font-bold text-xl">📊 Heatmap</h1>
                             <Link
