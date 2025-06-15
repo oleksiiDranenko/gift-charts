@@ -44,7 +44,7 @@ export default function MainPage() {
                 return filters.sort === 'lowFirst' ? aChange - bChange : bChange - aChange;
             });
 
-            setList(sortedList.slice(0, 5));
+            setList(sortedList);
         }
     }, [filters, giftsList]);
 
@@ -59,7 +59,7 @@ export default function MainPage() {
                     : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
             );
 
-            setTopList(sortedList.slice(0, 5));
+            setTopList(sortedList);
         }
     }, [filters, giftsList]);
 
@@ -121,50 +121,59 @@ export default function MainPage() {
 
     return (
         <div>
-            <h1 className="mb-3 px-3 text-2xl font-bold">
-                {'Hourly Price Updates ⏰'}
+            <h1 className="flex flex-row mb-3 px-3">
+                <Image src={'/images/logo.webp'} width={24} height={24} alt=""/>
+                <h1 className="text-2xl font-bold ml-2">
+                    Gift Charts
+                </h1>
             </h1>
 
-            <div className=" p-2 mx-3 bg-slate-800 bg-opacity-30 rounded-lg">
-                <span className="text-slate-300">
+            <div className="mx-3 mb-3">
+                <span className="text-slate-300 text-sm">
                     ✨ App is <span className="font-bold text-white">Free</span> but you can <Link href='/donate' className="font-bold text-[#0098EA] underline">Donate!</Link>
                 </span>
             </div>
             
 
-            <div className=" p-3 mt-3 mb-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+            <div className=" p-2 mt-3 mb-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
                 <div className="w-full flex flex-row justify-between items-center">
-                    <h1 className="font-bold text-xl">
+                    <h1 className="font-bold text-lg">
                         {'📊 Heatmap '} <span className="text-sm ml-3 text-yellow-400">Popular!</span>
                     </h1>
                     <Link
                         href={'/tools/treemap'}
-                        className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                        className="px-3 h-10 text-sm flex items-center bg-slate-800 rounded-lg"
                     >
                         {'Try it Now ->'}
                     </Link>
                 </div>                        
             </div>
 
-            <div className="max-w-full mx-3 flex items-center justify-between gap-x-3 mb-5">
+            <div className="max-w-full mx-3 flex items-center justify-between gap-x-1 mb-1">
                 <button
-                    className={`w-1/3 text-sm text-slate-400 h-10 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(0)}
                 >
-                    Top Changes
+                    Top change
                 </button>
                 <button
-                    className={`w-1/3 text-sm text-slate-400 h-10 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(1)}
                 >
-                    Top Gifts
+                    Price
                 </button>
                 <button
-                    className={`w-1/3 text-sm text-slate-400 h-10 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(2)}
                 >
-                    Watchlist
+                    ⭐ Watchlist
                 </button>
+                <Link
+                    className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-[#0098EA] rounded-lg`}
+                    href={'/gifts-list'}
+                >
+                    {'Customise ->'}
+                </Link>
             </div>
 
 
@@ -172,106 +181,26 @@ export default function MainPage() {
                 ref={containerRef}
                 className="w-full swipe-container flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
             >
-                <div className="flex-none w-full snap-start">
-                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                        <div className="w-full mb-1 px-3 flex flex-row justify-between items-center">
-                            <h2 className="text-xl font-bold">
-                                🔥 Top Price Changes
-                            </h2>
-                            <Link
-                                href={'/gifts-list'}
-                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
-                                onClick={() => {
-                                    dispatch(setFilters({ ...filters, sortBy: "percentChange" }));
-                                    vibrate();
-                                }}
-                            >
-                                {'Show all ->'}
-                            </Link>
-                        </div>
+                <ChartHandler giftsList={list} filters={filters}/>
 
-                        <ChartHandler giftsList={list} filters={filters}/>
+                <ChartHandler giftsList={topList} filters={filters}/>
 
-                        
-                    </div>
-                </div>
-
-                <div className="flex-none w-full snap-start">
-                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                        <div className="w-full mb-1 px-3 flex flex-row justify-between items-center">
-                            <h2 className="text-xl font-bold">
-                                🔥 Top Gifts
-                            </h2>
-                            <Link
-                                href={'/gifts-list'}
-                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
-                                onClick={() => {
-                                    dispatch(setFilters({ ...filters, sortBy: "price" }));
-                                    vibrate();
-                                }}
-                            >
-                                {'Show all ->'}
-                            </Link>
-                        </div>
-                        
-                        <ChartHandler giftsList={topList} filters={filters}/>
-                    </div>
-                </div>
-
-                <div className="flex-none w-full snap-start">
-                    <div className="max-w-full pt-3 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                        <div className="w-full mb-1 px-3 flex flex-row justify-between items-center">
-                            <h2 className="text-xl font-bold">
-                                📌 Your Watchlist
-                            </h2>
-                            <Link
-                                href={userList.length > 0 ? '/gifts-list' : '/account/settings/'}
-                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
-                                onClick={() => {
-                                    dispatch(setFilters({ ...filters, chosenGifts: userList }));
-                                    vibrate();
-                                }}
-                            >
-                                {userList.length > 0 ? 'Show all ->' : 'Add Items ->'}
-                            </Link>
-                        </div>
 
                         {userList.length !== 0 ?
-                         <ChartHandler giftsList={userList.slice(0, 5)} filters={filters}/>
+                         <ChartHandler giftsList={userList} filters={filters}/>
                          : 
-                         <>
+                         <div className="flex-none w-full snap-start">
                              <div className="px-3 pt-3 pb-1 font-bold text-slate-400">
                                  Your Watchlist is Empty
                              </div>
                              <div className="px-3 pt-3 pb-5 text-sm text-slate-400">
                                  {'Account -> Settings -> Edit Watchlist'}
                              </div>
-                         </>
+                         </div>
                         }
-
-                        
-                    </div>
-                </div>
-            </div>
-            <div className="flex justify-center">
-                <span
-                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
-                        activeIndex === 0 ? 'bg-white' : 'bg-gray-500'
-                    }`}
-                ></span>
-                <span
-                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
-                        activeIndex === 1 ? 'bg-white' : 'bg-gray-500'
-                    }`}
-                ></span>
-                <span
-                    className={`w-2 h-2 rounded-full mx-1 transition-colors duration-300 ${
-                        activeIndex === 2 ? 'bg-white' : 'bg-gray-500'
-                    }`}
-                ></span>
             </div>
             
-            <div className="max-w-full flex justify-between items-center p-3 mt-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
+            {/* <div className="max-w-full flex justify-between items-center p-3 mt-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
                 <span className="text-xl font-bold">
                     📣 Latest News
                 </span>
@@ -292,7 +221,7 @@ export default function MainPage() {
                         Gift Charts
                     </span>
                 </a>
-            </div>
+            </div> */}
         </div>
     );
 }
