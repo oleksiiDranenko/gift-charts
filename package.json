@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.4",
     "@reduxjs/toolkit": "^2.6.1",
     "@tonconnect/ui-react": "^2.0.11",
     "@twa-dev/sdk": "^8.0.2",
@@ -25,6 +26,7 @@
     "date-fns": "^4.1.0",
     "encoding": "^0.1.13",
     "env": "^0.0.2",
+    "fuse.js": "^7.1.0",
     "hammerjs": "^2.0.8",
     "lucide-react": "^0.515.0",
     "next": "^13.5.8",

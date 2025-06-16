@@ -62,28 +62,28 @@ export default function IndexBlock({name, id}: IndexProps) {
     }
 
     return (
-        <div className="w-full p-3 bg-slate-800 bg-opacity-50 rounded-lg">
+        <div className="w-full p-3 bg-slate-800 bg-opacity-30 rounded-lg">
             <div className="w-full flex flex-row justify-between items-center">
-                <h1 className="font-bold text-xl">
+                <h1 className="font-bold text-lg">
                 🌍 {name}
                 </h1>
                 <Link
                     href={`/tools/index/${id}`}
-                    className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                    className="px-3 h-8 flex items-center text-sm bg-slate-800 bg-opacity-50 rounded-lg"
                 >
                     {'Show Chart ->'}
                 </Link>
             </div>
-            <div className="w-full mt-4 mb-2 flex flex-row justify-between items-center bg-slate-800 p-3 rounded-lg">
+            <div className="w-full mt-3 flex flex-row justify-between items-center bg-slate-800 bg-opacity-30 p-3 rounded-lg">
                 <div className="flex flex-row items-center">
                     <Image 
                         alt="ton logo"
                         src='/images/ton.webp'
-                        width={15}
-                        height={15}
-                        className="mr-2"
+                        width={14}
+                        height={14}
+                        className="mr-1"
                     /> 
-                    <span className="text-lg font-bold">
+                    <span className="text-base font-bold">
                         {formatNumber(indexValue)}
                     </span>
                 </div>

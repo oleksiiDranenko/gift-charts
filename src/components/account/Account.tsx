@@ -14,6 +14,7 @@ import axios from "axios"
 import { countPercentChange } from "@/numberFormat/functions"
 
 interface AssetDisplayInterface {
+    _id: string,
     name: string,
     image: string,
     currency: 'ton' | 'usd',
@@ -85,6 +86,7 @@ export default function Account() {
             const gift = giftsList.find((gift: GiftInterface) => gift._id === asset.giftId)
             if (gift) {
                 return {
+                    _id: gift._id,
                     name: gift.name,
                     image: gift.image,
                     currency: currency,
@@ -171,7 +173,7 @@ export default function Account() {
                                     height={27}
                                     className="mr-2"
                                 /> : 
-                                <span className="text-4xl font-bold mr-1">$</span>
+                                <span className="text-4xl mr-1">$</span>
                             }
                             <h1 className="text-4xl font-bold">
                                 {portfolioValue}                                
@@ -183,10 +185,10 @@ export default function Account() {
                         </span>
                     </div>
 
-                    <div className="w-full flex justify-between items-center h-14 mb-5 gap-x-3">
+                    <div className="w-full flex justify-between items-center h-14 mb-3 gap-x-3">
                         <div className="w-1/2 flex justify-between gap-x-2">
                             <button 
-                                className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800'}`}
+                                className={`w-full text-sm h-8 box-border rounded-lg ${currency === 'ton' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800 bg-opacity-50'}`}
                                 onClick={() => {
                                     setCurrency('ton')
                                     vibrate()
@@ -195,7 +197,7 @@ export default function Account() {
                                 TON
                             </button>
                             <button 
-                                className={`w-1/2 text-sm h-10 box-border rounded-lg ${currency === 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800'}`}
+                                className={`w-full text-sm h-8 box-border rounded-lg ${currency === 'usd' ? 'bg-[#0098EA] font-bold' : 'bg-slate-800 bg-opacity-50'}`}
                                 onClick={() => {
                                     setCurrency('usd')
                                     vibrate()
@@ -212,7 +214,7 @@ export default function Account() {
                         </button> */}
                         <Link 
                             href={'/account/settings'}
-                            className="w-1/2 h-10 flex justify-center items-center box-border bg-slate-800 rounded-lg"
+                            className="w-1/2 h-8 flex justify-center items-center box-border bg-slate-800 bg-opacity-50 rounded-lg"
                             onClick={() => vibrate()}
                         >
                             Settings
@@ -287,6 +289,7 @@ export default function Account() {
                             {assetsArray.length !== 0 ?
                                 assetsArray.map((asset) => (
                                     <Asset 
+                                        _id={asset._id}
                                         name={asset.name}
                                         image={asset.image}
                                         currency={currency}
@@ -295,7 +298,7 @@ export default function Account() {
                                         priceUsd={asset.priceUsd}
                                         assetsPrice={currency === 'ton' ? assetsPriceTon : assetsPriceUsd}
                                         percentChange={currency === 'ton' ? countPercentChange(asset.tonPrice24hAgo, asset.priceTon) : countPercentChange(asset.usdPrice24hAgo, asset.priceUsd)}
-                                        key={asset.name}
+                                        key={asset._id}
                                     />
                                 ))
                                 :

@@ -9,7 +9,9 @@ import GiftItem from "../giftsList/GiftItem";
 import useVibrate from "@/hooks/useVibrate";
 import { useDispatch } from "react-redux";
 import { setFilters } from "@/redux/slices/filterListSlice";
-import ChartHandler from "./ChartHandler";
+import ListHandler from "./ListHandler";
+import SearchBar from "./SearchBar";
+import { Star } from "lucide-react";
 
 export default function MainPage() {
     const vibrate = useVibrate();
@@ -128,28 +130,15 @@ export default function MainPage() {
                 </h1>
             </h1>
 
-            <div className="mx-3 mb-3">
+            <div className="mx-3 mb-4">
                 <span className="text-slate-300 text-sm">
                     ✨ App is <span className="font-bold text-white">Free</span> but you can <Link href='/donate' className="font-bold text-[#0098EA] underline">Donate!</Link>
                 </span>
             </div>
-            
 
-            <div className=" p-2 mt-3 mb-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                <div className="w-full flex flex-row justify-between items-center">
-                    <h1 className="font-bold text-lg">
-                        {'📊 Heatmap '} <span className="text-sm ml-3 text-yellow-400">Popular!</span>
-                    </h1>
-                    <Link
-                        href={'/tools/treemap'}
-                        className="px-3 h-10 text-sm flex items-center bg-slate-800 rounded-lg"
-                    >
-                        {'Try it Now ->'}
-                    </Link>
-                </div>                        
-            </div>
+            <SearchBar/>
 
-            <div className="max-w-full mx-3 flex items-center justify-between gap-x-1 mb-1">
+            <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-1">
                 <button
                     className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(0)}
@@ -163,10 +152,11 @@ export default function MainPage() {
                     Leaders
                 </button>
                 <button
-                    className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(2)}
                 >
-                    ⭐ Watchlist
+                    <Star size={14} className="mr-[2px]"/> 
+                    <span>Saved</span>
                 </button>
                 <Link
                     className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-[#0098EA] rounded-lg`}
@@ -181,15 +171,15 @@ export default function MainPage() {
                 ref={containerRef}
                 className="w-full swipe-container flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
             >
-                <ChartHandler giftsList={list} filters={filters}/>
+                <ListHandler giftsList={list} filters={filters}/>
 
-                <ChartHandler giftsList={topList} filters={filters}/>
+                <ListHandler giftsList={topList} filters={filters}/>
 
 
                         {userList.length !== 0 ?
-                         <ChartHandler giftsList={userList} filters={filters}/>
+                         <ListHandler giftsList={userList} filters={filters}/>
                          : 
-                         <div className="flex-none w-full snap-start">
+                         <div className="flex-none w-full text-center snap-start">
                              <div className="px-3 pt-3 pb-1 font-bold text-slate-400">
                                  Your Watchlist is Empty
                              </div>

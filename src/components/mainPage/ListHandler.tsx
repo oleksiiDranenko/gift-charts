@@ -15,7 +15,7 @@ interface PropsInterface {
     filters: FilterListInterface
 }
 
-export default function ChartHandler({ giftsList, filters }: PropsInterface) {
+export default function ListHandler({ giftsList, filters }: PropsInterface) {
     
 
     return (

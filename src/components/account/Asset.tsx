@@ -1,8 +1,10 @@
 'use client'
 
 import Image from "next/image"
+import Link from "next/link"
 
 interface PropsInterface {
+    _id: string,
     name: string,
     image: string,
     currency: 'ton' | 'usd',
@@ -13,10 +15,11 @@ interface PropsInterface {
     percentChange: number
 }
 
-export default function Asset({name, image, currency, amount, priceTon, priceUsd, assetsPrice, percentChange } : PropsInterface) {
+export default function Asset({_id, name, image, currency, amount, priceTon, priceUsd, assetsPrice, percentChange } : PropsInterface) {
     return (
-        <div 
-            className="w-full h-20 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
+        <Link 
+            className="w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
+            href={`/gift/${_id}`}
         >
             <div className=" flex flex-row items-center">
                 <Image
@@ -24,7 +27,7 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                     src={`/gifts/${image}.webp`}
                     width={50}
                     height={50}
-                    className={`bg-slate-800 p-1 mr-3 rounded-lg`}
+                    className={`bg-slate-800 bg-opacity-50 p-1 mr-3 rounded-lg`}
                 />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">
@@ -45,7 +48,7 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
             </div>
                     
             <div className=" flex flex-row items-center justify-end">
-                <div className="w-20 h-10 text-sm flex flex-col items-end justify-center mr-2">
+                <div className="w-24 h-10 text-sm flex flex-col items-end justify-center mr-2">
                     <div className="flex flex-row items-center">
                         {currency === 'ton' ?
                             <Image 
@@ -68,6 +71,6 @@ export default function Asset({name, image, currency, amount, priceTon, priceUsd
                 </div>
                     
             </div>
-        </div>
+        </Link>
     )
 }

@@ -10,6 +10,7 @@ import GiftItem from "./GiftItem"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import useVibrate from "@/hooks/useVibrate"
+import SearchBar from "../mainPage/SearchBar"
 
 interface PropsInterface {
     loading: boolean,
@@ -146,26 +147,6 @@ export default function GiftsList({ loading }: PropsInterface) {
                                 }}
                             >
                                 {showFilters ? 'Hide Filters ↑' : 'Show Filters ↓'}
-                            </button>
-                        </div>
-
-
-                        <div className="w-full my-3 gap-x-3 flex flex-row">
-                            <input 
-                                type="text" 
-                                className="w-full h-10 px-3 bg-slate-800 bg-opacity-50 rounded-lg outline-none focus:bg-opacity-100"
-                                placeholder="Enter Gift name..."
-                                value={value}
-                                onChange={handleInput}
-                            />
-                            <button
-                                className="h-10 px-3 bg-slate-800 rounded-lg"
-                                onClick={() => {
-                                    dispatch(setFilters({...filters, chosenGifts: giftsList}))
-                                    setValue('')
-                                }}
-                            >
-                                Clear
                             </button>
                         </div>
 

@@ -61,16 +61,18 @@ export default function Page() {
                         <IndexBlock name='FDV' id='67faf0d0634d6e48d48360bc'/>
                     </div>
 
-                    <div className="w-full p-3 mt-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                    <div className=" p-2 mt-3 mb-5 bg-slate-800 bg-opacity-30 rounded-lg">
                         <div className="w-full flex flex-row justify-between items-center">
-                            <h1 className="font-bold text-xl">📊 Heatmap</h1>
+                            <h1 className="font-bold text-lg">
+                                {'📊 Heatmap '} <span className="text-sm ml-3 text-yellow-400">Popular!</span>
+                            </h1>
                             <Link
                                 href={'/tools/treemap'}
-                                className="px-3 h-10 flex items-center bg-slate-800 rounded-lg"
+                                className="px-3 h-10 text-sm flex items-center bg-slate-800 bg-opacity-50 rounded-lg"
                             >
                                 {'Try it Now ->'}
                             </Link>
-                        </div>
+                        </div>                        
                     </div>
                 </>
             )}
