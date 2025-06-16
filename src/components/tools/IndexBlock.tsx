@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useAppSelector } from "@/redux/hooks"
 import { useEffect, useState } from "react"
+import useVibrate from "@/hooks/useVibrate"
 
 interface IndexProps {
     name: string,
@@ -15,6 +16,8 @@ export default function IndexBlock({name, id}: IndexProps) {
 
     const [indexValue, setIndexValue] = useState<number>(0)
     const [previousIndexValue, setPreviousIndexValue] = useState<number>(0)
+
+    const vibrate = useVibrate()
 
     useEffect(() => {
         if(id === '68493d064b37eed02b7ae5af') { // tmc
@@ -70,6 +73,7 @@ export default function IndexBlock({name, id}: IndexProps) {
                 <Link
                     href={`/tools/index/${id}`}
                     className="px-3 h-8 flex items-center text-sm bg-slate-800 bg-opacity-50 rounded-lg"
+                    onClick={() => vibrate()}
                 >
                     {'Show Chart ->'}
                 </Link>

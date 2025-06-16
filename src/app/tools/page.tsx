@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import LoadingBar from 'react-top-loading-bar';
 import IndexBlock from '@/components/tools/IndexBlock';
+import useVibrate from '@/hooks/useVibrate';
 
 export default function Page() {
     const dispatch = useAppDispatch();
@@ -17,6 +18,7 @@ export default function Page() {
     const indexList = useAppSelector((state) => state.indexList);
     const [loading, setLoading] = useState<boolean>(true);
     const loadingBarRef = useRef<any>(null);
+    const vibrate = useVibrate()
 
     useEffect(() => {
         (async () => {
@@ -69,6 +71,7 @@ export default function Page() {
                             <Link
                                 href={'/tools/treemap'}
                                 className="px-3 h-10 text-sm flex items-center bg-slate-800 bg-opacity-50 rounded-lg"
+                                onClick={() => vibrate()}
                             >
                                 {'Try it Now ->'}
                             </Link>

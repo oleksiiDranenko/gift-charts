@@ -161,6 +161,7 @@ export default function MainPage() {
                 <Link
                     className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-[#0098EA] rounded-lg`}
                     href={'/gifts-list'}
+                    onClick={() => vibrate()}
                 >
                     {'Customise ->'}
                 </Link>

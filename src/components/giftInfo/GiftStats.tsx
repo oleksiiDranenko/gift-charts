@@ -35,7 +35,7 @@ export default function GiftStats({gift}: PropsInterface) {
     return (
         <div className="w-full mt-8 px-3">
 
-            <div className="text-slate-300 p-5 bg-slate-800 bg-opacity-50 rounded-lg">
+            <div className="text-slate-300 p-5 bg-slate-800 bg-opacity-30 rounded-lg">
                 <p className="mb-8 w-full flex justify-between">
                     <span className="font-light">
                         {'Release Date: '}

@@ -72,11 +72,11 @@ export default function Page({ params }: any) {
                             <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
                                 <button
                                     onClick={goBack}
-                                    className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
+                                    className="w-1/2 h-10 flex items-center justify-center bg-slate-800 bg-opacity-50 rounded-lg"
                                 >
                                     {'<- Back'}
                                 </button>
-                                <div className="w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 rounded-lg">
+                                <div className="w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 bg-opacity-50 rounded-lg">
                                     {weekList.length > 0
                                         ? `⏱ ${weekList[weekList.length - 1].time} 🇬🇧 London`
                                         : 'No time data'}
