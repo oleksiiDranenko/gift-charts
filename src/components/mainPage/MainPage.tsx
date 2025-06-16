@@ -154,13 +154,13 @@ export default function MainPage() {
                     className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(0)}
                 >
-                    Top change
+                    Hot
                 </button>
                 <button
                     className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(1)}
                 >
-                    Price
+                    Leaders
                 </button>
                 <button
                     className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}

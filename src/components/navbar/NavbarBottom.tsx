@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import useVibrate from "@/hooks/useVibrate";
+import { House, User, ChartCandlestick } from 'lucide-react';
 
 export default function NavbarBottom() {
     const pathname = usePathname();
@@ -23,37 +24,46 @@ export default function NavbarBottom() {
     }, [pathname]);
 
     return (
-        <div className="fixed bottom-0 mb-0 w-screen z-50 flex justify-center gap-3 pt-2 pb-10 px-3 items-center">
-            <div className="w-full lg:w-1/2 flex flex-row justify-between p-3 backdrop-blur-md rounded-2xl">
+        <div className="fixed bottom-0 mb-0 w-screen z-50 flex justify-center gap-3 pt-2 pb-10 px-3 items-center bg-[#0b1018] border-t border-slate-800 ">
+            <div className="w-full lg:w-1/2 flex flex-row justify-between">
                 <Link
-                    className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'home' ? 'bg-[#0098EA] rounded-lg' : ''}`}
+                    className={`w-1/4 flex flex-col justify-center items-center box-border ${selectedPage === 'home' ? 'text-[#0098EA]' : 'text-white'}`}
                     href="/"
                     onClick={() => {
                         setSelectedPage('home')
                         vibrate()
                     }}
                 >
-                    Home
+                    <House />
+                    <span className={`text-xs `}>
+                        Home
+                    </span>
                 </Link>
                 <Link
-                    className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'tools' ? 'bg-[#0098EA] rounded-lg' : ''}`}
+                    className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${selectedPage === 'tools' ? 'text-[#0098EA]' : 'text-white'}`}
                     href="/tools"
                     onClick={() => {
                         setSelectedPage('tools')
                         vibrate()
                     }}
                 >
-                    Tools
+                    <ChartCandlestick/>
+                    <span className={`text-xs `}>
+                        Tools
+                    </span>
                 </Link>
                 <Link
-                    className={`w-1/4 h-10 flex justify-center items-center box-border ${selectedPage === 'account' ? 'bg-[#0098EA] rounded-lg' : ''}`}
+                    className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${selectedPage === 'account' ? 'text-[#0098EA]' : 'text-white'}`}
                     href="/account"
                     onClick={() => {
                         setSelectedPage('account')
                         vibrate()
                     }}
                 >
-                    Account
+                    <User/>
+                    <span className={`text-xs `}>
+                        Account
+                    </span>
                 </Link>
             </div>
         </div>
