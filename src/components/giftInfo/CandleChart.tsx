@@ -7,6 +7,7 @@ import { parse } from 'date-fns';
 import GiftLifeDataInterface from '@/interfaces/GiftLifeDataInterface';
 import { CandlestickController, CandlestickElement } from 'chartjs-chart-financial';
 import 'chartjs-adapter-date-fns';
+import { format } from 'date-fns';
 
 Chart.register(...registerables, CandlestickController, CandlestickElement);
 
@@ -45,75 +46,87 @@ export default function CandleChart({ data }: PropsInterface) {
     const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
 
     const options: ChartProps<'candlestick', CandlestickData[], unknown>['options'] = {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false,
+    responsive: true,
+    plugins: {
+        legend: {
+            display: false,
+        },
+        title: {
+            display: false,
+        },
+        tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+                title: (tooltipItems) => {
+                    const item = data[tooltipItems[0].dataIndex];
+                    return item.date;
+                },
+                label: (tooltipItem) => {
+                    const item = data[tooltipItem.dataIndex];
+                    return `Open: ${item.openTon} TON, Close: ${item.closeTon} TON`;
+                },
+            },
+        },
+    },
+    interaction: {
+        mode: 'index',
+        intersect: false,
+    },
+    scales: {
+        x: {
+            type: 'time' as const,
+            time: {
+                unit: 'day',
+                displayFormats: {
+                    day: 'dd-MM',
+                },
+            },
+            ticks: {
+                source: 'data', // Align ticks with data points
+                autoSkip: true, // Prevent overlap
+                maxTicksLimit: 10, // Allow up to 10 ticks (adjust as needed)
+                color: 'rgba(255, 255, 255, 0.6)',
+                padding: 0,
+                maxRotation: 0,
+                minRotation: 0,
+                callback: (value, index, ticks) => {
+                    // Show ticks every 5 days based on data index
+                    const tickInterval = 5; // Adjust interval (e.g., 5 for every 5 days)
+                    if (index % tickInterval === 0) {
+                        return format(new Date(value), 'dd-MM');
+                    }
+                    return null; // Skip ticks that don't match the interval
+                },
             },
             title: {
                 display: false,
             },
-            tooltip: {
-                enabled: true,
-                mode: 'index',
-                intersect: false,
-                callbacks: {
-                    title: (tooltipItems) => {
-                        const item = data[tooltipItems[0].dataIndex];
-                        return item.date;
-                    },
-                    label: (tooltipItem) => {
-                        const item = data[tooltipItem.dataIndex];
-                        return `Open: ${item.openTon} TON, Close: ${item.closeTon} TON`;
-                    },
-                },
+            grid: {
+                color: 'rgba(255, 255, 255, 0.05)',
             },
         },
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
-        scales: {
-            x: {
-                type: 'time' as const,
-                time: {
-                    unit: 'day',
-                },
-                title: {
-                    display: false,
-                },
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.05)',
-                },
-                ticks: {
-                    color: 'rgba(255, 255, 255, 0.6)',
-                    padding: 0,
-                    autoSkip: true,
-                    maxTicksLimit: 5,
-                    maxRotation: 0,
-                    minRotation: 0,
-                },
+        y: {
+            type: 'linear' as const,
+            position: 'right',
+            title: {
+                display: false,
             },
-            y: {
-                type: 'linear' as const,
-                position: 'right',
-                title: {
-                    display: false,
-                },
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.05)',
-                    drawTicks: true,
-                    tickLength: 10,
-                },
-                ticks: {
-                    color: 'rgba(255, 255, 255, 0.6)',
-                    padding: 10,
-                },
-                suggestedMax: maxPrice * 1.1,
-                suggestedMin: minPrice * 0.9,
+            grid: {
+                color: 'rgba(255, 255, 255, 0.05)',
+                drawTicks: true,
+                tickLength: 10,
             },
+            ticks: {
+                color: 'rgba(255, 255, 255, 0.6)',
+                padding: 10,
+            },
+            suggestedMax: maxPrice * 1.1,
+            suggestedMin: minPrice * 0.9,
         },
-    };
+    },
+};
 
     return (
         <div className="h-auto w-full">

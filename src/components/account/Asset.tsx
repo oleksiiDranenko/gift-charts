@@ -9,19 +9,22 @@ interface PropsInterface {
     image: string,
     currency: 'ton' | 'usd',
     amount: number,
+    avgPrice: number,
     priceTon: number,
     priceUsd: number,
     assetsPrice: number,
     percentChange: number
 }
 
-export default function Asset({_id, name, image, currency, amount, priceTon, priceUsd, assetsPrice, percentChange } : PropsInterface) {
+export default function Asset({_id, name, image, currency, amount, avgPrice, priceTon, priceUsd, assetsPrice, percentChange } : PropsInterface) {
+    
     return (
         <Link 
-            className="w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg" 
+            className="w-full flex flex-col items-center justify-between my-3 rounded-lg" 
             href={`/gift/${_id}`}
         >
-            <div className=" flex flex-row items-center">
+            <div className="w-full flex flex-row items-center justify-between">
+                <div className=" flex flex-row items-center">
                 <Image
                     alt="gift image"
                     src={`/gifts/${image}.webp`}
@@ -70,6 +73,7 @@ export default function Asset({_id, name, image, currency, amount, priceTon, pri
                     </span>
                 </div>
                     
+                </div>
             </div>
         </Link>
     )

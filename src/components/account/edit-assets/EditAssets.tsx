@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { UserInterface } from "@/interfaces/UserInterface";
@@ -31,13 +31,10 @@ export default function EditAssets() {
     const [tonInput, setTonInput] = useState<string>("");
     const [usdInput, setUsdInput] = useState<string>("");
 
-    const hasInitialized = useRef(false);
-
     useEffect(() => {
         if (!user.telegramId) {
             setError("No Telegram ID provided. Please log in.");
             setLoading(false);
-            router.push('/login'); // Redirect to login page if no telegramId
             return;
         }
 
@@ -46,35 +43,43 @@ export default function EditAssets() {
                 setLoading(true);
                 setError(null);
 
-                // Log API URL for debugging
-                console.log('API Base URL:', process.env.NEXT_PUBLIC_API);
-
-                // Fetch gifts if not already loaded
                 if (giftsList.length === 0) {
                     const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
                     dispatch(setGiftsList(giftsRes.data));
                 }
 
-                // Check or create user account
                 const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`);
                 
                 if (userRes.data._id) {
-                    // User exists, update Redux with full data
-                    dispatch(setUser(userRes.data));
-                    setEditedUser(userRes.data);
-                    setTonInput(userRes.data.ton?.toString() || "");
-                    setUsdInput(userRes.data.usd?.toString() || "");
+                    // Ensure avgPrice is set for all assets
+                    const updatedUser = {
+                        ...userRes.data,
+                        assets: userRes.data.assets.map((asset: any) => ({
+                            ...asset,
+                            avgPrice: asset.avgPrice !== undefined ? asset.avgPrice : 0
+                        }))
+                    };
+                    dispatch(setUser(updatedUser));
+                    setEditedUser(updatedUser);
+                    setTonInput(updatedUser.ton?.toString() || "");
+                    setUsdInput(updatedUser.usd?.toString() || "");
                 } else if (userRes.data.exists === false) {
-                    // User doesn't exist, create a new account
                     const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API}/users/create-account`, {
                         telegramId: user.telegramId,
                         username: user.username || 'Anonymous',
                     });
                     if (createRes.data.user) {
-                        dispatch(setUser(createRes.data.user));
-                        setEditedUser(createRes.data.user);
-                        setTonInput(createRes.data.user.ton?.toString() || "");
-                        setUsdInput(createRes.data.user.usd?.toString() || "");
+                        const updatedUser = {
+                            ...createRes.data.user,
+                            assets: createRes.data.user.assets.map((asset: any) => ({
+                                ...asset,
+                                avgPrice: asset.avgPrice !== undefined ? asset.avgPrice : 0
+                            }))
+                        };
+                        dispatch(setUser(updatedUser));
+                        setEditedUser(updatedUser);
+                        setTonInput(updatedUser.ton?.toString() || "");
+                        setUsdInput(updatedUser.usd?.toString() || "");
                     } else {
                         throw new Error(createRes.data.message || 'Failed to create account');
                     }
@@ -117,6 +122,7 @@ export default function EditAssets() {
             const newAsset = {
                 giftId: id,
                 amount: 1,
+                avgPrice: 0
             };
             setEditedUser({ ...editedUser, assets: [...editedUser.assets, newAsset] });
             setAddGiftList((prevList) => prevList.filter((gift) => gift._id !== id));
@@ -127,6 +133,16 @@ export default function EditAssets() {
         if (editedUser) {
             const updatedAssets = editedUser.assets.map((asset) =>
                 asset.giftId === id ? { ...asset, amount: newAmount } : asset
+            );
+            setEditedUser({ ...editedUser, assets: updatedAssets });
+        }
+    };
+
+    const updateAvgPrice = (id: string, newAvgPrice: number) => {
+        if (editedUser) {
+            console.log(`Updating avgPrice for giftId ${id} to ${newAvgPrice}`);
+            const updatedAssets = editedUser.assets.map((asset) =>
+                asset.giftId === id ? { ...asset, avgPrice: newAvgPrice } : asset
             );
             setEditedUser({ ...editedUser, assets: updatedAssets });
         }
@@ -160,10 +176,16 @@ export default function EditAssets() {
                 const updatedUser = {
                     username: editedUser.username,
                     savedList: editedUser.savedList,
-                    assets: validAssets,
+                    assets: validAssets.map((asset) => ({
+                        giftId: asset.giftId,
+                        amount: asset.amount,
+                        avgPrice: asset.avgPrice !== undefined ? asset.avgPrice : 0
+                    })),
                     ton: editedUser.ton !== undefined && !isNaN(editedUser.ton) ? editedUser.ton : 0,
                     usd: editedUser.usd !== undefined && !isNaN(editedUser.usd) ? editedUser.usd : 0,
                 };
+
+                console.log('Frontend payload:', JSON.stringify(updatedUser, null, 2));
 
                 const updateRes = await axios.patch(
                     `${process.env.NEXT_PUBLIC_API}/users/update-account/${editedUser.telegramId}`,
@@ -280,9 +302,11 @@ export default function EditAssets() {
                             <EditAssetItem
                                 giftId={asset.giftId}
                                 amount={asset.amount}
+                                avgPrice={asset.avgPrice || 0}
                                 giftsList={giftsList}
                                 removeGift={removeGift}
                                 updateAmount={updateAmount}
+                                updateAvgPrice={updateAvgPrice}
                                 key={asset.giftId}
                             />
                         ))}

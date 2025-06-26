@@ -1,6 +1,7 @@
 export interface AssetInterface {
     giftId: string,
-    amount: number
+    amount: number,
+    avgPrice: number;
 }
 
 export interface UserInterface {

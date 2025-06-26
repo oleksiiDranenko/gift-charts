@@ -1,6 +1,5 @@
 'use client'
 
-
 import Link from "next/link"
 import Image from "next/image"
 import GiftInterface from "@/interfaces/GiftInterface"
@@ -138,7 +137,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                         </span>
                     </div>
                     
-                    <span className={`text-sm font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
+                    <span className={`flex flex-row items-center text-sm font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
                         {percentChange}{percentChange !== 'no data' ? '%' : null}
                     </span>
                 </div>
