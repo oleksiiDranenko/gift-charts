@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { setFilters } from "@/redux/slices/filterListSlice";
 import ListHandler from "./ListHandler";
 import SearchBar from "./SearchBar";
-import { Star } from "lucide-react";
+import { Activity, Trophy, Flame, Star, Hammer } from "lucide-react";
 
 export default function MainPage() {
     const vibrate = useVibrate();
@@ -123,9 +123,9 @@ export default function MainPage() {
 
     return (
         <div>
-            <h1 className="flex flex-row mb-3 px-3">
-                <Image src={'/images/logo.webp'} width={24} height={24} alt=""/>
-                <h1 className="text-2xl font-bold ml-2">
+            <h1 className="flex flex-row items-center mb-3 px-3">
+                <Activity size={24}/>
+                <h1 className="text-2xl font-bold ml-1">
                     Gift Charts
                 </h1>
             </h1>
@@ -140,16 +140,18 @@ export default function MainPage() {
 
             <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-1">
                 <button
-                    className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(0)}
                 >
-                    Hot
+                    <Flame size={14} className="mr-[2px]"/> 
+                    <span>Top changes</span>
                 </button>
                 <button
-                    className={`w-full text-xs text-slate-400 h-8 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
                     onClick={() => handleSwipe(1)}
                 >
-                    Leaders
+                    <Trophy size={14} className="mr-[2px]"/> 
+                    <span>Leaders</span>
                 </button>
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
@@ -163,7 +165,9 @@ export default function MainPage() {
                     href={'/gifts-list'}
                     onClick={() => vibrate()}
                 >
-                    {'Customise ->'}
+                    
+                    <span>Customise</span>
+                    <Hammer size={14} strokeWidth={2.5} className="ml-[2px]"/> 
                 </Link>
             </div>
 

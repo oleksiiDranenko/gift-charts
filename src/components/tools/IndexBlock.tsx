@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useAppSelector } from "@/redux/hooks"
 import { useEffect, useState } from "react"
 import useVibrate from "@/hooks/useVibrate"
+import { Globe, Landmark } from "lucide-react"
 
 interface IndexProps {
     name: string,
@@ -67,9 +68,12 @@ export default function IndexBlock({name, id}: IndexProps) {
     return (
         <div className="w-full p-3 bg-slate-800 bg-opacity-30 rounded-lg">
             <div className="w-full flex flex-row justify-between items-center">
-                <h1 className="font-bold text-lg">
-                🌍 {name}
-                </h1>
+                <div className="flex flex-row items-center gap-1 font-bold">
+                    <Globe size={18}/> 
+                    <span>
+                        {name}
+                    </span>
+                </div>
                 <Link
                     href={`/tools/index/${id}`}
                     className="px-3 h-8 flex items-center text-sm bg-slate-800 bg-opacity-50 rounded-lg"
