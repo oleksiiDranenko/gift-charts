@@ -144,7 +144,7 @@ export default function MainPage() {
                     onClick={() => handleSwipe(0)}
                 >
                     <Flame size={14} className="mr-[2px]"/> 
-                    <span>Top changes</span>
+                    <span>Hot</span>
                 </button>
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
