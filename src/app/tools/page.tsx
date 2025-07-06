@@ -1,6 +1,5 @@
 'use client';
 
-import IndexItem from '@/components/tools/IndexItem';
 import { IndexInterface } from '@/interfaces/IndexInterface';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setGiftsList } from '@/redux/slices/giftsListSlice';
