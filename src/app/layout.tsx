@@ -3,7 +3,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import ReduxProvider from '@/redux/provider';
-import NavbarTop from '@/components/navbar/NavbarTop';
 import NavbarBottom from '@/components/navbar/NavbarBottom';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
