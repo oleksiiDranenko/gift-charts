@@ -131,8 +131,8 @@ export default function MainPage() {
             </h1>
 
             <div className="mx-3 mb-4">
-                <span className="text-slate-300 text-sm">
-                    ✨ App is <span className="font-bold text-white">Free</span> but you can <Link href='/donate' className="font-bold text-[#0098EA] underline">Donate!</Link>
+                <span className="text-secondaryText text-sm">
+                    ✨ App is <span className="font-bold text-foreground">Free</span> but you can <Link href='/donate' className="font-bold text-primary underline">Donate!</Link>
                 </span>
             </div>
 
@@ -140,28 +140,28 @@ export default function MainPage() {
 
             <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-1">
                 <button
-                    className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 0 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 0 ? 'font-bold text-foreground bg-secondaryTransparent rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(0)}
                 >
                     <Flame size={14} className="mr-[2px]"/> 
                     <span>Hot</span>
                 </button>
                 <button
-                    className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 1 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 1 ? 'font-bold text-foreground bg-secondaryTransparent rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(1)}
                 >
                     <Trophy size={14} className="mr-[2px]"/> 
                     <span>Leaders</span>
                 </button>
                 <button
-                    className={`w-full flex flex-row items-center justify-center text-xs text-slate-400 h-8 ${activeIndex === 2 ? 'font-bold text-white bg-slate-800 bg-opacity-50 rounded-lg' : ''}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 2 ? 'font-bold text-foreground bg-secondaryTransparent rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(2)}
                 >
                     <Star size={14} className="mr-[2px]"/> 
                     <span>Saved</span>
                 </button>
                 <Link
-                    className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-[#0098EA] rounded-lg`}
+                    className={`w-full text-xs h-8 flex items-center justify-center font-bold text-foreground bg-primary rounded-lg`}
                     href={'/gifts-list'}
                     onClick={() => vibrate()}
                 >
@@ -185,10 +185,10 @@ export default function MainPage() {
                          <ListHandler giftsList={userList} filters={filters}/>
                          : 
                          <div className="flex-none w-full text-center snap-start">
-                             <div className="px-3 pt-3 pb-1 font-bold text-slate-400">
+                             <div className="px-3 pt-3 pb-1 font-bold text-secondaryText">
                                  Your Watchlist is Empty
                              </div>
-                             <div className="px-3 pt-3 pb-5 text-sm text-slate-400">
+                             <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
                                  {'Account -> Settings -> Edit Watchlist'}
                              </div>
                          </div>

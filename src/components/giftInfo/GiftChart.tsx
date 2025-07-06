@@ -265,18 +265,18 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                         src={`/gifts/${gift?.image}.webp`}
                         width={55}
                         height={55}
-                        className={`mr-3 p-1 rounded-lg ${gift?.staked && 'shadow-md shadow-[#0098EA]'} ${gift?.preSale ? 'bg-cyan-800 ' : 'bg-slate-800'}`}
+                        className={`mr-3 p-1 rounded-lg ${gift?.staked && 'shadow-md shadow-primary'} ${gift?.preSale ? 'bg-cyan-800 ' : 'bg-secondary'}`}
                     />
                     <h1 className="flex flex-col">
                         <span className="text-xl font-bold">
                             {gift?.name}
                         </span>
-                        <span className="text-slate-500 text-sm flex justify-start">
+                        <span className="text-secondaryText text-sm flex justify-start">
                             {gift ? formatNumber(gift?.upgradedSupply) : null}
                         </span>
                     </h1>
                 </div>
-                <div className="w-1/3 h-14 flex flex-row items-center justify-center bg-slate-800 bg-opacity-50 rounded-lg">
+                <div className="w-1/3 h-14 flex flex-row items-center justify-center bg-secondaryTransparent rounded-lg">
                     {
                         selectedPrice == 'ton'
                             ?
@@ -305,7 +305,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
             <div className="w-full mb-3 mt-5 flex flex-row justify-between">
                 <div className="w-1/2 flex flex-row box-border">
                     <button
-                        className={`w-full text-sm h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        className={`w-full text-sm h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-primary font-bold' : null}`}
                         onClick={() => {
                             setSelectedPrice('ton')
                             vibrate()
@@ -314,7 +314,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                         TON
                     </button>
                     <button
-                        className={`w-full text-sm h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        className={`w-full text-sm h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-primary font-bold' : null}`}
                         onClick={() => {
                             setSelectedPrice('usd')
                             vibrate()
@@ -333,7 +333,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
 
             <div className="w-full flex flex-row">
                 <button
-                    className={`w-full text-sm h-8 box-border ${chartType == 'line' ? 'rounded-lg bg-slate-800 bg-opacity-50 font-bold' : null}`}
+                    className={`w-full text-sm h-8 box-border ${chartType == 'line' ? 'rounded-lg bg-secondaryTransparent font-bold' : null}`}
                     onClick={() => {
                         setChartType('line')
                         vibrate()
@@ -342,13 +342,13 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                     Line
                 </button>
                 <button
-                    className={`w-full text-sm h-8 box-border ${chartType == 'candle' ? 'rounded-lg bg-slate-800 bg-opacity-50 font-bold' : null}`}
+                    className={`w-full text-sm h-8 box-border ${chartType == 'candle' ? 'rounded-lg bg-secondaryTransparent font-bold' : null}`}
                     onClick={() => {
                         setChartType('candle')
                         vibrate()
                     }}
                 >
-                    Candle <span className="text-xs text-yellow-400 font-light">new!</span>
+                    Candle
                 </button>
             </div>
 
@@ -375,7 +375,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                         <div className="mb-1 mt-5 flex flex-col">
                             <div className="w-full flex flex-row justify-between gap-x-3">
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                                    className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-primary font-bold' : null}`}
                                     onClick={() => {
                                         lifeData.length > 0 ? setListType('all') : null
                                         vibrate()
@@ -384,7 +384,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                                     All
                                 </button>
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                                    className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-primary font-bold' : null}`}
                                     onClick={() => {
                                         lifeData.length > 0 ? setListType('1m') : null
                                         vibrate()
@@ -393,7 +393,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                                     1m
                                 </button>
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                                    className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-primary font-bold' : null}`}
                                     onClick={() => {
                                         setListType('1w')
                                         vibrate()
@@ -402,7 +402,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                                     1w
                                 </button>
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == '24h' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                                    className={`w-full text-sm h-10 ${listType == '24h' ? 'rounded-lg bg-primary font-bold' : null}`}
                                     onClick={() => {
                                         setListType('24h')
                                         vibrate()

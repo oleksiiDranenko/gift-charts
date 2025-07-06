@@ -24,10 +24,10 @@ export default function NavbarBottom() {
     }, [pathname]);
 
     return (
-        <div className="fixed bottom-0 mb-0 w-screen z-50 flex justify-center gap-3 pt-3 pb-8 px-3 items-center bg-[#0b1018] border-t border-slate-800 ">
+        <div className="fixed bottom-0 mb-0 w-screen z-50 flex justify-center gap-3 pt-3 pb-8 px-3 items-center bg-background border-t border-slate-800 ">
             <div className="w-full lg:w-1/2 flex flex-row justify-between">
                 <Link
-                    className={`w-1/4 flex flex-col justify-center items-center box-border ${selectedPage === 'home' ? 'text-[#0098EA]' : 'text-white'}`}
+                    className={`w-1/4 flex flex-col justify-center items-center box-border ${selectedPage === 'home' ? 'text-primary' : 'text-foreground'}`}
                     href="/"
                     onClick={() => {
                         setSelectedPage('home')
@@ -40,7 +40,7 @@ export default function NavbarBottom() {
                     </span>
                 </Link>
                 <Link
-                    className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${selectedPage === 'tools' ? 'text-[#0098EA]' : 'text-white'}`}
+                    className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${selectedPage === 'tools' ? 'text-primary' : 'text-foreground'}`}
                     href="/tools"
                     onClick={() => {
                         setSelectedPage('tools')
@@ -53,7 +53,7 @@ export default function NavbarBottom() {
                     </span>
                 </Link>
                 <Link
-                    className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${selectedPage === 'account' ? 'text-[#0098EA]' : 'text-white'}`}
+                    className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${selectedPage === 'account' ? 'text-primary' : 'text-foreground'}`}
                     href="/account"
                     onClick={() => {
                         setSelectedPage('account')

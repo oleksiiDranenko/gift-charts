@@ -284,7 +284,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
         <div className='w-full flex flex-col items-center'>
             <div className='w-full lg:w-1/2 mb-3 flex gap-2'>
                 <button
-                    className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                    className='w-full text-sm h-10 rounded-lg bg-primary'
                     onClick={() => {
                         chartRef.current?.resetZoom();
                         chartRef.current?.update('none');
@@ -294,7 +294,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
                 </button>
                 <div className='w-full flex flex-row gap-x-2'>
                     <button
-                        className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                        className='w-full text-sm h-10 rounded-lg bg-primary'
                         onClick={() => {
                             const zoom = chartRef.current.getZoomLevel?.() ?? 1;
                             const newZoom = Math.max(1, zoom - 0.5);
@@ -308,7 +308,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
                         }}>-
                     </button>
                     <button
-                        className='w-full text-sm h-10 rounded-lg bg-[#0098EA]'
+                        className='w-full text-sm h-10 rounded-lg bg-primary'
                         onClick={() => {
                             const zoom = chartRef.current.getZoomLevel?.() ?? 1;
                             const newZoom = Math.min(10, zoom + 0.3);

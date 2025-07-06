@@ -35,21 +35,21 @@ export default function GiftStats({gift}: PropsInterface) {
     return (
         <div className="w-full mt-8 px-3">
 
-            <div className="text-slate-300 p-5 bg-slate-800 bg-opacity-30 rounded-lg">
+            <div className="text-secondaryText p-5 bg-secondaryTransparent rounded-lg">
                 <p className="mb-8 w-full flex justify-between">
                     <span className="font-light">
                         {'Release Date: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {formatDate(gift.releaseDate)}
                     </span>
                 </p>
 
                 <p className="mb-8 w-full flex justify-between">
                     <span className="font-light">
-                        Avaliable for<span className="text-[#0098EA] font-bold">{' Staking'}</span>:
+                        Avaliable for<span className="text-primary font-bold">{' Staking'}</span>:
                     </span>
-                    <span className={`${gift.staked && 'text-[#0098EA] font-bold'}`}>
+                    <span className={`${gift.staked ? 'text-primary font-bold' : 'text-foreground'}`}>
                         {gift.staked ? 'Yes' : 'No'}
                     </span>
                 </p>
@@ -59,7 +59,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Stars Price: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {'⭐ ' + gift.starsPrice}
                     </span>
                 </p>
@@ -67,7 +67,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Upgrade Stars Price: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {'⭐ ' + gift.upgradePrice}
                     </span>
                 </p>
@@ -75,7 +75,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Total Stars Price: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {'⭐ ' + totalStarsPrice}
                     </span>
                 </p>
@@ -83,7 +83,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Total Stars Price in USD: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {'$ ' + gift.initUsdPrice}
                     </span>
                 </p>
@@ -91,7 +91,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Total Stars Price in TON: '}
                     </span>
-                    <div className="text-white flex flex-row items-center">
+                    <div className="text-foreground flex flex-row items-center">
                         <Image 
                             alt="ton logo"
                             src='/images/ton.webp'
@@ -108,7 +108,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Inital Supply: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {formatNumber(gift.initSupply)}
                     </span>
                 </p>
@@ -116,7 +116,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Supply: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {formatNumber(gift.supply)}
                     </span>
                 </p>
@@ -124,7 +124,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Upgraded Supply: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {formatNumber(gift.upgradedSupply)}
                     </span>
                 </p>
@@ -132,7 +132,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Amount Burnt: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {`🔥 ${formatNumber(gift.initSupply - gift.supply)}`}
                     </span>
                 </p>
@@ -141,7 +141,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Percent Burnt: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {countPercentChange(gift.initSupply, gift.supply)+ '%'}
                     </span>
                 </p>
@@ -150,7 +150,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="font-light">
                         {'Percent Upgraded: '}
                     </span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                         {100 - countPercentChange(gift.supply, gift.upgradedSupply)+ '%'}
                     </span>
                 </p>

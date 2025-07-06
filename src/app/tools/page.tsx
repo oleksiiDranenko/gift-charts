@@ -11,6 +11,7 @@ import { useEffect, useState, useRef } from 'react';
 import LoadingBar from 'react-top-loading-bar';
 import IndexBlock from '@/components/tools/IndexBlock';
 import useVibrate from '@/hooks/useVibrate';
+import { Grid2x2 } from 'lucide-react';
 
 export default function Page() {
     const dispatch = useAppDispatch();
@@ -65,9 +66,12 @@ export default function Page() {
 
                     <div className=" p-2 mt-3 mb-5 bg-slate-800 bg-opacity-30 rounded-lg">
                         <div className="w-full flex flex-row justify-between items-center">
-                            <h1 className="font-bold text-lg">
-                                {'📊 Heatmap '} <span className="text-sm ml-3 text-yellow-400">Popular!</span>
-                            </h1>
+                            <div className="flex flex-row items-center font-bold text-lg gap-1">
+                                <Grid2x2 size={18}/>
+                                <span>
+                                    Heatmap
+                                </span> 
+                            </div>
                             <Link
                                 href={'/tools/treemap'}
                                 className="px-3 h-10 text-sm flex items-center bg-slate-800 bg-opacity-50 rounded-lg"

@@ -2,6 +2,7 @@
 
 import useVibrate from "@/hooks/useVibrate"
 import GiftInterface from "@/interfaces/GiftInterface"
+import { Star } from "lucide-react"
 import Image from "next/image"
 
 
@@ -25,9 +26,9 @@ export default function FilterGiftItem({ gift, selected, onClick } : PropsInterf
             }}
         >
             <div 
-                className='w-10 h-10 mr-3 flex justify-center items-center border border-slate-800 rounded-lg'
+                className='w-10 h-10 mr-3 flex justify-center items-center border border-secondary rounded-lg'
             >   
-                {selected && '📌'}
+                {selected && <Star/>}
             </div>
             <div className=" flex flex-row items-center">
                 <Image

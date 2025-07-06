@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 :root {
+  --primary: #0098EA;
+  --secondary: #1e293b;
+  --secondary-transparent: #1e293b50;
+  --secondary-text: #94a3b8;
+  --background: #0b1018;
+  --foreground: #ffffff;
+}
+
+html.dark{
+  --primary: #0098EA;
+  --secondary: #1e293b;
+  --secondary-transparent: #1e293b50;
+  --secondary-text: #94a3b8;
   --background: #0b1018;
   --foreground: #ffffff;
 }
@@ -14,5 +27,4 @@ body {
   background: var(--background);
   background-attachment: fixed;
   background-size: cover;
-  font-family: Arial, Helvetica, sans-serif;
 }

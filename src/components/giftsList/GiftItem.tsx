@@ -73,7 +73,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
 
     return (
         <Link 
-            className={`w-full h-16 my-1 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg bg-gradient-to-r from-slate-800/50 ${percentChange !== 'no data' && percentChange >= 0 ? 'to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'to-red-500/25' }`} 
+            className={`w-full h-16 my-2 flex flex-row items-center justify-between focus:bg-secondary focus:bg-opacity-35 rounded-lg bg-gradient-to-r ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }`} 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}
@@ -85,7 +85,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                     width={50}
                     height={50}
                     className={` p-1 mr-3 ml-2 bg-opacity-50 rounded-lg ${borderColor ? 'border' : ''} ${
-                      item.staked && 'shadow-md shadow-blue-500'
+                      item.staked && 'shadow-md shadow-primary'
                     } ${item.preSale ? 'bg-cyan-800' : 'bg-slate-800'}`}
                     style={borderColor ? { borderColor: `${borderColor}80` } : {}}
                 />

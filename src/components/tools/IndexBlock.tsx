@@ -66,7 +66,7 @@ export default function IndexBlock({name, id}: IndexProps) {
     }
 
     return (
-        <div className="w-full p-3 bg-slate-800 bg-opacity-30 rounded-lg">
+        <div className="w-full p-3 bg-secondaryTransparent rounded-lg">
             <div className="w-full flex flex-row justify-between items-center">
                 <div className="flex flex-row items-center gap-1 font-bold">
                     <Globe size={18}/> 
@@ -76,13 +76,13 @@ export default function IndexBlock({name, id}: IndexProps) {
                 </div>
                 <Link
                     href={`/tools/index/${id}`}
-                    className="px-3 h-8 flex items-center text-sm bg-slate-800 bg-opacity-50 rounded-lg"
+                    className="px-3 h-8 flex items-center text-sm bg-secondaryTransparent rounded-lg"
                     onClick={() => vibrate()}
                 >
                     {'Show Chart ->'}
                 </Link>
             </div>
-            <div className="w-full mt-3 flex flex-row justify-between items-center bg-slate-800 bg-opacity-30 p-3 rounded-lg">
+            <div className="w-full mt-3 flex flex-row justify-between items-center bg-secondaryTransparent p-3 rounded-lg">
                 <div className="flex flex-row items-center">
                     <Image 
                         alt="ton logo"

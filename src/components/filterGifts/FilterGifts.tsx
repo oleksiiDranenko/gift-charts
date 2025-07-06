@@ -78,12 +78,12 @@ export default function FilterGifts() {
             <div className="w-full mb-3 p-3 gap-3 flex justify-between items-center]">
                 <button 
                     onClick={goBack} 
-                    className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
+                    className="w-1/2 h-10 flex items-center justify-center bg-secondaryTransparent rounded-lg"
                 >
                     {'<- Back'}
                 </button>
                 <button 
-                    className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
+                    className="w-1/2 h-10 flex items-center justify-center bg-secondaryTransparent rounded-lg"
                     onClick={() => {
                         dispatch(setFilters({...filters, chosenGifts: []}))
                         vibrate()

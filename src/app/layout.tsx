@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/slices/userSlice';
 import axios from 'axios';
 import { Analytics } from '@vercel/analytics/react';
+import { ThemeProvider } from 'next-themes';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -141,10 +142,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en">
             <body className={inter.className}>
                 <ReduxProvider>
-                    <AppInitializer>
-                        {children}
-                        <Analytics />
-                    </AppInitializer>
+                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                        <AppInitializer>
+                            {children}
+                            <Analytics />
+                        </AppInitializer>
+                    </ThemeProvider>
                 </ReduxProvider>
             </body>
         </html>

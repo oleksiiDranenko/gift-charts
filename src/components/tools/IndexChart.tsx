@@ -401,12 +401,12 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         <span className="text-xl font-bold">
                             {'📊 ' + index.shortName}
                         </span>
-                        <span className="text-slate-500 text-sm flex justify-start">
+                        <span className="text-secondaryText text-sm flex justify-start">
                             {index.name}
                         </span>
                     </h1>
                 </div>
-                <div className="w-1/2 h-14 flex flex-row items-center justify-center bg-slate-800 bg-opacity-50 rounded-lg">
+                <div className="w-1/2 h-14 flex flex-row items-center justify-center bg-secondaryTransparent rounded-lg">
                     {
                         selectedPrice == 'ton' 
                         ? <Image 
@@ -431,7 +431,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             <div className="w-full mb-2 mt-5 flex flex-row justify-between">
                 <div className="w-1/2 flex flex-row box-border">
                     <button 
-                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-primary font-bold' : null }`}
                         onClick={() => {
                             setSelectedPrice('ton')
                             vibrate()
@@ -440,7 +440,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         TON
                     </button>
                     <button 
-                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-[#0098EA] font-bold' : null }`}
+                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-primary font-bold' : null }`}
                         onClick={() => {
                             setSelectedPrice('usd')
                             vibrate()
@@ -477,7 +477,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             <div className="mb-1 mt-5 flex flex-col">
                 <div className="w-full flex flex-row justify-between gap-x-3">
                     <button
-                        className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-primary font-bold' : null}`}
                         onClick={() => {
                             setListType('all')
                             vibrate()
@@ -486,7 +486,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         All
                     </button>
                     <button
-                        className={`w-full text-sm h-10 ${listType == '3m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == '3m' ? 'rounded-lg bg-primary font-bold' : null}`}
                         onClick={() => {
                             setListType('3m')
                             vibrate()
@@ -495,7 +495,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         3m
                     </button>
                     <button
-                        className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-primary font-bold' : null}`}
                         onClick={() => {
                             setListType('1m')
                             vibrate()
@@ -504,7 +504,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         1m
                     </button>
                     <button
-                        className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-[#0098EA] font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-primary font-bold' : null}`}
                         onClick={() => {
                             setListType('1w')
                             vibrate()
@@ -515,11 +515,11 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 </div>
             </div>
         
-            <div className="w-full p-3 mt-5 bg-slate-800 bg-opacity-50 rounded-lg">
+            <div className="w-full p-3 mt-5 bg-secondaryTransparent rounded-lg">
                 <h1 className="font-bold text-lg">
                     {index.name}
                 </h1>
-                <p className="font-light mt-3 text-slate-500">
+                <p className="font-light mt-3 text-secondaryText">
                     {index.description}
                 </p>
             </div>
