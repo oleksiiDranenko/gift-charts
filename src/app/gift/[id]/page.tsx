@@ -10,6 +10,9 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { giftUrlList } from '@/tonnelUrl/giftUrlList';
 import LoadingBar from 'react-top-loading-bar';
+import { AlarmClock, ChevronLeft } from 'lucide-react';
+import useVibrate from '@/hooks/useVibrate';
+import Link from 'next/link';
 
 export default function Page({ params }: any) {
     const [gift, setGift] = useState<GiftInterface | null>(null);
@@ -18,6 +21,7 @@ export default function Page({ params }: any) {
     const [loading, setLoading] = useState<boolean>(true);
     const loadingBarRef = useRef<any>(null);
     const router = useRouter();
+    const vibrate = useVibrate()
 
     useEffect(() => {
         (async () => {
@@ -70,20 +74,24 @@ export default function Page({ params }: any) {
                     gift && (
                         <div className="flex flex-col">
                             <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
-                                <button
-                                    onClick={goBack}
-                                    className="w-1/2 h-10 flex items-center justify-center bg-slate-800 bg-opacity-50 rounded-lg"
+                                <Link
+                                    href={'/'}
+                                    className="w-fit flex flex-row items-center text-lg font-bold"
+                                    onClick={() => vibrate()}
                                 >
-                                    {'<- Back'}
-                                </button>
-                                <div className="w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 bg-opacity-50 rounded-lg">
+                                    <ChevronLeft />{'Go Back'}
+                                </Link>
+                                <div className="w-1/2 h-10 pr-3 flex items-center justify-end text-sm text-secondaryText">
                                     {weekList.length > 0
-                                        ? `⏱ ${weekList[weekList.length - 1].time} 🇬🇧 London`
+                                        ? <span className='flex flex-row items-center gap-x-1'>
+                                        <AlarmClock size={14}/>
+                                        {`${weekList[weekList.length - 1].time} UTC+1`}
+                                        </span>
                                         : 'No time data'}
                                 </div>
                             </div>
                             <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
-                            {giftUrlList.map((item) => {
+                            {/* {giftUrlList.map((item) => {
                                 if (item.name === gift.name) {
                                     return (
                                         <div
@@ -99,7 +107,7 @@ export default function Page({ params }: any) {
                                     );
                                 }
                                 return null;
-                            })}
+                            })} */}
                             <GiftStats gift={gift} />
                         </div>
                     )

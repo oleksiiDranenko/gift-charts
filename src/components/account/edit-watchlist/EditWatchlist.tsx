@@ -13,6 +13,7 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import { useRouter } from "next/navigation";
 import useVibrate from "@/hooks/useVibrate";
 import EditWatchlistItem from "./EditWatchlistItem";
+import { ChevronLeft } from "lucide-react";
 
 export default function EditWatchlist() {
     const vibrate = useVibrate();
@@ -155,16 +156,17 @@ export default function EditWatchlist() {
                 </div>
             ) : (
                 <>
-                    <div className="w-full flex flex-row gap-x-3">
+                    <div className="w-full flex flex-row justify-between gap-x-3">
                         <Link
                             href={'/account/settings'}
-                            className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
+                            className="w-fit flex flex-row items-center text-lg font-bold"
+                            onClick={() => vibrate()}
                         >
-                            {'<- Back'}
+                            <ChevronLeft />{'Go Back'}
                         </Link>
 
                         <button
-                            className="w-1/2 h-10 bg-[#0098EA] rounded-lg"
+                            className="w-1/2 h-10 bg-primary text-white rounded-lg"
                             onClick={() => {
                                 saveChanges();
                                 vibrate();
@@ -180,7 +182,7 @@ export default function EditWatchlist() {
                         </h2>
                         {editedUser ? (
                             editedUser.savedList.length === 0 ? (
-                                <div className="pt-3 pb-5 text-slate-400">
+                                <div className="pt-3 pb-5 text-secondaryText">
                                     Your Watchlist is Empty
                                 </div>
                             ) : (
@@ -196,7 +198,7 @@ export default function EditWatchlist() {
                         ) : null}
                     </div>
 
-                    <div className="w-full mt-5 p-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                    <div className="w-full mt-5 p-3 border border-secondary rounded-lg">
                         <h2 className="w-full text-xl font-bold mb-3">
                             Add Gifts:
                         </h2>

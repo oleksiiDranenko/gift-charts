@@ -140,28 +140,28 @@ export default function MainPage() {
 
             <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-1">
                 <button
-                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 0 ? 'font-bold text-foreground bg-secondaryTransparent rounded-lg' : 'text-secondaryText'}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 0 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(0)}
                 >
                     <Flame size={14} className="mr-[2px]"/> 
                     <span>Hot</span>
                 </button>
                 <button
-                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 1 ? 'font-bold text-foreground bg-secondaryTransparent rounded-lg' : 'text-secondaryText'}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 1 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(1)}
                 >
                     <Trophy size={14} className="mr-[2px]"/> 
                     <span>Leaders</span>
                 </button>
                 <button
-                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 2 ? 'font-bold text-foreground bg-secondaryTransparent rounded-lg' : 'text-secondaryText'}`}
+                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 2 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(2)}
                 >
                     <Star size={14} className="mr-[2px]"/> 
                     <span>Saved</span>
                 </button>
                 <Link
-                    className={`w-full text-xs h-8 flex items-center justify-center font-bold text-foreground bg-primary rounded-lg`}
+                    className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-primary rounded-lg`}
                     href={'/gifts-list'}
                     onClick={() => vibrate()}
                 >

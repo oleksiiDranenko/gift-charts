@@ -24,7 +24,7 @@ export default function AddAssetItem({_id, name, image, addGift}: PropsInterface
                     src={`/gifts/${image}.webp`}
                     width={50}
                     height={50}
-                    className={`bg-slate-800 p-1 mr-3 rounded-lg`}
+                    className={`bg-secondary p-1 mr-3 rounded-lg`}
                 />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">
@@ -34,7 +34,7 @@ export default function AddAssetItem({_id, name, image, addGift}: PropsInterface
             </div>
                     
             <button
-                className="h-10 px-3 bg-slate-800 rounded-lg"
+                className="h-10 px-3 border border-secondary bg-secondaryTransparent rounded-lg"
                 onClick={() => {
                     addGift(_id)
                     vibrate()

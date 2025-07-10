@@ -11,7 +11,7 @@ import axios from 'axios';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from 'next-themes';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter =  Inter ({ subsets: ['latin', 'cyrillic'] });
 
 // Inner component to handle Telegram and Redux logic
 function AppInitializer({ children }: { children: React.ReactNode }) {

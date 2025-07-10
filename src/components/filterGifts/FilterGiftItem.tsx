@@ -36,7 +36,7 @@ export default function FilterGiftItem({ gift, selected, onClick } : PropsInterf
                     src={`/gifts/${gift.image}.webp`}
                     width={50}
                     height={50}
-                    className="bg-slate-800 p-1 mr-3 rounded-lg"
+                    className="bg-secondary p-1 mr-3 rounded-lg"
                 />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">

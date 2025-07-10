@@ -215,7 +215,7 @@ export default function Account() {
           />
         </div>
       ) : user.username === "_guest" ? (
-        <div className="w-full p-3 flex justify-center font-bold text-slate-200 bg-slate-800 rounded-lg">
+        <div className="w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-lg">
           Please open this app in Telegram
         </div>
       ) : (
@@ -224,7 +224,7 @@ export default function Account() {
             <Link
               href={"/account/settings"}
               onClick={() => vibrate()}
-              className="absolute left-3 top-3 text-slate-300"
+              className="absolute left-3 top-3 text-foreground"
             >
               <Settings />
             </Link>
@@ -233,9 +233,9 @@ export default function Account() {
                 {currency === "ton" ? (
                   <Image
                     alt="ton logo"
-                    src="/images/ton.webp"
-                    width={27}
-                    height={27}
+                    src="/images/toncoin.webp"
+                    width={30}
+                    height={30}
                     className="mr-2"
                   />
                 ) : (
@@ -244,7 +244,7 @@ export default function Account() {
                 <h1 className="text-4xl font-bold">{portfolioValue}</h1>
               </div>
               <span
-                className={`mt-1 ${
+                className={`mt-1 font-bold ${
                   changeType === '24h%' ? 
                   (countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0
                     ? "text-green-500"
@@ -283,40 +283,35 @@ export default function Account() {
           </div>
 
           <div className="flex flex-row gap-3 mt-3 justify-between">
-            <div className="flex flex-row gap-1">
+            <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
               <button
-                className={`h-8 w-14 flex items-center justify-center rounded-lg bg-opacity-50 ${
-                  currency === "ton" ? "bg-slate-800" : null
+                className={`text-xs h-8 px-3 box-border ${
+                  currency === "ton" ? 'rounded-lg bg-primary font-bold text-white' : null
                 }`}
                 onClick={() => {
                   setCurrency("ton");
                   vibrate();
                 }}
               >
-                <Image
-                  alt="ton logo"
-                  src="/images/ton.webp"
-                  width={14}
-                  height={14}
-                />
+                Ton
               </button>
               <button
-                className={`h-8 w-14 flex items-center justify-center rounded-lg bg-opacity-50 ${
-                  currency === "usd" ? "bg-slate-800" : null
+                className={`text-xs h-8 px-3 box-border ${
+                  currency === "usd" ? 'rounded-lg bg-primary font-bold text-white' : null
                 }`}
                 onClick={() => {
                   setCurrency("usd");
                   vibrate();
                 }}
               >
-                $
+                Usd
               </button>
             </div>
 
-            <div className="flex flex-row gap-1">
+            <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
               <button
-                className={`h-8 px-3 flex items-center justify-center text-sm rounded-lg bg-opacity-50 ${
-                  changeType === "24h%" && "bg-slate-800"
+                className={`text-xs h-8 px-3 box-border ${
+                  changeType === "24h%" && 'rounded-lg bg-primary font-bold text-white'
                 }`}
                 onClick={() => {
                   setChangeType("24h%");
@@ -326,8 +321,8 @@ export default function Account() {
                 24h %
               </button>
               <button
-                className={`h-8 px-3 flex items-center justify-center text-sm rounded-lg bg-opacity-50 ${
-                  changeType === "PNL" && "bg-slate-800"
+                className={`text-xs h-8 px-3 box-border ${
+                  changeType === "PNL" && 'rounded-lg bg-primary font-bold text-white'
                 }`}
                 onClick={() => {
                   setChangeType("PNL");
@@ -337,8 +332,8 @@ export default function Account() {
                 PNL
               </button>
               <button
-                className={`h-8 px-3 flex items-center justify-center text-sm rounded-lg bg-opacity-50 ${
-                  changeType === "PNL%" && "bg-slate-800"
+                className={`text-xs h-8 px-3 box-border ${
+                  changeType === "PNL%" && 'rounded-lg bg-primary font-bold text-white'
                 }`}
                 onClick={() => {
                   setChangeType("PNL%");
@@ -360,7 +355,7 @@ export default function Account() {
                   {currency === "ton" ? (
                     <Image
                       alt="ton logo"
-                      src="/images/ton.webp"
+                      src="/images/toncoin.webp"
                       width={16}
                       height={16}
                       className="mr-1"
@@ -405,7 +400,7 @@ export default function Account() {
                   />
                 ))
               ) : (
-                <h2 className="text-slate-400 mt-3">No assets yet</h2>
+                <h2 className="text-secondary mt-3">No assets yet</h2>
               )}
             </div>
 
@@ -417,7 +412,7 @@ export default function Account() {
                     {currency === "ton" ? (
                       <Image
                         alt="ton logo"
-                        src="/images/ton.webp"
+                        src="/images/toncoin.webp"
                         width={16}
                         height={16}
                         className="mr-1"

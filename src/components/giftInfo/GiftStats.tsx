@@ -35,7 +35,7 @@ export default function GiftStats({gift}: PropsInterface) {
     return (
         <div className="w-full mt-8 px-3">
 
-            <div className="text-secondaryText p-5 bg-secondaryTransparent rounded-lg">
+            <div className="text-secondaryText p-5 border border-secondary rounded-lg">
                 <p className="mb-8 w-full flex justify-between">
                     <span className="font-light">
                         {'Release Date: '}
@@ -94,7 +94,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     <div className="text-foreground flex flex-row items-center">
                         <Image 
                             alt="ton logo"
-                            src='/images/ton.webp'
+                            src='/images/toncoin.webp'
                             width={14}
                             height={14}
                             className="ml-1 mr-1"

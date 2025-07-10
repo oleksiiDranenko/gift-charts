@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import type GiftInterface from '@/interfaces/GiftInterface';
 import type { TreemapDataPoint, TreemapScriptableContext } from 'chartjs-chart-treemap';
+import { RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface GiftData {
     name: string;
@@ -96,14 +97,6 @@ const preloadImages = (data: GiftData[]): Map<string, HTMLImageElement> => {
     return map;
 };
 
-const darkenColor = (hex: string, amount: number): string => {
-    const num = parseInt(hex.slice(1), 16);
-    const r = Math.max(0, Math.floor((num >> 16) - 255 * amount));
-    const g = Math.max(0, Math.floor(((num >> 8) & 0x00FF) - 255 * amount));
-    const b = Math.max(0, Math.floor((num & 0x0000FF) - 255 * amount));
-    return `rgb(${r}, ${g}, ${b})`;
-};
-
 const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd') => ({
     id: 'treemapImages',
     afterDatasetDraw(chart: any) {
@@ -123,13 +116,10 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
             const width = meta.width / scale, height = meta.height / scale;
             if (width <= 0 || height <= 0) return;
 
-            // --- Gradient background ---
-            const baseColor = item.percentChange > 0 ? '#2e8c2e' :
-                              item.percentChange < 0 ? '#e33d3d' : '#6b8c6d';
-            const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-            gradient.addColorStop(0, darkenColor(baseColor, 0.05));
-            gradient.addColorStop(1, baseColor);
-            ctx.fillStyle = gradient;
+            // --- Solid color background ---
+            const baseColor = item.percentChange > 0 ? '#40a829' :
+                              item.percentChange < 0 ? '#ff3c38' : '#8F9779';
+            ctx.fillStyle = baseColor;
             ctx.fillRect(x, y, width, height);
 
             const img = imageMap.get(item.imageName);
@@ -238,12 +228,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
                                 const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
                                 return val > 0 ? '#008000' : val < 0 ? '#E50000' : '#808080';
                             },
-                            hoverBackgroundColor: (ctx: TreemapScriptableContext) => {
-                                const dataset = ctx.dataset as CustomTreemapDataset;
-                                const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                                return val > 0 ? '#008000' : val < 0 ? '#E50000' : '#808080';
-                            },
-                            hoverBorderColor: '#000'
                         }]
                     },
                     options: {
@@ -282,19 +266,20 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
 
     return (
         <div className='w-full flex flex-col items-center'>
-            <div className='w-full lg:w-1/2 mb-3 flex gap-2'>
+            <div className='w-full lg:w-1/2 mb-3 px-3 flex gap-2'>
                 <button
-                    className='w-full text-sm h-10 rounded-lg bg-primary'
+                    className='w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-lg border border-secondary bg-secondaryTransparent'
                     onClick={() => {
                         chartRef.current?.resetZoom();
                         chartRef.current?.update('none');
                         updateInteractivity(chartRef.current);
                     }}>
+                    <RotateCcw size={16}/>
                     Reset Zoom
                 </button>
                 <div className='w-full flex flex-row gap-x-2'>
                     <button
-                        className='w-full text-sm h-10 rounded-lg bg-primary'
+                        className='w-full flex items-center justify-center h-8 rounded-lg border border-secondary bg-secondaryTransparent'
                         onClick={() => {
                             const zoom = chartRef.current.getZoomLevel?.() ?? 1;
                             const newZoom = Math.max(1, zoom - 0.5);
@@ -305,17 +290,21 @@ const TreemapChart: React.FC<TreemapChartProps> = ({ data, chartType, timeGap, c
                             }
                             chartRef.current?.update('none');
                             updateInteractivity(chartRef.current);
-                        }}>-
+                        }}
+                    >
+                        <ZoomOut size={16}/>
                     </button>
                     <button
-                        className='w-full text-sm h-10 rounded-lg bg-primary'
+                        className='w-full flex items-center justify-center h-8 rounded-lg border border-secondary bg-secondaryTransparent'
                         onClick={() => {
                             const zoom = chartRef.current.getZoomLevel?.() ?? 1;
                             const newZoom = Math.min(10, zoom + 0.3);
                             chartRef.current.zoom(newZoom / zoom);
                             chartRef.current?.update('none');
                             updateInteractivity(chartRef.current);
-                        }}>+
+                        }}
+                    >
+                        <ZoomIn size={16}/>
                     </button>
                 </div>
             </div>

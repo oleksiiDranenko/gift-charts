@@ -17,6 +17,7 @@ import {
   Filler,
 } from "chart.js";
 import { useAppSelector } from "@/redux/hooks"
+import { useTheme } from "next-themes"
 
 ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Filler);
 
@@ -39,6 +40,8 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const [high, setHigh] = useState<number>()
     const [gradient, setGradient] = useState<CanvasGradient | null>(null);
     const [newData, setNewData] = useState<IndexDataInterface>()
+
+    const { theme, resolvedTheme } = useTheme()
 
     // Prevent scroll when interacting with chart
     useEffect(() => {
@@ -347,7 +350,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                     ctx.beginPath();
                     ctx.setLineDash([5, 5]);
                     ctx.lineWidth = 1;
-                    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)"; 
+                    ctx.strokeStyle = resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)"; 
                     ctx.moveTo(tooltipX, chart.chartArea.top);
                     ctx.lineTo(tooltipX, chart.chartArea.bottom);
                     ctx.moveTo(chart.chartArea.left, tooltipY);
@@ -363,9 +366,9 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         },
         scales: {
             x: {
-                grid: { color: "rgba(255, 255, 255, 0.05)" },
+                grid: { color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)" },
                 ticks: {
-                    color: "rgba(255, 255, 255, 0.6)",
+                    color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)",
                     padding: 0,
                     autoSkip: true,
                     maxTicksLimit: 3,
@@ -375,12 +378,12 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             },
             y: {
                 grid: {
-                    color: "rgba(255, 255, 255, 0.05)",
+                    color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
                     drawTicks: true, 
                     tickLength: 10, 
                 },
                 ticks: {
-                    color: "rgba(255, 255, 255, 0.6)",
+                    color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)",
                     padding: 10,
                     callback: function (value) {
                         return formatNumber(Number(value));
@@ -406,12 +409,13 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         </span>
                     </h1>
                 </div>
-                <div className="w-1/2 h-14 flex flex-row items-center justify-center bg-secondaryTransparent rounded-lg">
-                    {
+                <div className="w-1/2 h-14 pr-3 flex flex-col items-end justify-center">
+                    <div className="flex flex-row items-center">
+                        {
                         selectedPrice == 'ton' 
                         ? <Image 
                             alt="ton logo"
-                            src='/images/ton.webp'
+                            src='/images/toncoin.webp'
                             width={14}
                             height={14}
                             className="mr-1"
@@ -425,36 +429,36 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                             : formatNumberWithDots(Number(list[list.length -1]?.priceUsd))
                         }
                     </span>
+                    </div>
+
+                    <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {(percentChange > 0 ? '+' : '') + percentChange + '%'}
+                    </span>
                 </div>
             </div>
         
             <div className="w-full mb-2 mt-5 flex flex-row justify-between">
-                <div className="w-1/2 flex flex-row box-border">
-                    <button 
-                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-primary font-bold' : null }`}
+                <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+                    <button
+                        className={`text-xs h-8 px-3 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                         onClick={() => {
                             setSelectedPrice('ton')
                             vibrate()
                         }}
                     >
-                        TON
+                        Ton
                     </button>
-                    <button 
-                        className={`w-2/5 text-sm h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-primary font-bold' : null }`}
+                    <button
+                        className={`text-xs h-8 px-3  box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                         onClick={() => {
                             setSelectedPrice('usd')
                             vibrate()
                         }}
                     >
-                        USD
+                        Usd
                     </button>
                 </div>
                 
-                <div className="w-1/3 h-10 flex items-center justify-center">
-                    <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {(percentChange > 0 ? '+' : '') + percentChange + '%'}
-                    </span>
-                </div>
             </div>
                 
             <div className="w-full" ref={chartContainerRef}>
@@ -465,19 +469,19 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 />
             </div>
         
-            <div className="w-full flex flex-row justify-between mt-3 gap-x-3">
+            {/* <div className="w-full flex flex-row justify-between mt-3 gap-x-3">
                 <span className="w-1/2 flex justify-center items-center h-10 bg-red-600 bg-opacity-40 rounded-lg">
                     Low: {low ? formatNumberWithDots(low) : null}
                 </span>
                 <span className="w-1/2 flex justify-center items-center h-10 bg-green-600 bg-opacity-40 rounded-lg">
                     High: {high ? formatNumberWithDots(high) : null}
                 </span>
-            </div>
+            </div> */}
 
-            <div className="mb-1 mt-5 flex flex-col">
+            <div className="mb-1 mt-5 flex flex-col bg-secondaryTransparent rounded-lg">
                 <div className="w-full flex flex-row justify-between gap-x-3">
                     <button
-                        className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-primary font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                         onClick={() => {
                             setListType('all')
                             vibrate()
@@ -486,7 +490,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         All
                     </button>
                     <button
-                        className={`w-full text-sm h-10 ${listType == '3m' ? 'rounded-lg bg-primary font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == '3m' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                         onClick={() => {
                             setListType('3m')
                             vibrate()
@@ -495,7 +499,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         3m
                     </button>
                     <button
-                        className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-primary font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                         onClick={() => {
                             setListType('1m')
                             vibrate()
@@ -504,7 +508,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                         1m
                     </button>
                     <button
-                        className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-primary font-bold' : null}`}
+                        className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                         onClick={() => {
                             setListType('1w')
                             vibrate()

@@ -8,7 +8,10 @@ import IndexChart from '@/components/tools/IndexChart'
 import ReactLoading from 'react-loading'
 import { useRouter } from 'next/navigation'
 import IndexPie from '@/components/tools/IndexPie'
-
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
+import useVibrate from '@/hooks/useVibrate'
+ 
 
 export default function Page({ params }: any) {
 
@@ -17,6 +20,8 @@ export default function Page({ params }: any) {
     const [loading, setLoading] = useState<boolean>(true)
 
     const router = useRouter()
+
+    const vibrate = useVibrate()
 
     useEffect(() => {
         (async () => {
@@ -51,12 +56,13 @@ export default function Page({ params }: any) {
                         {!loading && index ?
                             <div className="flex flex-col">
                                 <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
-                                    <button onClick={goBack} className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg">
-                                        {'<- Back'}
-                                    </button>
-                                    <div className="w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 rounded-lg">
-                                        @gift_charts_bot
-                                    </div>
+                                    <Link
+                                        href={'/tools'}
+                                        className="w-fit flex flex-row items-center text-lg font-bold"
+                                        onClick={() => vibrate()}
+                                    >
+                                        <ChevronLeft />{'Go Back'}
+                                    </Link>
                                 </div>
                                 <IndexChart index={index} indexData={data}/>
                                 {/* {

@@ -19,12 +19,12 @@ export default function Cash({name, amount, percentage} : PropsInterface) {
                     name === 'ton' ? 
                     <Image
                         alt="gift image"
-                        src={`/images/ton.webp`}
+                        src={`/images/toncoin.webp`}
                         width={50}
                         height={50}
-                        className={`bg-slate-800 p-4 box-border mr-3 rounded-lg`}
+                        className={`bg-secondary p-3 box-border mr-3 rounded-lg`}
                     /> :
-                    <span className="bg-slate-800 h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-lg">
+                    <span className="bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-lg">
                         $
                     </span>
                 }
@@ -32,7 +32,7 @@ export default function Cash({name, amount, percentage} : PropsInterface) {
                     <span className="text-base font-bold">
                         {name === 'ton' ? 'Toncoin' : 'US Dollar'}
                     </span>
-                    <span className="text-slate-500 text-sm font-normal">
+                    <span className="text-secondaryText text-sm font-normal">
                         {percentage}%
                     </span>
                 </div>
@@ -44,7 +44,7 @@ export default function Cash({name, amount, percentage} : PropsInterface) {
                         {name === 'ton' ?
                             <Image 
                                 alt="ton logo"
-                                src='/images/ton.webp'
+                                src='/images/toncoin.webp'
                                 width={15}
                                 height={15}
                                 className="mr-1"

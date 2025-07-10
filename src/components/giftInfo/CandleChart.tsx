@@ -8,6 +8,7 @@ import GiftLifeDataInterface from '@/interfaces/GiftLifeDataInterface';
 import { CandlestickController, CandlestickElement } from 'chartjs-chart-financial';
 import 'chartjs-adapter-date-fns';
 import { format } from 'date-fns';
+import { useTheme } from 'next-themes';
 
 Chart.register(...registerables, CandlestickController, CandlestickElement);
 
@@ -19,6 +20,8 @@ interface PropsInterface {
 
 export default function CandleChart({ data }: PropsInterface) {
     const chartRef = useRef<Chart<'candlestick', CandlestickData[], unknown> | null | undefined>(null);
+
+    const { theme, resolvedTheme } = useTheme()
 
     const chartData: ChartProps<'candlestick', CandlestickData[], unknown>['data'] = {
         datasets: [
@@ -87,7 +90,7 @@ export default function CandleChart({ data }: PropsInterface) {
                 source: 'data', // Align ticks with data points
                 autoSkip: true, // Prevent overlap
                 maxTicksLimit: 10, // Allow up to 10 ticks (adjust as needed)
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)",
                 padding: 0,
                 maxRotation: 0,
                 minRotation: 0,
@@ -104,7 +107,7 @@ export default function CandleChart({ data }: PropsInterface) {
                 display: false,
             },
             grid: {
-                color: 'rgba(255, 255, 255, 0.05)',
+                color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
             },
         },
         y: {
@@ -114,12 +117,12 @@ export default function CandleChart({ data }: PropsInterface) {
                 display: false,
             },
             grid: {
-                color: 'rgba(255, 255, 255, 0.05)',
+                color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
                 drawTicks: true,
                 tickLength: 10,
             },
             ticks: {
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)",
                 padding: 10,
             },
             suggestedMax: maxPrice * 1.1,

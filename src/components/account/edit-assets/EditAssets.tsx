@@ -14,6 +14,7 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import useVibrate from "@/hooks/useVibrate";
+import { ChevronLeft } from "lucide-react";
 
 export default function EditAssets() {
     const vibrate = useVibrate();
@@ -217,16 +218,17 @@ export default function EditAssets() {
                 </div>
             ) : (
                 <>
-                    <div className="w-full flex flex-row gap-x-3">
+                    <div className="w-full flex flex-row justify-between gap-x-3">
                         <Link
                             href={'/account/settings'}
-                            className="w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-lg"
+                            className="w-fit flex flex-row items-center text-lg font-bold"
+                            onClick={() => vibrate()}
                         >
-                            {'<- Back'}
+                            <ChevronLeft />{'Go Back'}
                         </Link>
 
                         <button
-                            className="w-1/2 h-10 bg-[#0098EA] rounded-lg"
+                            className="w-1/2 h-10 bg-primary text-white rounded-lg"
                             onClick={() => {
                                 saveChanges();
                                 vibrate();
@@ -247,10 +249,10 @@ export default function EditAssets() {
                             <div className="flex flex-row items-center">
                                 <Image
                                     alt="Toncoin image"
-                                    src={`/images/ton.webp`}
+                                    src={`/images/toncoin.webp`}
                                     width={50}
                                     height={50}
-                                    className={`bg-slate-800 p-4 box-border mr-3 rounded-lg`}
+                                    className={`bg-secondary p-3 box-border mr-3 rounded-lg`}
                                 />
                                 <div className="flex flex-col">
                                     <span className="text-base font-bold">
@@ -264,7 +266,7 @@ export default function EditAssets() {
                                 step="any"
                                 value={tonInput}
                                 onChange={handleTon}
-                                className="w-32 h-10 text-center bg-slate-800 rounded-lg focus:outline-none focus:bg-slate-700"
+                                className="w-32 h-10 text-center border border-secondary bg-secondaryTransparent rounded-lg focus:outline-none focus:bg-secondary"
                                 placeholder="0"
                             />
                         </div>
@@ -273,7 +275,7 @@ export default function EditAssets() {
                             className="w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-lg"
                         >
                             <div className="flex flex-row items-center">
-                                <span className="bg-slate-800 h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-lg">
+                                <span className="bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-lg">
                                     $
                                 </span>
                                 <div className="flex flex-col">
@@ -288,7 +290,7 @@ export default function EditAssets() {
                                 step="any"
                                 value={usdInput}
                                 onChange={handleUsd}
-                                className="w-32 h-10 text-center bg-slate-800 rounded-lg focus:outline-none focus:bg-slate-700"
+                                className="w-32 h-10 text-center border border-secondary bg-secondaryTransparent rounded-lg focus:outline-none focus:bg-secondary"
                                 placeholder="0"
                             />
                         </div>
@@ -312,7 +314,7 @@ export default function EditAssets() {
                         ))}
                     </div>
 
-                    <div className="w-full mt-5 p-3 bg-slate-800 bg-opacity-50 rounded-lg">
+                    <div className="w-full mt-5 p-3 border border-secondary rounded-lg">
                         <h2 className="w-full text-xl font-bold mb-3">
                             Add Gifts:
                         </h2>

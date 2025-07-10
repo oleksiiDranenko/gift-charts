@@ -11,6 +11,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import useVibrate from "@/hooks/useVibrate"
 import SearchBar from "../mainPage/SearchBar"
+import { BrushCleaning, ChevronLeft, Eye, EyeClosed, Funnel } from "lucide-react"
 
 interface PropsInterface {
     loading: boolean,
@@ -130,33 +131,35 @@ export default function GiftsList({ loading }: PropsInterface) {
                 list !== undefined ? 
                     <>
                         <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
-                            <button
-                                className="w-1/2 h-10 bg-secondaryTransparent rounded-lg"
-                                onClick={() => {
-                                    dispatch(setDefaultFilters())
-                                    router.back()
-                                }}
+                            <Link
+                                href={'/'}
+                                className="w-fit flex flex-row items-center text-lg font-bold"
+                                onClick={() => vibrate()}
                             >
-                                {'<- Back'}
-                            </button>
+                                <ChevronLeft />{'Go Back'}
+                            </Link>
                             <button
-                                className="w-1/2 h-10 bg-secondaryTransparent rounded-lg"
+                                className="w-1/2 h-8 border border-secondary bg-secondaryTransparent rounded-lg"
                                 onClick={() => {
                                     setShowFilters(!showFilters)
                                     vibrate()
                                 }}
                             >
-                                {showFilters ? 'Hide Filters ↑' : 'Show Filters ↓'}
+                                {showFilters 
+                                ? 
+                                <span className="flex flex-row items-center justify-center gap-x-1"><EyeClosed size={16}/>Hide Filters</span>
+                                : 
+                                <span className="flex flex-row items-center justify-center gap-x-1"><Eye size={16}/>Show Filters</span>}
                             </button>
                         </div>
 
 
                         {showFilters ?
                             <div className="w-full h-auto pt-3">
-                                <div className="w-full flex flex-row justify-between items-center mb-5 gap-x-3">
-                                    <div className="w-1/2 gap-2 flex justify-between">
+                                <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
+                                    <div className="w-1/2 gap-2 flex justify-between border border-secondary bg-secondaryTransparent rounded-lg">
                                         <button
-                                            className={`w-1/2 text-sm h-10 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-primary font-bold' : 'bg-secondaryTransparent' }`}
+                                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${filters.currency == 'ton' ? 'bg-primary font-bold text-white' : null }`}
                                             onClick={() => {
                                                 dispatch(setFilters({...filters, currency: 'ton'}))
                                                 vibrate()
@@ -165,7 +168,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                             TON
                                         </button>
                                         <button
-                                            className={`w-1/2 text-sm h-10 box-border rounded-lg ${filters.currency == 'usd' ? 'bg-primary font-bold' : 'bg-secondaryTransparent' }`}
+                                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${filters.currency == 'usd' ? 'bg-primary font-bold text-white' : null }`}
                                             onClick={() => {
                                                 dispatch(setFilters({...filters, currency: 'usd'}))
                                                 vibrate()
@@ -177,14 +180,14 @@ export default function GiftsList({ loading }: PropsInterface) {
 
                                     <Link 
                                         href={'/gift-filters'}
-                                        className="w-1/2 h-10 flex justify-center items-center box-border bg-secondaryTransparent rounded-lg"
+                                        className="w-1/2 h-8 flex justify-center items-center box-border border border-secondary bg-secondaryTransparent rounded-lg gap-x-1"
                                         onClick={() => vibrate()}
                                     >
-                                        ≡ Filter Gifts
+                                        <Funnel size={16}/> Filter Gifts
                                     </Link>
                                 </div>
 
-                                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3">
+                                <div className="w-full flex flex-row justify-end items-center mb-3 gap-x-3">
                                     <div className="w-1/2 flex justify-between items-center">
                                         <span className="text-secondaryText mr-2 text-sm whitespace-nowrap">
                                             Sort By:
@@ -195,7 +198,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                                 dispatch(setFilters({...filters, sortBy: e.target.value}))
                                                 vibrate()
                                             }}
-                                            className="w-full px-3 h-10 rounded-lg bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full border border-secondary px-3 h-8 rounded-lg bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         >
                                             <option value={'price'}>Price</option>
                                             <option value={'marketCap'}>Market Cap</option>
@@ -216,7 +219,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                                 dispatch(setFilters({...filters, displayValue: e.target.value}))
                                                 vibrate()
                                             }}
-                                            className="w-full px-3 h-10 rounded-lg bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full border border-secondary px-3 h-8 rounded-lg bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         >
                                             <option value={'price'}>Price</option>
                                             <option value={'marketCap'}>Market Cap</option>
@@ -224,10 +227,10 @@ export default function GiftsList({ loading }: PropsInterface) {
                                     </div>
                                 </div>
 
-                                <div className="w-full flex flex-row justify-end items-center mb-5 gap-x-3">
-                                    <div className="w-1/2 gap-2 flex justify-end">
+                                <div className="w-full flex flex-row justify-end items-center mb-3 gap-x-3">
+                                    <div className="w-1/2 gap-2 flex justify-end border border-secondary bg-secondaryTransparent rounded-lg">
                                         <button
-                                            className={`w-1/2 text-sm h-10 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-primary font-bold' : 'bg-secondaryTransparent' }`}
+                                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${filters.sort == 'lowFirst' ? 'bg-primary font-bold text-white' : null }`}
                                             onClick={() => {
                                                 dispatch(setFilters({...filters, sort: 'lowFirst'}))
                                                 vibrate()
@@ -236,7 +239,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                             Low ↑
                                         </button>
                                         <button
-                                            className={`w-1/2 text-sm h-10 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-primary font-bold' : 'bg-secondaryTransparent' }`}
+                                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${filters.sort == 'highFirst' ? 'bg-primary font-bold text-white' : null }`}
                                             onClick={() => {
                                                 dispatch(setFilters({...filters, sort: 'highFirst'}))
                                                 vibrate()
@@ -248,25 +251,25 @@ export default function GiftsList({ loading }: PropsInterface) {
 
                                     <div className="w-1/2 flex justify-between items-center">
                                         <button
-                                            className="w-full h-10 bg-secondaryTransparent rounded-lg"
+                                            className="w-full border border-secondary flex flex-row items-center justify-center gap-x-1 h-8 bg-secondaryTransparent rounded-lg"
                                             onClick={() => {
                                                 dispatch(setDefaultFilters())
                                                 vibrate()
                                             }}
                                         >
-                                            ♻️ Clear Filters
+                                            <BrushCleaning size={16}/> Clean Filters
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         : null}
 
-                        <div className="w-full bg-secondaryTransparent rounded-lg">
-                            <div className="w-full mb-1 flex flex-col">
+                        <div className="w-full border border-secondary bg-secondaryTransparent rounded-lg">
+                            <div className="w-full flex flex-col">
                                 <div className="w-full flex flex-row justify-between gap-x-3">
                                     
                                     <button
-                                        className={`w-full text-sm h-10 ${timeGap === '1m' ? 'rounded-lg bg-primary font-bold' : ''}`}
+                                        className={`w-full text-sm h-8 ${timeGap === '1m' ? 'rounded-lg bg-primary font-bold text-white' : ''}`}
                                         onClick={() => {
                                             setTimeGap('1m');
                                             vibrate();
@@ -275,7 +278,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                         1m
                                     </button>
                                     <button
-                                        className={`w-full text-sm h-10 ${timeGap === '1w' ? 'rounded-lg bg-primary font-bold' : ''}`}
+                                        className={`w-full text-sm h-8 ${timeGap === '1w' ? 'rounded-lg bg-primary font-bold text-white' : ''}`}
                                         onClick={() => {
                                             setTimeGap('1w');
                                             vibrate();
@@ -284,7 +287,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                         1w
                                     </button>
                                     <button
-                                        className={`w-full text-sm h-10 ${timeGap === '24h' ? 'rounded-lg bg-primary font-bold' : ''}`}
+                                        className={`w-full text-sm h-8 ${timeGap === '24h' ? 'rounded-lg bg-primary font-bold text-white' : ''}`}
                                         onClick={() => {
                                             setTimeGap('24h');
                                             vibrate();

@@ -84,16 +84,13 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                     src={`/gifts/${item.image}.webp`}
                     width={50}
                     height={50}
-                    className={` p-1 mr-3 ml-2 bg-opacity-50 rounded-lg ${borderColor ? 'border' : ''} ${
-                      item.staked && 'shadow-md shadow-primary'
-                    } ${item.preSale ? 'bg-cyan-800' : 'bg-slate-800'}`}
+                    className={` p-1 mr-3 ml-2 bg-opacity-50 rounded-lg ${borderColor ? 'border' : ''} shadow-md shadow-primary' ${item.preSale ? 'bg-cyan-800' : 'bg-secondary'}`}
                     style={borderColor ? { borderColor: `${borderColor}80` } : {}}
                 />
                     <div className="flex flex-col">
                         <span className="text-base font-bold">
                             {item.name}
                             {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
-                            {item.staked && (<span className="text-xs text-blue-500 ml-2">Staking!</span>)}
                         </span>
                         <span className="text-slate-500 text-sm font-normal">
                             {
@@ -111,12 +108,12 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
             </div>
 
             <div className=" flex flex-row items-center justify-end">
-                <div className="w-20 h-10 text-sm flex flex-col items-end justify-center mr-2">
+                <div className="w-fit h-10 text-sm flex flex-col items-end justify-center mr-2">
                     <div className="flex flex-row items-center">
                         {currency === 'ton' ?
                             <Image 
                                 alt="ton logo"
-                                src='/images/ton.webp'
+                                src='/images/toncoin.webp'
                                 width={15}
                                 height={15}
                                 className="mr-1"

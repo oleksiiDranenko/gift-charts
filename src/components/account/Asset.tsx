@@ -30,14 +30,14 @@ export default function Asset({_id, name, image, currency, amount, avgPrice, pri
                     src={`/gifts/${image}.webp`}
                     width={50}
                     height={50}
-                    className={`bg-slate-800 bg-opacity-50 p-1 mr-3 rounded-lg`}
+                    className={`bg-secondary p-1 mr-3 rounded-lg`}
                 />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">
                         {name}
                     </span>
-                    <span className="text-slate-500 text-sm font-normal">
-                        <span className="text-slate-300">
+                    <span className="text-sm text-secondaryText">
+                        <span>
                             {amount} {amount > 1 ? 'gifts' : 'gift'}
                         </span>
                         {
@@ -56,7 +56,7 @@ export default function Asset({_id, name, image, currency, amount, avgPrice, pri
                         {currency === 'ton' ?
                             <Image 
                                 alt="ton logo"
-                                src='/images/ton.webp'
+                                src='/images/toncoin.webp'
                                 width={15}
                                 height={15}
                                 className="mr-1"

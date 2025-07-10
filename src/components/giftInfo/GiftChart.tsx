@@ -18,6 +18,8 @@ import { useEffect, useRef, useState } from "react"
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
 import CandleChart from "./CandleChart";
+import { ChartCandlestick, ChartSpline } from "lucide-react";
+import { useTheme } from "next-themes";
 
 ChartJS.register(LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Filler);
 
@@ -41,6 +43,8 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
     const [gradient, setGradient] = useState<CanvasGradient | null>(null)
     const [candleData, setCandleData] = useState<GiftLifeDataInterface[]>([])
     const [chartType, setChartType] = useState<'line' | 'candle'>('line')
+
+    const { theme, resolvedTheme } = useTheme()
 
     useEffect(() => {
         const filteredCandleData = lifeData.filter(item =>
@@ -213,7 +217,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                     ctx.beginPath();
                     ctx.setLineDash([5, 5]);
                     ctx.lineWidth = 1;
-                    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.strokeStyle = resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)";
 
                     ctx.moveTo(tooltipX, chart.chartArea.top);
                     ctx.lineTo(tooltipX, chart.chartArea.bottom);
@@ -232,9 +236,9 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
         },
         scales: {
             x: {
-                grid: { color: "rgba(255, 255, 255, 0.05)" },
+                grid: { color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)" },
                 ticks: {
-                    color: "rgba(255, 255, 255, 0.6)",
+                    color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)",
                     padding: 0,
                     autoSkip: true,
                     maxTicksLimit: 3,
@@ -244,11 +248,11 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
             },
             y: {
                 grid: {
-                    color: "rgba(255, 255, 255, 0.05)",
+                    color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
                     drawTicks: true,
                     tickLength: 10,
                 },
-                ticks: { color: "rgba(255, 255, 255, 0.6)", padding: 10 },
+                ticks: { color: resolvedTheme === 'dark' ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)", padding: 10 },
                 position: "right",
                 suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
                 suggestedMin: Math.min(...data.datasets[0].data) * 0.9,
@@ -276,13 +280,14 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                         </span>
                     </h1>
                 </div>
-                <div className="w-1/3 h-14 flex flex-row items-center justify-center bg-secondaryTransparent rounded-lg">
-                    {
-                        selectedPrice == 'ton'
+                <div className="w-1/3 h-14 pr-3 flex flex-col items-end justify-center">
+                    <div className="flex flex-row items-center">
+                        {
+                             selectedPrice == 'ton'
                             ?
                             <Image
                                 alt="ton logo"
-                                src='/images/ton.webp'
+                                src='/images/toncoin.webp'
                                 width={14}
                                 height={14}
                                 className="mr-1"
@@ -291,66 +296,66 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                             <span className="text-base font-extrabold mr-1">
                                 $
                             </span>
-                    }
-                    <span className="text-base font-extrabold">
-                        {
-                            selectedPrice == 'ton'
-                                ? list[list.length - 1]?.priceTon
-                                : list[list.length - 1]?.priceUsd
                         }
-                    </span>
-                </div>
-            </div>
+                            <span className="text-xl font-extrabold">
+                                {
+                                    selectedPrice == 'ton'
+                                        ? list[list.length - 1]?.priceTon
+                                        : list[list.length - 1]?.priceUsd
+                                }
+                            </span>
+                    </div>
 
-            <div className="w-full mb-3 mt-5 flex flex-row justify-between">
-                <div className="w-1/2 flex flex-row box-border">
-                    <button
-                        className={`w-full text-sm h-10 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-primary font-bold' : null}`}
-                        onClick={() => {
-                            setSelectedPrice('ton')
-                            vibrate()
-                        }}
-                    >
-                        TON
-                    </button>
-                    <button
-                        className={`w-full text-sm h-10 box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-primary font-bold' : null}`}
-                        onClick={() => {
-                            setSelectedPrice('usd')
-                            vibrate()
-                        }}
-                    >
-                        USD
-                    </button>
-                </div>
-
-                <div className="w-1/3 h-10 flex items-center justify-center">
-                    <span className={`text-sm font-bold ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <span className={`text-sm ${percentChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                         {(percentChange > 0 ? '+' : '') + percentChange + '%'}
                     </span>
                 </div>
             </div>
 
-            <div className="w-full flex flex-row">
-                <button
-                    className={`w-full text-sm h-8 box-border ${chartType == 'line' ? 'rounded-lg bg-secondaryTransparent font-bold' : null}`}
+            <div className="w-full h-fit mb-3 mt-5 flex flex-row gap-x-3">
+                <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+                    <button
+                        className={`text-xs h-8 px-3 box-border ${selectedPrice == 'ton' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
+                        onClick={() => {
+                            setSelectedPrice('ton')
+                            vibrate()
+                        }}
+                    >
+                        Ton
+                    </button>
+                    <button
+                        className={`text-xs h-8 px-3  box-border ${selectedPrice == 'usd' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
+                        onClick={() => {
+                            setSelectedPrice('usd')
+                            vibrate()
+                        }}
+                    >
+                        Usd
+                    </button>
+                </div>
+
+                <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+                    <button
+                    className={`text-xs h-8 px-3 box-border  ${chartType == 'line' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                     onClick={() => {
                         setChartType('line')
                         vibrate()
                     }}
                 >
-                    Line
+                    <ChartSpline size={16}/>
                 </button>
                 <button
-                    className={`w-full text-sm h-8 box-border ${chartType == 'candle' ? 'rounded-lg bg-secondaryTransparent font-bold' : null}`}
+                    className={`text-xs h-8 px-3 box-border ${chartType == 'candle' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                     onClick={() => {
                         setChartType('candle')
                         vibrate()
                     }}
                 >
-                    Candle
+                    <ChartCandlestick size={16}/>
                 </button>
+                </div>
             </div>
+
 
             {
                 chartType === 'line'
@@ -363,19 +368,11 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                                 options={options}
                             />
                         </div>
-                        <div className="w-full flex flex-row justify-between mt-3 gap-x-3">
-                            <span className="w-1/2 flex justify-center items-center h-10 bg-red-600 bg-opacity-40 rounded-lg">
-                                Low: {low}
-                            </span>
-                            <span className="w-1/2 flex justify-center items-center h-10 bg-green-600 bg-opacity-40 rounded-lg">
-                                High: {high}
-                            </span>
-                        </div>
 
-                        <div className="mb-1 mt-5 flex flex-col">
+                        <div className="mb-1 mt-5 flex flex-col border border-secondary bg-secondaryTransparent rounded-lg">
                             <div className="w-full flex flex-row justify-between gap-x-3">
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == 'all' ? 'rounded-lg bg-primary font-bold' : null}`}
+                                    className={`w-full text-sm h-8 ${listType == 'all' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                                     onClick={() => {
                                         lifeData.length > 0 ? setListType('all') : null
                                         vibrate()
@@ -384,7 +381,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                                     All
                                 </button>
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == '1m' ? 'rounded-lg bg-primary font-bold' : null}`}
+                                    className={`w-full text-sm h-8 ${listType == '1m' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                                     onClick={() => {
                                         lifeData.length > 0 ? setListType('1m') : null
                                         vibrate()
@@ -393,7 +390,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                                     1m
                                 </button>
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == '1w' ? 'rounded-lg bg-primary font-bold' : null}`}
+                                    className={`w-full text-sm h-8 ${listType == '1w' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                                     onClick={() => {
                                         setListType('1w')
                                         vibrate()
@@ -402,7 +399,7 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                                     1w
                                 </button>
                                 <button
-                                    className={`w-full text-sm h-10 ${listType == '24h' ? 'rounded-lg bg-primary font-bold' : null}`}
+                                    className={`w-full text-sm h-8 ${listType == '24h' ? 'rounded-lg bg-primary font-bold text-white' : null}`}
                                     onClick={() => {
                                         setListType('24h')
                                         vibrate()

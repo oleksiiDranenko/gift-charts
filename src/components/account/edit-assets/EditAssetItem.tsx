@@ -50,7 +50,7 @@ export default function EditAssetItem({
   };
 
   return (
-    <div className="w-full h-auto my-3 py-3 gap-2 flex flex-row bg-slate-800 bg-opacity-35 rounded-lg">
+    <div className="w-full h-auto my-3 py-3 gap-2 flex flex-row border border-secondary rounded-lg">
       <button
         className="m-2 text-red-600"
         onClick={() => {
@@ -68,7 +68,7 @@ export default function EditAssetItem({
               src={`/gifts/${gift?.image}.webp`}
               width={50}
               height={50}
-              className={`bg-slate-800 p-1 mr-3 rounded-lg`}
+              className={`bg-secondary p-1 mr-3 rounded-lg`}
             />
             <div className="flex flex-col">
               <span className="text-base font-bold">{gift?.name}</span>
@@ -78,25 +78,25 @@ export default function EditAssetItem({
 
         <div className="w-full flex flex-row justify-between items-center pr-3">
           <div className="flex flex-row items-center justify-center gap-x-1">
-            <span className="text-sm text-slate-400 mr-2">Avg price:</span>
+            <span className="text-sm text-secondaryTest mr-2">Avg price:</span>
             <input
               type="number"
               value={avgPrice}
               onChange={handleAvgPrice}
               placeholder="0"
-              className="w-14 h-8 text-center bg-slate-800 bg-opacity-50 rounded-lg focus:outline-none focus:bg-opacity-70"
+              className="w-14 h-8 text-center border border-secondary bg-secondaryTransparent rounded-lg focus:outline-none focus:bg-opacity-70"
             />
           </div>
 
           <div className="flex flex-row items-center justify-center gap-x-1">
-            <span className="text-sm text-slate-400 mr-2">Amount:</span>
+            <span className="text-sm text-secondaryText mr-2">Amount:</span>
             <div>
               <input
                 type="number"
                 value={amount}
                 onChange={handleAmount}
                 placeholder="0"
-                className="w-14 h-8 text-center bg-slate-800 bg-opacity-50 rounded-lg focus:outline-none focus:bg-opacity-70"
+                className="w-14 h-8 text-center border border-secondary bg-secondaryTransparent rounded-lg focus:outline-none focus:bg-opacity-70"
               />
             </div>
           </div>

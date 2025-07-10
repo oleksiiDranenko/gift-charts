@@ -63,7 +63,7 @@ export default function Page() {
                         <IndexBlock name='FDV' id='67faf0d0634d6e48d48360bc'/>
                     </div>
 
-                    <div className=" p-2 mt-3 mb-5 bg-slate-800 bg-opacity-30 rounded-lg">
+                    <div className=" p-2 mt-3 mb-5 border border-secondary rounded-lg">
                         <div className="w-full flex flex-row justify-between items-center">
                             <div className="flex flex-row items-center font-bold text-lg gap-1">
                                 <Grid2x2 size={18}/>
@@ -73,7 +73,7 @@ export default function Page() {
                             </div>
                             <Link
                                 href={'/tools/treemap'}
-                                className="px-3 h-10 text-sm flex items-center bg-slate-800 bg-opacity-50 rounded-lg"
+                                className="px-3 h-10 text-sm flex items-center border border-secondary bg-secondaryTransparent rounded-lg"
                                 onClick={() => vibrate()}
                             >
                                 {'Try it Now ->'}
