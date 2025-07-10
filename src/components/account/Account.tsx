@@ -61,7 +61,7 @@ export default function Account() {
           );
           dispatch(setGiftsList(giftsRes.data));
           setTon(
-            giftsList[0].priceUsd / giftsList[0].priceTon
+            giftsList[1].priceUsd / giftsList[1].priceTon
           );
         }
       } catch (error) {
