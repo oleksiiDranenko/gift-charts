@@ -40,8 +40,7 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
   const vibrate = useVibrate();
 
   useEffect(() => {
-    // Calculate current day's data from weekData
-    const today = new Date(); // Current date: July 20, 2025
+    const today = new Date();
     const todayStr = format(today, "dd-MM-yyyy");
     const lastDataDate = data.length > 0 ? data[data.length - 1].date : null;
     let updatedData = [...data];
