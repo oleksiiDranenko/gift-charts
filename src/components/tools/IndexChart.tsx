@@ -41,7 +41,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const [gradient, setGradient] = useState<CanvasGradient | null>(null);
     const [newData, setNewData] = useState<IndexDataInterface>()
 
-    const { theme, resolvedTheme } = useTheme()
+    const { resolvedTheme } = useTheme()
 
     // Prevent scroll when interacting with chart
     useEffect(() => {

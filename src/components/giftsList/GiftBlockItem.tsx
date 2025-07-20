@@ -16,7 +16,7 @@ interface PropsInterface {
     background: 'color' | 'none'
 }
 
-export default function GiftItem({item, currency, sortBy, displayValue, borderColor, timeGap, background}: PropsInterface) {
+export default function GiftBlockItem({item, currency, sortBy, displayValue, borderColor, timeGap, background}: PropsInterface) {
 
     const vibrate = useVibrate()
 
@@ -74,42 +74,42 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
 
     return (
         <Link 
-            className={`w-full h-16 mb-2 flex flex-row items-center justify-between focus:bg-secondary rounded-lg ${background === 'color' ? `bg-gradient-to-r ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : ''}`} 
+            className={`w-full mb-2 p-3 gap-y-2 flex flex-col items-center justify-between border border-secondary focus:bg-secondary rounded-lg ${background === 'color' && `bg-gradient-to-b ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }`} `} 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}
         >
-            <div className=" flex flex-row items-center">
+            <div className="w-full flex flex-col items-center relative">
                 <Image
                     alt="gift image"
                     src={`/gifts/${item.image}.webp`}
-                    width={50}
-                    height={50}
-                    className={` p-1 mr-3 ml-2 bg-opacity-50 rounded-lg ${borderColor ? 'border' : ''}  bg-secondary`}
+                    width={60}
+                    height={60}
+                    className={`p-1 ${borderColor ? 'border' : ''}'`}
                     style={borderColor ? { borderColor: `${borderColor}80` } : {}}
                 />
-                    <div className="flex flex-col">
-                        <span className="text-base font-bold">
-                            {item.name}
-                            {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
-                        </span>
-                        <span className="text-slate-500 text-sm font-normal">
-                            {
-                                sortBy === 'price' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                                : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.upgradedSupply) : (item.priceUsd * item.upgradedSupply))
-                                : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                                : sortBy === 'percentChange' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                                : sortBy === 'supply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                                : sortBy === 'initSupply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.initSupply))
-                                : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`
-                                : null
-                            }
-                        </span>
-                    </div>
+                {item.preSale && (<span className="text-[8px] text-cyan-500 font-bold ml-2 absolute top-0 right-0">Pre-Market</span>)}
+                <div className="flex flex-col items-center">
+                    <span className="text-sm text-center text-wrap font-bold">
+                        {item.name}
+                    </span>
+                    <span className="text-slate-500 text-xs font-normal">
+                        {
+                            sortBy === 'price' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                            : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.upgradedSupply) : (item.priceUsd * item.upgradedSupply))
+                            : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                            : sortBy === 'percentChange' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                            : sortBy === 'supply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
+                            : sortBy === 'initSupply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.initSupply))
+                            : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`
+                            : null
+                        }
+                    </span>
+                </div>
             </div>
 
             <div className=" flex flex-row items-center justify-end">
-                <div className="w-fit h-10 text-sm flex flex-col items-end justify-center mr-2">
+                <div className="w-fit h-10 text-sm flex flex-col items-center justify-center mr-2">
                     <div className="flex flex-row items-center">
                         {currency === 'ton' ?
                             <Image 

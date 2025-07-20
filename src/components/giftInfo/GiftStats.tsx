@@ -45,14 +45,14 @@ export default function GiftStats({gift}: PropsInterface) {
                     </span>
                 </p>
 
-                <p className="mb-8 w-full flex justify-between">
+                {/* <p className="mb-8 w-full flex justify-between">
                     <span className="font-light">
                         Avaliable for<span className="text-primary font-bold">{' Staking'}</span>:
                     </span>
                     <span className={`${gift.staked ? 'text-primary font-bold' : 'text-foreground'}`}>
                         {gift.staked ? 'Yes' : 'No'}
                     </span>
-                </p>
+                </p> */}
 
 
                 <p className="mb-3 w-full flex justify-between">
@@ -128,6 +128,16 @@ export default function GiftStats({gift}: PropsInterface) {
                         {formatNumber(gift.upgradedSupply)}
                     </span>
                 </p>
+
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
+                        {'Percent Upgraded: '}
+                    </span>
+                    <span className="text-foreground">
+                        {100 - countPercentChange(gift.supply, gift.upgradedSupply)+ '%'}
+                    </span>
+                </p>
+
                 <p className="mb-3 w-full flex justify-between">
                     <span className="font-light">
                         {'Amount Burnt: '}
@@ -145,17 +155,6 @@ export default function GiftStats({gift}: PropsInterface) {
                         {countPercentChange(gift.initSupply, gift.supply)+ '%'}
                     </span>
                 </p>
-
-                <p className="mb-3 w-full flex justify-between">
-                    <span className="font-light">
-                        {'Percent Upgraded: '}
-                    </span>
-                    <span className="text-foreground">
-                        {100 - countPercentChange(gift.supply, gift.upgradedSupply)+ '%'}
-                    </span>
-                </p>
-
-
             </div>
         </div>
     )

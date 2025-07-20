@@ -3,18 +3,12 @@
 @tailwind utilities;
 
 :root {
-  /* --primary: #1e96fc;
+  --primary: #1e96fc;
   --secondary: #e3f2fd;
   --secondary-transparent: #e3f2fd50;
   --secondary-text: #5c6673;
   --background: #ffffff;
-  --foreground: #000000; */
-  --primary: #0098EA;
-  --secondary: #1e293b;
-  --secondary-transparent: #1e293b50;
-  --secondary-text: #94a3b8;
-  --background: #0b1018;
-  --foreground: #ffffff;
+  --foreground: #000000;
 }
 
 html.dark{
@@ -25,6 +19,7 @@ html.dark{
   --background: #0b1018;
   --foreground: #ffffff;
 }
+
 
 
 

@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { setFilters } from "@/redux/slices/filterListSlice";
 import ListHandler from "./ListHandler";
 import SearchBar from "./SearchBar";
-import { Activity, Trophy, Flame, Star, Hammer } from "lucide-react";
+import { Activity, Trophy, Flame, Star, Hammer, Grid2x2, Rows3, PaintBucket, CircleSlash2 } from "lucide-react";
 
 export default function MainPage() {
     const vibrate = useVibrate();
@@ -26,6 +26,9 @@ export default function MainPage() {
     const [activeIndex, setActiveIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
+
+    const [giftType, setGiftType] = useState<'line' | 'block'>('line')
+    const [giftBackground, setGiftBackground] = useState<'color' | 'none'>('none')
 
     const dispatch = useDispatch();
 
@@ -138,7 +141,47 @@ export default function MainPage() {
 
             <SearchBar/>
 
-            <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-1">
+            <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-3">
+                <div className="w-full flex flex-row bg-secondaryTransparent border border-secondary rounded-lg">
+                    <button
+                        className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftType === 'line' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
+                        onClick={() => setGiftType('line')}
+                    >
+                        <Rows3 size={18}/>
+                    </button>
+                    <button
+                        className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftType === 'block' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
+                        onClick={() => setGiftType('block')}
+                    >
+                        <Grid2x2 size={18}/>
+                    </button>
+                </div>
+                <div className="w-full flex flex-row bg-secondaryTransparent border border-secondary rounded-lg">
+                    <button
+                        className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftBackground === 'color' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
+                        onClick={() => setGiftBackground('color')}
+                    >
+                        <PaintBucket size={18}/>
+                    </button>
+                    <button
+                        className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftBackground === 'none' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
+                        onClick={() => setGiftBackground('none')}
+                    >
+                        <CircleSlash2 size={18}/>
+                    </button>
+                </div>
+                <Link
+                    className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-primary rounded-lg`}
+                    href={'/gifts-list'}
+                    onClick={() => vibrate()}
+                >
+                    
+                    <span>Customise</span>
+                    <Hammer size={14} strokeWidth={2.5} className="ml-[2px]"/> 
+                </Link>
+            </div>
+
+            <div className="max-w-full mx-3 flex items-center justify-between  mb-1">
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 0 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(0)}
@@ -160,15 +203,6 @@ export default function MainPage() {
                     <Star size={14} className="mr-[2px]"/> 
                     <span>Saved</span>
                 </button>
-                <Link
-                    className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-primary rounded-lg`}
-                    href={'/gifts-list'}
-                    onClick={() => vibrate()}
-                >
-                    
-                    <span>Customise</span>
-                    <Hammer size={14} strokeWidth={2.5} className="ml-[2px]"/> 
-                </Link>
             </div>
 
 
@@ -176,20 +210,20 @@ export default function MainPage() {
                 ref={containerRef}
                 className="w-full swipe-container flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
             >
-                <ListHandler giftsList={list} filters={filters}/>
+                <ListHandler giftsList={list} filters={filters} type={giftType} background={giftBackground}/>
 
-                <ListHandler giftsList={topList} filters={filters}/>
+                <ListHandler giftsList={topList} filters={filters} type={giftType} background={giftBackground}/>
 
 
                         {userList.length !== 0 ?
-                         <ListHandler giftsList={userList} filters={filters}/>
+                         <ListHandler giftsList={userList} filters={filters} type={giftType} background={giftBackground}/>
                          : 
                          <div className="flex-none w-full text-center snap-start">
-                             <div className="px-3 pt-3 pb-1 font-bold text-secondaryText">
+                             <div className="px-3 pt-3 pb-1 font-bold">
                                  Your Watchlist is Empty
                              </div>
                              <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
-                                 {'Account -> Settings -> Edit Watchlist'}
+                                 {'Go to: Settings -> Edit Watchlist'}
                              </div>
                          </div>
                         }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import GiftInterface from "@/interfaces/GiftInterface";
@@ -24,11 +23,11 @@ export default function EditAssetItem({
   giftsList,
   removeGift,
   updateAmount,
-  updateAvgPrice
+  updateAvgPrice,
 }: PropsInterface) {
   const vibrate = useVibrate();
-
   const [gift, setGift] = useState<GiftInterface>();
+  const [inputAvgPrice, setInputAvgPrice] = useState<string | number>(avgPrice);
 
   const filterGift = () => {
     const gift = giftsList.filter((item) => item._id === giftId);
@@ -39,14 +38,33 @@ export default function EditAssetItem({
     filterGift();
   }, []);
 
+  useEffect(() => {
+    // Update inputAvgPrice when avgPrice prop changes
+    setInputAvgPrice(avgPrice);
+  }, [avgPrice]);
+
   const handleAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newAmount = e.target.valueAsNumber;
+    // Only update if value is non-negative or empty (NaN when empty)
+    if (!isNaN(newAmount) && newAmount >= 0) {
       updateAmount(giftId, newAmount);
+    }
   };
 
   const handleAvgPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newAvgPrice = e.target.valueAsNumber;
-      updateAvgPrice(giftId, newAvgPrice);
+    const value = e.target.value;
+    // Allow empty string or valid non-negative number
+    setInputAvgPrice(value === "" ? "" : Math.max(0, Number(value)));
+  };
+
+  const handleBlur = () => {
+    // On blur, if the input is empty, set default value of 1
+    if (inputAvgPrice === "") {
+      setInputAvgPrice(1);
+      updateAvgPrice(giftId, 1);
+    } else {
+      updateAvgPrice(giftId, Number(inputAvgPrice));
+    }
   };
 
   return (
@@ -81,9 +99,11 @@ export default function EditAssetItem({
             <span className="text-sm text-secondaryTest mr-2">Avg price:</span>
             <input
               type="number"
-              value={avgPrice}
+              value={inputAvgPrice}
               onChange={handleAvgPrice}
+              onBlur={handleBlur}
               placeholder="0"
+              min="0"
               className="w-14 h-8 text-center border border-secondary bg-secondaryTransparent rounded-lg focus:outline-none focus:bg-opacity-70"
             />
           </div>
@@ -96,6 +116,7 @@ export default function EditAssetItem({
                 value={amount}
                 onChange={handleAmount}
                 placeholder="0"
+                min="0"
                 className="w-14 h-8 text-center border border-secondary bg-secondaryTransparent rounded-lg focus:outline-none focus:bg-opacity-70"
               />
             </div>

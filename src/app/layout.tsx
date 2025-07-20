@@ -8,8 +8,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/slices/userSlice';
 import axios from 'axios';
-import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from 'next-themes';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setGiftsList } from '@/redux/slices/giftsListSlice';
+import { setDefaultFilters } from '@/redux/slices/filterListSlice';
+import Lottie from 'lottie-react';
+import animationData from '@/animations/lowRide.json';
+import ProgressBar from '@ramonak/react-progress-bar';
 
 const inter =  Inter ({ subsets: ['latin', 'cyrillic'] });
 
@@ -127,13 +132,72 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
                 isFullscreen ? 'pt-[40px]' : null
             } flex flex-col`}
         >
-            {/* <NavbarTop isFullscreen={isFullscreen} /> */}
             <div className="w-screen flex justify-center flex-grow">
                 {children}
             </div>
             <NavbarBottom />
         </div>
     );
+}
+
+function DefaultUpdate({ children }: { children: React.ReactNode }) {
+    const dispatch = useAppDispatch();
+  const giftsList = useAppSelector((item) => item.giftsList);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [progress, setProgress] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchGifts = async () => {
+      try {
+        setLoading(true);
+        setProgress(30); // Start at 30%
+        if (giftsList.length === 0) {
+          const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
+          setProgress(80); // Set to 80% after data fetch
+          dispatch(setGiftsList(giftsRes.data));
+        }
+      } catch (error) {
+        console.error('Error fetching gifts:', error);
+        setProgress(100); // Complete progress even on error
+      } finally {
+        setProgress(100); // Ensure progress reaches 100%
+        setTimeout(() => {
+          setLoading(false); // Hide the loading UI after a delay
+        }, 500); // 500ms delay for smooth completion
+      }
+    };
+
+    fetchGifts();
+  }, [dispatch, giftsList]);
+
+  useEffect(() => {
+    dispatch(setDefaultFilters());
+  }, [dispatch]);
+
+  return (
+    <>
+        {loading ? (
+                <div className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-background">
+                  <div className="w-40 h-40 mb-3">
+                    <Lottie animationData={animationData} loop={true} />
+                  </div>
+                  <div className="w-1/2 max-w-96">
+                    <ProgressBar
+                      completed={progress}
+                      bgColor="var(--primary)"
+                      height="3px"
+                      baseBgColor="var(--secondary)"
+                      isLabelVisible={false}
+                      transitionDuration="0.5s"
+                      transitionTimingFunction="ease-in-out"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <>{children}</>
+              )}
+    </>
+  )
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -143,8 +207,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ReduxProvider>
                      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                         <AppInitializer>
-                            {children}
-                            <Analytics />
+                            <DefaultUpdate>{children}</DefaultUpdate>
                         </AppInitializer>
                     </ThemeProvider>
                 </ReduxProvider>

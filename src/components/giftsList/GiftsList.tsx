@@ -117,17 +117,11 @@ export default function GiftsList({ loading }: PropsInterface) {
     }, [value])
     
 
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setShowFilters(false)
-        setValue(e.target.value)
-    }
     
 
     return (
         <div className='w-full h-auto flex flex-col items-center px-3'>
-            {loading ? 
-                <ReactLoading type="spin" color="#0098EA" height={30} width={30} className="mt-5"/>
-            : 
+            {
                 list !== undefined ? 
                     <>
                         <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
@@ -324,6 +318,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                                 displayValue={filters.displayValue} 
                                 key={item._id}
                                 timeGap={timeGap}
+                                background="none"
                             />
                         ))}
                     </>

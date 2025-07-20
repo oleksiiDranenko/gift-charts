@@ -220,14 +220,7 @@ export default function Account() {
         </div>
       ) : (
         <>
-          <div className="w-full h-28 flex flex-row justify-center items-center relative">
-            <Link
-              href={"/account/settings"}
-              onClick={() => vibrate()}
-              className="absolute left-3 top-3 text-foreground"
-            >
-              <Settings />
-            </Link>
+          <div className="w-full h-28 flex flex-row justify-center items-center">
             <div className="flex flex-col items-center">
               <div className="flex flex-row items-center">
                 {currency === "ton" ? (
