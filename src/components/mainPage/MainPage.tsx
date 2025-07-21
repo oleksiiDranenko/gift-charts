@@ -126,6 +126,16 @@ export default function MainPage() {
 
     return (
         <div>
+            <div className="w-full px-3">
+                <div className="w-full p-2 mb-2 rounded-lg border bg-secondaryTransparent text-xs text-red-500 font-bold">
+                    <p className="mb-2">
+                        ⚠️ App switched to getting data from all markets. On some of them gifts are cheaper than on Tonnel so the market seems to be down
+                    </p>
+                    <p>
+                        ⚠️ Приложение перешло на данные из всех маркетов. На некоторых из них подарки выставлены дешевле чем на Tonnel, поэтому рынок упал
+                    </p>
+                </div>
+            </div>
             <h1 className="flex flex-row items-center mb-3 px-3">
                 <Activity size={24}/>
                 <h1 className="text-2xl font-bold ml-1">
