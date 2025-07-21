@@ -132,7 +132,7 @@ export default function MainPage() {
                         ⚠️ App switched to getting data from all markets. On some of them gifts are cheaper than on Tonnel so the market seems to be down
                     </p>
                     <p>
-                        ⚠️ Приложение перешло на данные из всех маркетов. На некоторых из них подарки выставлены дешевле чем на Tonnel, поэтому рынок упал
+                        ⚠️ Приложение перешло на данные из всех маркетов. На некоторых из них подарки выставлены дешевле чем на Tonnel,  поэтому на графиках рынок упал
                     </p>
                 </div>
             </div>
