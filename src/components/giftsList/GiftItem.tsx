@@ -11,12 +11,11 @@ interface PropsInterface {
     currency: 'ton' | 'usd',
     sortBy: 'price' | 'marketCap' | 'supply' | 'initSupply' | 'starsPrice' | 'percentChange',
     displayValue: 'price' | 'marketCap',
-    borderColor?: string,
     timeGap: '24h' | '1w' | '1m' | 'all',
     background: 'color' | 'none'
 }
 
-export default function GiftItem({item, currency, sortBy, displayValue, borderColor, timeGap, background}: PropsInterface) {
+export default function GiftItem({item, currency, sortBy, displayValue, timeGap, background}: PropsInterface) {
 
     const vibrate = useVibrate()
 
@@ -85,8 +84,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, borderCo
                     src={`/gifts/${item.image}.webp`}
                     width={50}
                     height={50}
-                    className={` p-1 mr-3 ml-2 bg-opacity-50 rounded-lg ${borderColor ? 'border' : ''}  bg-secondary`}
-                    style={borderColor ? { borderColor: `${borderColor}80` } : {}}
+                    className={`w-12 h-12 p-[6px] overflow-visible mr-3 ml-2 rounded-full bg-secondaryTransparent border border-secondary shadow-md shadow-secondary`}
                 />
                     <div className="flex flex-col">
                         <span className="text-base font-bold">
