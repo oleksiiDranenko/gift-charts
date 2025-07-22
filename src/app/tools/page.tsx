@@ -44,44 +44,27 @@ export default function Page() {
 
     return (
         <main className="w-full lg:w-1/2 pt-[70px] px-3">
-            {loading ? (
-                <div className="w-full flex flex-col justify-center items-center h-[600px]">
-                    <p className="text-slate-300 mb-2">Loading Gifts...</p>
-                    <div className="w-1/2 max-w-[300px]">
-                        <LoadingBar
-                            color="#0098EA"
-                            ref={loadingBarRef}
-                            height={3}
-                            containerStyle={{ position: 'relative' }}
-                        />
+            <div className='w-full h-auto flex flex-col gap-3'>
+                <IndexBlock name='Market Cap' id='68493d064b37eed02b7ae5af'/>
+                <IndexBlock name='FDV' id='67faf0d0634d6e48d48360bc'/>
+            </div>
+            <div className=" p-2 mt-3 mb-5 border border-secondary rounded-lg">
+                <div className="w-full flex flex-row justify-between items-center">
+                    <div className="flex flex-row items-center font-bold text-lg gap-1">
+                        <Grid2x2 size={18}/>
+                        <span>
+                            Heatmap
+                        </span> 
                     </div>
-                </div>
-            ) : (
-                <>
-                    <div className='w-full h-auto flex flex-col gap-3'>
-                        <IndexBlock name='Market Cap' id='68493d064b37eed02b7ae5af'/>
-                        <IndexBlock name='FDV' id='67faf0d0634d6e48d48360bc'/>
-                    </div>
-
-                    <div className=" p-2 mt-3 mb-5 border border-secondary rounded-lg">
-                        <div className="w-full flex flex-row justify-between items-center">
-                            <div className="flex flex-row items-center font-bold text-lg gap-1">
-                                <Grid2x2 size={18}/>
-                                <span>
-                                    Heatmap
-                                </span> 
-                            </div>
-                            <Link
-                                href={'/tools/treemap'}
-                                className="px-3 h-10 text-sm flex items-center border border-secondary bg-secondaryTransparent rounded-lg"
-                                onClick={() => vibrate()}
-                            >
-                                {'Try it Now ->'}
-                            </Link>
-                        </div>                        
-                    </div>
-                </>
-            )}
+                    <Link
+                        href={'/tools/treemap'}
+                        className="px-3 h-10 text-sm flex items-center border border-secondary bg-secondaryTransparent rounded-lg"
+                        onClick={() => vibrate()}
+                    >
+                        {'Try it Now ->'}
+                    </Link>
+                </div>                        
+            </div>
         </main>
     );
 }
