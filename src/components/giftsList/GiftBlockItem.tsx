@@ -74,7 +74,7 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
 
     return (
         <Link 
-            className={`w-full mb-2 p-3 gap-y-2 flex flex-col items-center justify-between border border-secondary focus:bg-secondary rounded-lg ${background === 'color' && `bg-gradient-to-b ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }`} `} 
+            className={`w-full mb-2 p-3 gap-y-2 flex flex-col items-center justify-between focus:bg-secondary rounded-md ${background === 'color' && `bg-gradient-to-b ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }`} `} 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}

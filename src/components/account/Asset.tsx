@@ -30,7 +30,7 @@ export default function Asset({_id, name, image, currency, amount, avgPrice, pri
                     src={`/gifts/${image}.webp`}
                     width={50}
                     height={50}
-                    className={`bg-secondary p-1 mr-3 rounded-lg`}
+                    className={`w-12 h-12 p-[4px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondary shadow-md shadow-secondary`}
                 />
                 <div className="flex flex-col">
                     <span className="text-base font-bold">

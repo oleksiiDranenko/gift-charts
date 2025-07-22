@@ -117,8 +117,8 @@ const imagePlugin = (chartType: 'change' | 'marketCap', currency: 'ton' | 'usd')
             if (width <= 0 || height <= 0) return;
 
             // --- Solid color background ---
-            const baseColor = item.percentChange > 0 ? '#40a829' :
-                              item.percentChange < 0 ? '#ff3c38' : '#8F9779';
+            const baseColor = item.percentChange > 0 ? '#47a333' :
+                              item.percentChange < 0 ? '#fc4542' : '#8F9779';
             ctx.fillStyle = baseColor;
             ctx.fillRect(x, y, width, height);
 

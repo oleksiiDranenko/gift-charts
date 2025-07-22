@@ -73,7 +73,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
 
     return (
         <Link 
-            className={`w-full h-16 mb-2 flex flex-row items-center justify-between focus:bg-secondary rounded-lg ${background === 'color' ? `bg-gradient-to-r ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : ''}`} 
+            className={`w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondary rounded-md ${background === 'color' ? `bg-gradient-to-r ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : ''}`} 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}
