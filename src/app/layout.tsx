@@ -150,24 +150,25 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchGifts = async () => {
+        vibrate()
       try {
         setLoading(true);
         setProgress(60);
-        vibrate()
+        
         
         if (giftsList.length === 0) {
+            vibrate()
           const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
           setProgress(80);
-          vibrate()
           dispatch(setGiftsList(giftsRes.data));
         }
       } catch (error) {
+        vibrate()
         console.error('Error fetching gifts:', error);
         setProgress(100);
-        vibrate()
       } finally {
-        setProgress(100);
         vibrate()
+        setProgress(100);
         setTimeout(() => {
           setLoading(false);
         }, 500);

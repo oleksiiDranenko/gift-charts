@@ -145,13 +145,19 @@ export default function MainPage() {
                 <div className="w-full flex flex-row bg-secondaryTransparent border border-secondary rounded-lg">
                     <button
                         className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftType === 'line' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
-                        onClick={() => setGiftType('line')}
+                        onClick={() => {
+                            setGiftType('line')
+                            vibrate()
+                        }}
                     >
                         <Rows3 size={18}/>
                     </button>
                     <button
                         className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftType === 'block' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
-                        onClick={() => setGiftType('block')}
+                        onClick={() => {
+                            setGiftType('block')
+                            vibrate()
+                        }}
                     >
                         <Grid2x2 size={18}/>
                     </button>
@@ -159,13 +165,19 @@ export default function MainPage() {
                 <div className="w-full flex flex-row bg-secondaryTransparent border border-secondary rounded-lg">
                     <button
                         className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftBackground === 'color' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
-                        onClick={() => setGiftBackground('color')}
+                        onClick={() => {
+                            setGiftBackground('color')
+                            vibrate()
+                        }}
                     >
                         <PaintBucket size={18}/>
                     </button>
                     <button
                         className={`w-full flex flex-row items-center justify-center text-xs h-8 ${giftBackground === 'none' ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
-                        onClick={() => setGiftBackground('none')}
+                        onClick={() => {
+                            setGiftBackground('none')
+                            vibrate()
+                        }}
                     >
                         <CircleSlash2 size={18}/>
                     </button>
