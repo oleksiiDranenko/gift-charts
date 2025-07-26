@@ -15,6 +15,7 @@ import { setDefaultFilters } from '@/redux/slices/filterListSlice';
 import Lottie from 'lottie-react';
 import animationData from '@/animations/lowRide.json';
 import ProgressBar from '@ramonak/react-progress-bar';
+import useVibrate from '@/hooks/useVibrate';
 
 const inter =  Inter ({ subsets: ['latin', 'cyrillic'] });
 
@@ -142,28 +143,34 @@ function AppInitializer({ children }: { children: React.ReactNode }) {
 
 function DefaultUpdate({ children }: { children: React.ReactNode }) {
     const dispatch = useAppDispatch();
-  const giftsList = useAppSelector((item) => item.giftsList);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [progress, setProgress] = useState<number>(0);
+    const giftsList = useAppSelector((item) => item.giftsList);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [progress, setProgress] = useState<number>(0);
+    const vibrate = useVibrate()
 
   useEffect(() => {
     const fetchGifts = async () => {
       try {
         setLoading(true);
-        setProgress(30); // Start at 30%
+        setProgress(60);
+        vibrate()
+        
         if (giftsList.length === 0) {
           const giftsRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-          setProgress(80); // Set to 80% after data fetch
+          setProgress(80);
+          vibrate()
           dispatch(setGiftsList(giftsRes.data));
         }
       } catch (error) {
         console.error('Error fetching gifts:', error);
-        setProgress(100); // Complete progress even on error
+        setProgress(100);
+        vibrate()
       } finally {
-        setProgress(100); // Ensure progress reaches 100%
+        setProgress(100);
+        vibrate()
         setTimeout(() => {
-          setLoading(false); // Hide the loading UI after a delay
-        }, 500); // 500ms delay for smooth completion
+          setLoading(false);
+        }, 500);
       }
     };
 
