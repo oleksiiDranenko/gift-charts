@@ -47,14 +47,7 @@ export default function Page({ params }: any) {
         })();
     }, [params.id]);
 
-    const goBack = () => {
-        if (window.history.length > 1) {
-            router.back();
-        } else {
-            router.push('/');
-        }
-    };
-
+    
     return (
         <div className="w-screen pt-[70px] pb-24 flex justify-center">
             <div className="w-full lg:w-1/2">

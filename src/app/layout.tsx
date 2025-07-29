@@ -13,9 +13,9 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setGiftsList } from '@/redux/slices/giftsListSlice';
 import { setDefaultFilters } from '@/redux/slices/filterListSlice';
 import Lottie from 'lottie-react';
-import animationData from '@/animations/lowRide.json';
 import ProgressBar from '@ramonak/react-progress-bar';
 import useVibrate from '@/hooks/useVibrate';
+import {animations} from '@/animations/animations.js';
 
 const inter =  Inter ({ subsets: ['latin', 'cyrillic'] });
 
@@ -147,12 +147,30 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState<boolean>(true);
     const [progress, setProgress] = useState<number>(0);
     const vibrate = useVibrate()
+    const [currentAnimation, setCurrentAnimation] = useState<any>(null);
+
+    useEffect(() => {
+      const randomIndex = Math.floor(Math.random() * animations.length);
+      setCurrentAnimation(animations[randomIndex]);
+    }, []);
+
+     const handleAnimationComplete = () => {
+        if (loading) {
+          let newIndex = Math.floor(Math.random() * animations.length);
+          currentAnimation(animations[newIndex])
+        }
+    };
+
 
   useEffect(() => {
     const fetchGifts = async () => {
       try {
         setLoading(true);
-        setProgress(60);
+        setProgress(40);
+        setTimeout(() => {
+          setProgress(60)
+        }, 500);
+        
         
         
         if (giftsList.length === 0) {
@@ -162,13 +180,13 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error('Error fetching gifts:', error);
-        setProgress(100);
+        setProgress(50);
       } finally {
         setProgress(100);
         setTimeout(() => {
           setLoading(false);
           vibrate()
-        }, 500);
+        }, 400);
       }
     };
 
@@ -183,8 +201,13 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
     <>
         {loading ? (
                 <div className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-background">
-                  <div className="w-40 h-40 mb-3">
-                    <Lottie animationData={animationData} loop={true} />
+                  <div className="w-40 h-40 mb-5">
+                    {currentAnimation &&
+                        <Lottie 
+                            animationData={currentAnimation} 
+                            loop={true}
+                        />
+                    }
                   </div>
                   <div className="w-1/2 max-w-96">
                     <ProgressBar
@@ -206,13 +229,16 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  
     return (
         <html lang="en">
             <body className={inter.className}>
                 <ReduxProvider>
                      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                         <AppInitializer>
-                            <DefaultUpdate>{children}</DefaultUpdate>
+                            <DefaultUpdate>
+                              {children}
+                            </DefaultUpdate>
                         </AppInitializer>
                     </ThemeProvider>
                 </ReduxProvider>

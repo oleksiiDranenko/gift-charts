@@ -15,6 +15,7 @@ import { Activity, Trophy, Flame, Star, Hammer, Grid2x2, Rows3, PaintBucket, Cir
 
 export default function MainPage() {
     const vibrate = useVibrate();
+    const dispatch = useDispatch();
 
     const giftsList = useAppSelector((state) => state.giftsList);
     const filters = useAppSelector((state) => state.filters);
@@ -27,12 +28,29 @@ export default function MainPage() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
 
-    const [giftType, setGiftType] = useState<'line' | 'block'>('line')
-    const [giftBackground, setGiftBackground] = useState<'color' | 'none'>('none')
+    const [giftType, setGiftType] = useState<'line' | 'block'>(
+        typeof window !== 'undefined' 
+            ? (localStorage.getItem('giftType') as 'line' | 'block') || 'line'
+            : 'line'
+    );
 
-    const dispatch = useDispatch();
+    const [giftBackground, setGiftBackground] = useState<'color' | 'none'>(
+        typeof window !== 'undefined'
+            ? (localStorage.getItem('giftBackground') as 'color' | 'none') || 'none'
+            : 'none'
+    );
 
+    useEffect(() => {
+        if (isMounted) {
+            localStorage.setItem('giftType', giftType);
+        }
+    }, [giftType, isMounted]);
 
+    useEffect(() => {
+        if (isMounted) {
+            localStorage.setItem('giftBackground', giftBackground);
+        }
+    }, [giftBackground, isMounted]);
 
     useEffect(() => {
         if (giftsList.length > 0) {
@@ -53,7 +71,6 @@ export default function MainPage() {
         }
     }, [filters, giftsList]);
 
-
     useEffect(() => {
         if (giftsList.length > 0) {
             let sortedList = [...giftsList];
@@ -70,11 +87,9 @@ export default function MainPage() {
 
     useEffect(() => {
         if (giftsList.length > 0 && user.savedList.length > 0) {
-
             let filteredList = giftsList.filter((gift) =>
                 user.savedList.includes(gift._id)
             );
-
 
             filteredList.sort((a, b) =>
                 filters.currency === 'ton'
@@ -84,7 +99,7 @@ export default function MainPage() {
 
             setUserList(filteredList);
         } else {
-            setUserList([]); 
+            setUserList([]);
         }
     }, [filters, giftsList, user.savedList]);
 
@@ -187,36 +202,34 @@ export default function MainPage() {
                     href={'/gifts-list'}
                     onClick={() => vibrate()}
                 >
-                    
                     <span>Customise</span>
-                    <Hammer size={14} strokeWidth={2.5} className="ml-[2px]"/> 
+                    <Hammer size={14} strokeWidth={2.5} className="ml-[2px]"/>
                 </Link>
             </div>
 
-            <div className="max-w-full mx-3 flex items-center justify-between  mb-1">
+            <div className="max-w-full mx-3 flex items-center justify-between mb-1">
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 0 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(0)}
                 >
-                    <Flame size={14} className="mr-[2px]"/> 
+                    <Flame size={14} className="mr-[2px]"/>
                     <span>Hot</span>
                 </button>
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 1 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(1)}
                 >
-                    <Trophy size={14} className="mr-[2px]"/> 
+                    <Trophy size={14} className="mr-[2px]"/>
                     <span>Leaders</span>
                 </button>
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 2 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(2)}
                 >
-                    <Star size={14} className="mr-[2px]"/> 
+                    <Star size={14} className="mr-[2px]"/>
                     <span>Saved</span>
                 </button>
             </div>
-
 
             <div
                 ref={containerRef}
@@ -226,43 +239,19 @@ export default function MainPage() {
 
                 <ListHandler giftsList={topList} filters={filters} type={giftType} background={giftBackground}/>
 
-
-                        {userList.length !== 0 ?
-                         <ListHandler giftsList={userList} filters={filters} type={giftType} background={giftBackground}/>
-                         : 
-                         <div className="flex-none w-full text-center snap-start">
-                             <div className="px-3 pt-3 pb-1 font-bold">
-                                 Your Watchlist is Empty
-                             </div>
-                             <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
-                                 {'Go to: Settings -> Edit Watchlist'}
-                             </div>
-                         </div>
-                        }
+                {userList.length !== 0 ?
+                    <ListHandler giftsList={userList} filters={filters} type={giftType} background={giftBackground}/>
+                    :
+                    <div className="flex-none w-full text-center snap-start">
+                        <div className="px-3 pt-3 pb-1 font-bold">
+                            Your Watchlist is Empty
+                        </div>
+                        <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
+                            {'Go to: Settings -> Edit Watchlist'}
+                        </div>
+                    </div>
+                }
             </div>
-            
-            {/* <div className="max-w-full flex justify-between items-center p-3 mt-5 mx-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                <span className="text-xl font-bold">
-                    📣 Latest News
-                </span>
-
-                <a 
-                    className="flex flex-row items-center justify-center p-3 gap-x-2 rounded-lg bg-slate-800"
-                    href="https://t.me/gift_charts"
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                >
-                    <Image
-                        src={'/images/telegram.webp'}
-                        alt="telegram logo"
-                        height={25}
-                        width={25}
-                    />
-                    <span className="font-bold">
-                        Gift Charts
-                    </span>
-                </a>
-            </div> */}
         </div>
     );
 }
