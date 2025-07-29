@@ -52,7 +52,7 @@ export default function Page() {
       <div className="mt-3 mb-5 border border-secondary rounded-lg overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-40 z-0">
         <Image
-          src="https://tomato-rapid-caterpillar-799.mypinata.cloud/ipfs/bafybeicvhppx27bh3mcqqfrrba2zccg6ds5ag2553ulditkx4gsdddiz6y"
+          src="/images/heatmap.webp"
           alt="heatmap background"
           fill
           className="object-cover blur-[3px]"
