@@ -154,13 +154,6 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
       setCurrentAnimation(animations[randomIndex]);
     }, []);
 
-     const handleAnimationComplete = () => {
-        if (loading) {
-          let newIndex = Math.floor(Math.random() * animations.length);
-          currentAnimation(animations[newIndex])
-        }
-    };
-
 
   useEffect(() => {
     const fetchGifts = async () => {

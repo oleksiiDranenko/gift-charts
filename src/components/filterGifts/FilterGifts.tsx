@@ -79,7 +79,7 @@ export default function FilterGifts() {
         <div className="w-full flex flex-col items-center">
             <div className="w-full mb-3 p-3 gap-3 flex justify-between items-center]">
                 <Link
-                    href={'/'}
+                    href={'/gifts-list'}
                     className="w-fit flex flex-row items-center text-lg font-bold"
                     onClick={() => vibrate()}
                 >
