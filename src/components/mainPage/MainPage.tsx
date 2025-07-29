@@ -197,17 +197,16 @@ export default function MainPage() {
   return (
     <div>
       {/* <h1 className="flex flex-row items-center mb-3 px-3">
-                <Activity size={24}/>
-                <h1 className="text-2xl font-bold ml-1">
-                    Gift Charts
-                </h1>
+            <Activity size={24}/>
+            <h1 className="text-2xl font-bold ml-1">
+                Gift Charts
             </h1>
-
-            <div className="mx-3 mb-4">
-                <span className="text-secondaryText text-sm">
-                    ✨ App is <span className="font-bold text-foreground">Free</span> but you can <Link href='/donate' className="font-bold text-primary underline">Donate!</Link>
-                </span>
-            </div> */}
+        </h1
+        <div className="mx-3 mb-4">
+            <span className="text-secondaryText text-sm">
+                ✨ App is <span className="font-bold text-foreground">Free</span> but you can <Link href='/donate' className="font-bold text-primary underline">Donate!</Link>
+            </span>
+        </div> */}
 
       <div className="w-full px-3 mb-5">
         <Link

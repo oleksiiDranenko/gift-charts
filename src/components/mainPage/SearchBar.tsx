@@ -42,7 +42,7 @@ export default function GiftSearchBar() {
       >
         <div className="relative">
           <Combobox.Input
-            className="w-full h-10 pr-10 border border-secondary bg-secondaryTransparent text-foreground px-3 rounded-lg focus:outline-none placeholder:text-sm"
+            className="w-full h-10 pr-10 border border-secondary bg-secondaryTransparent text-foreground px-3 rounded-lg focus:outline-none placeholder:text-sm placeholder:text-secondaryText"
             onChange={(e) => setQuery(e.target.value)}
             displayValue={(gift: GiftInterface) => gift?.name || ''}
             placeholder="Search gifts..."
@@ -52,7 +52,7 @@ export default function GiftSearchBar() {
             size={18}
           />
           {filteredGifts.length > 0 && (
-            <Combobox.Options className="absolute mt-1 w-full max-h-80 overflow-auto rounded-md border border-slate-800 shadow-lg z-10">
+            <Combobox.Options className="absolute mt-1 w-full max-h-80 overflow-auto rounded-md border border-secondary shadow-lg z-10">
               {filteredGifts.map((gift) => (
                 <Combobox.Option
                   key={gift._id}
