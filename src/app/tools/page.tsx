@@ -63,7 +63,7 @@ export default function Page() {
       <div className="relative z-10">
         <div className="w-full h-40" />
 
-        <div className="w-full p-3 flex flex-row justify-between items-center backdrop-blur-sm">
+        <div className="w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg">
           <div className="flex flex-row items-center font-bold text-lg gap-1">
             <Grid2x2 size={24} />
             <span>Heatmap</span>
@@ -75,7 +75,7 @@ export default function Page() {
             onClick={() => vibrate()}
           >
             <span>Try it now</span>
-            <ChevronRight size={18} />
+            <ChevronRight size={18} /> 
           </Link>
         </div>
       </div>
