@@ -74,7 +74,7 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
 
     return (
         <Link 
-            className={`w-full mb-2 p-3 gap-y-2 flex flex-col items-center justify-between focus:bg-secondary rounded-md ${background === 'color' ? `bg-gradient-to-b ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : 'shadow-md shadow-secondary'} `} 
+            className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between focus:bg-secondary rounded-md ${background === 'color' ? `bg-gradient-to-b ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : 'shadow-md shadow-secondary'} `} 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}
@@ -93,7 +93,7 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
                     <span className="text-sm text-center text-wrap font-bold">
                         {item.name}
                     </span>
-                    <span className="text-slate-500 text-xs font-normal">
+                    <span className="text-secondaryText text-xs font-normal">
                         {
                             sortBy === 'price' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
                             : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.upgradedSupply) : (item.priceUsd * item.upgradedSupply))
@@ -109,7 +109,7 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
             </div>
 
             <div className=" flex flex-row items-center justify-end">
-                <div className="w-fit h-10 text-sm flex flex-col items-center justify-center mr-2">
+                <div className="w-fit text-sm flex flex-col items-center justify-center">
                     <div className="flex flex-row items-center">
                         {currency === 'ton' ?
                             <Image 
@@ -135,8 +135,10 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
                         </span>
                     </div>
                     
-                    <span className={`flex flex-row items-center text-sm font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
-                        {percentChange}{percentChange !== 'no data' ? '%' : null}
+                    <span className={`flex flex-row items-center text-xs font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-secondaryText' : 'text-secondaryText'}`}>
+                        {percentChange !== 'no data' && percentChange >= 0 &&  '+'}
+                        {percentChange}
+                        {percentChange !== 'no data' ? '%' : null}
                     </span>
                 </div>
                     

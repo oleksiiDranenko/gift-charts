@@ -7,12 +7,11 @@ import GiftBlockItem from "../giftsList/GiftBlockItem"
 
 interface PropsInterface {
     giftsList: GiftInterface[],
-    filters: FilterListInterface,
     type: 'line' | 'block',
     background: 'color' | 'none'
 }
 
-export default function ListHandler({ giftsList, filters, type, background }: PropsInterface) {
+export default function ListHandler({ giftsList, type, background }: PropsInterface) {
     
 
     return (
@@ -26,8 +25,8 @@ export default function ListHandler({ giftsList, filters, type, background }: Pr
                             ?
                             <GiftItem
                                 item={item}
-                                currency={filters.currency}
-                                sortBy={filters.sortBy}
+                                currency={"ton"}
+                                sortBy={"price"}
                                 displayValue='price'
                                 key={item._id}
                                 background={background}
@@ -36,8 +35,8 @@ export default function ListHandler({ giftsList, filters, type, background }: Pr
                             :
                             <GiftBlockItem
                                 item={item}
-                                currency={filters.currency}
-                                sortBy={filters.sortBy}
+                                currency={"ton"}
+                                sortBy={"price"}
                                 displayValue='price'
                                 key={item._id}
                                 background={background}

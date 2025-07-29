@@ -134,7 +134,9 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
                     </div>
                     
                     <span className={`flex flex-row items-center text-sm font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
-                        {percentChange}{percentChange !== 'no data' ? '%' : null}
+                        {percentChange !== 'no data' && percentChange >= 0 &&  '+'}
+                        {percentChange}
+                        {percentChange !== 'no data' ? '%' : null}
                     </span>
                 </div>
                     

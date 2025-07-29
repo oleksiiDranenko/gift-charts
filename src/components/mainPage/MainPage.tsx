@@ -11,17 +11,17 @@ import { useDispatch } from "react-redux";
 import { setFilters } from "@/redux/slices/filterListSlice";
 import ListHandler from "./ListHandler";
 import SearchBar from "./SearchBar";
-import { Activity, Trophy, Flame, Star, Hammer, Grid2x2, Rows3, PaintBucket, CircleSlash2 } from "lucide-react";
+import { Activity, Trophy, Flame, Star, Hammer, Grid2x2, Rows3, PaintBucket, CircleSlash2, TrendingUp, TrendingDown } from "lucide-react";
 
 export default function MainPage() {
     const vibrate = useVibrate();
-    const dispatch = useDispatch();
 
     const giftsList = useAppSelector((state) => state.giftsList);
     const filters = useAppSelector((state) => state.filters);
     const user = useAppSelector((state) => state.user);
 
-    const [list, setList] = useState<GiftInterface[]>([]);
+    const [gainersList, setGainersList] = useState<GiftInterface[]>([]);
+    const [losersList, setLosersList] = useState<GiftInterface[]>([]);
     const [topList, setTopList] = useState<GiftInterface[]>([]);
     const [userList, setUserList] = useState<GiftInterface[]>([]);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -52,38 +52,74 @@ export default function MainPage() {
         }
     }, [giftBackground, isMounted]);
 
+    
+
     useEffect(() => {
-        if (giftsList.length > 0) {
-            let sortedList = [...giftsList];
+    if (giftsList.length > 0) {
+        const sortedList = [...giftsList].sort((a, b) =>
+            filters.currency === 'ton'
+                ? filters.sort === 'lowFirst'
+                    ? a.priceTon - b.priceTon
+                    : b.priceTon - a.priceTon
+                : filters.sort === 'lowFirst'
+                    ? a.priceUsd - b.priceUsd
+                    : b.priceUsd - a.priceUsd
+        );
+        setTopList(sortedList);
 
-            sortedList.sort((a, b) => {
-                const aChange = filters.currency === 'ton'
-                    ? a.tonPrice24hAgo ? Math.abs(((a.priceTon - a.tonPrice24hAgo) / a.tonPrice24hAgo) * 100) : 0
-                    : a.usdPrice24hAgo ? Math.abs(((a.priceUsd - a.usdPrice24hAgo) / a.usdPrice24hAgo) * 100) : 0;
-                const bChange = filters.currency === 'ton'
-                    ? b.tonPrice24hAgo ? Math.abs(((b.priceTon - b.tonPrice24hAgo) / b.tonPrice24hAgo) * 100) : 0
-                    : b.usdPrice24hAgo ? Math.abs(((b.priceUsd - b.usdPrice24hAgo) / b.usdPrice24hAgo) * 100) : 0;
+        const getChange = (current: number, prev: number): number => {
+            if (!prev || prev === 0) return 0;
+            return ((current - prev) / prev) * 100;
+        };
 
-                return filters.sort === 'lowFirst' ? aChange - bChange : bChange - aChange;
+        // Gainers
+        const sortedGainers = [...giftsList]
+            .filter(gift => {
+                const prev = filters.currency === 'ton'
+                    ? gift.tonPrice24hAgo
+                    : gift.usdPrice24hAgo;
+
+                return typeof prev === 'number' && prev > 0;
+            })
+            .sort((a, b) => {
+                const changeA = filters.currency === 'ton'
+                    ? getChange(a.priceTon, a.tonPrice24hAgo ?? 1)
+                    : getChange(a.priceUsd, a.usdPrice24hAgo ?? 1);
+
+                const changeB = filters.currency === 'ton'
+                    ? getChange(b.priceTon, b.tonPrice24hAgo ?? 1)
+                    : getChange(b.priceUsd, b.usdPrice24hAgo ?? 1);
+
+                return changeB - changeA;
             });
 
-            setList(sortedList);
-        }
-    }, [filters, giftsList]);
+        setGainersList(sortedGainers);
 
-    useEffect(() => {
-        if (giftsList.length > 0) {
-            let sortedList = [...giftsList];
+        // Losers
+        const sortedLosers = [...giftsList]
+            .filter(gift => {
+                const prev = filters.currency === 'ton'
+                    ? gift.tonPrice24hAgo
+                    : gift.usdPrice24hAgo;
 
-            sortedList.sort((a, b) =>
-                filters.currency === 'ton'
-                    ? filters.sort === 'lowFirst' ? a.priceTon - b.priceTon : b.priceTon - a.priceTon
-                    : filters.sort === 'lowFirst' ? a.priceUsd - b.priceUsd : b.priceUsd - a.priceUsd
-            );
+                return typeof prev === 'number' && prev > 0;
+            })
+            .sort((a, b) => {
+                const changeA = filters.currency === 'ton'
+                    ? getChange(a.priceTon, a.tonPrice24hAgo ?? 1)
+                    : getChange(a.priceUsd, a.usdPrice24hAgo ?? 1);
 
-            setTopList(sortedList);
-        }
-    }, [filters, giftsList]);
+                const changeB = filters.currency === 'ton'
+                    ? getChange(b.priceTon, b.tonPrice24hAgo ?? 1)
+                    : getChange(b.priceUsd, b.usdPrice24hAgo ?? 1);
+
+                return changeA - changeB;
+            });
+
+        setLosersList(sortedLosers);
+    }
+}, [filters, giftsList]);
+
 
     useEffect(() => {
         if (giftsList.length > 0 && user.savedList.length > 0) {
@@ -207,27 +243,35 @@ export default function MainPage() {
                 </Link>
             </div>
 
-            <div className="max-w-full mx-3 flex items-center justify-between mb-1">
+            <div className="max-w-full mx-3 gap-x-1 flex items-center justify-between mb-1">
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 0 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(0)}
                 >
-                    <Flame size={14} className="mr-[2px]"/>
-                    <span>Hot</span>
+                    <span>Gainers</span>
+                    <TrendingUp size={14} className="ml-1"/>
                 </button>
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 1 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(1)}
-                >
-                    <Trophy size={14} className="mr-[2px]"/>
-                    <span>Leaders</span>
+                >   
+                    <span>Loosers</span>
+                    <TrendingDown size={14} className="ml-1"/>
                 </button>
                 <button
                     className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 2 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
                     onClick={() => handleSwipe(2)}
                 >
-                    <Star size={14} className="mr-[2px]"/>
+                    <span>Top Price</span>
+                    <Trophy size={14} className="ml-1"/>
+                </button>
+                <button
+                    className={`w-full flex flex-row items-center justify-center text-xs h-8 ${activeIndex === 3 ? 'font-bold text-foreground bg-secondary rounded-lg' : 'text-secondaryText'}`}
+                    onClick={() => handleSwipe(3)}
+                >
+                    
                     <span>Saved</span>
+                    <Star size={14} className="ml-1"/>
                 </button>
             </div>
 
@@ -235,12 +279,14 @@ export default function MainPage() {
                 ref={containerRef}
                 className="w-full swipe-container flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
             >
-                <ListHandler giftsList={list} filters={filters} type={giftType} background={giftBackground}/>
+                <ListHandler giftsList={gainersList} type={giftType} background={giftBackground}/>
+                
+                <ListHandler giftsList={losersList} type={giftType} background={giftBackground}/>
 
-                <ListHandler giftsList={topList} filters={filters} type={giftType} background={giftBackground}/>
+                <ListHandler giftsList={topList} type={giftType} background={giftBackground}/>
 
                 {userList.length !== 0 ?
-                    <ListHandler giftsList={userList} filters={filters} type={giftType} background={giftBackground}/>
+                    <ListHandler giftsList={userList} type={giftType} background={giftBackground}/>
                     :
                     <div className="flex-none w-full text-center snap-start">
                         <div className="px-3 pt-3 pb-1 font-bold">
