@@ -84,7 +84,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
                     src={`/gifts/${item.image}.webp`}
                     width={50}
                     height={50}
-                    className={`w-14 h-14 p-[4px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent`}
+                    className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent`}
                 />
                     <div className="flex flex-col">
                         <span className="text-base font-bold">

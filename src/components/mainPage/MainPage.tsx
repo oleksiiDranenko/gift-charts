@@ -201,8 +201,8 @@ export default function MainPage() {
             <h1 className="text-2xl font-bold ml-1">
                 Gift Charts
             </h1>
-        </h1
-        <div className="mx-3 mb-4">
+        </h1> */}
+        {/* <div className="mx-3 mb-4">
             <span className="text-secondaryText text-sm">
                 ✨ App is <span className="font-bold text-foreground">Free</span> but you can <Link href='/donate' className="font-bold text-primary underline">Donate!</Link>
             </span>
@@ -216,11 +216,11 @@ export default function MainPage() {
           <div className="flex flex-col justify-center">
             <div className="flex flex-row">
               <h1 className=" text-white font-bold">
-                Subscribe to the official channel!
+                Advertise your product here!
               </h1>
             </div>
             <p className="text-xs text-white/70">
-              Be informed about the upcoming updates
+              Send DM to the channel for details!
             </p>
           </div>
           <div className="absolute right-0 top-2">
