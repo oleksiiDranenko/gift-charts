@@ -7,12 +7,9 @@ import GiftLifeDataInterface from '@/interfaces/GiftLifeDataInterface';
 import GiftWeekDataInterface from '@/interfaces/GiftWeekDataInterface';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import LoadingBar from 'react-top-loading-bar';
-import { AlarmClock, ChevronLeft } from 'lucide-react';
-import useVibrate from '@/hooks/useVibrate';
-import Link from 'next/link';
+import { AlarmClock } from 'lucide-react';
 import ReactLoading from 'react-loading';
+import BackButton from '@/utils/ui/backButton';
 
 export default function Page({ params }: any) {
     const [gift, setGift] = useState<GiftInterface | null>(null);
@@ -20,8 +17,6 @@ export default function Page({ params }: any) {
     const [lifeList, setLifeList] = useState<GiftLifeDataInterface[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const loadingBarRef = useRef<any>(null);
-    const router = useRouter();
-    const vibrate = useVibrate()
 
     useEffect(() => {
         (async () => {
@@ -54,16 +49,7 @@ export default function Page({ params }: any) {
                 {loading ? (
                     <div className="flex flex-col">
                             <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
-                                <div
-                                    className="w-fit flex flex-row items-center text-lg font-bold"
-                                    onClick={() => {
-                                        router.back()
-                                        vibrate()
-                                    }}
-                                >
-                                    <ChevronLeft />{'Go Back'}
-                                </div>
-                                
+                                <BackButton/>
                             </div>
                             <div className='w-full h-20 flex justify-center items-center'>
                                 <ReactLoading
@@ -79,15 +65,7 @@ export default function Page({ params }: any) {
                     gift && (
                         <div className="flex flex-col">
                             <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
-                                <div
-                                    className="w-fit flex flex-row items-center text-lg font-bold"
-                                    onClick={() => {
-                                        router.back()
-                                        vibrate()
-                                    }}
-                                >
-                                    <ChevronLeft />{'Go Back'}
-                                </div>
+                                <BackButton/>
                                 <div className="w-1/2 h-10 pr-3 flex items-center justify-end text-sm text-secondaryText">
                                     {weekList.length > 0
                                         ? <span className='flex flex-row items-center gap-x-1'>

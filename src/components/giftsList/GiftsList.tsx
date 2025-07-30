@@ -5,19 +5,17 @@ import { useAppSelector } from "@/redux/hooks";
 import { useAppDispatch } from "@/redux/hooks";
 import { setDefaultFilters, setFilters } from "@/redux/slices/filterListSlice";
 import { useEffect, useState } from "react";
-import ReactLoading from "react-loading";
 import GiftItem from "./GiftItem";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useVibrate from "@/hooks/useVibrate";
-import SearchBar from "../mainPage/SearchBar";
 import {
   BrushCleaning,
-  ChevronLeft,
   Eye,
   EyeClosed,
   Funnel,
 } from "lucide-react";
+import BackButton from "@/utils/ui/backButton";
 
 interface PropsInterface {
   loading: boolean;
@@ -176,14 +174,7 @@ export default function GiftsList({ loading }: PropsInterface) {
       {list !== undefined ? (
         <>
           <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
-            <Link
-              href={"/"}
-              className="w-fit flex flex-row items-center text-lg font-bold"
-              onClick={() => vibrate()}
-            >
-              <ChevronLeft />
-              {"Go Back"}
-            </Link>
+            <BackButton/>
             <button
               className="w-1/2 h-8 border border-secondary bg-secondaryTransparent rounded-lg"
               onClick={() => {

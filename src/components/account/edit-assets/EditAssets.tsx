@@ -1,7 +1,6 @@
 'use client';
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
@@ -14,7 +13,7 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import useVibrate from "@/hooks/useVibrate";
-import { ChevronLeft } from "lucide-react";
+import BackButton from "@/utils/ui/backButton";
 
 export default function EditAssets() {
     const vibrate = useVibrate();
@@ -219,13 +218,7 @@ export default function EditAssets() {
             ) : (
                 <>
                     <div className="w-full flex flex-row justify-between gap-x-3">
-                        <Link
-                            href={'/account/settings'}
-                            className="w-fit flex flex-row items-center text-lg font-bold"
-                            onClick={() => vibrate()}
-                        >
-                            <ChevronLeft />{'Go Back'}
-                        </Link>
+                        <BackButton/>
 
                         <button
                             className="w-1/2 h-10 bg-primary text-white rounded-lg"

@@ -12,8 +12,8 @@ import FilterGiftItem from "./FilterGiftItem"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { setFilters } from "@/redux/slices/filterListSlice"
 import useVibrate from "@/hooks/useVibrate"
-import Link from "next/link"
-import { BrushCleaning, ChevronLeft } from "lucide-react"
+import { BrushCleaning } from "lucide-react"
+import BackButton from "@/utils/ui/backButton"
 
 export default function FilterGifts() {
     
@@ -78,13 +78,7 @@ export default function FilterGifts() {
     return (
         <div className="w-full flex flex-col items-center">
             <div className="w-full mb-3 p-3 gap-3 flex justify-between items-center]">
-                <Link
-                    href={'/gifts-list'}
-                    className="w-fit flex flex-row items-center text-lg font-bold"
-                    onClick={() => vibrate()}
-                >
-                    <ChevronLeft />{'Go Back'}
-                </Link>
+                <BackButton/>
                 <button 
                     className="w-1/2 h-10 flex items-center justify-center border bg-secondaryTransparent rounded-lg gap-x-1"
                     onClick={() => {

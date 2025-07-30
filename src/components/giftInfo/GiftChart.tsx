@@ -413,6 +413,10 @@ export default function GiftChart({ gift, weekData, lifeData }: PropsInterface) 
                     :
                     <CandleChart data={candleData} weekData={weekData} />
             }
+
+            <div>
+                
+            </div>
         </div>
     );
 }

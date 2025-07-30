@@ -73,7 +73,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
 
     return (
         <Link 
-            className={`w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondary rounded-md ${background === 'color' ? `bg-gradient-to-r ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : ''}`} 
+            className={`w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondaryTransparent rounded-lg ${background === 'color' ? `bg-gradient-to-r ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : ''}`} 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}
@@ -84,14 +84,14 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
                     src={`/gifts/${item.image}.webp`}
                     width={50}
                     height={50}
-                    className={`w-12 h-12 p-[4px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent shadow-md shadow-secondary`}
+                    className={`w-14 h-14 p-[4px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent`}
                 />
                     <div className="flex flex-col">
                         <span className="text-base font-bold">
                             {item.name}
                             {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
                         </span>
-                        <span className="text-slate-500 text-sm font-normal">
+                        <span className="text-slate-500 gap-y-1 w-fit bg-secondaryTransparent p-1 rounded-lg text-xs font-normal">
                             {
                                 sortBy === 'price' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
                                 : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.upgradedSupply) : (item.priceUsd * item.upgradedSupply))
@@ -107,7 +107,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
             </div>
 
             <div className=" flex flex-row items-center justify-end">
-                <div className="w-fit h-10 text-sm flex flex-col items-end justify-center mr-2">
+                <div className="w-fit gap-y-1 text-sm flex flex-col items-end justify-center mr-2">
                     <div className="flex flex-row items-center">
                         {currency === 'ton' ?
                             <Image 
@@ -133,7 +133,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
                         </span>
                     </div>
                     
-                    <span className={`flex flex-row items-center text-sm font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
+                    <span className={`py-[2px] px-1 rounded-lg bg-opacity-10 flex flex-row items-center text-xs font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500 bg-green-500' : percentChange < 0 ? 'text-red-500 bg-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
                         {percentChange !== 'no data' && percentChange >= 0 &&  '+'}
                         {percentChange}
                         {percentChange !== 'no data' ? '%' : null}

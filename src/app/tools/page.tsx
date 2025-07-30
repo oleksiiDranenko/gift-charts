@@ -17,15 +17,11 @@ export default function Page() {
   const dispatch = useAppDispatch();
   const giftsList = useAppSelector((state) => state.giftsList);
   const indexList = useAppSelector((state) => state.indexList);
-  const [loading, setLoading] = useState<boolean>(true);
-  const loadingBarRef = useRef<any>(null);
   const vibrate = useVibrate();
 
   useEffect(() => {
     (async () => {
       try {
-        setLoading(true);
-        loadingBarRef.current?.continuousStart();
         if (giftsList.length === 0) {
           const giftsRes = await axios.get(
             `${process.env.NEXT_PUBLIC_API}/gifts`
@@ -40,9 +36,6 @@ export default function Page() {
         }
       } catch (error) {
         console.error("Error fetching gifts:", error);
-      } finally {
-        setLoading(false);
-        loadingBarRef.current?.complete();
       }
     })();
   }, [dispatch, giftsList]);
