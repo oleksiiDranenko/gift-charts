@@ -202,12 +202,12 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
                         />
                     }
                   </div>
-                  <div className="w-1/2 max-w-96">
+                  <div className="w-2/3 lg:w-1/2 max-w-96">
                     <ProgressBar
                       completed={progress}
                       bgColor="var(--primary)"
-                      height="3px"
-                      baseBgColor="var(--secondary)"
+                      height="2px"
+                      baseBgColor="var(--secondary-transparent)"
                       isLabelVisible={false}
                       transitionDuration="0.5s"
                       transitionTimingFunction="ease-in-out"

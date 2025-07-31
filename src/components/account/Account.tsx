@@ -49,6 +49,24 @@ export default function Account() {
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValue24hAgo, setPortfolioValue24hAgo] = useState<number>(0);
   const [portfolioInitValue, setPortfolioInitValue] = useState<number>(0);
+  const [referralLink, setReferralLink] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initDataUnsafe?.user) {
+      const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
+      const link = `https://t.me/gift_charts_bot?start=ref_${userId}`;
+      setReferralLink(link);
+    }
+  }, []);
+
+  const handleClick = () => {
+    if (referralLink) {
+      navigator.clipboard.writeText(referralLink);
+      alert('Referral link copied!');
+    } else {
+      alert('Referral link not available.');
+    }
+  };
 
   useEffect(() => {
     console.log(user);
@@ -220,7 +238,13 @@ export default function Account() {
         </div>
       ) : (
         <>
-          <div className="w-full h-28 flex flex-row justify-center items-center">
+          <div className="w-full h-28 flex flex-row justify-center items-center relative">
+            <button 
+            className="py-1 px-2 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-lg"
+            onClick={handleClick}>
+              Referral Link
+            </button>
+            
             <div className="flex flex-col items-center">
               <div className="flex flex-row items-center">
                 {currency === "ton" ? (

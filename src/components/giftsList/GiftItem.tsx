@@ -86,12 +86,12 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
                     height={50}
                     className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent`}
                 />
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-y-[2px]">
                         <span className="text-base font-bold">
                             {item.name}
                             {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
                         </span>
-                        <span className="text-slate-500 gap-y-1 w-fit bg-secondaryTransparent p-1 rounded-lg text-xs font-normal">
+                        <span className="py-[2px] px-1 text-slate-500 gap-y-1 w-fit bg-secondaryTransparent rounded-lg text-xs font-normal">
                             {
                                 sortBy === 'price' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
                                 : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.upgradedSupply) : (item.priceUsd * item.upgradedSupply))
@@ -107,7 +107,7 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
             </div>
 
             <div className=" flex flex-row items-center justify-end">
-                <div className="w-fit gap-y-1 text-sm flex flex-col items-end justify-center mr-2">
+                <div className="w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-2">
                     <div className="flex flex-row items-center">
                         {currency === 'ton' ?
                             <Image 
