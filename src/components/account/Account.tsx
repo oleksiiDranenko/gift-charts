@@ -12,7 +12,7 @@ import Link from "next/link";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { countPercentChange } from "@/numberFormat/functions";
-import { Gift, Settings } from "lucide-react";
+import { Copy, Gift, Settings } from "lucide-react";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -49,10 +49,13 @@ export default function Account() {
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValue24hAgo, setPortfolioValue24hAgo] = useState<number>(0);
   const [portfolioInitValue, setPortfolioInitValue] = useState<number>(0);
-  const [referralLink, setReferralLink] = useState('');
+  const [referralLink, setReferralLink] = useState("");
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initDataUnsafe?.user) {
+    if (
+      typeof window !== "undefined" &&
+      window.Telegram?.WebApp?.initDataUnsafe?.user
+    ) {
       const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
       const link = `https://t.me/gift_charts_bot?start=ref_${userId}`;
       setReferralLink(link);
@@ -62,9 +65,9 @@ export default function Account() {
   const handleClick = () => {
     if (referralLink) {
       navigator.clipboard.writeText(referralLink);
-      alert('Referral link copied!');
+      alert("Referral link copied!");
     } else {
-      alert('Referral link not available.');
+      alert("Referral link not available.");
     }
   };
 
@@ -78,9 +81,7 @@ export default function Account() {
             `${process.env.NEXT_PUBLIC_API}/gifts`
           );
           dispatch(setGiftsList(giftsRes.data));
-          setTon(
-            giftsList[1].priceUsd / giftsList[1].priceTon
-          );
+          setTon(giftsList[1].priceUsd / giftsList[1].priceTon);
         }
       } catch (error) {
         console.error("Error fetching gifts:", error);
@@ -163,7 +164,10 @@ export default function Account() {
 
       // Calculate initial portfolio value (using avgPrice, stored in TON)
       const initialAssetsValue = updatedAssets.reduce(
-        (sum, asset) => sum + (currency === "ton" ? asset.avgPrice : asset.avgPrice * ton) * asset.amount,
+        (sum, asset) =>
+          sum +
+          (currency === "ton" ? asset.avgPrice : asset.avgPrice * ton) *
+            asset.amount,
         0
       );
 
@@ -239,12 +243,14 @@ export default function Account() {
       ) : (
         <>
           <div className="w-full h-28 flex flex-row justify-center items-center relative">
-            <button 
-            className="py-1 px-2 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-lg"
-            onClick={handleClick}>
-              Referral Link
+            <button
+              className="py-2 px-3 flex flex-row items-center gap-x-1 left-0 top-0 absolute text-sm bg-secondaryTransparent border border-secondary rounded-lg"
+              onClick={handleClick}
+            >
+              <Copy size={16} />
+              <span>Referral</span>
             </button>
-            
+
             <div className="flex flex-col items-center">
               <div className="flex flex-row items-center">
                 {currency === "ton" ? (
@@ -262,17 +268,22 @@ export default function Account() {
               </div>
               <span
                 className={`mt-1 font-bold ${
-                  changeType === '24h%' ? 
-                  (countPercentChange(portfolioValue24hAgo, portfolioValue) >= 0
-                    ? "text-green-500"
-                    : "text-red-500")
-                    : changeType === 'PNL' ?
-                    (portfolioValue - portfolioInitValue >=0 ? "text-green-500"
-                    : "text-red-500")
-                    : changeType === 'PNL%' &&
-                    (countPercentChange(portfolioInitValue, portfolioValue) >= 0
-                    ? "text-green-500"
-                    : "text-red-500")
+                  changeType === "24h%"
+                    ? countPercentChange(
+                        portfolioValue24hAgo,
+                        portfolioValue
+                      ) >= 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                    : changeType === "PNL"
+                    ? portfolioValue - portfolioInitValue >= 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                    : changeType === "PNL%" &&
+                      (countPercentChange(portfolioInitValue, portfolioValue) >=
+                      0
+                        ? "text-green-500"
+                        : "text-red-500")
                 }`}
               >
                 {changeType === "24h%"
@@ -284,9 +295,14 @@ export default function Account() {
                         ? "+"
                         : ""
                     }
-                ${countPercentChange(portfolioValue24hAgo, portfolioValue).toFixed(2)}% `
+                ${countPercentChange(
+                  portfolioValue24hAgo,
+                  portfolioValue
+                ).toFixed(2)}% `
                   : changeType === "PNL"
-                  ? `${portfolioValue - portfolioInitValue > 0 && '+'} ${(portfolioValue - portfolioInitValue).toFixed(2)}`
+                  ? `${portfolioValue - portfolioInitValue > 0 && "+"} ${(
+                      portfolioValue - portfolioInitValue
+                    ).toFixed(2)}`
                   : changeType === "PNL%" &&
                     `${
                       countPercentChange(portfolioInitValue, portfolioValue) >=
@@ -294,7 +310,10 @@ export default function Account() {
                         ? "+"
                         : ""
                     }
-                ${countPercentChange(portfolioInitValue, portfolioValue).toFixed(2)}% `}
+                ${countPercentChange(
+                  portfolioInitValue,
+                  portfolioValue
+                ).toFixed(2)}% `}
               </span>
             </div>
           </div>
@@ -303,7 +322,9 @@ export default function Account() {
             <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
               <button
                 className={`text-xs h-8 px-3 box-border ${
-                  currency === "ton" ? 'rounded-lg bg-primary font-bold text-white' : null
+                  currency === "ton"
+                    ? "rounded-lg bg-primary font-bold text-white"
+                    : null
                 }`}
                 onClick={() => {
                   setCurrency("ton");
@@ -314,7 +335,9 @@ export default function Account() {
               </button>
               <button
                 className={`text-xs h-8 px-3 box-border ${
-                  currency === "usd" ? 'rounded-lg bg-primary font-bold text-white' : null
+                  currency === "usd"
+                    ? "rounded-lg bg-primary font-bold text-white"
+                    : null
                 }`}
                 onClick={() => {
                   setCurrency("usd");
@@ -328,7 +351,8 @@ export default function Account() {
             <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
               <button
                 className={`text-xs h-8 px-3 box-border ${
-                  changeType === "24h%" && 'rounded-lg bg-primary font-bold text-white'
+                  changeType === "24h%" &&
+                  "rounded-lg bg-primary font-bold text-white"
                 }`}
                 onClick={() => {
                   setChangeType("24h%");
@@ -339,7 +363,8 @@ export default function Account() {
               </button>
               <button
                 className={`text-xs h-8 px-3 box-border ${
-                  changeType === "PNL" && 'rounded-lg bg-primary font-bold text-white'
+                  changeType === "PNL" &&
+                  "rounded-lg bg-primary font-bold text-white"
                 }`}
                 onClick={() => {
                   setChangeType("PNL");
@@ -350,7 +375,8 @@ export default function Account() {
               </button>
               <button
                 className={`text-xs h-8 px-3 box-border ${
-                  changeType === "PNL%" && 'rounded-lg bg-primary font-bold text-white'
+                  changeType === "PNL%" &&
+                  "rounded-lg bg-primary font-bold text-white"
                 }`}
                 onClick={() => {
                   setChangeType("PNL%");
@@ -365,9 +391,7 @@ export default function Account() {
           <div className="w-full h-auto">
             <div className="mt-5">
               <div className="w-full flex justify-between items-center text-lg font-bold mb-3 pr-2">
-                <h2>
-                  Assets
-                </h2>
+                <h2>Assets</h2>
                 <div className="flex flex-row items-center">
                   {currency === "ton" ? (
                     <Image
