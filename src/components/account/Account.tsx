@@ -244,10 +244,10 @@ export default function Account() {
         <>
           <div className="w-full h-28 flex flex-row justify-center items-center relative">
             <button
-              className="py-2 px-3 flex flex-row items-center gap-x-1 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-lg"
+              className="p-[6px] flex flex-row items-center gap-x-1 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-lg"
               onClick={handleClick}
             >
-              <Copy size={14} />
+              <Copy size={14} className="text-primary"/>
               <span>Referral</span>
             </button>
 

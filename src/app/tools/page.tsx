@@ -74,6 +74,10 @@ export default function Page() {
       </div>
     </div>
 
+    {/* <Link href={'/tools/calendar-heatmap'}>
+      test thing
+    </Link> */}
+
       <div className="w-full h-auto flex flex-col gap-3">
         <IndexBlock name="Market Cap" id="68493d064b37eed02b7ae5af" />
         <IndexBlock name="FDV" id="67faf0d0634d6e48d48360bc" />

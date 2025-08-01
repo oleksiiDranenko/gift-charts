@@ -16,6 +16,8 @@ import Lottie from 'lottie-react';
 import ProgressBar from '@ramonak/react-progress-bar';
 import useVibrate from '@/hooks/useVibrate';
 import {animations} from '@/animations/animations.js';
+import Script from 'next/script';
+import { usePathname } from 'next/navigation';
 
 const inter =  Inter ({ subsets: ['latin', 'cyrillic'] });
 
@@ -221,13 +223,43 @@ function DefaultUpdate({ children }: { children: React.ReactNode }) {
   )
 }
 
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Track page views on route change
+    if (typeof window.gtag === 'function') {
+      window.gtag('config', 'G-HFQGDBLR7K', {
+        page_path: pathname,
+      });
+    }
+  }, [pathname]);
   
     return (
+        <>
+        <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-HFQGDBLR7K"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-HFQGDBLR7K', { page_path: window.location.pathname });
+        `}
+      </Script>
         <html lang="en">
             <body className={inter.className}>
                 <ReduxProvider>
-                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
                         <AppInitializer>
                             <DefaultUpdate>
                               {children}
@@ -237,5 +269,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </ReduxProvider>
             </body>
         </html>
+        </>
     );
 }
