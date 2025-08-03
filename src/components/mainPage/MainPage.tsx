@@ -323,7 +323,7 @@ export default function MainPage() {
           }`}
           onClick={() => handleSwipe(1)}
         >
-          <span>Loosers</span>
+          <span>Losers</span>
           <TrendingDown size={14} className="ml-1" />
         </button>
         <button
