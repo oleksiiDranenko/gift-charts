@@ -5,6 +5,7 @@ import Image from "next/image"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { useEffect, useState } from "react"
 import useVibrate from "@/hooks/useVibrate"
+import { BadgeCheck, Cannabis } from "lucide-react"
 
 interface PropsInterface {
     item: GiftInterface,
@@ -87,8 +88,12 @@ export default function GiftItem({item, currency, sortBy, displayValue, timeGap,
                     className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent`}
                 />
                     <div className="flex flex-col gap-y-[2px]">
-                        <span className="text-base font-bold">
+                        <span className="flex flex-row items-center text-base font-bold">
                             {item.name}
+                            {/* <span className="flex flex-row items-center gap-[2px] ml-1 text-xs font-normal p-1 text-green-500 bg-green-500 bg-opacity-10 rounded-lg">
+                                <Cannabis size={12}/>
+                            </span> */}
+                            
                             {item.preSale && (<span className="text-xs text-cyan-500 ml-2">Pre-Market</span>)}
                         </span>
                         <span className="py-[2px] px-1 text-slate-500 gap-y-1 w-fit bg-secondaryTransparent rounded-lg text-xs font-normal">
