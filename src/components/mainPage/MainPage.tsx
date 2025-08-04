@@ -216,11 +216,11 @@ export default function MainPage() {
           <div className="flex flex-col justify-center">
             <div className="flex flex-row">
               <h1 className=" text-white font-bold">
-                Advertise your product here!
+                Subscribe to official channel!
               </h1>
             </div>
             <p className="text-xs text-white/70">
-              Send DM to the channel for details!
+              Find out about the latest updates
             </p>
           </div>
           <div className="absolute right-0 top-2">
