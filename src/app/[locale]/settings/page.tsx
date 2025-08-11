@@ -1,10 +1,11 @@
 'use client'
 
+import LanguageSwitcher from "@/components/languageSwitcher";
 import useVibrate from "@/hooks/useVibrate"
 import { useAppSelector } from "@/redux/hooks";
 import { ChevronRight, Gift, Moon, Palette, Star, Sun, SunMoon } from "lucide-react"
 import { useTheme } from "next-themes";
-import Link from "next/link"
+import {Link} from "@/i18n/navigation"
 
 export default function Page() {
 
@@ -52,6 +53,8 @@ export default function Page() {
                     </button>
                 </div>
             </div>
+
+            {/* <LanguageSwitcher/> */}
             {
                 user.username !== "_guest" && (
                 <div className="w-full flex flex-col items-center">

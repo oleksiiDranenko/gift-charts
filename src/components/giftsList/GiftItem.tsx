@@ -1,6 +1,6 @@
 'use client'
 
-import Link from "next/link"
+import {Link} from "@/i18n/navigation"
 import Image from "next/image"
 import GiftInterface from "@/interfaces/GiftInterface"
 import { useEffect, useState } from "react"

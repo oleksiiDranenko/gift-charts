@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import ReactLoading from "react-loading";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { countPercentChange } from "@/numberFormat/functions";

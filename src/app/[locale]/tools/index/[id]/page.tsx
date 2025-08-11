@@ -8,7 +8,7 @@ import IndexChart from "@/components/tools/IndexChart";
 import ReactLoading from "react-loading";
 import { useRouter } from "next/navigation";
 import IndexPie from "@/components/tools/IndexPie";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation";
 import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import useVibrate from "@/hooks/useVibrate";
 import CalendarHeatmap from "@/components/tools/calendar-heatmap/CalendarHeatmap";

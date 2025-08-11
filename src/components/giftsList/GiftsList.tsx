@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setDefaultFilters, setFilters } from "@/redux/slices/filterListSlice";
 import { useEffect, useState } from "react";
 import GiftItem from "./GiftItem";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation";
 import { useRouter } from "next/navigation";
 import useVibrate from "@/hooks/useVibrate";
 import {
