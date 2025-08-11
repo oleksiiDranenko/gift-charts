@@ -1,0 +1,29 @@
+{
+	"navbar": {
+    "home": "Home",
+    "tools": "Tools",
+    "profile": "Account",
+    "settings": "Settings"
+  },
+	
+  "mainPage": {
+		"addPoster": {
+			"title": "",
+			"description": ""
+		},
+		"searchBar": {
+			"placeholder": "Search gifts..."
+		},
+		"filters": {
+			"customise": "Customise",
+			"gainers": "Gainers",
+			"losers": "Losers",
+			"topPrice": "Top Price",
+			"saved": "Saved"
+		}
+	},
+
+	"tools": {
+
+	}
+}

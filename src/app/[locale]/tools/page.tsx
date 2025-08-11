@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { setIndexList } from "@/redux/slices/indexListSlice";
 import axios from "axios";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation";
 import { useEffect, useState, useRef } from "react";
 import LoadingBar from "react-top-loading-bar";
 import IndexBlock from "@/components/tools/IndexBlock";

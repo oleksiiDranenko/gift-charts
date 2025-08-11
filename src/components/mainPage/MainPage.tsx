@@ -2,7 +2,7 @@
 
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppSelector } from "@/redux/hooks";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import GiftItem from "../giftsList/GiftItem";

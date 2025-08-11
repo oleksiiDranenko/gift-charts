@@ -1,12 +1,16 @@
+import createNextIntlPlugin from 'next-intl/plugin'
+
+const withNextIntl = createNextIntlPlugin()
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    formats: ['image/webp'], // Prefer WebP
-    minimumCacheTTL: 31536000, // 1 year caching for optimized images
+    formats: ['image/webp'], 
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**', // Allow external images if needed
+        hostname: '**',
       },
     ],
   },
@@ -25,4 +29,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default withNextIntl(nextConfig)
