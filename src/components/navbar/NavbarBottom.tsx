@@ -40,7 +40,10 @@ export default function NavbarBottom() {
           }}
         >
           <House />
-          <span className="text-xs">{t('home')}</span>
+          <span className="text-xs">
+            {/* {t('home')} */}
+            Home
+          </span>
         </Link>
         <Link
           className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${
@@ -53,7 +56,10 @@ export default function NavbarBottom() {
           }}
         >
           <ChartCandlestick />
-          <span className="text-xs">{t('tools')}</span>
+          <span className="text-xs">
+            {/* {t('tools')} */}
+            Tools
+          </span>
         </Link>
         <Link
           className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${
@@ -66,7 +72,10 @@ export default function NavbarBottom() {
           }}
         >
           <User />
-          <span className="text-xs">{t('profile')}</span>
+          <span className="text-xs">
+            {/* {t('profile')} */}
+            Profile
+        </span>
         </Link>
         <Link
           className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${
@@ -79,7 +88,10 @@ export default function NavbarBottom() {
           }}
         >
           <Settings />
-          <span className="text-xs">{t('settings')}</span>
+          <span className="text-xs">
+            {/* {t('settings')} */}
+            Settings
+        </span>
         </Link>
       </div>
     </div>
