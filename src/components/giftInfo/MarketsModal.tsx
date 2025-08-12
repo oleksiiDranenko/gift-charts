@@ -1,0 +1,155 @@
+// components/MarketsModal.tsx
+"use client";
+
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, ReactNode, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+
+interface MarketsModalProps {
+  trigger: ReactNode; // Button or any clickable element
+}
+
+export default function MarketsModal({ trigger }: MarketsModalProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {/* Clone the trigger element and attach onClick */}
+      <span onClick={() => setIsOpen(true)} className="inline-block w-full">
+        {trigger}
+      </span>
+
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setIsOpen(false)}>
+          {/* Backdrop */}
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-200"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-150"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+          </Transition.Child>
+
+          {/* Modal content */}
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-200"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-150"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full lg:w-1/2 p-3 rounded-xl bg-background border border-secondary shadow-xl">
+                
+
+                <div className="w-full mt-2">
+                    <h2 className="mb-3 text-lg font-bold">Off-Chain:</h2>
+                    <div className="w-full flex flex-row gap-x-4">
+                        <Link 
+                            className="flex flex-col items-center text-sm gap-y-1" 
+                            href={"https://t.me/portals/market?startapp=s6ekgi"}
+                        >
+                            <Image 
+                            src={"https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/ni7vlvzll03912e/avatar_9xf5gwd17v.jpg"} 
+                            alt={""}
+                            width={70}
+                            height={70}
+                            className="rounded-xl shadow-sm shadow-secondary"
+                            />
+                            <span>
+                                Portals
+                            </span>
+                        </Link>
+                        <Link 
+                            className="flex flex-col items-center text-sm gap-y-1" 
+                            href={"https://t.me/tonnel_network_bot/gifts?startapp=ref_754292445"}
+                        >
+                            <Image 
+                            src={"https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/2cyjbta6sjfetin/avatar_wiaiqqnm_nt_TUsxtMdabW.jpg"} 
+                            alt={""}
+                            width={70}
+                            height={70}
+                            className="rounded-xl shadow-sm shadow-secondary"
+                            />
+                            <span>
+                                Tonnel
+                            </span>
+                        </Link>
+                        <Link 
+                            className="flex flex-col items-center text-sm gap-y-1" 
+                            href={"https://t.me/mrkt/app?startapp=754292445"}
+                        >
+                            <Image 
+                            src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_s5uUrxWH-KgIH_koXtCcZ8-E31bSl1QB3w&s"} 
+                            alt={""}
+                            width={70}
+                            height={70}
+                            className="rounded-xl shadow-sm shadow-secondary"
+                            />
+                            <span>
+                                MRKT
+                            </span>
+                        </Link>
+                    </div>
+                </div>
+
+                <div className="w-full mt-6">
+                    <h2 className="mb-3 text-lg font-bold">On-Chain:</h2>
+                    <div className="w-full flex flex-row gap-x-4">
+                        <Link 
+                            className="flex flex-col items-center text-sm gap-y-1" 
+                            href={"https://fragment.com/gifts"}
+                        >
+                            <Image 
+                            src={"https://cdn4.telesco.pe/file/C-31x4JtF5ZgPmjjqLjfEgeQczapERvf4VEHn2RQxqRPz1SFFSyurVsqtiuFHeWvesfgslbkM3V7aWUppX8P3NqqQCabg5Z64wWpoBqAwWv73Cxuq-nhEOKhr0_U38LbYoIRn4bhRsAv31wNz9wBlpY02cxMf5X4HXWUc4fD6cHvjWgFRPNWu7liKQua_jn_kO--1mSOSoCHk3IcxYTcIPUEuuq77b2FMXwpuzL5YdEphqJKD5HjrVKsGZSoJaDB8SJm9Yy6QlwGJoHjA2nCFKbvbJYEQvartWyTt35yzZo7xwHDLe8Hd2IeYHhGjtOLsMCQmYYt4MO32tZu8tVqJg.jpg"} 
+                            alt={""}
+                            width={70}
+                            height={70}
+                            className="rounded-xlg shadow-sm shadow-secondary"
+                            />
+                            <span>
+                                Fragment
+                            </span>
+                        </Link>
+                        <Link 
+                            className="flex flex-col items-center text-sm gap-y-1" 
+                            href={"https://getgems.io/gifts-collection"}
+                        >
+                            <Image 
+                            src={"https://avatars.githubusercontent.com/u/109078587?s=200&v=4"} 
+                            alt={""}
+                            width={70}
+                            height={70}
+                            className="rounded-xl shadow-sm shadow-secondary"
+                            />
+                            <span>
+                                GetGems
+                            </span>
+                        </Link>
+                    </div>
+                </div>
+
+                <div className="w-full mt-6 flex">
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="w-full px-4 py-2 bg-secondaryTransparent border border-secondary rounded-lg"
+                  >
+                    Close
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
+    </>
+  );
+}

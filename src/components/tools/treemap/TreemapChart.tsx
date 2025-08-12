@@ -160,9 +160,9 @@ const imagePlugin = (
       // --- Solid color background ---
       const baseColor =
         item.percentChange > 0
-          ? "#009900"
+          ? "#16a34a"
           : item.percentChange < 0
-          ? "#FF0000"
+          ? "#dc2626"
           : "#8F9779";
       ctx.fillStyle = baseColor;
       ctx.fillRect(x, y, width, height);
@@ -332,7 +332,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         tooltip: { enabled: false },
       },
     },
-    plugins: [imagePlugin(chartType, currency, 50, 1, 1.4)], // Larger watermark, text, and image
+    plugins: [imagePlugin(chartType, currency, 35, 1, 1.4)], // Larger watermark, text, and image
   });
 
   // Give the chart a moment to render

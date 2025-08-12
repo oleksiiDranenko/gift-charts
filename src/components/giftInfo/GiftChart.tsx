@@ -18,9 +18,15 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
 import CandleChart from "./CandleChart";
-import { ChartCandlestick, ChartSpline, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  ChartCandlestick,
+  ChartSpline,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import CalendarHeatmap from "../tools/calendar-heatmap/CalendarHeatmap";
+import MarketsModal from "./MarketsModal";
 
 ChartJS.register(
   LineElement,
@@ -58,7 +64,7 @@ export default function GiftChart({
   const [candleData, setCandleData] = useState<GiftLifeDataInterface[]>([]);
   const [chartType, setChartType] = useState<"line" | "candle">("line");
 
-  const [showCalendar, setShowCalendar] = useState<boolean>(false)
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
   const { theme, resolvedTheme } = useTheme();
 
@@ -497,39 +503,45 @@ export default function GiftChart({
         <CandleChart data={candleData} weekData={weekData} />
       )}
 
+      <div className="w-full flex flex-row gap-x-3 mt-5">
+        <MarketsModal
+          trigger={
+            <button className="w-full h-10 bg-red-600 rounded-lg">Sell</button>
+          }
+        />
+        <MarketsModal
+          trigger={
+            <button className="w-full h-10 bg-green-600 rounded-lg">Buy</button>
+          }
+        />
+      </div>
+
       <div className="mt-5">
         <div className="w-full flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
-            <Image
-              alt="gift"
-              src={`/gifts/${gift?.image}.webp`}
-              width={55}
-              height={55}
-              className={`mr-3 p-1 rounded-lg  bg-secondaryTransparent `}
-            />
             <h2 className="text-lg font-bold">Yearly Performance</h2>
           </div>
           <div>
             <button
-            onClick={() => setShowCalendar(!showCalendar)}
-            className="flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-lg"
+              onClick={() => setShowCalendar(!showCalendar)}
+              className="flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-lg"
             >
-                {
-                    showCalendar ? 
-                    <>
-                        Hide
-                        <ChevronUp size={18}/>
-                    </> : 
-                    <>
-                        Show
-                        <ChevronDown size={18}/>
-                        </>
-                }
+              {showCalendar ? (
+                <>
+                  Hide
+                  <ChevronUp size={18} />
+                </>
+              ) : (
+                <>
+                  Show
+                  <ChevronDown size={18} />
+                </>
+              )}
             </button>
           </div>
         </div>
-        <div className={showCalendar ? 'visible' : 'hidden'}>
-            <CalendarHeatmap lifeData={lifeData}/>
+        <div className={showCalendar ? "visible" : "hidden"}>
+          <CalendarHeatmap lifeData={lifeData} />
         </div>
       </div>
     </div>

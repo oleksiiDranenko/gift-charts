@@ -74,8 +74,8 @@ const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ lifeData }) => {
 
   const getColor = (percentChange: number | null): string => {
     if (percentChange === null) return "bg-secondaryTransparent";
-    if (percentChange > 0) return "bg-[#009900]";
-    if (percentChange < 0) return "bg-[#FF0000]";
+    if (percentChange > 0) return "bg-green-600";
+    if (percentChange < 0) return "bg-red-600";
     return "bg-[#8F9779]";
   };
 

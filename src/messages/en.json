@@ -1,11 +1,49 @@
 {
+	"filters": {
+		"hideFilters": "Hide Filters",
+		"showFilters": "Show Filters",
+		"filterGifts": "Filter Gifts",
+		"sortBy": "Sort By",
+		"price": "Price",
+		"marketCap": "Market Cap",
+		"change": "Change",
+		"supply": "Supply",
+		"initSupply": "Init. Supply",
+		"starsPrice": "Stars Price",
+		"low": "Low",
+		"high": "High",
+		"clearFilters": "Clear Filters",
+		"name": "Name",
+		"24hChange": "24h change",
+		"top": "Top"
+	},
+
+	"timegap": {
+		"hour": "h",
+		"day": "d",
+		"week": "w",
+		"month": "m",
+		"all": "All"
+	},
+
+	"number": {
+		"thousand": "K",
+		"million": "M"
+	},
+
+	"buttons": {
+		"show": "Show",
+		"hide": "Hide",
+		"tryItNow": "Try it now"
+	},
+
 	"navbar": {
     "home": "Home",
     "tools": "Tools",
     "profile": "Account",
     "settings": "Settings"
   },
-	
+
   "mainPage": {
 		"addPoster": {
 			"title": "",
@@ -23,7 +61,37 @@
 		}
 	},
 
-	"tools": {
+	"giftInfo": {
+		"yearlyPerformance": "Yearly Performance",
+		"releaseDate": "Release Date",
+		"starsPrice": "Stars Price",
+		"upgradeStarsPrice": "Upgrade Stars Price",
+		"totalStarsPrice": "Total Stars Price",
+		"totalStarsPriceInUSD": "Total Stars Price in USD",
+		"totalStarsPriceInTON": "Total Stars Price in TON",
+		"initialSupply": "Inital Supply",
+		"supply": "Supply",
+		"upgradedSupply": "Upgraded Supply",
+		"percentUpdgraded": "Percent Upgraded",
+		"amountBurnt": "Amount Burnt",
+		"percentBurnt": "Percent Burnt"
+	},
 
+	"tools": {
+		"heatmap": {
+			"name": "Heatmap",
+			"resetZoom": "Reset Zoom",
+			"download": "Download Heatmap as an Image"
+		},
+		"marketCap": "Market Cap"
+	},
+
+	"settings": {
+		"colorTheme": {
+			"name": "Color Theme",
+			"light": "Light",
+			"dark": "Dark",
+			"system": "System"
+		}
 	}
 }

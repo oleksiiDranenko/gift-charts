@@ -24,6 +24,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
+import MarketsModal from "../giftInfo/MarketsModal";
 
 export default function MainPage() {
   const vibrate = useVibrate();
