@@ -67,16 +67,13 @@ export default function Page() {
             className="px-3 h-10 text-sm flex items-center border border-secondary bg-secondaryTransparent rounded-lg"
             onClick={() => vibrate()}
           >
-            <span>Try it now</span>
+            <span>Try it now</span> 
             <ChevronRight size={18} /> 
           </Link>
         </div>
       </div>
     </div>
 
-    {/* <Link href={'/tools/calendar-heatmap'}>
-      test thing
-    </Link> */}
 
       <div className="w-full h-auto flex flex-col gap-3">
         <IndexBlock name="Market Cap" id="68493d064b37eed02b7ae5af" />
