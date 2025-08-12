@@ -5,6 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import useVibrate from "@/hooks/useVibrate";
 
 
 interface MarketsModalProps {
@@ -13,6 +14,7 @@ interface MarketsModalProps {
 
 export default function MarketsModal({ trigger }: MarketsModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const vibrate = useVibrate()
 
   return (
     <>
@@ -56,6 +58,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         <Link 
                             className="flex flex-col items-center text-sm gap-y-1" 
                             href={"https://t.me/portals/market?startapp=s6ekgi"}
+                            onClick={() => vibrate()}
                         >
                             <Image 
                             src={"https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/ni7vlvzll03912e/avatar_9xf5gwd17v.jpg"} 
@@ -71,6 +74,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         <Link 
                             className="flex flex-col items-center text-sm gap-y-1" 
                             href={"https://t.me/tonnel_network_bot/gifts?startapp=ref_754292445"}
+                            onClick={() => vibrate()}
                         >
                             <Image 
                             src={"https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/2cyjbta6sjfetin/avatar_wiaiqqnm_nt_TUsxtMdabW.jpg"} 
@@ -86,6 +90,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         <Link 
                             className="flex flex-col items-center text-sm gap-y-1" 
                             href={"https://t.me/mrkt/app?startapp=754292445"}
+                            onClick={() => vibrate()}
                         >
                             <Image 
                             src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_s5uUrxWH-KgIH_koXtCcZ8-E31bSl1QB3w&s"} 
@@ -107,6 +112,8 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         <Link 
                             className="flex flex-col items-center text-sm gap-y-1" 
                             href={"https://fragment.com/gifts"}
+                            onClick={() => vibrate()}
+                            target="_blank"
                         >
                             <Image 
                             src={"https://cdn4.telesco.pe/file/C-31x4JtF5ZgPmjjqLjfEgeQczapERvf4VEHn2RQxqRPz1SFFSyurVsqtiuFHeWvesfgslbkM3V7aWUppX8P3NqqQCabg5Z64wWpoBqAwWv73Cxuq-nhEOKhr0_U38LbYoIRn4bhRsAv31wNz9wBlpY02cxMf5X4HXWUc4fD6cHvjWgFRPNWu7liKQua_jn_kO--1mSOSoCHk3IcxYTcIPUEuuq77b2FMXwpuzL5YdEphqJKD5HjrVKsGZSoJaDB8SJm9Yy6QlwGJoHjA2nCFKbvbJYEQvartWyTt35yzZo7xwHDLe8Hd2IeYHhGjtOLsMCQmYYt4MO32tZu8tVqJg.jpg"} 
@@ -122,6 +129,8 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         <Link 
                             className="flex flex-col items-center text-sm gap-y-1" 
                             href={"https://getgems.io/gifts-collection"}
+                            target="_blank"
+                            onClick={() => vibrate()}
                         >
                             <Image 
                             src={"https://avatars.githubusercontent.com/u/109078587?s=200&v=4"} 

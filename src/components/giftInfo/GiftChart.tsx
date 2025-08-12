@@ -506,12 +506,12 @@ export default function GiftChart({
       <div className="w-full flex flex-row gap-x-3 mt-5">
         <MarketsModal
           trigger={
-            <button className="w-full h-10 bg-red-600 rounded-lg">Sell</button>
+            <button className="w-full h-10 bg-red-600 rounded-lg" onClick={() => vibrate()}>Sell</button>
           }
         />
         <MarketsModal
           trigger={
-            <button className="w-full h-10 bg-green-600 rounded-lg">Buy</button>
+            <button className="w-full h-10 bg-green-600 rounded-lg" onClick={() => vibrate()}>Buy</button>
           }
         />
       </div>
