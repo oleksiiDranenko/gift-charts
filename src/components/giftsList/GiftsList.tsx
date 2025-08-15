@@ -6,16 +6,11 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setDefaultFilters, setFilters } from "@/redux/slices/filterListSlice";
 import { useEffect, useState } from "react";
 import GiftItem from "./GiftItem";
-import {Link} from "@/i18n/navigation";
-import { useRouter } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import useVibrate from "@/hooks/useVibrate";
-import {
-  BrushCleaning,
-  Eye,
-  EyeClosed,
-  Funnel,
-} from "lucide-react";
+import { BrushCleaning, Eye, EyeClosed, Funnel } from "lucide-react";
 import BackButton from "@/utils/ui/backButton";
+import FilterGiftsModal from "../filterGifts/FilterGiftsModal";
 
 interface PropsInterface {
   loading: boolean;
@@ -27,8 +22,6 @@ export default function GiftsList({ loading }: PropsInterface) {
   const giftsList = useAppSelector((state) => state.giftsList);
   const filters = useAppSelector((state) => state.filters);
   const dispatch = useAppDispatch();
-
-  const router = useRouter();
 
   const [list, setList] = useState<GiftInterface[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(true);
@@ -174,7 +167,7 @@ export default function GiftsList({ loading }: PropsInterface) {
       {list !== undefined ? (
         <>
           <div className="w-full flex flex-row justify-between items-center mb-3 gap-x-3">
-            <BackButton/>
+            <BackButton />
             <button
               className="w-1/2 h-8 border border-secondary bg-secondaryTransparent rounded-lg"
               onClick={() => {
@@ -228,13 +221,18 @@ export default function GiftsList({ loading }: PropsInterface) {
                   </button>
                 </div>
 
-                <Link
-                  href={"/gift-filters"}
-                  className="w-1/2 h-8 flex justify-center items-center box-border border border-secondary bg-secondaryTransparent rounded-lg gap-x-1"
-                  onClick={() => vibrate()}
-                >
-                  <Funnel size={16} /> Filter Gifts
-                </Link>
+                <div className="w-1/2">
+                  <FilterGiftsModal
+                    trigger={
+                      <button
+                        className="w-full h-8 flex justify-center items-center box-border border border-secondary bg-secondaryTransparent rounded-lg gap-x-1"
+                        onClick={() => vibrate()}
+                      >
+                        <Funnel size={16} /> Filter Gifts
+                      </button>
+                    }
+                  />
+                </div>
               </div>
 
               <div className="w-full flex flex-row justify-end items-center mb-3 gap-x-3">
