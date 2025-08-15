@@ -2,17 +2,23 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
-import { Gift, X } from "lucide-react";
+import { X } from "lucide-react";
+import ReactLoading from "react-loading";
+import { useQuery } from "react-query";
 
 interface MarketsModalProps {
   trigger: ReactNode;
   giftName: string;
   giftId: string;
+}
+
+async function fetchGiftModels(giftId: string) {
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/giftModels/${giftId}`);
+  return data[0].models;
 }
 
 export default function ModelsModal({
@@ -21,19 +27,15 @@ export default function ModelsModal({
   giftId,
 }: MarketsModalProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [modelsList, setModelsList] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const vibrate = useVibrate();
 
-  useEffect(() => {
-    (async () => {
-      const giftRes = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/giftModels/${giftId}`
-      );
-      setModelsList(giftRes.data[0].models);
-      setLoading(false);
-    })();
-  }, []);
+  const { data: modelsList = [], isLoading, isError } = useQuery(
+    ['giftModels', giftId],
+    () => fetchGiftModels(giftId),
+    {
+      enabled: !!giftId, // only run if giftId is defined
+    }
+  );
 
   return (
     <>
@@ -86,9 +88,10 @@ export default function ModelsModal({
                 </div>
 
                 <div className="flex-1 overflow-y-scroll">
-                  {!loading
-                    ? modelsList.sort((a, b) => b.priceTon - a.priceTon)
-                    .map((model) => (
+                  {!isLoading ? (
+                    modelsList
+                      .sort((a: any, b: any) => b.priceTon - a.priceTon)
+                      .map((model: any) => (
                         <div
                           key={model.id}
                           className="w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondaryTransparent rounded-lg"
@@ -106,7 +109,7 @@ export default function ModelsModal({
                               {model.rarity}%
                             </span>
                           </div>
-                          <div className="flex flex-row items-center mr-10">
+                          <div className="flex flex-row items-center mr-4">
                             <Image
                               alt="ton logo"
                               src="/images/toncoin.webp"
@@ -118,7 +121,17 @@ export default function ModelsModal({
                           </div>
                         </div>
                       ))
-                    : "loading"}
+                  ) : (
+                    <div className="w-full mt-10">
+                      <ReactLoading
+                        type="spin"
+                        color="var(--primary)"
+                        height={30}
+                        width={30}
+                        className="mt-5"
+                      />
+                    </div>
+                  )}
                   <div className="h-10"></div>
                 </div>
               </Dialog.Panel>

@@ -354,12 +354,12 @@ export default function GiftChart({
               <Image
                 alt="ton logo"
                 src="/images/toncoin.webp"
-                width={14}
-                height={14}
-                className="mr-1"
+                width={18}
+                height={18}
+                className="mr-2"
               />
             ) : (
-              <span className="text-base font-extrabold mr-1">$</span>
+              <span className="text-xl font-extrabold mr-2">$</span>
             )}
             <span className="text-xl font-extrabold">
               {selectedPrice == "ton"
