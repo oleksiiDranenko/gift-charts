@@ -73,7 +73,7 @@ export default function ModelsModal({
               leaveTo="translate-y-full opacity-0"
             >
               <Dialog.Panel className="w-full lg:w-1/2 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col">
-                <div className="w-full h-10 mb-3 flex justify-end items-center">
+                <div className="w-full h-10 flex justify-end items-center">
                   <button
                     onClick={() => {
                       vibrate();
@@ -85,31 +85,42 @@ export default function ModelsModal({
                   </button>
                 </div>
 
-                {/* Scrollable list */}
-                <div className="flex-1 overflow-y-auto">
+                <div className="flex-1 overflow-y-scroll">
                   {!loading
-                    ? modelsList.map((model) => (
+                    ? modelsList.sort((a, b) => b.priceTon - a.priceTon)
+                    .map((model) => (
                         <div
                           key={model.id}
-                          className="w-full h-16 gap-x-2 mb-1 flex flex-row items-center justify-start focus:bg-secondaryTransparent rounded-lg"
+                          className="w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondaryTransparent rounded-lg"
                         >
-                          <Image
-                            src={model.image}
-                            alt=""
-                            width={50}
-                            height={50}
-                            className="w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent"
-                          />
-                          <span className="font-bold">{model.name}</span>
-                          <span className="text-secondaryText">
-                            {model.rarity}%
-                          </span>
+                          <div className="h-full flex flex-row items-center justify-start">
+                            <Image
+                              src={model.image}
+                              alt=""
+                              width={50}
+                              height={50}
+                              className="w-[50px] h-[50px] p-[6px] !overflow-visible mr-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent"
+                            />
+                            <span className="font-bold mr-2">{model.name}</span>
+                            <span className="text-xs font-bold text-primary p-1 bg-blue-500 bg-opacity-10 rounded-lg">
+                              {model.rarity}%
+                            </span>
+                          </div>
+                          <div className="flex flex-row items-center mr-10">
+                            <Image
+                              alt="ton logo"
+                              src="/images/toncoin.webp"
+                              width={15}
+                              height={15}
+                              className="mr-1"
+                            />
+                            <span className="font-bold">{model.priceTon}</span>
+                          </div>
                         </div>
                       ))
                     : "loading"}
+                  <div className="h-10"></div>
                 </div>
-
-                <div className="h-10"></div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

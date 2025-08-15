@@ -442,7 +442,7 @@ export default function GiftChart({
         <div>
           <ModelsModal trigger={
             <button 
-              className="flex flex-row justify-center items-center gap-x-1 text-xs h-8 px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
+              className="h-8 text-primary flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
               onClick={() => vibrate()}
             >
               <Gift size={16}/>Gift Models
@@ -522,7 +522,7 @@ export default function GiftChart({
         <MarketsModal
           trigger={
             <button
-              className="w-full h-10 bg-red-600 rounded-lg"
+              className="w-full h-10 bg-red-600 rounded-lg text-white"
               onClick={() => vibrate()}
             >
               Sell
@@ -532,7 +532,7 @@ export default function GiftChart({
         <MarketsModal
           trigger={
             <button
-              className="w-full h-10 bg-green-600 rounded-lg"
+              className="w-full h-10 bg-green-600 rounded-lg text-white"
               onClick={() => vibrate()}
             >
               Buy
