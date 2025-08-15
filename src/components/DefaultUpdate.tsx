@@ -27,14 +27,17 @@ export default function DefaultUpdate({ children }: { children: React.ReactNode 
     setCurrentAnimation(animations[randomIndex]);
   }, []);
 
- const { data: gifts, isLoading, isFetching } = useQuery({
+const { data: gifts, isLoading, isFetching } = useQuery({
   queryKey: ['gifts'],
   queryFn: fetchGifts,
-  refetchOnMount: false,
+  staleTime: 5 * 60 * 1000,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false, // this prevents refetch on remount
   onSuccess: (data: any) => {
     dispatch(setGiftsList(data));
   },
 });
+
 
   useEffect(() => {
     dispatch(setDefaultFilters());
@@ -52,6 +55,7 @@ export default function DefaultUpdate({ children }: { children: React.ReactNode 
     return () => clearTimeout(timer);
   }
 }, [isLoading]);
+
 
 
   return (
