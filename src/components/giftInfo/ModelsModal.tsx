@@ -122,7 +122,7 @@ export default function ModelsModal({
                         </div>
                       ))
                   ) : (
-                    <div className="w-full mt-10">
+                    <div className="w-full flex justify-center mt-10">
                       <ReactLoading
                         type="spin"
                         color="var(--primary)"
