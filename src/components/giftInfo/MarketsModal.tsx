@@ -120,7 +120,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                             alt={""}
                             width={70}
                             height={70}
-                            className="rounded-xlg shadow-sm shadow-secondary"
+                            className="rounded-xl shadow-sm shadow-secondary"
                             />
                             <span>
                                 Fragment
@@ -148,7 +148,10 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
 
                 <div className="w-full mt-6 flex">
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                        vibrate()
+                        setIsOpen(false)
+                    }}
                     className="w-full px-4 py-2 bg-secondaryTransparent border border-secondary rounded-lg"
                   >
                     Close

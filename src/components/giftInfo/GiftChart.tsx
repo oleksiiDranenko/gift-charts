@@ -23,10 +23,12 @@ import {
   ChartSpline,
   ChevronDown,
   ChevronUp,
+  Gift,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import CalendarHeatmap from "../tools/calendar-heatmap/CalendarHeatmap";
 import MarketsModal from "./MarketsModal";
+import ModelsModal from "./ModelsModal";
 
 ChartJS.register(
   LineElement,
@@ -376,63 +378,76 @@ export default function GiftChart({
         </div>
       </div>
 
-      <div className="w-full h-fit mb-3 mt-5 flex flex-row gap-x-3">
-        <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
-          <button
-            className={`text-xs h-8 px-3 box-border ${
-              selectedPrice == "ton"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
-            onClick={() => {
-              setSelectedPrice("ton");
-              vibrate();
-            }}
-          >
-            Ton
-          </button>
-          <button
-            className={`text-xs h-8 px-3  box-border ${
-              selectedPrice == "usd"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
-            onClick={() => {
-              setSelectedPrice("usd");
-              vibrate();
-            }}
-          >
-            Usd
-          </button>
+      <div className="w-full h-fit justify-between mb-3 mt-5 flex flex-row">
+        <div className="flex flex-row gap-x-3">
+          <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+            <button
+              className={`text-xs h-8 px-3 box-border ${
+                selectedPrice == "ton"
+                  ? "rounded-lg bg-primary font-bold text-white"
+                  : null
+              }`}
+              onClick={() => {
+                setSelectedPrice("ton");
+                vibrate();
+              }}
+            >
+              Ton
+            </button>
+            <button
+              className={`text-xs h-8 px-3  box-border ${
+                selectedPrice == "usd"
+                  ? "rounded-lg bg-primary font-bold text-white"
+                  : null
+              }`}
+              onClick={() => {
+                setSelectedPrice("usd");
+                vibrate();
+              }}
+            >
+              Usd
+            </button>
+          </div>
+
+          <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+            <button
+              className={`text-xs h-8 px-3 box-border  ${
+                chartType == "line"
+                  ? "rounded-lg bg-primary font-bold text-white"
+                  : null
+              }`}
+              onClick={() => {
+                setChartType("line");
+                vibrate();
+              }}
+            >
+              <ChartSpline size={16} />
+            </button>
+            <button
+              className={`text-xs h-8 px-3 box-border ${
+                chartType == "candle"
+                  ? "rounded-lg bg-primary font-bold text-white"
+                  : null
+              }`}
+              onClick={() => {
+                setChartType("candle");
+                vibrate();
+              }}
+            >
+              <ChartCandlestick size={16} />
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
-          <button
-            className={`text-xs h-8 px-3 box-border  ${
-              chartType == "line"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
-            onClick={() => {
-              setChartType("line");
-              vibrate();
-            }}
-          >
-            <ChartSpline size={16} />
+        <div>
+          <ModelsModal trigger={
+            <button 
+              className="flex flex-row justify-center items-center gap-x-1 text-xs h-8 px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
+              onClick={() => vibrate()}
+            >
+              <Gift size={16}/>Gift Models
           </button>
-          <button
-            className={`text-xs h-8 px-3 box-border ${
-              chartType == "candle"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
-            onClick={() => {
-              setChartType("candle");
-              vibrate();
-            }}
-          >
-            <ChartCandlestick size={16} />
-          </button>
+          } giftName={gift?.name ? gift.name : ''} giftId={gift?._id ? gift._id : ''} />
         </div>
       </div>
 
@@ -506,12 +521,22 @@ export default function GiftChart({
       <div className="w-full flex flex-row gap-x-3 mt-5">
         <MarketsModal
           trigger={
-            <button className="w-full h-10 bg-red-600 rounded-lg" onClick={() => vibrate()}>Sell</button>
+            <button
+              className="w-full h-10 bg-red-600 rounded-lg"
+              onClick={() => vibrate()}
+            >
+              Sell
+            </button>
           }
         />
         <MarketsModal
           trigger={
-            <button className="w-full h-10 bg-green-600 rounded-lg" onClick={() => vibrate()}>Buy</button>
+            <button
+              className="w-full h-10 bg-green-600 rounded-lg"
+              onClick={() => vibrate()}
+            >
+              Buy
+            </button>
           }
         />
       </div>
