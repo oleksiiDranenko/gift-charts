@@ -6,10 +6,8 @@ import { setGiftsList } from '@/redux/slices/giftsListSlice';
 import { setDefaultFilters } from '@/redux/slices/filterListSlice';
 import { useQuery } from 'react-query';
 import axios from 'axios';
-import Lottie from 'lottie-react';
 import ProgressBar from '@ramonak/react-progress-bar';
 import useVibrate from '@/hooks/useVibrate';
-import { animations } from '@/animations/animations.js';
 
 const fetchGifts = async () => {
   const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
@@ -20,12 +18,7 @@ export default function DefaultUpdate({ children }: { children: React.ReactNode 
   const dispatch = useAppDispatch();
   const vibrate = useVibrate();
   const [progress, setProgress] = useState<number>(0);
-  const [currentAnimation, setCurrentAnimation] = useState<any>(null);
 
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * animations.length);
-    setCurrentAnimation(animations[randomIndex]);
-  }, []);
 
 const { data: gifts, isLoading, isFetching } = useQuery({
   queryKey: ['gifts'],
@@ -57,20 +50,15 @@ const { data: gifts, isLoading, isFetching } = useQuery({
 }, [isLoading]);
 
 
-
   return (
     <>
       {(isLoading || isFetching) ? (
         <div className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-background">
-          <div className="w-40 h-40 mb-5">
-            {currentAnimation && (
-              <Lottie 
-                animationData={currentAnimation} 
-                loop={true} 
-              />
-            )}
-          </div>
+          
           <div className="w-2/3 lg:w-1/2 max-w-96">
+            <h1 className='text-center text-lg font-semibold text-secondaryText mb-3'>
+              Loading gift data...
+            </h1>
             <ProgressBar
               completed={progress}
               bgColor="var(--primary)"
