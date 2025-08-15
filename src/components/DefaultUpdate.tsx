@@ -27,13 +27,14 @@ export default function DefaultUpdate({ children }: { children: React.ReactNode 
     setCurrentAnimation(animations[randomIndex]);
   }, []);
 
-  const { data: gifts, isLoading, isFetching } = useQuery({
-    queryKey: ['gifts'],
-    queryFn: fetchGifts,
-    onSuccess: (data: any) => {
-      dispatch(setGiftsList(data));
-    },
-  });
+ const { data: gifts, isLoading, isFetching } = useQuery({
+  queryKey: ['gifts'],
+  queryFn: fetchGifts,
+  refetchOnMount: false,
+  onSuccess: (data: any) => {
+    dispatch(setGiftsList(data));
+  },
+});
 
   useEffect(() => {
     dispatch(setDefaultFilters());
@@ -41,16 +42,17 @@ export default function DefaultUpdate({ children }: { children: React.ReactNode 
 
   // Progress simulation
   useEffect(() => {
-    if (isFetching || isLoading) {
-      setProgress(40);
-      const timer = setTimeout(() => setProgress(80), 500);
-      return () => clearTimeout(timer);
-    } else if (!isFetching && !isLoading) {
-      setProgress(100);
-      const timer = setTimeout(() => vibrate(), 400);
-      return () => clearTimeout(timer);
-    }
-  }, [isFetching, isLoading, vibrate]);
+  if (isLoading) {
+    setProgress(40);
+    const timer = setTimeout(() => setProgress(80), 500);
+    return () => clearTimeout(timer);
+  } else if (!isLoading) {
+    setProgress(100);
+    const timer = setTimeout(() => vibrate(), 400);
+    return () => clearTimeout(timer);
+  }
+}, [isLoading]);
+
 
   return (
     <>
