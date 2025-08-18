@@ -385,7 +385,7 @@ export default function MainPage() {
               Your Watchlist is Empty
             </div>
             <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
-              {"Go to: Settings -> Edit Watchlist"}
+              {"Profile -> Settings -> Edit Watchlist"}
             </div>
           </div>
         )}

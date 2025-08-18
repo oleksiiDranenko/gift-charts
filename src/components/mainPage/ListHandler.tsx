@@ -18,7 +18,7 @@ export default function ListHandler({ giftsList, type, background }: PropsInterf
         <div className="flex-none w-full snap-start mt-3">
             
             <div className="px-1">
-                <div className={type === 'block' ? "grid grid-flow-row grid-cols-3 md:grid-cols-4 gap-x-2 px-2" : ""}>
+                <div className={type === 'block' ? "grid grid-flow-row grid-cols-4 md:grid-cols-5 gap-x-2 px-2" : ""}>
                     {giftsList.length > 0
                         ? giftsList.map((item: GiftInterface, index) => (
                             type === 'line'

@@ -24,6 +24,8 @@ import {
   ChevronDown,
   ChevronUp,
   Gift,
+  List,
+  Menu,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import CalendarHeatmap from "../tools/calendar-heatmap/CalendarHeatmap";
@@ -445,7 +447,7 @@ export default function GiftChart({
               className="h-8 text-primary flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
               onClick={() => vibrate()}
             >
-              <Gift size={16}/>Gift Models
+              <Menu size={16}/>Gift Models
           </button>
           } giftName={gift?.name ? gift.name : ''} giftId={gift?._id ? gift._id : ''} />
         </div>

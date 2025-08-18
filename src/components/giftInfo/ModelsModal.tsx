@@ -9,6 +9,8 @@ import axios from "axios";
 import { X } from "lucide-react";
 import ReactLoading from "react-loading";
 import { useQuery } from "react-query";
+import GiftModelInterface from "@/interfaces/GiftModelInterface";
+import ModelItem from "./ModelItem";
 
 interface MarketsModalProps {
   trigger: ReactNode;
@@ -91,35 +93,8 @@ export default function ModelsModal({
                   {!isLoading ? (
                     modelsList
                       .sort((a: any, b: any) => b.priceTon - a.priceTon)
-                      .map((model: any) => (
-                        <div
-                          key={model.id}
-                          className="w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondaryTransparent rounded-lg"
-                        >
-                          <div className="h-full flex flex-row items-center justify-start">
-                            <Image
-                              src={model.image}
-                              alt=""
-                              width={50}
-                              height={50}
-                              className="w-[50px] h-[50px] p-[6px] !overflow-visible mr-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent"
-                            />
-                            <span className="font-bold mr-2">{model.name}</span>
-                            <span className="text-xs font-bold text-primary p-1 bg-blue-500 bg-opacity-10 rounded-lg">
-                              {model.rarity}%
-                            </span>
-                          </div>
-                          <div className="flex flex-row items-center mr-4">
-                            <Image
-                              alt="ton logo"
-                              src="/images/toncoin.webp"
-                              width={15}
-                              height={15}
-                              className="mr-1"
-                            />
-                            <span className="font-bold">{model.priceTon}</span>
-                          </div>
-                        </div>
+                      .map((model: GiftModelInterface) => (
+                        <ModelItem model={model}/>
                       ))
                   ) : (
                     <div className="w-full flex justify-center mt-10">

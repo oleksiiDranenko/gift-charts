@@ -89,23 +89,11 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
                     style={borderColor ? { borderColor: `${borderColor}80` } : {}}
                 />
                 {item.preSale && (<span className="text-[8px] text-cyan-500 font-bold ml-2 absolute top-0 right-0">Pre-Market</span>)}
-                <div className="flex flex-col items-center">
+                {/* <div className="flex flex-col items-center">
                     <span className="text-sm text-center text-wrap font-bold">
                         {item.name}
                     </span>
-                    <span className="text-secondaryText text-xs font-normal">
-                        {
-                            sortBy === 'price' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                            : sortBy === 'marketCap' && displayValue === 'price' ? formatNumber(currency === 'ton' ? (item.priceTon * item.upgradedSupply) : (item.priceUsd * item.upgradedSupply))
-                            : sortBy === 'marketCap' && displayValue === 'marketCap' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                            : sortBy === 'percentChange' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                            : sortBy === 'supply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.supply)) 
-                            : sortBy === 'initSupply' ? (formatNumber(item.upgradedSupply) + ' / ' + formatNumber(item.initSupply))
-                            : sortBy === 'starsPrice' ? `${item.starsPrice} ⭐`
-                            : null
-                        }
-                    </span>
-                </div>
+                </div> */}
             </div>
 
             <div className=" flex flex-row items-center justify-end">
@@ -135,7 +123,7 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
                         </span>
                     </div>
                     
-                    <span className={`flex flex-row items-center text-xs font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500' : percentChange < 0 ? 'text-red-500'  : 'text-secondaryText' : 'text-secondaryText'}`}>
+                    <span className={`py-[2px] px-1 mt-1 rounded-lg bg-opacity-10 flex flex-row items-center text-xs font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500 bg-green-500' : percentChange < 0 ? 'text-red-500 bg-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
                         {percentChange !== 'no data' && percentChange >= 0 &&  '+'}
                         {percentChange}
                         {percentChange !== 'no data' ? '%' : null}
