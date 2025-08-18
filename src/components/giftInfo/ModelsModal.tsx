@@ -94,7 +94,7 @@ export default function ModelsModal({
                     modelsList
                       .sort((a: any, b: any) => b.priceTon - a.priceTon)
                       .map((model: GiftModelInterface) => (
-                        <ModelItem model={model}/>
+                        <ModelItem model={model} key={model._id}/>
                       ))
                   ) : (
                     <div className="w-full flex justify-center mt-10">
