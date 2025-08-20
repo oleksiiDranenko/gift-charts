@@ -9,6 +9,7 @@ import type {
 import { Download, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { ChartDataset } from "chart.js";
 import useVibrate from "@/hooks/useVibrate";
+import axios from "axios";
 
 interface GiftData {
   name: string;
@@ -265,147 +266,121 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<any>(null);
-	const vibrate = useVibrate()
+  const vibrate = useVibrate();
 
   const downloadImage = async () => {
-  vibrate();
-  if (!chartRef.current) return;
+    vibrate();
+    if (!chartRef.current) return;
 
-  // Stricter Telegram Web App detection
-  const telegram = window.Telegram?.WebApp;
-  const isTelegramWebApp = !!telegram?.initDataUnsafe?.user?.id && typeof telegram?.showAlert === "function";
+    const telegram = window.Telegram?.WebApp;
+    const isTelegramWebApp =
+      !!telegram?.initDataUnsafe?.user?.id &&
+      typeof telegram?.showAlert === "function";
 
-  const exportWidth = 1920;
-  const exportHeight = 1080;
+    const exportWidth = 1920;
+    const exportHeight = 1080;
 
-  // Create off-screen canvas
-  const offscreenCanvas = document.createElement("canvas");
-  offscreenCanvas.width = exportWidth;
-  offscreenCanvas.height = exportHeight;
+    const offscreenCanvas = document.createElement("canvas");
+    offscreenCanvas.width = exportWidth;
+    offscreenCanvas.height = exportHeight;
 
-  const ctx = offscreenCanvas.getContext("2d");
-  if (!ctx) return;
+    const ctx = offscreenCanvas.getContext("2d");
+    if (!ctx) return;
 
-  // Dynamic imports
-  const chartModule = await import("chart.js/auto");
-  const treemapModule = await import("chartjs-chart-treemap");
-  const zoomModule = await import("chartjs-plugin-zoom");
+    // Dynamic imports
+    const chartModule = await import("chart.js/auto");
+    const treemapModule = await import("chartjs-chart-treemap");
+    const zoomModule = await import("chartjs-plugin-zoom");
 
-  const Chart = chartModule.default;
-  Chart.register(
-    treemapModule.TreemapController,
-    treemapModule.TreemapElement,
-    zoomModule.default
-  );
+    const Chart = chartModule.default;
+    Chart.register(
+      treemapModule.TreemapController,
+      treemapModule.TreemapElement,
+      zoomModule.default
+    );
 
-  // Transform data
-  const transformed = transformGiftData(data, chartType, timeGap, currency);
+    // Transform data and preload images
+    const transformed = transformGiftData(data, chartType, timeGap, currency);
+    const imageMap = await preloadImagesAsync(transformed);
 
-  // Wait for all images to finish loading
-  const imageMap = await preloadImagesAsync(transformed);
-
-  // Create chart only after images are ready
-  const tempChart = new Chart(ctx, {
-    type: "treemap",
-    data: {
-      datasets: [
-        {
-          data: [],
-          tree: transformed,
-          key: "size",
-          imageMap,
-          backgroundColor: (ctx: any) => {
-            const val = ctx.dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-            return val > 0 ? "#008000" : val < 0 ? "#E50000" : "#808080";
-          },
-          borderWidth: 4, // Increased border thickness for exported image
-          borderColor: "#FFFFFF", // White borders for visibility
-        } as unknown as ChartDataset<"treemap", TreemapDataPoint[]>,
-      ],
-    },
-    options: {
-      responsive: false,
-      maintainAspectRatio: false,
-      animation: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false },
+    const tempChart = new Chart(ctx, {
+      type: "treemap",
+      data: {
+        datasets: [
+          {
+            data: [],
+            tree: transformed,
+            key: "size",
+            imageMap,
+            backgroundColor: (ctx: any) => {
+              const val = ctx.dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
+              return val > 0 ? "#008000" : val < 0 ? "#E50000" : "#808080";
+            },
+            borderWidth: 4,
+            borderColor: "#FFFFFF",
+          } as unknown as ChartDataset<"treemap", TreemapDataPoint[]>,
+        ],
       },
-    },
-    plugins: [imagePlugin(chartType, currency, 35, 1, 1.4)], // Larger watermark, text, and image
-  });
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      },
+      plugins: [imagePlugin(chartType, currency, 35, 1, 1.4)],
+    });
 
-  // Give the chart a moment to render
-  setTimeout(async () => {
-    try {
-      // Get the image as a base64 string
-      const imageDataUrl = offscreenCanvas.toDataURL("image/jpeg", 1.0);
+    setTimeout(async () => {
+      try {
+        const imageDataUrl = offscreenCanvas.toDataURL("image/jpeg", 1.0);
 
-      // Download image directly in non-Telegram environment
-      if (!isTelegramWebApp) {
-        const link = document.createElement("a");
-        link.download = `heatmap-${Date.now()}.jpeg`;
-        link.href = imageDataUrl;
-        link.click();
+        // Non-Telegram download
+        if (!isTelegramWebApp) {
+          const link = document.createElement("a");
+          link.download = `heatmap-${Date.now()}.jpeg`;
+          link.href = imageDataUrl;
+          link.click();
+          tempChart.destroy();
+          return;
+        }
+
+        if (telegram.showAlert)
+          telegram.showAlert("Image will be sent to you soon");
+
+        const chatId = telegram.initDataUnsafe.user.id;
+        if (!chatId) {
+          console.error("No chat ID found");
+          telegram.showAlert?.("Failed to send image: No chat ID.");
+          tempChart.destroy();
+          return;
+        }
+
+        // Convert base64 to Blob
+        const blob = await (await fetch(imageDataUrl)).blob();
+        const formData = new FormData();
+        formData.append("file", blob, `heatmap-${Date.now()}.jpeg`);
+        formData.append("chatId", chatId.toString());
+
+        // Send to backend
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        if (response.data.success) {
+          telegram.showAlert?.("Image sent successfully!");
+        } else {
+          console.error("Backend error sending image:", response.data);
+          telegram.showAlert?.("Failed to send heatmap image.");
+        }
+
         tempChart.destroy();
-        return;
+      } catch (error) {
+        console.error("Error sending image:", error);
       }
-
-      // Telegram Web App logic
-      if(telegram.showAlert){
-				telegram.showAlert("Image will be sent to you soon");
-			}
-
-      const chatId = telegram.initDataUnsafe.user.id;
-      if (!chatId && telegram.showAlert) {
-        console.error("Could not retrieve user chat ID from Telegram Web App");
-        telegram.showAlert("Failed to send the heatmap image: No chat ID.");
-        tempChart.destroy();
-        return;
-      }
-
-      const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-      if (!botToken && telegram.showAlert) {
-        console.error("Telegram bot token is not defined");
-        telegram.showAlert("Failed to send the heatmap image: Bot token missing.");
-        tempChart.destroy();
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("chat_id", chatId.toString());
-      formData.append(
-        "caption",
-        "Here is a 1920x1080 image of a Heatmap chart!"
-      );
-
-      // Fetch the image and convert it to a blob
-      const response = await fetch(imageDataUrl);
-      const blob = await response.blob();
-      formData.append("document", blob, `heatmap-${Date.now()}.jpeg`);
-
-      const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendDocument`;
-      const sendResponse = await fetch(telegramApiUrl, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!sendResponse.ok && telegram.showAlert) {
-        const errorData = await sendResponse.json();
-        console.error("Failed to send image via Telegram:", errorData);
-        telegram.showAlert("Failed to send the heatmap image. Please try again.");
-      }
-
-      tempChart.destroy();
-    } catch (error) {
-      console.error("Error sending image to Telegram:", error);
-      if(telegram?.showAlert) {
-				telegram.showAlert("An error occurred while sending the heatmap image.");
-			}
-    }
-  }, 0);
-};
-
+    }, 0);
+  };
   useEffect(() => {
     let Chart: any,
       TreemapController: any,
@@ -540,13 +515,13 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
           </button>
         </div>
       </div>
-      {/* <button
+      <button
         className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg border border-secondary bg-secondaryTransparent"
         onClick={downloadImage}
       >
         <Download size={16} />
         Download Heatmap as Image
-      </button> */}
+      </button>
 
       <div style={{ width: "100%", minHeight: "600px" }}>
         <canvas ref={canvasRef} />
