@@ -116,7 +116,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                             target="_blank"
                         >
                             <Image 
-                            src={"https://cdn4.telesco.pe/file/C-31x4JtF5ZgPmjjqLjfEgeQczapERvf4VEHn2RQxqRPz1SFFSyurVsqtiuFHeWvesfgslbkM3V7aWUppX8P3NqqQCabg5Z64wWpoBqAwWv73Cxuq-nhEOKhr0_U38LbYoIRn4bhRsAv31wNz9wBlpY02cxMf5X4HXWUc4fD6cHvjWgFRPNWu7liKQua_jn_kO--1mSOSoCHk3IcxYTcIPUEuuq77b2FMXwpuzL5YdEphqJKD5HjrVKsGZSoJaDB8SJm9Yy6QlwGJoHjA2nCFKbvbJYEQvartWyTt35yzZo7xwHDLe8Hd2IeYHhGjtOLsMCQmYYt4MO32tZu8tVqJg.jpg"} 
+                            src={"https://storage.getblock.io/web/web/images/marketplace/Fragment/photo_2024-07-23_22-06-50.jpg"} 
                             alt={""}
                             width={70}
                             height={70}

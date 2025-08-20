@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type GiftInterface from "@/interfaces/GiftInterface";
 import type {
   TreemapDataPoint,
@@ -10,6 +10,7 @@ import { Download, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { ChartDataset } from "chart.js";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
+import DownloadHeatmapModal from "./DownloadHeatmapModal";
 
 interface GiftData {
   name: string;
@@ -267,15 +268,14 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<any>(null);
   const vibrate = useVibrate();
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   const downloadImage = async () => {
     vibrate();
     if (!chartRef.current) return;
 
     const telegram = window.Telegram?.WebApp;
-    const isTelegramWebApp =
-      !!telegram?.initDataUnsafe?.user?.id &&
-      typeof telegram?.showAlert === "function";
+    const isTelegramWebApp = !!telegram?.initDataUnsafe?.user?.id;
 
     const exportWidth = 1920;
     const exportHeight = 1080;
@@ -299,7 +299,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
       zoomModule.default
     );
 
-    // Transform data and preload images
     const transformed = transformGiftData(data, chartType, timeGap, currency);
     const imageMap = await preloadImagesAsync(transformed);
 
@@ -334,7 +333,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
       try {
         const imageDataUrl = offscreenCanvas.toDataURL("image/jpeg", 1.0);
 
-        // Non-Telegram download
+        // ✅ Non-Telegram → download directly
         if (!isTelegramWebApp) {
           const link = document.createElement("a");
           link.download = `heatmap-${Date.now()}.jpeg`;
@@ -344,41 +343,37 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
           return;
         }
 
-        if (telegram.showAlert)
-          telegram.showAlert("Image will be sent to you soon");
+        // ✅ Telegram → show modal
+        setIsDownloadModalOpen(true);
 
-        const chatId = telegram.initDataUnsafe.user.id;
+        const chatId = telegram?.initDataUnsafe?.user?.id;
         if (!chatId) {
           console.error("No chat ID found");
-          telegram.showAlert?.("Failed to send image: No chat ID.");
           tempChart.destroy();
           return;
         }
 
-        // Convert base64 to Blob
         const blob = await (await fetch(imageDataUrl)).blob();
         const formData = new FormData();
         formData.append("file", blob, `heatmap-${Date.now()}.jpeg`);
         formData.append("chatId", chatId.toString());
-        formData.append("content", 'Here is a 1920x1080 image of a Heatmap chart!');
+        formData.append(
+          "content",
+          "Here is a 1920x1080 image of a Heatmap chart!"
+        );
 
         // Send to backend
-        const response = await axios.post(
+        await axios.post(
           `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
 
-        if (response.data.success) {
-          telegram.showAlert?.("Image sent successfully!");
-        } else {
-          console.error("Backend error sending image:", response.data);
-          telegram.showAlert?.("Failed to send heatmap image.");
-        }
-
+        // ✅ Do nothing after send — modal stays open until user closes it
         tempChart.destroy();
       } catch (error) {
         console.error("Error sending image:", error);
+        tempChart.destroy();
       }
     }, 0);
   };
@@ -523,6 +518,9 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         <Download size={16} />
         Download Heatmap as Image
       </button>
+
+      <DownloadHeatmapModal trigger={null} />
+      {isDownloadModalOpen && <DownloadHeatmapModal trigger={<></>} />}
 
       <div style={{ width: "100%", minHeight: "600px" }}>
         <canvas ref={canvasRef} />
