@@ -42,8 +42,8 @@ export default function Page() {
 
   return (
     <main className="w-full lg:w-1/2 pt-[70px] px-3">
-      <div className="mb-5 border border-secondary rounded-lg overflow-hidden relative">
-      <div className="absolute top-0 left-0 w-full h-40 z-0">
+      <div className="mb-5 border border-secondary bg-secondaryTransparent rounded-lg overflow-hidden relative">
+      <div className="absolute top-0 left-0 w-full h-40 z-0 overflow-hidden">
         <Image
           src="/images/heatmap.webp"
           alt="heatmap background"

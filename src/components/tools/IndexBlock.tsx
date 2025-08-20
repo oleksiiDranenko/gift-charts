@@ -71,7 +71,7 @@ export default function IndexBlock({ name, id }: IndexProps) {
   return (
     <Link
       href={`/tools/index/${id}`}
-      className="w-full flex flex-row justify-between h-16 p-3 border border-secondary rounded-lg"
+      className="w-full flex flex-row justify-between h-16 p-3 border border-secondary bg-secondaryTransparent rounded-lg"
       onClick={() => vibrate()}
     >
       <div className="h-full flex flex-row items-center gap-x-2">

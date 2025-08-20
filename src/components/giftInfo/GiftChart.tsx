@@ -61,7 +61,7 @@ export default function GiftChart({
   const [list, setList] = useState<
     (GiftLifeDataInterface | GiftWeekDataInterface)[]
   >(weekData.slice(-24));
-  const [listType, setListType] = useState<"24h" | "1w" | "1m" | "all">("24h");
+  const [listType, setListType] = useState<"24h" | "3d" | "1w" | "1m" | "3m" | "all">("24h");
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
   const [gradient, setGradient] = useState<CanvasGradient | null>(null);
@@ -70,7 +70,7 @@ export default function GiftChart({
 
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
-  const { theme, resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     const filteredCandleData = lifeData.filter(
@@ -182,11 +182,17 @@ export default function GiftChart({
       case "24h":
         setList(weekData.slice(-48));
         break;
+      case "3d":
+        setList(weekData.slice(-144));
+        break;
       case "1w":
         setList(weekData);
         break;
       case "1m":
         setList([...lifeData.slice(-30), weekData[lastPriceIndex]]);
+        break;
+      case "3m":
+        setList([...lifeData.slice(-90), weekData[lastPriceIndex]]);
         break;
       case "all":
         setList([...lifeData, weekData[lastPriceIndex]]);
@@ -444,7 +450,7 @@ export default function GiftChart({
         <div>
           <ModelsModal trigger={
             <button 
-              className="h-8 text-primary flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
+              className="h-8 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
               onClick={() => vibrate()}
             >
               <Menu size={16}/>Gift Models
@@ -455,17 +461,26 @@ export default function GiftChart({
 
       {chartType === "line" ? (
         <>
+
+          {/* <div className="w-full flex flex-row justify-start gap-x-1">
+            <span className="px-3 py-2 bg-secondaryTransparent rounded-xl text-sm text-secondaryText">
+              Low: {low}
+            </span>
+            <span className="px-3 py-2 bg-secondaryTransparent rounded-xl text-sm text-secondaryText">
+              High: {high}
+            </span>
+          </div> */}
+        
           <div className="relative" ref={chartContainerRef}>
             <Line ref={chartRef} data={data} options={options} />
           </div>
 
-          <div className="mb-1 mt-5 flex flex-col border border-secondary bg-secondaryTransparent rounded-lg">
-            <div className="w-full flex flex-row justify-between gap-x-3">
-              <button
-                className={`w-full text-sm h-8 ${
+          <div className="w-full mt-3 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-lg">
+            <button
+                className={`w-full px-1 text-sm h-8 ${
                   listType == "all"
-                    ? "rounded-lg bg-primary font-bold text-white"
-                    : null
+                    ? "rounded-lg bg-secondary font-bold"
+                    : "text-secondaryText"
                 }`}
                 onClick={() => {
                   lifeData.length > 0 ? setListType("all") : null;
@@ -475,10 +490,23 @@ export default function GiftChart({
                 All
               </button>
               <button
-                className={`w-full text-sm h-8 ${
+                className={`w-full px-1 text-sm h-8 ${
+                  listType == "3m"
+                    ? "rounded-lg bg-secondary font-bold"
+                    : "text-secondaryText"
+                }`}
+                onClick={() => {
+                  lifeData.length > 0 ? setListType("3m") : null;
+                  vibrate();
+                }}
+              >
+                3m
+              </button>
+              <button
+                className={`w-full px-1 text-sm h-8 ${
                   listType == "1m"
-                    ? "rounded-lg bg-primary font-bold text-white"
-                    : null
+                    ? "rounded-lg bg-secondary font-bold"
+                    : "text-secondaryText"
                 }`}
                 onClick={() => {
                   lifeData.length > 0 ? setListType("1m") : null;
@@ -490,8 +518,8 @@ export default function GiftChart({
               <button
                 className={`w-full text-sm h-8 ${
                   listType == "1w"
-                    ? "rounded-lg bg-primary font-bold text-white"
-                    : null
+                    ? "rounded-lg bg-secondary font-bold"
+                    : "text-secondaryText"
                 }`}
                 onClick={() => {
                   setListType("1w");
@@ -501,10 +529,23 @@ export default function GiftChart({
                 1w
               </button>
               <button
-                className={`w-full text-sm h-8 ${
+                className={`w-full px-1 text-sm h-8 ${
+                  listType == "3d"
+                    ? "rounded-lg bg-secondary font-bold"
+                    : "text-secondaryText"
+                }`}
+                onClick={() => {
+                  setListType("3d");
+                  vibrate();
+                }}
+              >
+                3d
+              </button>
+              <button
+                className={`w-full px-1 text-sm h-8 ${
                   listType == "24h"
-                    ? "rounded-lg bg-primary font-bold text-white"
-                    : null
+                    ? "rounded-lg bg-secondary font-bold"
+                    : "text-secondaryText"
                 }`}
                 onClick={() => {
                   setListType("24h");
@@ -513,7 +554,6 @@ export default function GiftChart({
               >
                 24h
               </button>
-            </div>
           </div>
         </>
       ) : (

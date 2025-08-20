@@ -540,13 +540,13 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
           </button>
         </div>
       </div>
-      <button
+      {/* <button
         className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg border border-secondary bg-secondaryTransparent"
         onClick={downloadImage}
       >
         <Download size={16} />
         Download Heatmap as Image
-      </button>
+      </button> */}
 
       <div style={{ width: "100%", minHeight: "600px" }}>
         <canvas ref={canvasRef} />
