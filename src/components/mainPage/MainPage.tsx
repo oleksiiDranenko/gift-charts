@@ -2,7 +2,7 @@
 
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppSelector } from "@/redux/hooks";
-import {Link} from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import GiftItem from "../giftsList/GiftItem";
@@ -37,7 +37,9 @@ export default function MainPage() {
   const [losersList, setLosersList] = useState<GiftInterface[]>([]);
   const [topList, setTopList] = useState<GiftInterface[]>([]);
   const [userList, setUserList] = useState<GiftInterface[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [chosenFilter, setChosenFilter] = useState<
+    "gainers" | "losers" | "floor" | "saved"
+  >("gainers");
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -160,40 +162,8 @@ export default function MainPage() {
   }, [filters, giftsList, user.savedList]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      const handleScroll = () => {
-        const scrollLeft = container.scrollLeft;
-        const width = container.clientWidth;
-        const newIndex = Math.round(scrollLeft / width);
-        setActiveIndex(newIndex);
-      };
-
-      container.addEventListener("scroll", handleScroll);
-      return () => container.removeEventListener("scroll", handleScroll);
-    }
-  }, []);
-
-  useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (isMounted) {
-      vibrate();
-    }
-  }, [activeIndex]);
-
-  const handleSwipe = (index: number) => {
-    const container = containerRef.current;
-    if (container) {
-      const width = container.clientWidth;
-      container.scrollTo({
-        left: index * width,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <div>
@@ -203,7 +173,7 @@ export default function MainPage() {
                 Gift Charts
             </h1>
         </h1> */}
-        {/* <div className="mx-3 mb-4">
+      {/* <div className="mx-3 mb-4">
             <span className="text-secondaryText text-sm">
                 ✨ App is <span className="font-bold text-foreground">Free</span> but you can <Link href='/donate' className="font-bold text-primary underline">Donate!</Link>
             </span>
@@ -307,87 +277,84 @@ export default function MainPage() {
       <div className="max-w-full mx-3 gap-x-1 flex items-center justify-between mb-1">
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            activeIndex === 0
+            chosenFilter === "gainers"
               ? "font-bold text-foreground bg-secondary rounded-lg"
               : "text-secondaryText"
           }`}
-          onClick={() => handleSwipe(0)}
+          onClick={() => setChosenFilter("gainers")}
         >
           <span>Gainers</span>
           <TrendingUp size={14} className="ml-1" />
         </button>
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            activeIndex === 1
+            chosenFilter === "losers"
               ? "font-bold text-foreground bg-secondary rounded-lg"
               : "text-secondaryText"
           }`}
-          onClick={() => handleSwipe(1)}
+          onClick={() => setChosenFilter("losers")}
         >
           <span>Losers</span>
           <TrendingDown size={14} className="ml-1" />
         </button>
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            activeIndex === 2
+            chosenFilter === "floor"
               ? "font-bold text-foreground bg-secondary rounded-lg"
               : "text-secondaryText"
           }`}
-          onClick={() => handleSwipe(2)}
+          onClick={() => setChosenFilter("floor")}
         >
-          <span>Top Price</span>
+          <span>Floor</span>
           <Trophy size={14} className="ml-1" />
         </button>
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            activeIndex === 3
+            chosenFilter === "saved"
               ? "font-bold text-foreground bg-secondary rounded-lg"
               : "text-secondaryText"
           }`}
-          onClick={() => handleSwipe(3)}
+          onClick={() => setChosenFilter("saved")}
         >
           <span>Saved</span>
           <Star size={14} className="ml-1" />
         </button>
       </div>
 
-      <div
-        ref={containerRef}
-        className="w-full swipe-container flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
-      >
-        <ListHandler
-          giftsList={gainersList}
-          type={giftType}
-          background={giftBackground}
-        />
-
-        <ListHandler
-          giftsList={losersList}
-          type={giftType}
-          background={giftBackground}
-        />
-
-        <ListHandler
-          giftsList={topList}
-          type={giftType}
-          background={giftBackground}
-        />
-
-        {userList.length !== 0 ? (
+      <div className="w-full flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+        {chosenFilter === "saved" ? (
+          <>
+            {userList.length !== 0 ? (
+              <ListHandler
+                giftsList={userList}
+                type={giftType}
+                background={giftBackground}
+              />
+            ) : (
+              <div className="flex-none w-full text-center snap-start">
+                <div className="px-3 pt-3 pb-1 font-bold">
+                  Your Watchlist is Empty
+                </div>
+                <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
+                  {"Profile -> Settings -> Edit Watchlist"}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
           <ListHandler
-            giftsList={userList}
+            giftsList={
+              chosenFilter === "gainers"
+                ? gainersList
+                : chosenFilter === "losers"
+                ? losersList
+                : chosenFilter === "floor"
+                ? topList
+                : []
+            }
             type={giftType}
             background={giftBackground}
           />
-        ) : (
-          <div className="flex-none w-full text-center snap-start">
-            <div className="px-3 pt-3 pb-1 font-bold">
-              Your Watchlist is Empty
-            </div>
-            <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
-              {"Profile -> Settings -> Edit Watchlist"}
-            </div>
-          </div>
         )}
       </div>
     </div>

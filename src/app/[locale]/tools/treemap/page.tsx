@@ -8,14 +8,11 @@ import { setGiftsList } from "@/redux/slices/giftsListSlice"
 import axios from "axios"
 import { ChevronLeft } from "lucide-react"
 import {Link} from "@/i18n/navigation"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import ReactLoading from "react-loading"
 
 export default function Page() {
 	const vibrate = useVibrate()
-
-	const router = useRouter()
 
     const giftsList = useAppSelector((state) => state.giftsList);
     const [list, setList] = useState<GiftInterface[]>([]);
@@ -44,7 +41,9 @@ export default function Page() {
     }, [dispatch, giftsList]);
 
     useEffect(() => {
-        let sortedList = [...giftsList];
+        let rawList = [...giftsList];
+
+        let sortedList = rawList.filter((gift) => gift.preSale === false || gift.preSale === undefined)
 
         switch (listType) {
             case 'change':

@@ -148,11 +148,26 @@ const imagePlugin = (
     const scale = chart.getZoomLevel ? chart.getZoomLevel() : 1;
 
     // Load toncoin image
-    let toncoinImg = imageMap.get('toncoin');
+    let toncoinImg = imageMap.get("toncoin");
     if (!toncoinImg) {
       toncoinImg = new Image();
-      toncoinImg.src = '/images/toncoin.webp'; // Adjust path if necessary
-      imageMap.set('toncoin', toncoinImg);
+      toncoinImg.src = "/images/toncoin.webp"; // Adjust path if necessary
+      toncoinImg.onerror = () => {
+        console.error("Failed to load toncoin image at /images/toncoin.webp");
+      };
+      toncoinImg.onload = () => {
+        console.log("Toncoin image loaded successfully");
+        if (
+          toncoinImg &&
+          toncoinImg.naturalWidth > 0 &&
+          toncoinImg.naturalHeight > 0
+        ) {
+          imageMap.set("toncoin", toncoinImg);
+        } else {
+          console.error("Toncoin image is invalid (zero width/height)");
+        }
+      };
+      imageMap.set("toncoin", toncoinImg);
     }
 
     ctx.save();
@@ -168,23 +183,24 @@ const imagePlugin = (
         height = meta.height / scale;
       if (width <= 0 || height <= 0) return;
 
-      // --- Solid color background ---
-      const baseColor =
-        item.percentChange > 0
-          ? "#018f35"
-          : item.percentChange < 0
-          ? "#dc2626"
-          : "#8F9779";
-      ctx.fillStyle = baseColor;
-      ctx.fillRect(x, y, width, height);
-
-      // --- Draw border ---
-      ctx.strokeStyle = "#1e293b50"; // Border color
-      ctx.lineWidth = borderWidth; // Use borderWidth parameter
-      ctx.strokeRect(x, y, width, height);
+      // --- Solid color background and border with rounded corners ---
+const baseColor =
+  item.percentChange > 0
+    ? "#018f35"
+    : item.percentChange < 0
+    ? "#dc2626"
+    : "#8F9779";
+ctx.fillStyle = baseColor;
+ctx.strokeStyle = "#1e293b50"; // Border color
+ctx.lineWidth = borderWidth; // Use borderWidth parameter
+ctx.beginPath();
+ctx.roundRect(x, y, width, height, 0); // 5 is the corner radius (adjust as needed)
+ctx.fill();
+ctx.stroke();
+ctx.closePath();
 
       const img = imageMap.get(item.imageName);
-      if (!img?.complete) return;
+      if (!img?.complete || img.naturalWidth === 0) return;
 
       const minSize = Math.min(width, height);
       const baseSize = Math.min(Math.max(minSize / 4, 5), 1000) * imageScale;
@@ -225,69 +241,144 @@ const imagePlugin = (
         startY + drawHeight + fontSize + lineSpacing
       );
 
-      // Draw % change or market cap
+      // Draw % change or market cap with toncoin image or fallback emoji to the left
       ctx.font = `${fontSize}px sans-serif`;
       const valueText =
         chartType === "change"
           ? `${item.percentChange >= 0 ? "+" : ""}${item.percentChange}%`
           : (item.marketCap ?? 0) / 1000 >= 1000
-          ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${currency === "ton" ? "" : "$"}`
-          : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${currency === "ton" ? "" : "$"}`;
-      ctx.fillText(
-        valueText,
-        centerX,
-        startY + drawHeight + fontSize * 2 + lineSpacing * 2
-      );
+          ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M`
+          : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K`;
+      const valueTextWidth = ctx.measureText(valueText).width;
+      const iconSize = fontSize * 1.0; // Smaller toncoin image for valueText
+      const iconSpacing = fontSize * -0.1; // Tighter spacing between image and market cap text
+      const usdSpacing = fontSize * -0.05; // Small space between $ and text
 
-      // Draw price with toncoin image or fallback emoji to the left
+      if (
+        chartType === "marketCap" &&
+        currency === "ton" &&
+        toncoinImg?.complete &&
+        toncoinImg !== null &&
+        toncoinImg.naturalWidth > 0
+      ) {
+        try {
+          ctx.drawImage(
+            toncoinImg,
+            centerX - valueTextWidth / 2 - iconSize - iconSpacing,
+            startY +
+              drawHeight +
+              fontSize * 2 +
+              lineSpacing * 2 -
+              iconSize * 0.8,
+            iconSize,
+            iconSize
+          );
+          ctx.fillText(
+            valueText,
+            centerX + iconSize / 2 + iconSpacing,
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+          );
+        } catch (e) {
+          console.error("Error drawing toncoin image for valueText:", e);
+          ctx.fillText(
+            `💎 ${valueText}`,
+            centerX,
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+          );
+        }
+      } else if (chartType === "marketCap" && currency === "ton") {
+        ctx.fillText(
+          `💎 ${valueText}`,
+          centerX,
+          startY + drawHeight + fontSize * 2 + lineSpacing * 2
+        );
+      } else if (currency === "usd") {
+        const dollarWidth = ctx.measureText("$").width;
+        ctx.fillText(
+          "$",
+          centerX - valueTextWidth / 2 - usdSpacing - dollarWidth / 2,
+          startY + drawHeight + fontSize * 2 + lineSpacing * 2
+        );
+        ctx.fillText(
+          valueText,
+          centerX + dollarWidth / 2 + usdSpacing,
+          startY + drawHeight + fontSize * 2 + lineSpacing * 2
+        );
+      } else {
+        ctx.fillText(
+          valueText,
+          centerX,
+          startY + drawHeight + fontSize * 2 + lineSpacing * 2
+        );
+      }
+
+      // Draw price with toncoin image or fallback emoji to the left (only for chartType === "change")
       ctx.font = `${priceFontSize}px sans-serif`;
       const bottomText =
         chartType === "change"
           ? `${item.price.toFixed(2)}`
           : `${item.percentChange >= 0 ? "+" : ""}${item.percentChange}%`;
       const bottomTextWidth = ctx.measureText(bottomText).width;
-      const iconSize = priceFontSize * 1.2; // Slightly larger toncoin image
-      const iconSpacing = priceFontSize * -0.05;
-      const usdSpacing = priceFontSize * -0.05;
+      const priceIconSize = priceFontSize * 1; // Larger toncoin image for bottomText
+      const priceIconSpacing = priceFontSize * -0.1; // Tight spacing for price
+      const priceUsdSpacing = priceFontSize * -0.05; // Small space for USD
 
-      if (currency === "ton" && toncoinImg?.complete && toncoinImg !== null) {
+      if (
+        chartType === "change" &&
+        currency === "ton" &&
+        toncoinImg?.complete &&
+        toncoinImg !== null &&
+        toncoinImg.naturalWidth > 0
+      ) {
         try {
           ctx.drawImage(
             toncoinImg,
-            centerX - bottomTextWidth / 2 - iconSize - iconSpacing,
-            startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3 - iconSize * 0.8,
-            iconSize,
-            iconSize
+            centerX - bottomTextWidth / 2 - priceIconSize - priceIconSpacing,
+            startY +
+              drawHeight +
+              fontSize * 2 +
+              priceFontSize +
+              lineSpacing * 3 -
+              priceIconSize * 0.8,
+            priceIconSize,
+            priceIconSize
           );
           ctx.fillText(
             bottomText,
-            centerX + iconSize / 2 + iconSpacing,
+            centerX + priceIconSize / 2 + priceIconSpacing,
             startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
           );
         } catch (e) {
-          console.error('Error drawing toncoin image for bottomText:', e);
+          console.error("Error drawing toncoin image for bottomText:", e);
           ctx.fillText(
             `💎 ${bottomText}`,
             centerX,
             startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
           );
         }
-      } else if (currency === "ton") {
+      } else if (chartType === "change" && currency === "ton") {
         ctx.fillText(
           `💎 ${bottomText}`,
           centerX,
           startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
         );
-      } else if (currency === "usd") {
+      } else if (chartType === "change" && currency === "usd") {
         const dollarWidth = ctx.measureText("$").width;
         ctx.fillText(
           "$",
-          centerX - bottomTextWidth / 2 - usdSpacing - dollarWidth / 2,
+          centerX - bottomTextWidth / 2 - priceUsdSpacing - dollarWidth / 2,
           startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
         );
         ctx.fillText(
           bottomText,
-          centerX + dollarWidth / 2 + usdSpacing,
+          centerX + dollarWidth / 2 + priceUsdSpacing,
+          startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
+        );
+      } else {
+        // chartType === "marketCap": just draw bottomText (percent change) without symbol
+        ctx.fillText(
+          bottomText,
+          centerX,
           startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
         );
       }
@@ -363,12 +454,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
             tree: transformed,
             key: "size",
             imageMap,
-            backgroundColor: (ctx: any) => {
-              const val = ctx.dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-              return val > 0 ? "#008000" : val < 0 ? "#E50000" : "#808080";
-            },
-            borderWidth: 5,
-            borderColor: "#000",
+            backgroundColor: 'transparent',
           } as unknown as ChartDataset<"treemap", TreemapDataPoint[]>,
         ],
       },
@@ -468,12 +554,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
                 tree: transformed,
                 key: "size",
                 imageMap,
-                backgroundColor: (ctx: TreemapScriptableContext) => {
-                  const dataset = ctx.dataset as CustomTreemapDataset;
-                  const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
-                  return val > 0 ? "#008000" : val < 0 ? "#E50000" : "#808080";
-                },
-                
+                backgroundColor: 'transparent',
               },
             ],
           },
@@ -562,13 +643,17 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         </div>
       </div>
 
-      <DownloadHeatmapModal trigger={<button
-        className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg border border-secondary bg-secondaryTransparent"
-        onClick={downloadImage}
-      >
-        <Download size={16} />
-        Download Heatmap as Image
-      </button>} />
+      <DownloadHeatmapModal
+        trigger={
+          <button
+            className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg border border-secondary bg-secondaryTransparent"
+            onClick={downloadImage}
+          >
+            <Download size={16} />
+            Download Heatmap as Image
+          </button>
+        }
+      />
 
       <div style={{ width: "100%", minHeight: "600px" }}>
         <canvas ref={canvasRef} />
