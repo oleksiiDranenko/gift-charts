@@ -137,7 +137,8 @@ const imagePlugin = (
   currency: "ton" | "usd",
   watermarkFontSize: number = 15, // Default watermark font size
   textScale: number = 1, // Default text scale
-  imageScale: number = 1 // Default image scale
+  imageScale: number = 1, // Default image scale
+  borderWidth: number = 0
 ) => ({
   id: "treemapImages",
   afterDatasetDraw(chart: any) {
@@ -145,6 +146,14 @@ const imagePlugin = (
     const dataset = data.datasets[0] as any;
     const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
     const scale = chart.getZoomLevel ? chart.getZoomLevel() : 1;
+
+    // Load toncoin image
+    let toncoinImg = imageMap.get('toncoin');
+    if (!toncoinImg) {
+      toncoinImg = new Image();
+      toncoinImg.src = '/images/toncoin.webp'; // Adjust path if necessary
+      imageMap.set('toncoin', toncoinImg);
+    }
 
     ctx.save();
     ctx.scale(scale, scale);
@@ -162,12 +171,17 @@ const imagePlugin = (
       // --- Solid color background ---
       const baseColor =
         item.percentChange > 0
-          ? "#16a34a"
+          ? "#018f35"
           : item.percentChange < 0
           ? "#dc2626"
           : "#8F9779";
       ctx.fillStyle = baseColor;
       ctx.fillRect(x, y, width, height);
+
+      // --- Draw border ---
+      ctx.strokeStyle = "#1e293b50"; // Border color
+      ctx.lineWidth = borderWidth; // Use borderWidth parameter
+      ctx.strokeRect(x, y, width, height);
 
       const img = imageMap.get(item.imageName);
       if (!img?.complete) return;
@@ -217,28 +231,66 @@ const imagePlugin = (
         chartType === "change"
           ? `${item.percentChange >= 0 ? "+" : ""}${item.percentChange}%`
           : (item.marketCap ?? 0) / 1000 >= 1000
-          ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${
-              currency === "ton" ? "💎" : "$"
-            }`
-          : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${
-              currency === "ton" ? "💎" : "$"
-            }`;
+          ? `${((item.marketCap ?? 0) / 1e6).toFixed(1)}M ${currency === "ton" ? "" : "$"}`
+          : `${((item.marketCap ?? 0) / 1000).toFixed(1)}K ${currency === "ton" ? "" : "$"}`;
       ctx.fillText(
         valueText,
         centerX,
         startY + drawHeight + fontSize * 2 + lineSpacing * 2
       );
 
+      // Draw price with toncoin image or fallback emoji to the left
       ctx.font = `${priceFontSize}px sans-serif`;
       const bottomText =
         chartType === "change"
-          ? `${item.price.toFixed(2)} ${currency === "ton" ? "💎" : "$"}`
+          ? `${item.price.toFixed(2)}`
           : `${item.percentChange >= 0 ? "+" : ""}${item.percentChange}%`;
-      ctx.fillText(
-        bottomText,
-        centerX,
-        startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
-      );
+      const bottomTextWidth = ctx.measureText(bottomText).width;
+      const iconSize = priceFontSize * 1.2; // Slightly larger toncoin image
+      const iconSpacing = priceFontSize * -0.05;
+      const usdSpacing = priceFontSize * -0.05;
+
+      if (currency === "ton" && toncoinImg?.complete && toncoinImg !== null) {
+        try {
+          ctx.drawImage(
+            toncoinImg,
+            centerX - bottomTextWidth / 2 - iconSize - iconSpacing,
+            startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3 - iconSize * 0.8,
+            iconSize,
+            iconSize
+          );
+          ctx.fillText(
+            bottomText,
+            centerX + iconSize / 2 + iconSpacing,
+            startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
+          );
+        } catch (e) {
+          console.error('Error drawing toncoin image for bottomText:', e);
+          ctx.fillText(
+            `💎 ${bottomText}`,
+            centerX,
+            startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
+          );
+        }
+      } else if (currency === "ton") {
+        ctx.fillText(
+          `💎 ${bottomText}`,
+          centerX,
+          startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
+        );
+      } else if (currency === "usd") {
+        const dollarWidth = ctx.measureText("$").width;
+        ctx.fillText(
+          "$",
+          centerX - bottomTextWidth / 2 - usdSpacing - dollarWidth / 2,
+          startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
+        );
+        ctx.fillText(
+          bottomText,
+          centerX + dollarWidth / 2 + usdSpacing,
+          startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
+        );
+      }
 
       if (index === 0) {
         ctx.font = `${watermarkFontSize}px sans-serif`;
@@ -315,8 +367,8 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
               const val = ctx.dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
               return val > 0 ? "#008000" : val < 0 ? "#E50000" : "#808080";
             },
-            borderWidth: 4,
-            borderColor: "#FFFFFF",
+            borderWidth: 5,
+            borderColor: "#000",
           } as unknown as ChartDataset<"treemap", TreemapDataPoint[]>,
         ],
       },
@@ -326,7 +378,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         animation: false,
         plugins: { legend: { display: false }, tooltip: { enabled: false } },
       },
-      plugins: [imagePlugin(chartType, currency, 35, 1, 1.4)],
+      plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 3)],
     });
 
     setTimeout(async () => {
@@ -342,9 +394,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
           tempChart.destroy();
           return;
         }
-
-        // ✅ Telegram → show modal
-        setIsDownloadModalOpen(true);
 
         const chatId = telegram?.initDataUnsafe?.user?.id;
         if (!chatId) {
@@ -424,6 +473,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
                   const val = dataset.tree?.[ctx.dataIndex]?.percentChange ?? 0;
                   return val > 0 ? "#008000" : val < 0 ? "#E50000" : "#808080";
                 },
+                
               },
             ],
           },
@@ -511,16 +561,14 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
           </button>
         </div>
       </div>
-      <button
+
+      <DownloadHeatmapModal trigger={<button
         className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg border border-secondary bg-secondaryTransparent"
         onClick={downloadImage}
       >
         <Download size={16} />
         Download Heatmap as Image
-      </button>
-
-      <DownloadHeatmapModal trigger={null} />
-      {isDownloadModalOpen && <DownloadHeatmapModal trigger={<></>} />}
+      </button>} />
 
       <div style={{ width: "100%", minHeight: "600px" }}>
         <canvas ref={canvasRef} />

@@ -26,6 +26,7 @@ import {
   Gift,
   List,
   Menu,
+  SquareArrowOutUpRight,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import CalendarHeatmap from "../tools/calendar-heatmap/CalendarHeatmap";
@@ -61,7 +62,9 @@ export default function GiftChart({
   const [list, setList] = useState<
     (GiftLifeDataInterface | GiftWeekDataInterface)[]
   >(weekData.slice(-24));
-  const [listType, setListType] = useState<"24h" | "3d" | "1w" | "1m" | "3m" | "all">("24h");
+  const [listType, setListType] = useState<
+    "24h" | "3d" | "1w" | "1m" | "3m" | "all"
+  >("24h");
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
   const [gradient, setGradient] = useState<CanvasGradient | null>(null);
@@ -447,21 +450,27 @@ export default function GiftChart({
           </div>
         </div>
 
-        <div>
-          <ModelsModal trigger={
-            <button 
-              className="h-8 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
-              onClick={() => vibrate()}
-            >
-              <Menu size={16}/>Gift Models
-          </button>
-          } giftName={gift?.name ? gift.name : ''} giftId={gift?._id ? gift._id : ''} />
-        </div>
+        {gift?.preSale ? null : (
+          <div>
+            <ModelsModal
+              trigger={
+                <button
+                  className="h-8 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
+                  onClick={() => vibrate()}
+                >
+                  <Menu size={16} />
+                  Gift Models
+                </button>
+              }
+              giftName={gift?.name ? gift.name : ""}
+              giftId={gift?._id ? gift._id : ""}
+            />
+          </div>
+        )}
       </div>
 
       {chartType === "line" ? (
         <>
-
           {/* <div className="w-full flex flex-row justify-start gap-x-1">
             <span className="px-3 py-2 bg-secondaryTransparent rounded-xl text-sm text-secondaryText">
               Low: {low}
@@ -470,90 +479,93 @@ export default function GiftChart({
               High: {high}
             </span>
           </div> */}
-        
+
           <div className="relative" ref={chartContainerRef}>
             <Line ref={chartRef} data={data} options={options} />
           </div>
 
-          <div className="w-full mt-3 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-lg">
+          <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-lg">
             <button
-                className={`w-full px-1 text-sm h-8 ${
-                  listType == "all"
-                    ? "rounded-lg bg-secondary font-bold"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => {
-                  lifeData.length > 0 ? setListType("all") : null;
-                  vibrate();
-                }}
-              >
-                All
-              </button>
-              <button
-                className={`w-full px-1 text-sm h-8 ${
-                  listType == "3m"
-                    ? "rounded-lg bg-secondary font-bold"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => {
-                  lifeData.length > 0 ? setListType("3m") : null;
-                  vibrate();
-                }}
-              >
-                3m
-              </button>
-              <button
-                className={`w-full px-1 text-sm h-8 ${
-                  listType == "1m"
-                    ? "rounded-lg bg-secondary font-bold"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => {
-                  lifeData.length > 0 ? setListType("1m") : null;
-                  vibrate();
-                }}
-              >
-                1m
-              </button>
-              <button
-                className={`w-full text-sm h-8 ${
-                  listType == "1w"
-                    ? "rounded-lg bg-secondary font-bold"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => {
-                  setListType("1w");
-                  vibrate();
-                }}
-              >
-                1w
-              </button>
-              <button
-                className={`w-full px-1 text-sm h-8 ${
-                  listType == "3d"
-                    ? "rounded-lg bg-secondary font-bold"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => {
-                  setListType("3d");
-                  vibrate();
-                }}
-              >
-                3d
-              </button>
-              <button
-                className={`w-full px-1 text-sm h-8 ${
-                  listType == "24h"
-                    ? "rounded-lg bg-secondary font-bold"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => {
-                  setListType("24h");
-                  vibrate();
-                }}
-              >
-                24h
-              </button>
+              className={`w-full px-1 text-sm h-8 ${
+                listType == "all"
+                  ? "rounded-lg bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                !gift?.preSale ? 
+                (lifeData.length > 0 ? setListType("all") : null) : null
+                vibrate();
+              }}
+            >
+              All
+            </button>
+            <button
+              className={`w-full px-1 text-sm h-8 ${
+                listType == "3m"
+                  ? "rounded-lg bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                !gift?.preSale ? 
+                (lifeData.length > 0 ? setListType("3m") : null) : null
+                vibrate();
+              }}
+            >
+              3m
+            </button>
+            <button
+              className={`w-full px-1 text-sm h-8 ${
+                listType == "1m"
+                  ? "rounded-lg bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                !gift?.preSale ? 
+                (lifeData.length > 0 ? setListType("1m") : null) : null
+                vibrate();
+              }}
+            >
+              1m
+            </button>
+            <button
+              className={`w-full text-sm h-8 ${
+                listType == "1w"
+                  ? "rounded-lg bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setListType("1w");
+                vibrate();
+              }}
+            >
+              1w
+            </button>
+            <button
+              className={`w-full px-1 text-sm h-8 ${
+                listType == "3d"
+                  ? "rounded-lg bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setListType("3d");
+                vibrate();
+              }}
+            >
+              3d
+            </button>
+            <button
+              className={`w-full px-1 text-sm h-8 ${
+                listType == "24h"
+                  ? "rounded-lg bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setListType("24h");
+                vibrate();
+              }}
+            >
+              24h
+            </button>
           </div>
         </>
       ) : (
@@ -564,20 +576,22 @@ export default function GiftChart({
         <MarketsModal
           trigger={
             <button
-              className="w-full h-10 bg-red-600 rounded-lg text-white"
+              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-lg text-white"
               onClick={() => vibrate()}
             >
               Sell
+              <SquareArrowOutUpRight size={16} />
             </button>
           }
         />
         <MarketsModal
           trigger={
             <button
-              className="w-full h-10 bg-green-600 rounded-lg text-white"
+              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-lg text-white"
               onClick={() => vibrate()}
             >
               Buy
+              <SquareArrowOutUpRight size={16} />
             </button>
           }
         />
