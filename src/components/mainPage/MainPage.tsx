@@ -25,6 +25,7 @@ import {
   TrendingDown,
 } from "lucide-react";
 import MarketsModal from "../giftInfo/MarketsModal";
+import AddBanner from "./AddBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -180,9 +181,9 @@ export default function MainPage() {
         </div> */}
 
       <div className="w-full px-3 mb-5">
-        <Link
+        {/* <Link
           href="https://t.me/gift_charts"
-          className="w-full min-h-20 p-3 pr-[120px] flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden"
+          className="w-full h-20 p-3 pr-[120px] flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden"
         >
           <div className="flex flex-col justify-center">
             <div className="flex flex-row">
@@ -202,7 +203,8 @@ export default function MainPage() {
               height={100}
             />
           </div>
-        </Link>
+        </Link> */}
+        <AddBanner/>
       </div>
 
       <SearchBar />

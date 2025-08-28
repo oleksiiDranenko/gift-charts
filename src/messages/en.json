@@ -1,4 +1,9 @@
 {
+	"add": {
+		"header": "Heart Locket floor price increase on September 1st?",
+		"text": "Predict events with",
+		"chance": "chance"
+	},
 	"filters": {
 		"hideFilters": "Hide Filters",
 		"showFilters": "Show Filters",
