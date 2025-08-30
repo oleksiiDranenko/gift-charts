@@ -10,26 +10,28 @@ interface Props {
 
 export default function PageTransition({ children }: Props) {
   const pathname = usePathname()
-  const [show, setShow] = useState(true)
   const [currentChild, setCurrentChild] = useState(children)
+  const [show, setShow] = useState(true)
 
   useEffect(() => {
-    setShow(false) // start exit
+    setShow(false) // start fade out
     const timeout = setTimeout(() => {
       setCurrentChild(children) // swap content
-      setShow(true) // trigger enter animation
-    }, 200) // duration matches transition
+      setShow(true) // fade in new content
+    }, 50) // short timeout
     return () => clearTimeout(timeout)
   }, [pathname, children])
 
   return (
     <Transition
-      appear
       show={show}
-      enter="transition-transform transition-opacity duration-200 ease-out"
-      enterFrom="opacity-0 translate-y-6"
-      enterTo="opacity-100 translate-y-0"
-      leave="transition-none" // keep old page until new one enters
+      appear
+      enter="transition-opacity duration-200 ease-out"
+      enterFrom="opacity-90"
+      enterTo="opacity-100"
+      leave="transition-opacity duration-200 ease-in"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-90"
     >
       <div className="relative w-full">{currentChild}</div>
     </Transition>
