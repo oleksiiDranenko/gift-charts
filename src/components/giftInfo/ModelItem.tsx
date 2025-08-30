@@ -20,7 +20,7 @@ export default function ModelItem({ model }: Props) {
   return (
     <div
       key={model._id}
-      className="w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondaryTransparent rounded-lg"
+      className="w-full h-16 mb-1 flex flex-row items-center justify-between focus:bg-secondaryTransparent rounded-xl"
     >
       <div className="h-full flex flex-row items-center justify-start">
         <Image
@@ -32,7 +32,7 @@ export default function ModelItem({ model }: Props) {
         />
         <div className="flex flex-col">
 					<span className="font-bold mr-2">{model.name}</span>
-        <span className="w-fit text-xs font-bold text-primary p-1 bg-blue-500 bg-opacity-10 rounded-lg">
+        <span className="w-fit text-xs font-bold text-primary p-1 bg-blue-500 bg-opacity-10 rounded-xl">
           {model.rarity}%
         </span>
 				</div>
@@ -50,7 +50,7 @@ export default function ModelItem({ model }: Props) {
         </div>
 
         <span
-          className={`py-[2px] px-1 rounded-lg bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+          className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
             percentChange !== "no data"
               ? percentChange >= 0
                 ? "text-green-500 bg-green-500"

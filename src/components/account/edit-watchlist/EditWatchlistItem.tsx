@@ -29,11 +29,11 @@ export default function EditWatchlistItem({giftId, giftsList, removeGift, }: Pro
 
     return (
         <div 
-            className="w-full h-20 flex flex-row items-center justify-start" 
+            className="w-full h-16 p-3 mb-3 bg-secondaryTransparent flex flex-row items-center justify-start rounded-xl" 
         >  
-            <div className="flex flex-row items-center">
+            <div className="flex flex-row items-center gap-x-3">
                 <button
-                    className="h-10 w-10 mr-3 pl-3 text-red-500"
+                    className="p-3 text-red-600 bg-red-600/10 rounded-xl"
                     onClick={() => {
                         removeGift(giftId)
                         vibrate()
@@ -46,7 +46,7 @@ export default function EditWatchlistItem({giftId, giftsList, removeGift, }: Pro
                     src={`/gifts/${gift?.image}.webp`}
                     width={50}
                     height={50}
-                    className={`bg-secondary p-1 mr-3 rounded-lg`}
+                    className={`bg-secondary p-1 mr-3 rounded-xl`}
                 />
                 <span className="text-base font-bold">
                     {gift?.name}

@@ -23,6 +23,7 @@ import {
   CircleSlash2,
   TrendingUp,
   TrendingDown,
+  SlidersHorizontal,
 } from "lucide-react";
 import MarketsModal from "../giftInfo/MarketsModal";
 import AddBanner from "./AddBanner";
@@ -204,17 +205,17 @@ export default function MainPage() {
             />
           </div>
         </Link> */}
-        <AddBanner/>
+        <AddBanner />
       </div>
 
       <SearchBar />
 
       <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-3">
-        <div className="w-full flex flex-row bg-secondaryTransparent border border-secondary rounded-lg">
+        <div className="w-full flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden">
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
               giftType === "line"
-                ? "font-bold text-foreground bg-secondary rounded-lg"
+                ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => {
@@ -227,7 +228,7 @@ export default function MainPage() {
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
               giftType === "block"
-                ? "font-bold text-foreground bg-secondary rounded-lg"
+                ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => {
@@ -238,11 +239,11 @@ export default function MainPage() {
             <Grid2x2 size={18} />
           </button>
         </div>
-        <div className="w-full flex flex-row bg-secondaryTransparent border border-secondary rounded-lg">
+        <div className="w-full flex flex-row bg-secondaryTransparent rounded-xl">
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
               giftBackground === "color"
-                ? "font-bold text-foreground bg-secondary rounded-lg"
+                ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => {
@@ -255,7 +256,7 @@ export default function MainPage() {
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
               giftBackground === "none"
-                ? "font-bold text-foreground bg-secondary rounded-lg"
+                ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => {
@@ -267,12 +268,12 @@ export default function MainPage() {
           </button>
         </div>
         <Link
-          className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-primary rounded-lg`}
+          className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
           href={"/gifts-list"}
           onClick={() => vibrate()}
         >
           <span>Customise</span>
-          <Hammer size={14} strokeWidth={2.5} className="ml-[2px]" />
+          <SlidersHorizontal size={14} strokeWidth={2.5} className="ml-[2px]" />
         </Link>
       </div>
 
@@ -280,7 +281,7 @@ export default function MainPage() {
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
             chosenFilter === "gainers"
-              ? "font-bold text-foreground bg-secondary rounded-lg"
+              ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
           onClick={() => setChosenFilter("gainers")}
@@ -291,7 +292,7 @@ export default function MainPage() {
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
             chosenFilter === "losers"
-              ? "font-bold text-foreground bg-secondary rounded-lg"
+              ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
           onClick={() => setChosenFilter("losers")}
@@ -302,7 +303,7 @@ export default function MainPage() {
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
             chosenFilter === "floor"
-              ? "font-bold text-foreground bg-secondary rounded-lg"
+              ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
           onClick={() => setChosenFilter("floor")}
@@ -313,7 +314,7 @@ export default function MainPage() {
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
             chosenFilter === "saved"
-              ? "font-bold text-foreground bg-secondary rounded-lg"
+              ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
           onClick={() => setChosenFilter("saved")}
@@ -328,6 +329,7 @@ export default function MainPage() {
           <>
             {userList.length !== 0 ? (
               <ListHandler
+                key={chosenFilter}
                 giftsList={userList}
                 type={giftType}
                 background={giftBackground}
@@ -345,6 +347,7 @@ export default function MainPage() {
           </>
         ) : (
           <ListHandler
+            key={chosenFilter}
             giftsList={
               chosenFilter === "gainers"
                 ? gainersList

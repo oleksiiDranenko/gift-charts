@@ -48,7 +48,7 @@ export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full lg:w-1/2 p-3 rounded-xl bg-background border border-secondary shadow-xl">
+              <Dialog.Panel className="w-full lg:w-1/2 p-3 rounded-xl bg-secondaryTransparent shadow-xl">
                 
 
                 <div className="w-full mt-2 flex flex-col items-center">
@@ -61,7 +61,7 @@ export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
                         vibrate()
                         setIsOpen(false)
                     }}
-                    className="w-full px-4 py-2 bg-secondaryTransparent border border-secondary rounded-lg"
+                    className="w-full px-4 py-2 bg-primary rounded-xl"
                   >
                     Ok
                   </button>

@@ -81,8 +81,8 @@ const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ lifeData }) => {
 
   return (
     <div className="w-full mt-3">
-      <div className="w-full rounded-lg overflow-hidden">
-        <div className="grid grid-cols-6">
+      <div className="w-full rounded-xl overflow-hidden">
+        <div className="grid grid-cols-6 text-white">
           {monthlyData.map((item, index) => (
             <div
               key={index}

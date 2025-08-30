@@ -1,23 +1,24 @@
 "use client";
 
-import { IndexInterface } from "@/interfaces/IndexInterface";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { setIndexList } from "@/redux/slices/indexListSlice";
 import axios from "axios";
-import {Link} from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { useEffect, useState, useRef } from "react";
-import LoadingBar from "react-top-loading-bar";
 import IndexBlock from "@/components/tools/IndexBlock";
 import useVibrate from "@/hooks/useVibrate";
-import { ChevronRight, Grid2x2 } from "lucide-react";
+import { ChevronRight, Gauge, Grid2x2 } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function Page() {
   const dispatch = useAppDispatch();
   const giftsList = useAppSelector((state) => state.giftsList);
   const indexList = useAppSelector((state) => state.indexList);
   const vibrate = useVibrate();
+
+  const t = useTranslations("fearAndGreed");
 
   useEffect(() => {
     (async () => {
@@ -42,38 +43,55 @@ export default function Page() {
 
   return (
     <main className="w-full lg:w-1/2 pt-[70px] px-3">
-      <div className="mb-5 border border-secondary bg-secondaryTransparent rounded-lg overflow-hidden relative">
-      <div className="absolute top-0 left-0 w-full h-40 z-0 overflow-hidden">
-        <Image
-          src="/images/heatmap.webp"
-          alt="heatmap background"
-          fill
-          className="object-cover blur-[3px]"
-          priority
-        />
-      </div>
+      <h1 className="w-full text-xl font-bold mb-3 ml-1 flex flex-row gap-x-2">
+        Analytics Tools
+      </h1>
+      <div className="mb-3 bg-secondaryTransparent rounded-xl overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-20 z-0 overflow-hidden">
+          <Image
+            src="/images/heatmap.webp"
+            alt="heatmap background"
+            fill
+            className="object-cover blur-[3px]"
+            priority
+          />
+        </div>
 
-      <div className="relative z-10">
-        <div className="w-full h-40" />
+        <div className="relative z-10">
+          <div className="w-full h-20" />
 
-        <div className="w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg">
-          <div className="flex flex-row items-center font-bold text-lg gap-1">
-            <Grid2x2 size={24} />
-            <span>Heatmap</span>
+          <div className="w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg">
+            <div className="flex flex-row items-center font-bold text-lg gap-2">
+              <Grid2x2 size={24} className="text-primary" />
+              <span>Heatmap</span>
+            </div>
+
+            <Link
+              href="/tools/treemap"
+              className="px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl"
+              onClick={() => vibrate()}
+            >
+              <span>Try it now</span>
+              <ChevronRight size={18} />
+            </Link>
           </div>
-
-          <Link
-            href="/tools/treemap"
-            className="px-3 h-10 text-sm flex items-center border border-secondary bg-secondaryTransparent rounded-lg"
-            onClick={() => vibrate()}
-          >
-            <span>Try it now</span> 
-            <ChevronRight size={18} /> 
-          </Link>
         </div>
       </div>
-    </div>
 
+      {/* <div className="w-full h-16 p-3 mb-3 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl">
+          <h1 className="font-bold flex flex-row items-center gap-x-2">
+            <Gauge  size={26} className="text-primary"/>
+            {t("name")}
+          </h1>
+          <Link
+            href="/tools/fear-greed"
+            className="px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl"
+            onClick={() => vibrate()}
+          >
+            <span>Try it now</span>
+            <ChevronRight size={18} />
+          </Link>
+      </div> */}
 
       <div className="w-full h-auto flex flex-col gap-3">
         <IndexBlock name="Market Cap" id="68493d064b37eed02b7ae5af" />

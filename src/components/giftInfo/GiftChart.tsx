@@ -23,9 +23,6 @@ import {
   ChartSpline,
   ChevronDown,
   ChevronUp,
-  Gift,
-  List,
-  Menu,
   SquareArrowOutUpRight,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -343,14 +340,14 @@ export default function GiftChart({
 
   return (
     <div className="h-auto w-full pl-3 pr-3">
-      <div className="w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center">
+      <div className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${resolvedTheme === 'dark' ? '' : 'bg-secondaryTransparent rounded-xl pl-2'}`}>
         <div className="h-full flex items-center">
           <Image
             alt="gift"
             src={`/gifts/${gift?.image}.webp`}
             width={55}
-            height={55}
-            className={`mr-3 p-1 rounded-lg  bg-secondaryTransparent `}
+            height={55} 
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-xl ${resolvedTheme === 'dark' ? 'bg-secondaryTransparent' : 'bg-background'} `}
           />
           <h1 className="flex flex-col">
             <span className="text-xl font-bold">{gift?.name}</span>
@@ -389,13 +386,13 @@ export default function GiftChart({
         </div>
       </div>
 
-      <div className="w-full h-fit justify-between mb-3 mt-5 flex flex-row">
+      <div className="w-full h-fit justify-between mb-3 mt-3 flex flex-row">
         <div className="flex flex-row gap-x-3">
-          <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+          <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
             <button
               className={`text-xs h-8 px-3 box-border ${
                 selectedPrice == "ton"
-                  ? "rounded-lg bg-primary font-bold text-white"
+                  ? "rounded-xl bg-primary font-bold text-white"
                   : null
               }`}
               onClick={() => {
@@ -408,7 +405,7 @@ export default function GiftChart({
             <button
               className={`text-xs h-8 px-3  box-border ${
                 selectedPrice == "usd"
-                  ? "rounded-lg bg-primary font-bold text-white"
+                  ? "rounded-xl bg-primary font-bold text-white"
                   : null
               }`}
               onClick={() => {
@@ -420,11 +417,11 @@ export default function GiftChart({
             </button>
           </div>
 
-          <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+          <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
             <button
               className={`text-xs h-8 px-3 box-border  ${
                 chartType == "line"
-                  ? "rounded-lg bg-primary font-bold text-white"
+                  ? "rounded-xl bg-primary font-bold text-white"
                   : null
               }`}
               onClick={() => {
@@ -437,7 +434,7 @@ export default function GiftChart({
             <button
               className={`text-xs h-8 px-3 box-border ${
                 chartType == "candle"
-                  ? "rounded-lg bg-primary font-bold text-white"
+                  ? "rounded-xl bg-primary font-bold text-white"
                   : null
               }`}
               onClick={() => {
@@ -455,10 +452,10 @@ export default function GiftChart({
             <ModelsModal
               trigger={
                 <button
-                  className="h-8 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-lg bg-secondaryTransparent border border-secondary"
+                  className={`h-8 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-xl ${resolvedTheme === 'dark' ? 'bg-secondary' : 'bg-secondaryTransparent'}`}
                   onClick={() => vibrate()}
                 >
-                  <Menu size={16} />
+                  <SquareArrowOutUpRight size={16} />
                   Gift Models
                 </button>
               }
@@ -480,20 +477,19 @@ export default function GiftChart({
             </span>
           </div> */}
 
-          <div className="relative" ref={chartContainerRef}>
+          <div className={resolvedTheme === 'dark' ? 'relative' : 'relative bg-secondaryTransparent rounded-xl'} ref={chartContainerRef}>
             <Line ref={chartRef} data={data} options={options} />
           </div>
 
-          <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-lg">
+          <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl">
             <button
               className={`w-full px-1 text-sm h-8 ${
                 listType == "all"
-                  ? "rounded-lg bg-secondary font-bold"
+                  ? "rounded-xl bg-secondary font-bold"
                   : "text-secondaryText"
               }`}
               onClick={() => {
-                !gift?.preSale ? 
-                (lifeData.length > 0 ? setListType("all") : null) : null
+                (lifeData.length > 0 ? setListType("all") : null)
                 vibrate();
               }}
             >
@@ -502,12 +498,11 @@ export default function GiftChart({
             <button
               className={`w-full px-1 text-sm h-8 ${
                 listType == "3m"
-                  ? "rounded-lg bg-secondary font-bold"
+                  ? "rounded-xl bg-secondary font-bold"
                   : "text-secondaryText"
               }`}
               onClick={() => {
-                !gift?.preSale ? 
-                (lifeData.length > 0 ? setListType("3m") : null) : null
+                (lifeData.length > 0 ? setListType("3m") : null)
                 vibrate();
               }}
             >
@@ -516,12 +511,11 @@ export default function GiftChart({
             <button
               className={`w-full px-1 text-sm h-8 ${
                 listType == "1m"
-                  ? "rounded-lg bg-secondary font-bold"
+                  ? "rounded-xl bg-secondary font-bold"
                   : "text-secondaryText"
               }`}
               onClick={() => {
-                !gift?.preSale ? 
-                (lifeData.length > 0 ? setListType("1m") : null) : null
+                (lifeData.length > 0 ? setListType("1m") : null)
                 vibrate();
               }}
             >
@@ -530,7 +524,7 @@ export default function GiftChart({
             <button
               className={`w-full text-sm h-8 ${
                 listType == "1w"
-                  ? "rounded-lg bg-secondary font-bold"
+                  ? "rounded-xl bg-secondary font-bold"
                   : "text-secondaryText"
               }`}
               onClick={() => {
@@ -543,7 +537,7 @@ export default function GiftChart({
             <button
               className={`w-full px-1 text-sm h-8 ${
                 listType == "3d"
-                  ? "rounded-lg bg-secondary font-bold"
+                  ? "rounded-xl bg-secondary font-bold"
                   : "text-secondaryText"
               }`}
               onClick={() => {
@@ -556,7 +550,7 @@ export default function GiftChart({
             <button
               className={`w-full px-1 text-sm h-8 ${
                 listType == "24h"
-                  ? "rounded-lg bg-secondary font-bold"
+                  ? "rounded-xl bg-secondary font-bold"
                   : "text-secondaryText"
               }`}
               onClick={() => {
@@ -576,7 +570,7 @@ export default function GiftChart({
         <MarketsModal
           trigger={
             <button
-              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-lg text-white"
+              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-xl text-white"
               onClick={() => vibrate()}
             >
               Sell
@@ -587,7 +581,7 @@ export default function GiftChart({
         <MarketsModal
           trigger={
             <button
-              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-lg text-white"
+              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-xl text-white"
               onClick={() => vibrate()}
             >
               Buy
@@ -605,7 +599,7 @@ export default function GiftChart({
           <div>
             <button
               onClick={() => setShowCalendar(!showCalendar)}
-              className="flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-lg"
+              className="flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondary rounded-xl"
             >
               {showCalendar ? (
                 <>

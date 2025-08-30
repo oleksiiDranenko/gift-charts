@@ -76,7 +76,7 @@ export default function ModelsModal({
               leaveFrom="translate-y-0 opacity-100"
               leaveTo="translate-y-full opacity-0"
             >
-              <Dialog.Panel className="w-full lg:w-1/2 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col">
+              <Dialog.Panel className="w-full lg:w-1/2 h-5/6 p-3 rounded-t-xl bg-background flex flex-col">
                 <div className="w-full h-10 flex justify-end items-center">
                   <button
                     onClick={() => {

@@ -34,7 +34,7 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
     Chart<"candlestick", CandlestickData[], unknown> | null | undefined
   >(null);
 
-  const [listType, setListType] = useState<"2w" | "1m" | "3m" | "all">("2w");
+  const [listType, setListType] = useState<"2w" | "1m" | "2m" | "3m" | "all">("2w");
   const [list, setList] = useState<GiftLifeDataInterface[]>(data);
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
@@ -94,6 +94,9 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
         break;
       case "1m":
         setList([...updatedData.slice(-30)]);
+        break;
+      case "2m":
+        setList([...updatedData.slice(-60)]);
         break;
       case "3m":
         setList([...updatedData.slice(-90)]);
@@ -245,14 +248,13 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
         data={chartData}
         options={options}
       />
-      <div className="mb-1 mt-5 flex flex-col border border-secondary bg-secondaryTransparent rounded-lg">
-        <div className="w-full flex flex-row justify-between gap-x-3">
+      <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl">
           <button
-            className={`w-full text-sm h-8 ${
-              listType == "all"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
+            className={`w-full px-1 text-sm h-8 ${
+                listType == "all"
+                  ? "rounded-xl bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
             onClick={() => {
               data.length > 0 ? setListType("all") : null;
               vibrate();
@@ -261,11 +263,11 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
             All
           </button>
           <button
-            className={`w-full text-sm h-8 ${
-              listType == "3m"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
+            className={`w-full px-1 text-sm h-8 ${
+                listType == "3m"
+                  ? "rounded-xl bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
             onClick={() => {
               data.length > 0 ? setListType("3m") : null;
               vibrate();
@@ -274,11 +276,24 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
             3m
           </button>
           <button
-            className={`w-full text-sm h-8 ${
-              listType == "1m"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
+            className={`w-full px-1 text-sm h-8 ${
+                listType == "2m"
+                  ? "rounded-xl bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+            onClick={() => {
+              setListType("2m");
+              vibrate();
+            }}
+          >
+            2m
+          </button>
+          <button
+            className={`w-full px-1 text-sm h-8 ${
+                listType == "1m"
+                  ? "rounded-xl bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
             onClick={() => {
               setListType("1m");
               vibrate();
@@ -287,11 +302,11 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
             1m
           </button>
           <button
-            className={`w-full text-sm h-8 ${
-              listType == "2w"
-                ? "rounded-lg bg-primary font-bold text-white"
-                : null
-            }`}
+            className={`w-full px-1 text-sm h-8 ${
+                listType == "2w"
+                  ? "rounded-xl bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
             onClick={() => {
               setListType("2w");
               vibrate();
@@ -300,7 +315,6 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
             2w
           </button>
         </div>
-      </div>
     </div>
   );
 }

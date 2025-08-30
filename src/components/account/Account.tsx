@@ -12,7 +12,7 @@ import {Link} from "@/i18n/navigation";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { countPercentChange } from "@/numberFormat/functions";
-import { Copy, Gift, Settings } from "lucide-react";
+import { Copy, Gift } from "lucide-react";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -237,19 +237,19 @@ export default function Account() {
           />
         </div>
       ) : user.username === "_guest" ? (
-        <div className="w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-lg">
+        <div className="w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl">
           Please open this app in Telegram
         </div>
       ) : (
         <>
           <div className="w-full h-28 flex flex-row justify-center items-center relative">
-            <button
-              className="p-[6px] flex flex-row items-center gap-x-1 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-lg"
+            {/* <button
+              className="p-[6px] flex flex-row items-center gap-x-1 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-xl"
               onClick={handleClick}
             >
               <Copy size={14} className="text-primary"/>
               <span>Referral</span>
-            </button>
+            </button> */}
 
             <div className="flex flex-col items-center">
               <div className="flex flex-row items-center">
@@ -319,11 +319,11 @@ export default function Account() {
           </div>
 
           <div className="flex flex-row gap-3 mt-3 justify-between">
-            <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+            <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   currency === "ton"
-                    ? "rounded-lg bg-primary font-bold text-white"
+                    ? "rounded-xl bg-primary font-bold text-white"
                     : null
                 }`}
                 onClick={() => {
@@ -336,7 +336,7 @@ export default function Account() {
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   currency === "usd"
-                    ? "rounded-lg bg-primary font-bold text-white"
+                    ? "rounded-xl bg-primary font-bold text-white"
                     : null
                 }`}
                 onClick={() => {
@@ -348,11 +348,11 @@ export default function Account() {
               </button>
             </div>
 
-            <div className="flex flex-row box-border bg-secondaryTransparent rounded-lg gap-x-1">
+            <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   changeType === "24h%" &&
-                  "rounded-lg bg-primary font-bold text-white"
+                  "rounded-xl bg-primary font-bold text-white"
                 }`}
                 onClick={() => {
                   setChangeType("24h%");
@@ -364,7 +364,7 @@ export default function Account() {
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   changeType === "PNL" &&
-                  "rounded-lg bg-primary font-bold text-white"
+                  "rounded-xl bg-primary font-bold text-white"
                 }`}
                 onClick={() => {
                   setChangeType("PNL");
@@ -376,7 +376,7 @@ export default function Account() {
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   changeType === "PNL%" &&
-                  "rounded-lg bg-primary font-bold text-white"
+                  "rounded-xl bg-primary font-bold text-white"
                 }`}
                 onClick={() => {
                   setChangeType("PNL%");
@@ -389,9 +389,12 @@ export default function Account() {
           </div>
 
           <div className="w-full h-auto">
-            <div className="mt-5">
-              <div className="w-full flex justify-between items-center text-lg font-bold mb-3 pr-2">
-                <h2>Assets</h2>
+            <div className="mt-5 rounded-xl p-3 bg-secondaryTransparent">
+              <div className="w-full flex justify-between items-center text-xl font-bold mb-3">
+                <h2 className="flex flex-row items-center gap-x-1">
+                  <Gift size={20}/>
+                  Assets:
+                </h2>
                 <div className="flex flex-row items-center">
                   {currency === "ton" ? (
                     <Image

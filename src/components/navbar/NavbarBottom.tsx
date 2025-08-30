@@ -27,11 +27,11 @@ export default function NavbarBottom() {
   }, [pathname]);
 
   return (
-    <div className="fixed bottom-0 mb-0 w-screen z-40 flex justify-center gap-3 pt-3 pb-8 px-3 items-center bg-background border-t border-secondary">
-      <div className="w-full lg:w-1/2 flex flex-row justify-between">
+    <div className="fixed bottom-0 mb-0 w-screen z-40 flex justify-center gap-3 items-center">
+      <div className="w-full lg:w-1/2 flex flex-row justify-between pt-3 pb-8 px-3 rounded-t-xl bg-secondaryTransparent">
         <Link
           className={`w-1/4 flex flex-col justify-center items-center box-border ${
-            selectedPage === 'home' ? 'text-primary' : 'text-foreground'
+            selectedPage === 'home' ? 'text-foreground' : 'text-secondaryText'
           }`}
           href="/"
           onClick={() => {
@@ -41,13 +41,12 @@ export default function NavbarBottom() {
         >
           <House />
           <span className="text-xs">
-            {/* {t('home')} */}
-            Home
+            {t('home')}
           </span>
         </Link>
         <Link
           className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${
-            selectedPage === 'tools' ? 'text-primary' : 'text-foreground'
+            selectedPage === 'tools' ? 'text-foreground' : 'text-secondaryText'
           }`}
           href="/tools"
           onClick={() => {
@@ -57,13 +56,12 @@ export default function NavbarBottom() {
         >
           <ChartCandlestick />
           <span className="text-xs">
-            {/* {t('tools')} */}
-            Tools
+            {t('tools')}
           </span>
         </Link>
         <Link
           className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${
-            selectedPage === 'account' ? 'text-primary' : 'text-foreground'
+            selectedPage === 'account' ? 'text-foreground' : 'text-secondaryText'
           }`}
           href="/account"
           onClick={() => {
@@ -73,13 +71,12 @@ export default function NavbarBottom() {
         >
           <User />
           <span className="text-xs">
-            {/* {t('profile')} */}
-            Profile
+            {t('profile')}
         </span>
         </Link>
         <Link
           className={`w-1/4 h-10 flex flex-col justify-center items-center box-border ${
-            selectedPage === 'settings' ? 'text-primary' : 'text-foreground'
+            selectedPage === 'settings' ? 'text-foreground' : 'text-secondaryText'
           }`}
           href="/settings"
           onClick={() => {
@@ -89,8 +86,7 @@ export default function NavbarBottom() {
         >
           <Settings />
           <span className="text-xs">
-            {/* {t('settings')} */}
-            Settings
+            {t('settings')}
         </span>
         </Link>
       </div>

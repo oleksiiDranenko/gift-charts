@@ -98,5 +98,14 @@
 			"dark": "Dark",
 			"system": "System"
 		}
+	},
+
+	"fearAndGreed": {
+		"name": "Fear & Greed",
+		"extremeFear": "Extreme fear",
+		"fear": "Fear",
+		"neutral": "Neutral",
+		"greed": "Greed",
+		"extremeGreed": "Extreme greed"
 	}
 }

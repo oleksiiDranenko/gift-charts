@@ -601,7 +601,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
     <div className="w-full flex flex-col items-center">
       <div className="w-full lg:w-1/2 mb-3 px-3 flex gap-2">
         <button
-          className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-lg border border-secondary bg-secondaryTransparent"
+          className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-xl bg-secondaryTransparent"
           onClick={() => {
             chartRef.current?.resetZoom();
             chartRef.current?.update("none");
@@ -613,7 +613,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         </button>
         <div className="w-full flex flex-row gap-x-2">
           <button
-            className="w-full flex items-center justify-center h-8 rounded-lg border border-secondary bg-secondaryTransparent"
+            className="w-full flex items-center justify-center h-8 rounded-xl bg-secondaryTransparent"
             onClick={() => {
               const zoom = chartRef.current.getZoomLevel?.() ?? 1;
               const newZoom = Math.max(1, zoom - 0.5);
@@ -629,7 +629,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
             <ZoomOut size={16} />
           </button>
           <button
-            className="w-full flex items-center justify-center h-8 rounded-lg border border-secondary bg-secondaryTransparent"
+            className="w-full flex items-center justify-center h-8 rounded-xl bg-secondaryTransparent"
             onClick={() => {
               const zoom = chartRef.current.getZoomLevel?.() ?? 1;
               const newZoom = Math.min(10, zoom + 0.3);
@@ -646,7 +646,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
       <DownloadHeatmapModal
         trigger={
           <button
-            className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg border border-secondary bg-secondaryTransparent"
+            className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg bg-secondaryTransparent"
             onClick={downloadImage}
           >
             <Download size={16} />

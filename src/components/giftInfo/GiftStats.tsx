@@ -35,7 +35,7 @@ export default function GiftStats({gift}: PropsInterface) {
     return (
         <div className="w-full mt-8 px-3">
 
-            <div className="text-secondaryText p-5 border border-secondary rounded-lg">
+            <div className="text-secondaryText p-5 bg-secondaryTransparent rounded-xl">
                 <p className="mb-8 w-full flex justify-between">
                     <span className="font-light">
                         {'Release Date: '}
@@ -43,64 +43,6 @@ export default function GiftStats({gift}: PropsInterface) {
                     <span className="text-foreground">
                         {formatDate(gift.releaseDate)}
                     </span>
-                </p>
-
-                {/* <p className="mb-8 w-full flex justify-between">
-                    <span className="font-light">
-                        Avaliable for<span className="text-primary font-bold">{' Staking'}</span>:
-                    </span>
-                    <span className={`${gift.staked ? 'text-primary font-bold' : 'text-foreground'}`}>
-                        {gift.staked ? 'Yes' : 'No'}
-                    </span>
-                </p> */}
-
-
-                <p className="mb-3 w-full flex justify-between">
-                    <span className="font-light">
-                        {'Stars Price: '}
-                    </span>
-                    <span className="text-foreground">
-                        {'⭐ ' + gift.starsPrice}
-                    </span>
-                </p>
-                <p className="mb-3 w-full flex justify-between">
-                    <span className="font-light">
-                        {'Upgrade Stars Price: '}
-                    </span>
-                    <span className="text-foreground">
-                        {'⭐ ' + gift.upgradePrice}
-                    </span>
-                </p>
-                <p className="mb-3 w-full flex justify-between">
-                    <span className="font-light">
-                        {'Total Stars Price: '}
-                    </span>
-                    <span className="text-foreground">
-                        {'⭐ ' + totalStarsPrice}
-                    </span>
-                </p>
-                <p className="mb-3 w-full flex justify-between">
-                    <span className="font-light">
-                        {'Total Stars Price in USD: '}
-                    </span>
-                    <span className="text-foreground">
-                        {'$ ' + gift.initUsdPrice}
-                    </span>
-                </p>
-                <p className="mb-8 w-full flex justify-between">
-                    <span className="font-light">
-                        {'Total Stars Price in TON: '}
-                    </span>
-                    <div className="text-foreground flex flex-row items-center">
-                        <Image 
-                            alt="ton logo"
-                            src='/images/toncoin.webp'
-                            width={14}
-                            height={14}
-                            className="ml-1 mr-1"
-                        />
-                        {gift.initTonPrice}
-                    </div>
                 </p>
 
 
@@ -147,7 +89,7 @@ export default function GiftStats({gift}: PropsInterface) {
                     </span>
                 </p>
 
-                <p className="mb-3 w-full flex justify-between">
+                <p className="mb-8 w-full flex justify-between">
                     <span className="font-light">
                         {'Percent Burnt: '}
                     </span>
@@ -155,6 +97,56 @@ export default function GiftStats({gift}: PropsInterface) {
                         {countPercentChange(gift.initSupply, gift.supply)+ '%'}
                     </span>
                 </p>
+
+
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
+                        {'Stars Price: '}
+                    </span>
+                    <span className="text-foreground">
+                        {'⭐ ' + gift.starsPrice}
+                    </span>
+                </p>
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
+                        {'Upgrade Stars Price: '}
+                    </span>
+                    <span className="text-foreground">
+                        {'⭐ ' + gift.upgradePrice}
+                    </span>
+                </p>
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
+                        {'Total Stars Price: '}
+                    </span>
+                    <span className="text-foreground">
+                        {'⭐ ' + totalStarsPrice}
+                    </span>
+                </p>
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
+                        {'Total Stars Price in USD: '}
+                    </span>
+                    <span className="text-foreground">
+                        {'$ ' + gift.initUsdPrice}
+                    </span>
+                </p>
+                <p className="mb-3 w-full flex justify-between">
+                    <span className="font-light">
+                        {'Total Stars Price in TON: '}
+                    </span>
+                    <div className="text-foreground flex flex-row items-center">
+                        <Image 
+                            alt="ton logo"
+                            src='/images/toncoin.webp'
+                            width={14}
+                            height={14}
+                            className="ml-1 mr-1"
+                        />
+                        {gift.initTonPrice}
+                    </div>
+                </p>
+
             </div>
         </div>
     )

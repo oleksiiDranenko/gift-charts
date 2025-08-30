@@ -74,7 +74,6 @@ export default function FilterGiftsModal({
             <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
           </Transition.Child>
 
-          {/* Modal content */}
           <div className="fixed inset-0 flex items-end justify-center">
             <Transition.Child
               as={Fragment}

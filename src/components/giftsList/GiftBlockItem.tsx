@@ -74,7 +74,7 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
 
     return (
         <Link 
-            className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between focus:bg-secondary rounded-md ${background === 'color' ? `bg-gradient-to-b ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : 'shadow-md shadow-secondary'} `} 
+            className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between focus:bg-secondary rounded-md ${background === 'color' ? `bg-gradient-to-b ${percentChange !== 'no data' && percentChange >= 0 ? 'from-green-500/5 to-green-500/25' : percentChange !== 'no data' && percentChange < 0 && 'from-red-500/5 to-red-500/25' }` : 'bg-secondaryTransparent'} `} 
             key={item._id}
             href={`/gift/${item._id}`}
             onClick={() => vibrate()}
@@ -123,7 +123,7 @@ export default function GiftBlockItem({item, currency, sortBy, displayValue, bor
                         </span>
                     </div>
                     
-                    <span className={`py-[2px] px-1 mt-1 rounded-lg bg-opacity-10 flex flex-row items-center text-xs font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500 bg-green-500' : percentChange < 0 ? 'text-red-500 bg-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
+                    <span className={`py-[2px] px-1 mt-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${percentChange !== 'no data' ? percentChange >= 0 ? 'text-green-500 bg-green-500' : percentChange < 0 ? 'text-red-500 bg-red-500'  : 'text-slate-500' : 'text-slate-500'}`}>
                         {percentChange !== 'no data' && percentChange >= 0 &&  '+'}
                         {percentChange}
                         {percentChange !== 'no data' ? '%' : null}

@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --primary: #1e96fc;
-  --secondary: #e3f2fd;
-  --secondary-transparent: #e3f2fd50;
+  --primary: #3b82f6;
+  --secondary: #d9e8ff;
+  --secondary-transparent: #ffffff;
   --secondary-text: #5c6673;
-  --background: #ffffff;
+  --background: #f3f3f3;
   --foreground: #000000;
 }
 
 html.dark{
-  --primary: #0098EA;
-  --secondary: #1e293b;
-  --secondary-transparent: #1e293b50;
-  --secondary-text: #94a3b8;
-  --background: #0b1018;
+  --primary: #3b82f6;
+  --secondary: #374151;
+  --secondary-transparent: #1f2937;
+  --secondary-text: #9ca3af;
+  --background: #111827;
   --foreground: #ffffff;
 }
 

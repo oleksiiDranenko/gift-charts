@@ -71,14 +71,14 @@ export default function IndexBlock({ name, id }: IndexProps) {
   return (
     <Link
       href={`/tools/index/${id}`}
-      className="w-full flex flex-row justify-between h-16 p-3 border border-secondary bg-secondaryTransparent rounded-lg"
+      className="w-full flex flex-row justify-between h-16 p-3 bg-secondaryTransparent rounded-xl"
       onClick={() => vibrate()}
     >
       <div className="h-full flex flex-row items-center gap-x-2">
-        <Globe size={24} />
-        <span className="">{name}</span>
+        <Globe size={26} className="text-primary"/>
+        <span className="font-bold">{name}</span>
       </div>
-      <div className="flex flex-col items-end">
+      <div className="flex flex-col items-end justify-between">
         <div className="flex flex-row items-center">
           <Image
             alt="ton logo"
@@ -92,11 +92,14 @@ export default function IndexBlock({ name, id }: IndexProps) {
           </span>
         </div>
         <span
-          className={`text-sm font-bold ${
-            indexValue - previousIndexValue >= 0
-              ? "text-green-500"
-              : "text-red-500"
-          }`}
+          className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+              indexValue - previousIndexValue >= 0
+                  ? "text-green-500 bg-green-500"
+                  : indexValue - previousIndexValue < 0
+                  ? "text-red-500 bg-red-500"
+                  : "text-slate-500"
+                
+            }`}
         >
           {indexValue - previousIndexValue >= 0 ? "+" : null}
           {countPercentChange(previousIndexValue, indexValue)}%

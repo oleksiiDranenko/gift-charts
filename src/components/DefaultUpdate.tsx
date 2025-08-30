@@ -62,7 +62,7 @@ const { data: gifts, isLoading, isFetching } = useQuery({
             <ProgressBar
               completed={progress}
               bgColor="var(--primary)"
-              height="2px"
+              height="5px"
               baseBgColor="var(--secondary-transparent)"
               isLabelVisible={false}
               transitionDuration="0.5s"

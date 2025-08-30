@@ -11,9 +11,8 @@ import DefaultUpdate from "../../components/DefaultUpdate";
 import Analytics from "../../components/Analytics";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "@/utils/queryClient";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
+import PageTransition from "@/components/PageTransition";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
@@ -53,7 +52,7 @@ export default async function RootLayout({
                 <ReactQueryProvider>
                   <Analytics />
                   <AppInitializer>
-                    <DefaultUpdate>{children}</DefaultUpdate>
+                    <DefaultUpdate><PageTransition>{children}</PageTransition></DefaultUpdate>
                   </AppInitializer>
                 </ReactQueryProvider>
               </ThemeProvider>

@@ -102,14 +102,10 @@ export default function Page() {
                     </Link>
 				</div>
 
-                <div className="w-full lg:w-1/2 p-3 text-xs text-secondaryText bg-secondaryTransparent rounded-lg">
-                    😇 If you use this chart in your Channel, please mention @gift_charts_bot
-                </div>
-
 				<div className="w-full lg:w-1/2 gap-x-3 flex justify-end">
-                    <div className="w-1/2 bg-secondaryTransparent border border-secondary rounded-lg">
+                    <div className="w-1/2 bg-secondaryTransparent  rounded-xl">
                         <button
-                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${listType === 'change' ? 'bg-primary font-bold text-white' : null }`}
+                            className={`w-1/2 text-sm h-8 box-border rounded-xl ${listType === 'change' ? 'bg-primary font-bold text-white' : null }`}
                             onClick={() => {
                                 setListType('change')
                                 vibrate()
@@ -118,7 +114,7 @@ export default function Page() {
                             Change
                         </button>
                         <button
-                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${listType === 'marketCap' ? 'bg-primary font-bold text-white' : null }`}
+                            className={`w-1/2 text-sm h-8 box-border rounded-xl ${listType === 'marketCap' ? 'bg-primary font-bold text-white' : null }`}
                             onClick={() => {
                                 setListType('marketCap')
                                 vibrate()
@@ -128,9 +124,9 @@ export default function Page() {
                         </button>
                     </div>
 
-                    <div className="w-1/2 bg-secondaryTransparent border border-secondary rounded-lg">
+                    <div className="w-1/2 bg-secondaryTransparent rounded-xl">
                         <button
-                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${currency === 'ton' ? 'bg-primary font-bold text-white' : null }`}
+                            className={`w-1/2 text-sm h-8 box-border rounded-xl ${currency === 'ton' ? 'bg-primary font-bold text-white' : null }`}
                             onClick={() => {
                                 setCurrency('ton')
                                 vibrate()
@@ -139,7 +135,7 @@ export default function Page() {
                             TON
                         </button>
                         <button
-                            className={`w-1/2 text-sm h-8 box-border rounded-lg ${currency === 'usd' ? 'bg-primary font-bold text-white' : null }`}
+                            className={`w-1/2 text-sm h-8 box-border rounded-xl ${currency === 'usd' ? 'bg-primary font-bold text-white' : null }`}
                             onClick={() => {
                                 setCurrency('usd')
                                 vibrate()
@@ -152,12 +148,12 @@ export default function Page() {
                 </div>
 
 
-                <div className="w-full lg:w-1/2 bg-secondaryTransparent border border-secondary rounded-lg">
+                <div className="w-full lg:w-1/2 bg-secondaryTransparent rounded-xl">
                     <div className="w-full flex flex-col">
                         <div className="w-full flex flex-row justify-between gap-x-3">
                             
                             <button
-                                className={`w-full text-sm h-8 rounded-lg ${timeGap === '1m' ? 'bg-primary font-bold text-white' : null}`}
+                                className={`w-full text-sm h-8 rounded-xl ${timeGap === '1m' ? 'bg-primary font-bold text-white' : null}`}
                                 onClick={() => {
                                     setTimeGap('1m');
                                     vibrate();
@@ -166,7 +162,7 @@ export default function Page() {
                                 1m
                             </button>
                             <button
-                                className={`w-full text-sm h-8 rounded-lg ${timeGap === '1w' ? 'bg-primary font-bold text-white' : null}`}
+                                className={`w-full text-sm h-8 rounded-xl ${timeGap === '1w' ? 'bg-primary font-bold text-white' : null}`}
                                 onClick={() => {
                                     setTimeGap('1w');
                                     vibrate();
@@ -175,7 +171,7 @@ export default function Page() {
                                 1w
                             </button>
                             <button
-                                className={`w-full text-sm h-8 rounded-lg ${timeGap === '24h' ? 'bg-primary font-bold text-white' : null}`}
+                                className={`w-full text-sm h-8 rounded-xl ${timeGap === '24h' ? 'bg-primary font-bold text-white' : null}`}
                                 onClick={() => {
                                     setTimeGap('24h');
                                     vibrate();
@@ -187,12 +183,12 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className="w-full lg:w-1/2 bg-secondaryTransparent border border-secondary rounded-lg">
+                <div className="w-full lg:w-1/2 bg-secondaryTransparent  rounded-xl">
                     <div className="w-full flex flex-col">
                         <div className="w-full flex flex-row justify-between gap-x-3">
                             
                             <button
-                                className={`w-full text-sm h-8 rounded-lg ${amount === giftsList.length ? 'bg-primary font-bold text-white' : null}`}
+                                className={`w-full text-sm h-8 rounded-xl ${amount === giftsList.length ? 'bg-primary font-bold text-white' : null}`}
                                 onClick={() => {
                                     setAmount(giftsList.length)
                                     vibrate();
@@ -201,7 +197,7 @@ export default function Page() {
                                 All
                             </button>
                             <button
-                                className={`w-full text-sm h-8 rounded-lg ${amount === 50 ? 'bg-primary font-bold text-white' : null}`}
+                                className={`w-full text-sm h-8 rounded-xl ${amount === 50 ? 'bg-primary font-bold text-white' : null}`}
                                 onClick={() => {
                                     setAmount(50)
                                     vibrate();
@@ -210,7 +206,7 @@ export default function Page() {
                                 Top 50
                             </button>
                             <button
-                                className={`w-full text-sm h-8 rounded-lg ${amount === 35 ? 'bg-primary font-bold text-white' : null}`}
+                                className={`w-full text-sm h-8 rounded-xl ${amount === 35 ? 'bg-primary font-bold text-white' : null}`}
                                 onClick={() => {
                                     setAmount(35)
                                     vibrate();
@@ -219,7 +215,7 @@ export default function Page() {
                                 Top 35
                             </button>
                             <button
-                                className={`w-full text-sm h-8 rounded-lg ${amount === 25 ? 'bg-primary font-bold text-white' : null}`}
+                                className={`w-full text-sm h-8 rounded-xl ${amount === 25 ? 'bg-primary font-bold text-white' : null}`}
                                 onClick={() => {
                                     setAmount(25)
                                     vibrate();

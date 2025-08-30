@@ -13,7 +13,7 @@ export default function BackButton() {
         vibrate();
       }}
     >
-      <ChevronLeft />
+      <ChevronLeft size={20}/>
       {"Go Back"}
     </button>
   );

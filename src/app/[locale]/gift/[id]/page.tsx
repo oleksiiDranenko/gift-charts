@@ -86,7 +86,7 @@ export default function Page({ params }: any) {
           <div className="flex flex-col">
             <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
               <BackButton />
-              <div className="w-1/2 h-10 pr-3 flex items-center justify-end text-sm text-secondaryText">
+              <div className="w-1/2 h-10 pr-3 flex items-center justify-end text-sm ">
                 {weekList.length > 0 ? (
                   <span className="flex flex-row items-center gap-x-1">
                     <AlarmClock size={14} />
