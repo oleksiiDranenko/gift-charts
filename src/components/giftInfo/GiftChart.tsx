@@ -23,6 +23,9 @@ import {
   ChartSpline,
   ChevronDown,
   ChevronUp,
+  Component,
+  Dna,
+  Search,
   SquareArrowOutUpRight,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -455,8 +458,8 @@ export default function GiftChart({
                   className={`h-8 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-xl ${resolvedTheme === 'dark' ? 'bg-secondary' : 'bg-secondaryTransparent'}`}
                   onClick={() => vibrate()}
                 >
-                  <SquareArrowOutUpRight size={16} />
-                  Gift Models
+                  <Component size={16} />
+                  View Models
                 </button>
               }
               giftName={gift?.name ? gift.name : ""}

@@ -136,9 +136,9 @@ const imagePlugin = (
   chartType: "change" | "marketCap",
   currency: "ton" | "usd",
   watermarkFontSize: number = 15, // Default watermark font size
-  textScale: number = 1, // Default text scale
-  imageScale: number = 1, // Default image scale
-  borderWidth: number = 0
+  textScale: number = 1,          // Default text scale
+  imageScale: number = 1,         // Default image scale
+  borderWidth: number = 0         // Absolute pixel border width
 ) => ({
   id: "treemapImages",
   afterDatasetDraw(chart: any) {
@@ -147,26 +147,11 @@ const imagePlugin = (
     const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
     const scale = chart.getZoomLevel ? chart.getZoomLevel() : 1;
 
-    // Load toncoin image
+    // ensure toncoin image
     let toncoinImg = imageMap.get("toncoin");
     if (!toncoinImg) {
       toncoinImg = new Image();
-      toncoinImg.src = "/images/toncoin.webp"; // Adjust path if necessary
-      toncoinImg.onerror = () => {
-        console.error("Failed to load toncoin image at /images/toncoin.webp");
-      };
-      toncoinImg.onload = () => {
-        console.log("Toncoin image loaded successfully");
-        if (
-          toncoinImg &&
-          toncoinImg.naturalWidth > 0 &&
-          toncoinImg.naturalHeight > 0
-        ) {
-          imageMap.set("toncoin", toncoinImg);
-        } else {
-          console.error("Toncoin image is invalid (zero width/height)");
-        }
-      };
+      toncoinImg.src = "/images/toncoin.webp";
       imageMap.set("toncoin", toncoinImg);
     }
 
@@ -183,21 +168,22 @@ const imagePlugin = (
         height = meta.height / scale;
       if (width <= 0 || height <= 0) return;
 
-      // --- Solid color background and border with rounded corners ---
-const baseColor =
-  item.percentChange > 0
-    ? "#018f35"
-    : item.percentChange < 0
-    ? "#dc2626"
-    : "#8F9779";
-ctx.fillStyle = baseColor;
-ctx.strokeStyle = "#1e293b50"; // Border color
-ctx.lineWidth = borderWidth; // Use borderWidth parameter
-ctx.beginPath();
-ctx.roundRect(x, y, width, height, 0); // 5 is the corner radius (adjust as needed)
-ctx.fill();
-ctx.stroke();
-ctx.closePath();
+      const baseColor =
+        item.percentChange > 0
+          ? "#018f35"
+          : item.percentChange < 0
+          ? "#dc2626"
+          : "#8F9779";
+
+      ctx.fillStyle = baseColor;
+      ctx.strokeStyle = "#1e293b";
+      ctx.lineWidth = borderWidth / scale;
+
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, 0);
+      ctx.fill();
+      if (borderWidth > 0) ctx.stroke();
+      ctx.closePath();
 
       const img = imageMap.get(item.imageName);
       if (!img?.complete || img.naturalWidth === 0) return;
@@ -454,7 +440,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
             tree: transformed,
             key: "size",
             imageMap,
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
           } as unknown as ChartDataset<"treemap", TreemapDataPoint[]>,
         ],
       },
@@ -464,7 +450,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         animation: false,
         plugins: { legend: { display: false }, tooltip: { enabled: false } },
       },
-      plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 3)],
+      plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 1)],
     });
 
     setTimeout(async () => {
@@ -554,7 +540,6 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
                 tree: transformed,
                 key: "size",
                 imageMap,
-                backgroundColor: 'transparent',
               },
             ],
           },

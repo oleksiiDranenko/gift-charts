@@ -277,7 +277,7 @@ export default function MainPage() {
         </Link>
       </div>
 
-      <div className="max-w-full mx-3 gap-x-1 flex items-center justify-between mb-1">
+      <div className="max-w-full mx-3 gap-x-1 flex items-center justify-between mb-3">
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
             chosenFilter === "gainers"
