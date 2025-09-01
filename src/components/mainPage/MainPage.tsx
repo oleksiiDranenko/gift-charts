@@ -182,7 +182,7 @@ export default function MainPage() {
         </div> */}
 
       <div className="w-full px-3 mb-5">
-        {/* <Link
+        <Link
           href="https://t.me/gift_charts"
           className="w-full h-20 p-3 pr-[120px] flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden"
         >
@@ -204,8 +204,8 @@ export default function MainPage() {
               height={100}
             />
           </div>
-        </Link> */}
-        <AddBanner />
+        </Link>
+        {/* <AddBanner /> */}
       </div>
 
       <SearchBar />
