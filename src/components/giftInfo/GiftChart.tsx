@@ -154,54 +154,53 @@ export default function GiftChart({
     setGradient(gradient);
   }, [percentChange]);
 
-useEffect(() => {
-  if (list.length === 0) return;
+  useEffect(() => {
+    if (list.length === 0) return;
 
-  if (selectedPrice === "ton") {
-    const prices = list.map((item) => item.priceTon);
-    const firstData = list[0].priceTon;
-    const lastData = list[list.length - 1].priceTon;
-    const result = parseFloat(
-      (((lastData - firstData) / firstData) * 100).toFixed(2)
-    );
-    setPercentChange(result);
-    setLow(Math.min(...prices));
-    setHigh(Math.max(...prices));
-  } else if (selectedPrice === "usd") {
-    const prices = list.map((item) => item.priceUsd);
-    const firstData = list[0].priceUsd;
-    const lastData = list[list.length - 1].priceUsd;
-    const result = parseFloat(
-      (((lastData - firstData) / firstData) * 100).toFixed(2)
-    );
-    setPercentChange(result);
-    setLow(Math.min(...prices));
-    setHigh(Math.max(...prices));
-  } else if (selectedPrice === "onSale") {
-    // filter out nulls
-    const amounts = list
-      .map((item) =>
-        typeof item.amountOnSale === "number" ? item.amountOnSale : null
-      )
-      .filter((v): v is number => v !== null);
-
-    if (amounts.length > 1) {
-      const firstData = amounts[0];
-      const lastData = amounts[amounts.length - 1];
+    if (selectedPrice === "ton") {
+      const prices = list.map((item) => item.priceTon);
+      const firstData = list[0].priceTon;
+      const lastData = list[list.length - 1].priceTon;
       const result = parseFloat(
         (((lastData - firstData) / firstData) * 100).toFixed(2)
       );
       setPercentChange(result);
-      setLow(Math.min(...amounts));
-      setHigh(Math.max(...amounts));
-    } else {
-      setPercentChange(0);
-      setLow(0);
-      setHigh(0);
-    }
-  }
-}, [selectedPrice, list]);
+      setLow(Math.min(...prices));
+      setHigh(Math.max(...prices));
+    } else if (selectedPrice === "usd") {
+      const prices = list.map((item) => item.priceUsd);
+      const firstData = list[0].priceUsd;
+      const lastData = list[list.length - 1].priceUsd;
+      const result = parseFloat(
+        (((lastData - firstData) / firstData) * 100).toFixed(2)
+      );
+      setPercentChange(result);
+      setLow(Math.min(...prices));
+      setHigh(Math.max(...prices));
+    } else if (selectedPrice === "onSale") {
+      // filter out nulls
+      const amounts = list
+        .map((item) =>
+          typeof item.amountOnSale === "number" ? item.amountOnSale : null
+        )
+        .filter((v): v is number => v !== null);
 
+      if (amounts.length > 1) {
+        const firstData = amounts[0];
+        const lastData = amounts[amounts.length - 1];
+        const result = parseFloat(
+          (((lastData - firstData) / firstData) * 100).toFixed(2)
+        );
+        setPercentChange(result);
+        setLow(Math.min(...amounts));
+        setHigh(Math.max(...amounts));
+      } else {
+        setPercentChange(0);
+        setLow(0);
+        setHigh(0);
+      }
+    }
+  }, [selectedPrice, list]);
 
   useEffect(() => {
     const lastPriceIndex = weekData.length - 1;
@@ -428,7 +427,7 @@ useEffect(() => {
             ) : selectedPrice === "usd" ? (
               <span className="text-xl font-extrabold mr-2">$</span>
             ) : (
-              <Store size={18} className="mr-2 font-bold"/>
+              <Store size={18} className="mr-2 font-bold" />
             )}
 
             <span className="text-xl font-extrabold">
@@ -479,19 +478,21 @@ useEffect(() => {
             >
               Usd
             </button>
-            <button
-              className={`text-xs h-8 px-3 box-border ${
-                selectedPrice == "onSale"
-                  ? "rounded-xl bg-primary font-bold text-white"
-                  : null
-              }`}
-              onClick={() => {
-                setSelectedPrice("onSale");
-                vibrate();
-              }}
-            >
-              On Sale
-            </button>
+            {gift?.preSale ? null : (
+              <button
+                className={`text-xs h-8 px-3 box-border ${
+                  selectedPrice == "onSale"
+                    ? "rounded-xl bg-primary font-bold text-white"
+                    : null
+                }`}
+                onClick={() => {
+                  setSelectedPrice("onSale");
+                  vibrate();
+                }}
+              >
+                On Sale
+              </button>
+            )}
           </div>
 
           <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
@@ -523,7 +524,6 @@ useEffect(() => {
             </button>
           </div>
         </div>
-
       </div>
 
       {chartType === "line" ? (
@@ -659,26 +659,26 @@ useEffect(() => {
       </div>
 
       {gift?.preSale ? null : (
-          <div>
-            <ModelsModal
-              trigger={
-                <button
-                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-xl ${
-                    resolvedTheme === "dark"
-                      ? "bg-secondaryTransparent"
-                      : "bg-secondaryTransparent"
-                  }`}
-                  onClick={() => vibrate()}
-                >
-                  <Component size={16} />
-                  View Models
-                </button>
-              }
-              giftName={gift?.name ? gift.name : ""}
-              giftId={gift?._id ? gift._id : ""}
-            />
-          </div>
-        )}
+        <div>
+          <ModelsModal
+            trigger={
+              <button
+                className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-xl ${
+                  resolvedTheme === "dark"
+                    ? "bg-secondaryTransparent"
+                    : "bg-secondaryTransparent"
+                }`}
+                onClick={() => vibrate()}
+              >
+                <Component size={16} />
+                View Models
+              </button>
+            }
+            giftName={gift?.name ? gift.name : ""}
+            giftId={gift?._id ? gift._id : ""}
+          />
+        </div>
+      )}
 
       <div className="mt-5">
         <div className="w-full flex flex-row justify-between items-center">
