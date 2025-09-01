@@ -7,5 +7,6 @@ export default interface GiftLifeDataInterface {
     openTon?: number,
     closeTon?: number,
     highTon?: number,
-    lowTon?: number
+    lowTon?: number,
+    amountOnSale?: number
 }

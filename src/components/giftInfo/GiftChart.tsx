@@ -26,7 +26,9 @@ import {
   Component,
   Dna,
   Search,
+  ShoppingCart,
   SquareArrowOutUpRight,
+  Store,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import CalendarHeatmap from "../tools/calendar-heatmap/CalendarHeatmap";
@@ -57,7 +59,9 @@ export default function GiftChart({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ChartJS<"line">>(null);
 
-  const [selectedPrice, setSelectedPrice] = useState<"ton" | "usd">("ton");
+  const [selectedPrice, setSelectedPrice] = useState<"ton" | "usd" | "onSale">(
+    "ton"
+  );
   const [percentChange, setPercentChange] = useState<number>(0);
   const [list, setList] = useState<
     (GiftLifeDataInterface | GiftWeekDataInterface)[]
@@ -150,33 +154,54 @@ export default function GiftChart({
     setGradient(gradient);
   }, [percentChange]);
 
-  useEffect(() => {
-    if (list.length === 0) return;
+useEffect(() => {
+  if (list.length === 0) return;
 
-    const prices = list.map((item) =>
-      selectedPrice === "ton" ? item.priceTon : item.priceUsd
+  if (selectedPrice === "ton") {
+    const prices = list.map((item) => item.priceTon);
+    const firstData = list[0].priceTon;
+    const lastData = list[list.length - 1].priceTon;
+    const result = parseFloat(
+      (((lastData - firstData) / firstData) * 100).toFixed(2)
     );
+    setPercentChange(result);
+    setLow(Math.min(...prices));
+    setHigh(Math.max(...prices));
+  } else if (selectedPrice === "usd") {
+    const prices = list.map((item) => item.priceUsd);
+    const firstData = list[0].priceUsd;
+    const lastData = list[list.length - 1].priceUsd;
+    const result = parseFloat(
+      (((lastData - firstData) / firstData) * 100).toFixed(2)
+    );
+    setPercentChange(result);
+    setLow(Math.min(...prices));
+    setHigh(Math.max(...prices));
+  } else if (selectedPrice === "onSale") {
+    // filter out nulls
+    const amounts = list
+      .map((item) =>
+        typeof item.amountOnSale === "number" ? item.amountOnSale : null
+      )
+      .filter((v): v is number => v !== null);
 
-    if (selectedPrice === "ton") {
-      const firstData = list[0].priceTon;
-      const lastData = list[list.length - 1].priceTon;
+    if (amounts.length > 1) {
+      const firstData = amounts[0];
+      const lastData = amounts[amounts.length - 1];
       const result = parseFloat(
         (((lastData - firstData) / firstData) * 100).toFixed(2)
       );
       setPercentChange(result);
-      setLow(Math.min(...prices));
-      setHigh(Math.max(...prices));
+      setLow(Math.min(...amounts));
+      setHigh(Math.max(...amounts));
     } else {
-      const firstData = list[0].priceUsd;
-      const lastData = list[list.length - 1].priceUsd;
-      const result = parseFloat(
-        (((lastData - firstData) / firstData) * 100).toFixed(2)
-      );
-      setPercentChange(result);
-      setLow(Math.min(...prices));
-      setHigh(Math.max(...prices));
+      setPercentChange(0);
+      setLow(0);
+      setHigh(0);
     }
-  }, [selectedPrice, list]);
+  }
+}, [selectedPrice, list]);
+
 
   useEffect(() => {
     const lastPriceIndex = weekData.length - 1;
@@ -211,6 +236,13 @@ export default function GiftChart({
     return number.toString();
   };
 
+  // Always keep the full list, just map values differently
+  const values = list.map((item) => {
+    if (selectedPrice === "ton") return item.priceTon;
+    if (selectedPrice === "usd") return item.priceUsd;
+    return typeof item.amountOnSale === "number" ? item.amountOnSale : null;
+  });
+
   const data = {
     labels: list.map((item) => {
       if ("time" in item && listType === "24h") {
@@ -220,10 +252,8 @@ export default function GiftChart({
     }),
     datasets: [
       {
-        label: "Gift Price",
-        data: list.map((item) =>
-          selectedPrice === "ton" ? item.priceTon : item.priceUsd
-        ),
+        label: selectedPrice === "onSale" ? "Amount On Sale" : "Gift Price",
+        data: values,
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
         borderWidth: 1,
         tension: 0,
@@ -236,9 +266,14 @@ export default function GiftChart({
             ? "rgba(34, 197, 94, 0.2)"
             : "rgba(239, 68, 68, 0.2)"),
         pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
+        spanGaps: false, // ensures gaps remain when value is null
       },
     ],
   };
+
+  const numericValues = (data.datasets[0].data as (number | null)[]).filter(
+    (v): v is number => v !== null
+  );
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -258,6 +293,11 @@ export default function GiftChart({
             return item.date;
           },
           label: function (tooltipItem) {
+            if (selectedPrice === "onSale") {
+              return tooltipItem.raw === null
+                ? "No data"
+                : `On Sale: ${tooltipItem.raw}`;
+            }
             return `Price: ${tooltipItem.raw} ${
               selectedPrice === "ton" ? "TON" : "USD"
             }`;
@@ -335,22 +375,38 @@ export default function GiftChart({
           padding: 10,
         },
         position: "right",
-        suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
-        suggestedMin: Math.min(...data.datasets[0].data) * 0.9,
+        suggestedMax:
+          numericValues.length > 0
+            ? Math.max(...numericValues) * 1.1
+            : undefined,
+        suggestedMin:
+          numericValues.length > 0
+            ? Math.min(...numericValues) * 0.9
+            : undefined,
       },
     },
   };
 
   return (
     <div className="h-auto w-full pl-3 pr-3">
-      <div className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${resolvedTheme === 'dark' ? '' : 'bg-secondaryTransparent rounded-xl pl-2'}`}>
+      <div
+        className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${
+          resolvedTheme === "dark"
+            ? ""
+            : "bg-secondaryTransparent rounded-xl pl-2"
+        }`}
+      >
         <div className="h-full flex items-center">
           <Image
             alt="gift"
             src={`/gifts/${gift?.image}.webp`}
             width={55}
-            height={55} 
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-xl ${resolvedTheme === 'dark' ? 'bg-secondaryTransparent' : 'bg-background'} `}
+            height={55}
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-xl ${
+              resolvedTheme === "dark"
+                ? "bg-secondaryTransparent"
+                : "bg-background"
+            } `}
           />
           <h1 className="flex flex-col">
             <span className="text-xl font-bold">{gift?.name}</span>
@@ -361,7 +417,7 @@ export default function GiftChart({
         </div>
         <div className="w-1/3 h-14 pr-3 flex flex-col items-end justify-center">
           <div className="flex flex-row items-center">
-            {selectedPrice == "ton" ? (
+            {selectedPrice === "ton" ? (
               <Image
                 alt="ton logo"
                 src="/images/toncoin.webp"
@@ -369,13 +425,18 @@ export default function GiftChart({
                 height={18}
                 className="mr-2"
               />
-            ) : (
+            ) : selectedPrice === "usd" ? (
               <span className="text-xl font-extrabold mr-2">$</span>
+            ) : (
+              <Store size={18} className="mr-2 font-bold"/>
             )}
+
             <span className="text-xl font-extrabold">
-              {selectedPrice == "ton"
+              {selectedPrice === "ton"
                 ? list[list.length - 1]?.priceTon
-                : list[list.length - 1]?.priceUsd}
+                : selectedPrice === "usd"
+                ? list[list.length - 1]?.priceUsd
+                : list[list.length - 1]?.amountOnSale ?? "—"}
             </span>
           </div>
 
@@ -389,8 +450,8 @@ export default function GiftChart({
         </div>
       </div>
 
-      <div className="w-full h-fit justify-between mb-3 mt-3 flex flex-row">
-        <div className="flex flex-row gap-x-3">
+      <div className="w-full h-fit mb-3 mt-3 flex flex-col gap-y-3">
+        <div className="w-full flex flex-row justify-between">
           <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
             <button
               className={`text-xs h-8 px-3 box-border ${
@@ -417,6 +478,19 @@ export default function GiftChart({
               }}
             >
               Usd
+            </button>
+            <button
+              className={`text-xs h-8 px-3 box-border ${
+                selectedPrice == "onSale"
+                  ? "rounded-xl bg-primary font-bold text-white"
+                  : null
+              }`}
+              onClick={() => {
+                setSelectedPrice("onSale");
+                vibrate();
+              }}
+            >
+              On Sale
             </button>
           </div>
 
@@ -450,23 +524,6 @@ export default function GiftChart({
           </div>
         </div>
 
-        {gift?.preSale ? null : (
-          <div>
-            <ModelsModal
-              trigger={
-                <button
-                  className={`h-8 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-xl ${resolvedTheme === 'dark' ? 'bg-secondary' : 'bg-secondaryTransparent'}`}
-                  onClick={() => vibrate()}
-                >
-                  <Component size={16} />
-                  View Models
-                </button>
-              }
-              giftName={gift?.name ? gift.name : ""}
-              giftId={gift?._id ? gift._id : ""}
-            />
-          </div>
-        )}
       </div>
 
       {chartType === "line" ? (
@@ -480,7 +537,14 @@ export default function GiftChart({
             </span>
           </div> */}
 
-          <div className={resolvedTheme === 'dark' ? 'relative' : 'relative bg-secondaryTransparent rounded-xl'} ref={chartContainerRef}>
+          <div
+            className={
+              resolvedTheme === "dark"
+                ? "relative"
+                : "relative bg-secondaryTransparent rounded-xl"
+            }
+            ref={chartContainerRef}
+          >
             <Line ref={chartRef} data={data} options={options} />
           </div>
 
@@ -492,7 +556,7 @@ export default function GiftChart({
                   : "text-secondaryText"
               }`}
               onClick={() => {
-                (lifeData.length > 0 ? setListType("all") : null)
+                lifeData.length > 0 ? setListType("all") : null;
                 vibrate();
               }}
             >
@@ -505,7 +569,7 @@ export default function GiftChart({
                   : "text-secondaryText"
               }`}
               onClick={() => {
-                (lifeData.length > 0 ? setListType("3m") : null)
+                lifeData.length > 0 ? setListType("3m") : null;
                 vibrate();
               }}
             >
@@ -518,7 +582,7 @@ export default function GiftChart({
                   : "text-secondaryText"
               }`}
               onClick={() => {
-                (lifeData.length > 0 ? setListType("1m") : null)
+                lifeData.length > 0 ? setListType("1m") : null;
                 vibrate();
               }}
             >
@@ -593,6 +657,28 @@ export default function GiftChart({
           }
         />
       </div>
+
+      {gift?.preSale ? null : (
+          <div>
+            <ModelsModal
+              trigger={
+                <button
+                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-xl ${
+                    resolvedTheme === "dark"
+                      ? "bg-secondaryTransparent"
+                      : "bg-secondaryTransparent"
+                  }`}
+                  onClick={() => vibrate()}
+                >
+                  <Component size={16} />
+                  View Models
+                </button>
+              }
+              giftName={gift?.name ? gift.name : ""}
+              giftId={gift?._id ? gift._id : ""}
+            />
+          </div>
+        )}
 
       <div className="mt-5">
         <div className="w-full flex flex-row justify-between items-center">
