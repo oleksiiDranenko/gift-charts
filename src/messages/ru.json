@@ -1,10 +1,10 @@
 {
-  "add": {
-  "header": "Увеличится ли цена на Heart Locket 1 сентября?",
-  "text": "Предсказывай с",
-  "chance": "шанс"
-},
-  "filters": {
+	"add": {
+		"header": "Heart Locket floor price increase on September 1st?",
+		"text": "Predict events with",
+		"chance": "chance"
+	},
+	"filters": {
 		"hideFilters": "Hide Filters",
 		"showFilters": "Show Filters",
 		"filterGifts": "Filter Gifts",
@@ -15,6 +15,7 @@
 		"supply": "Supply",
 		"initSupply": "Init. Supply",
 		"starsPrice": "Stars Price",
+		"value": "Value",
 		"low": "Low",
 		"high": "High",
 		"clearFilters": "Clear Filters",
@@ -99,13 +100,13 @@
 			"system": "System"
 		}
 	},
-	"fearAndGreed": {
-    "name": "Индекс страха и жадности",
-    "extremeFear": "Крайний страх",
-    "fear": "Страх",
-    "neutral": "Нейтрально",
-    "greed": "Жадность",
-    "extremeGreed": "Крайняя жадность"
-}
 
+	"fearAndGreed": {
+		"name": "Fear & Greed",
+		"extremeFear": "Extreme fear",
+		"fear": "Fear",
+		"neutral": "Neutral",
+		"greed": "Greed",
+		"extremeGreed": "Extreme greed"
+	}
 }
