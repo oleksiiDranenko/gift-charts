@@ -5,18 +5,12 @@ import { useAppSelector } from "@/redux/hooks";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import GiftItem from "../giftsList/GiftItem";
 import useVibrate from "@/hooks/useVibrate";
-import { useDispatch } from "react-redux";
-import { setFilters } from "@/redux/slices/filterListSlice";
 import ListHandler from "./ListHandler";
 import SearchBar from "./SearchBar";
 import {
-  Activity,
   Trophy,
-  Flame,
   Star,
-  Hammer,
   Grid2x2,
   Rows3,
   PaintBucket,
@@ -25,8 +19,6 @@ import {
   TrendingDown,
   SlidersHorizontal,
 } from "lucide-react";
-import MarketsModal from "../giftInfo/MarketsModal";
-import AddBanner from "./AddBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();

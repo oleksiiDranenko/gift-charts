@@ -6,11 +6,11 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setDefaultFilters, setFilters } from "@/redux/slices/filterListSlice";
 import { useEffect, useState } from "react";
 import GiftItem from "./GiftItem";
-import { Link } from "@/i18n/navigation";
 import useVibrate from "@/hooks/useVibrate";
 import { BrushCleaning, Eye, EyeClosed, Funnel } from "lucide-react";
 import BackButton from "@/utils/ui/backButton";
 import FilterGiftsModal from "../filterGifts/FilterGiftsModal";
+import { useTranslations } from "next-intl";
 
 interface PropsInterface {
   loading: boolean;
@@ -18,6 +18,9 @@ interface PropsInterface {
 
 export default function GiftsList({ loading }: PropsInterface) {
   const vibrate = useVibrate();
+
+  const t = useTranslations('filters')
+  const d = useTranslations('timegap')
 
   const giftsList = useAppSelector((state) => state.giftsList);
   const filters = useAppSelector((state) => state.filters);
@@ -178,12 +181,12 @@ export default function GiftsList({ loading }: PropsInterface) {
               {showFilters ? (
                 <span className="flex flex-row items-center justify-center gap-x-1">
                   <EyeClosed size={16} />
-                  Hide Filters
+                  {t('hideFilters')}
                 </span>
               ) : (
                 <span className="flex flex-row items-center justify-center gap-x-1">
                   <Eye size={16} />
-                  Show Filters
+                  {t('showFilters')}
                 </span>
               )}
             </button>
@@ -228,7 +231,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                         className="w-full h-8 flex justify-center items-center box-border bg-secondaryTransparent rounded-xl gap-x-1"
                         onClick={() => vibrate()}
                       >
-                        <Funnel size={16} /> Filter Gifts
+                        <Funnel size={16} /> {t('filterGifts')}
                       </button>
                     }
                   />
@@ -238,7 +241,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               <div className="w-full flex flex-row justify-end items-center mb-3 gap-x-3">
                 <div className="w-1/2 flex justify-between items-center">
                   <span className="text-secondaryText mr-2 text-sm whitespace-nowrap">
-                    Sort By:
+                    {t('sortBy')}:
                   </span>
                   <select
                     value={filters.sortBy}
@@ -250,18 +253,18 @@ export default function GiftsList({ loading }: PropsInterface) {
                     }}
                     className="w-full px-3 h-8 rounded-xl bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value={"price"}>Price</option>
-                    <option value={"marketCap"}>Market Cap</option>
-                    <option value={"percentChange"}>Change</option>
-                    <option value={"supply"}>Supply</option>
-                    <option value={"initSupply"}>Init. Supply</option>
-                    <option value={"starsPrice"}>Stars Price</option>
+                    <option value={"price"}>{t('price')}</option>
+                    <option value={"marketCap"}>{t('marketCap')}</option>
+                    <option value={"percentChange"}>{t('change')}</option>
+                    <option value={"supply"}>{t('supply')}</option>
+                    <option value={"initSupply"}>{t('initSupply')}</option>
+                    <option value={"starsPrice"}>{t('starsPrice')}</option>
                   </select>
                 </div>
 
                 <div className="w-1/2 flex justify-between items-center">
                   <span className="text-secondaryText mr-2 text-sm">
-                    Value:
+                    {t('value')}:
                   </span>
                   <select
                     value={filters.displayValue}
@@ -273,8 +276,8 @@ export default function GiftsList({ loading }: PropsInterface) {
                     }}
                     className="w-full px-3 h-8 rounded-xl bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value={"price"}>Price</option>
-                    <option value={"marketCap"}>Market Cap</option>
+                    <option value={"price"}>{t('price')}</option>
+                    <option value={"marketCap"}>{t('marketCap')}</option>
                   </select>
                 </div>
               </div>
@@ -292,7 +295,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       vibrate();
                     }}
                   >
-                    Low ↑
+                    {t('low')}
                   </button>
                   <button
                     className={`w-1/2 text-sm h-8 box-border rounded-xl ${
@@ -305,7 +308,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       vibrate();
                     }}
                   >
-                    High ↓
+                    {t('high')}
                   </button>
                 </div>
 
@@ -317,7 +320,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       vibrate();
                     }}
                   >
-                    <BrushCleaning size={16} /> Clean Filters
+                    <BrushCleaning size={16} /> {t('clearFilters')}
                   </button>
                 </div>
               </div>
@@ -338,7 +341,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     vibrate();
                   }}
                 >
-                  1m
+                  1{t('month')}
                 </button>
                 <button
                   className={`w-full text-sm h-8 ${
@@ -351,7 +354,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     vibrate();
                   }}
                 >
-                  1w
+                  1{t('week')}
                 </button>
                 <button
                   className={`w-full text-sm h-8 ${
@@ -364,7 +367,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     vibrate();
                   }}
                 >
-                  24h
+                  24{t('hour')}
                 </button>
               </div>
             </div>
@@ -372,7 +375,7 @@ export default function GiftsList({ loading }: PropsInterface) {
 
           <div className="w-full mt-2 flex flex-row items-center justify-between h-6 text-xs text-secondaryText">
             <div className="">
-              Name /{" "}
+              {t('name')} /{" "}
               {filters.sortBy === "price" ||
               filters.sortBy === "supply" ||
               filters.sortBy === "percentChange"
@@ -391,7 +394,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             <div className="">
               {filters.displayValue === "price" ? "Price" : "Market Cap"} /{" "}
               {timeGap === "24h" ? "24h " : timeGap === "1w" ? "1w " : "1m "}{" "}
-              change
+              {t('change')}
             </div>
           </div>
 

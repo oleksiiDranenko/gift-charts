@@ -247,6 +247,7 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
         type="candlestick"
         data={chartData}
         options={options}
+        className={resolvedTheme === 'dark' ? '' : 'bg-secondaryTransparent rounded-lg'}
       />
       <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl">
           <button

@@ -24,9 +24,6 @@ import {
   ChevronDown,
   ChevronUp,
   Component,
-  Dna,
-  Search,
-  ShoppingCart,
   SquareArrowOutUpRight,
   Store,
 } from "lucide-react";
@@ -265,7 +262,7 @@ export default function GiftChart({
             ? "rgba(34, 197, 94, 0.2)"
             : "rgba(239, 68, 68, 0.2)"),
         pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        spanGaps: false, // ensures gaps remain when value is null
+        spanGaps: false,
       },
     ],
   };
