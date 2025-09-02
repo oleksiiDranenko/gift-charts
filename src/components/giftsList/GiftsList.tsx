@@ -341,7 +341,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     vibrate();
                   }}
                 >
-                  1{t('month')}
+                  1{d('month')}
                 </button>
                 <button
                   className={`w-full text-sm h-8 ${
@@ -354,7 +354,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     vibrate();
                   }}
                 >
-                  1{t('week')}
+                  1{d('week')}
                 </button>
                 <button
                   className={`w-full text-sm h-8 ${
@@ -367,7 +367,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     vibrate();
                   }}
                 >
-                  24{t('hour')}
+                  24{d('hour')}
                 </button>
               </div>
             </div>
