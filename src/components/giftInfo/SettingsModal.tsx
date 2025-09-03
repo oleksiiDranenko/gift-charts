@@ -76,10 +76,10 @@ export default function SettingsModal({
                     <h1 className="font-bold mb-3">Displayed Value:</h1>
                   <div className={`w-full grid grid-cols-3 gap-1 rounded-xl`}>
                     <button
-                      className={`w-full text-xs h-10 px-3 box-border ${
+                      className={`w-full text-xs h-10 px-3  box-border ${
                         selectedPrice == "ton"
                           ? "rounded-xl bg-primary font-bold text-white"
-                          : (resolvedTheme === 'dark' ? 'text-white bg-secondary' : 'text-secondaryText')
+                          : (resolvedTheme === 'dark' ? 'text-white' : 'text-secondaryText')
                       }`}
                       onClick={() => {
                         handleSelectedPrice("ton");
