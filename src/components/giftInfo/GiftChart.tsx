@@ -480,7 +480,15 @@ export default function GiftChart({
               <span className="text-xl font-extrabold mr-2">$</span>
             ) : selectedPrice === "onSale" ? (
               <Store size={18} className="mr-2 font-bold" />
-            ) : (
+            ) : selectedPrice === "volume" ? (
+              <Image
+                alt="ton logo"
+                src="/images/toncoin.webp"
+                width={18}
+                height={18}
+                className="mr-2"
+              />
+            ) :(
               <ChartNoAxesColumn size={18} className="mr-2 font-bold" />
             )}
 
