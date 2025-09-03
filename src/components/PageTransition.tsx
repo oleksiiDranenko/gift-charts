@@ -23,7 +23,7 @@ export default function PageTransition({ children }: Props) {
         leaveFrom="opacity-100 translate-y-0"
         leaveTo="opacity-0 translate-y-6"
       >
-        <div className="w-full">{children}</div>
+        <div className="w-full flex flex-row justify-center">{children}</div>
       </Transition>
     </div>
   )
