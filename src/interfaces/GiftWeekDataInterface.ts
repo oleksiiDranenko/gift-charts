@@ -6,5 +6,7 @@ export default interface GiftWeekDataInterface {
     priceTon: number,
     priceUsd: number,
     createdAt: any,
-    amountOnSale?: number
+    amountOnSale?: number,
+    volume?: number,
+    salesCount?: number
 }

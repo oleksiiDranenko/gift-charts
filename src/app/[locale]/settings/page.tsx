@@ -10,7 +10,7 @@ import {Link} from "@/i18n/navigation"
 export default function Page() {
 
     const user = useAppSelector((state) => state.user);
-    const { theme, setTheme } = useTheme()
+    const { theme, setTheme, resolvedTheme } = useTheme()
 
     const vibrate = useVibrate()
 
@@ -23,9 +23,9 @@ export default function Page() {
                         Color Theme:
                     </h1>
                 </div>
-                <div className="flex flex-row bg-secondaryTransparent border border-secondary rounded-xl">
+                <div className={`flex flex-row ${resolvedTheme === 'dark' ? 'bg-secondary' : 'bg-background'} rounded-xl`}>
                     <button 
-                        className={`w-full flex flex-col items-center justify-center gap-y-1 py-2 text-xs ${theme === 'light' ? 'font-bold text-foreground bg-secondary rounded-xl' : 'text-secondaryText'}`}
+                        className={`w-full flex flex-col items-center justify-center gap-y-1 py-3 text-xs ${theme === 'light' ? 'font-bold text-foreground bg-primary rounded-xl text-white' : (resolvedTheme === 'dark' ? 'text-white' : 'text-secondaryText')}`}
                         onClick={() => setTheme('light')}
                     >
                         <Sun size={14}/>
@@ -34,7 +34,7 @@ export default function Page() {
                         </span>
                     </button>
                     <button 
-                        className={`w-full flex flex-col items-center justify-center gap-y-1 py-2 text-xs ${theme === 'dark' ? 'font-bold text-foreground bg-secondary rounded-xl' : 'text-secondaryText'}`}
+                        className={`w-full flex flex-col items-center justify-center gap-y-1 py-3 text-xs ${theme === 'dark' ? 'font-bold text-foreground bg-primary rounded-xl text-white' : (resolvedTheme === 'dark' ? 'text-white' : 'text-secondaryText')}`}
                         onClick={() => setTheme('dark')}
                     >
                         <Moon size={14}/>
@@ -43,7 +43,7 @@ export default function Page() {
                         </span>
                     </button>
                     <button 
-                        className={`w-full flex flex-col items-center justify-center gap-y-1 py-2 text-xs ${theme === 'system' ? 'font-bold text-foreground bg-secondary rounded-xl' : 'text-secondaryText'}`}
+                        className={`w-full flex flex-col items-center justify-center gap-y-1 py-3 text-xs ${theme === 'system' ? 'font-bold text-foreground bg-primary rounded-xl text-white' : (resolvedTheme === 'dark' ? 'text-white' : 'text-secondaryText')}`}
                         onClick={() => setTheme('system')}
                     >
                         <SunMoon size={14}/>

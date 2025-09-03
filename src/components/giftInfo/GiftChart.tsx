@@ -20,10 +20,12 @@ import useVibrate from "@/hooks/useVibrate";
 import CandleChart from "./CandleChart";
 import {
   ChartCandlestick,
+  ChartNoAxesColumn,
   ChartSpline,
   ChevronDown,
   ChevronUp,
   Component,
+  SlidersHorizontal,
   SquareArrowOutUpRight,
   Store,
 } from "lucide-react";
@@ -31,6 +33,7 @@ import { useTheme } from "next-themes";
 import CalendarHeatmap from "../tools/calendar-heatmap/CalendarHeatmap";
 import MarketsModal from "./MarketsModal";
 import ModelsModal from "./ModelsModal";
+import SettingsModal from "./SettingsModal";
 
 ChartJS.register(
   LineElement,
@@ -56,9 +59,10 @@ export default function GiftChart({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ChartJS<"line">>(null);
 
-  const [selectedPrice, setSelectedPrice] = useState<"ton" | "usd" | "onSale">(
-    "ton"
-  );
+  const [selectedPrice, setSelectedPrice] = useState<
+    "ton" | "usd" | "onSale" | "volume" | "salesCount"
+  >("ton");
+
   const [percentChange, setPercentChange] = useState<number>(0);
   const [list, setList] = useState<
     (GiftLifeDataInterface | GiftWeekDataInterface)[]
@@ -75,6 +79,12 @@ export default function GiftChart({
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
   const { resolvedTheme } = useTheme();
+
+  const handleSelectedPrice = (
+    value: "ton" | "usd" | "onSale" | "volume" | "salesCount"
+  ) => {
+    setSelectedPrice(value);
+  };
 
   useEffect(() => {
     const filteredCandleData = lifeData.filter(
@@ -196,6 +206,46 @@ export default function GiftChart({
         setLow(0);
         setHigh(0);
       }
+    } else if (selectedPrice === "volume") {
+      const volumes = list
+        .map((item) => (typeof item.volume === "number" ? item.volume : null))
+        .filter((v): v is number => v !== null);
+
+      if (volumes.length > 1) {
+        const firstData = volumes[0];
+        const lastData = volumes[volumes.length - 1];
+        const result = parseFloat(
+          (((lastData - firstData) / firstData) * 100).toFixed(2)
+        );
+        setPercentChange(result);
+        setLow(Math.min(...volumes));
+        setHigh(Math.max(...volumes));
+      } else {
+        setPercentChange(0);
+        setLow(0);
+        setHigh(0);
+      }
+    } else if (selectedPrice === "salesCount") {
+      const counts = list
+        .map((item) =>
+          typeof item.salesCount === "number" ? item.salesCount : null
+        )
+        .filter((v): v is number => v !== null);
+
+      if (counts.length > 1) {
+        const firstData = counts[0];
+        const lastData = counts[counts.length - 1];
+        const result = parseFloat(
+          (((lastData - firstData) / firstData) * 100).toFixed(2)
+        );
+        setPercentChange(result);
+        setLow(Math.min(...counts));
+        setHigh(Math.max(...counts));
+      } else {
+        setPercentChange(0);
+        setLow(0);
+        setHigh(0);
+      }
     }
   }, [selectedPrice, list]);
 
@@ -236,7 +286,12 @@ export default function GiftChart({
   const values = list.map((item) => {
     if (selectedPrice === "ton") return item.priceTon;
     if (selectedPrice === "usd") return item.priceUsd;
-    return typeof item.amountOnSale === "number" ? item.amountOnSale : null;
+    if (selectedPrice === "onSale")
+      return typeof item.amountOnSale === "number" ? item.amountOnSale : null;
+    if (selectedPrice === "volume")
+      return typeof item.volume === "number" ? item.volume : null;
+    if (selectedPrice === "salesCount")
+      return typeof item.salesCount === "number" ? item.salesCount : null;
   });
 
   const data = {
@@ -423,8 +478,10 @@ export default function GiftChart({
               />
             ) : selectedPrice === "usd" ? (
               <span className="text-xl font-extrabold mr-2">$</span>
-            ) : (
+            ) : selectedPrice === "onSale" ? (
               <Store size={18} className="mr-2 font-bold" />
+            ) : (
+              <ChartNoAxesColumn size={18} className="mr-2 font-bold" />
             )}
 
             <span className="text-xl font-extrabold">
@@ -432,7 +489,13 @@ export default function GiftChart({
                 ? list[list.length - 1]?.priceTon
                 : selectedPrice === "usd"
                 ? list[list.length - 1]?.priceUsd
-                : list[list.length - 1]?.amountOnSale ?? "—"}
+                : selectedPrice === "onSale"
+                ? list[list.length - 1]?.amountOnSale
+                : selectedPrice === "volume"
+                ? list[list.length - 1]?.volume
+                : selectedPrice === "salesCount"
+                ? list[list.length - 1]?.salesCount
+                : null}
             </span>
           </div>
 
@@ -448,51 +511,19 @@ export default function GiftChart({
 
       <div className="w-full h-fit mb-3 mt-3 flex flex-col gap-y-3">
         <div className="w-full flex flex-row justify-between">
-          <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
-            <button
-              className={`text-xs h-8 px-3 box-border ${
-                selectedPrice == "ton"
-                  ? "rounded-xl bg-primary font-bold text-white"
-                  : null
-              }`}
-              onClick={() => {
-                setSelectedPrice("ton");
-                vibrate();
-              }}
-            >
-              Ton
-            </button>
-            <button
-              className={`text-xs h-8 px-3  box-border ${
-                selectedPrice == "usd"
-                  ? "rounded-xl bg-primary font-bold text-white"
-                  : null
-              }`}
-              onClick={() => {
-                setSelectedPrice("usd");
-                vibrate();
-              }}
-            >
-              Usd
-            </button>
-            {gift?.preSale ? null : (
-              <button
-                className={`text-xs h-8 px-3 box-border ${
-                  selectedPrice == "onSale"
-                    ? "rounded-xl bg-primary font-bold text-white"
-                    : null
-                }`}
-                onClick={() => {
-                  setSelectedPrice("onSale");
-                  vibrate();
-                }}
-              >
-                On Sale
+          <SettingsModal
+            trigger={
+              <button className="text-xs h-8 px-3 flex flex-row items-center justify-normal box-border rounded-xl bg-primary font-bold text-white gap-x-1">
+                <SlidersHorizontal size={16} />
+                Configure chart
               </button>
-            )}
-          </div>
+            }
+            preSale={gift?.preSale}
+            selectedPrice={selectedPrice}
+            handleSelectedPrice={handleSelectedPrice}
+          />
 
-          <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
+          <div className="flex flex-row mr-2 box-border bg-secondaryTransparent rounded-xl gap-x-1">
             <button
               className={`text-xs h-8 px-3 box-border  ${
                 chartType == "line"
@@ -525,15 +556,6 @@ export default function GiftChart({
 
       {chartType === "line" ? (
         <>
-          {/* <div className="w-full flex flex-row justify-start gap-x-1">
-            <span className="px-3 py-2 bg-secondaryTransparent rounded-xl text-sm text-secondaryText">
-              Low: {low}
-            </span>
-            <span className="px-3 py-2 bg-secondaryTransparent rounded-xl text-sm text-secondaryText">
-              High: {high}
-            </span>
-          </div> */}
-
           <div
             className={
               resolvedTheme === "dark"
@@ -542,7 +564,7 @@ export default function GiftChart({
             }
             ref={chartContainerRef}
           >
-            <Line ref={chartRef} data={data} options={options} />
+            <Line ref={chartRef as any} data={data} options={options} />
           </div>
 
           <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl">
