@@ -27,18 +27,27 @@ type CandlestickData = {
 interface PropsInterface {
   data: GiftLifeDataInterface[];
   weekData: GiftWeekDataInterface[];
+  percentChange: number;
+  setPercentChange: (value: number) => void;
+  onDataUpdate?: (data: { currentValue: number | null }) => void;
 }
 
-export default function CandleChart({ data, weekData }: PropsInterface) {
+export default function CandleChart({
+  data,
+  weekData,
+  percentChange,
+  setPercentChange,
+  onDataUpdate,
+}: PropsInterface) {
   const chartRef = useRef<
     Chart<"candlestick", CandlestickData[], unknown> | null | undefined
   >(null);
-
   const [listType, setListType] = useState<"2w" | "1m" | "2m" | "3m" | "all">("2w");
   const [list, setList] = useState<GiftLifeDataInterface[]>(data);
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
 
+  // Update data based on listType and append today's data if applicable
   useEffect(() => {
     const today = new Date();
     const todayStr = format(today, "dd-MM-yyyy");
@@ -63,19 +72,21 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
           );
 
           // Calculate open, high, low, close for today
-          const prices = sortedTodayData.map((item) => item.priceTon);
+          const prices = sortedTodayData
+            .map((item) => item.priceTon)
+            .filter((v): v is number => v !== undefined && v !== null);
           const openTon = sortedTodayData[0].priceTon;
           const closeTon = sortedTodayData[sortedTodayData.length - 1].priceTon;
-          const highTon = Math.max(...prices);
-          const lowTon = Math.min(...prices);
+          const highTon = prices.length > 0 ? Math.max(...prices) : openTon;
+          const lowTon = prices.length > 0 ? Math.min(...prices) : openTon;
 
           // Create new data item for today
           const newDataItem: GiftLifeDataInterface = {
             _id: `temp-${todayStr}`,
             name: sortedTodayData[0].name,
             date: todayStr,
-            priceTon: closeTon, // Use close price as the representative price
-            priceUsd: 0, // Not used as per request
+            priceTon: closeTon,
+            priceUsd: 0,
             openTon,
             closeTon,
             highTon,
@@ -90,24 +101,48 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
     // Apply listType filtering
     switch (listType) {
       case "2w":
-        setList([...updatedData.slice(-14)]);
+        setList(updatedData.slice(-14));
         break;
       case "1m":
-        setList([...updatedData.slice(-30)]);
+        setList(updatedData.slice(-30));
         break;
       case "2m":
-        setList([...updatedData.slice(-60)]);
+        setList(updatedData.slice(-60));
         break;
       case "3m":
-        setList([...updatedData.slice(-90)]);
+        setList(updatedData.slice(-90));
         break;
       case "all":
-        setList([...updatedData]);
-        break;
-      default:
+        setList(updatedData);
         break;
     }
   }, [listType, data, weekData]);
+
+  // Calculate percent change from first openTon to last closeTon
+  useEffect(() => {
+    if (list.length === 0) {
+      setPercentChange(0);
+      if (onDataUpdate) onDataUpdate({ currentValue: null });
+      return;
+    }
+
+    const firstOpen = list[0].openTon;
+    const lastClose = list[list.length - 1].closeTon;
+    let calculatedPercentChange = 0;
+    let currentValue: number | null = null;
+
+    if (typeof firstOpen === "number" && typeof lastClose === "number" && firstOpen !== 0) {
+      calculatedPercentChange = parseFloat(
+        (((lastClose - firstOpen) / firstOpen) * 100).toFixed(2)
+      );
+      currentValue = lastClose;
+    }
+
+    setPercentChange(calculatedPercentChange);
+    if (onDataUpdate) {
+      onDataUpdate({ currentValue });
+    }
+  }, [list, setPercentChange, onDataUpdate]);
 
   const chartData: ChartProps<
     "candlestick",
@@ -184,9 +219,9 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
           },
         },
         ticks: {
-          source: "data", // Align ticks with data points
-          autoSkip: true, // Prevent overlap
-          maxTicksLimit: 10, // Allow up to 10 ticks (adjust as needed)
+          source: "data",
+          autoSkip: true,
+          maxTicksLimit: 10,
           color:
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
@@ -195,12 +230,11 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
           maxRotation: 0,
           minRotation: 0,
           callback: (value, index, ticks) => {
-            // Show ticks every 5 days based on data index
-            const tickInterval = 5; // Adjust interval (e.g., 5 for every 5 days)
+            const tickInterval = 5;
             if (index % tickInterval === 0) {
               return format(new Date(value), "dd-MM");
             }
-            return null; // Skip ticks that don't match the interval
+            return null;
           },
         },
         title: {
@@ -247,75 +281,75 @@ export default function CandleChart({ data, weekData }: PropsInterface) {
         type="candlestick"
         data={chartData}
         options={options}
-        className={resolvedTheme === 'dark' ? '' : 'bg-secondaryTransparent rounded-lg'}
+        className={resolvedTheme === "dark" ? "" : "bg-secondaryTransparent rounded-lg"}
       />
       <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl">
-          <button
-            className={`w-full px-1 text-sm h-8 ${
-                listType == "all"
-                  ? "rounded-xl bg-secondary font-bold"
-                  : "text-secondaryText"
-              }`}
-            onClick={() => {
-              data.length > 0 ? setListType("all") : null;
-              vibrate();
-            }}
-          >
-            All
-          </button>
-          <button
-            className={`w-full px-1 text-sm h-8 ${
-                listType == "3m"
-                  ? "rounded-xl bg-secondary font-bold"
-                  : "text-secondaryText"
-              }`}
-            onClick={() => {
-              data.length > 0 ? setListType("3m") : null;
-              vibrate();
-            }}
-          >
-            3m
-          </button>
-          <button
-            className={`w-full px-1 text-sm h-8 ${
-                listType == "2m"
-                  ? "rounded-xl bg-secondary font-bold"
-                  : "text-secondaryText"
-              }`}
-            onClick={() => {
-              setListType("2m");
-              vibrate();
-            }}
-          >
-            2m
-          </button>
-          <button
-            className={`w-full px-1 text-sm h-8 ${
-                listType == "1m"
-                  ? "rounded-xl bg-secondary font-bold"
-                  : "text-secondaryText"
-              }`}
-            onClick={() => {
-              setListType("1m");
-              vibrate();
-            }}
-          >
-            1m
-          </button>
-          <button
-            className={`w-full px-1 text-sm h-8 ${
-                listType == "2w"
-                  ? "rounded-xl bg-secondary font-bold"
-                  : "text-secondaryText"
-              }`}
-            onClick={() => {
-              setListType("2w");
-              vibrate();
-            }}
-          >
-            2w
-          </button>
-        </div>
+        <button
+          className={`w-full px-1 text-sm h-8 ${
+            listType === "all"
+              ? "rounded-xl bg-secondary font-bold"
+              : "text-secondaryText"
+          }`}
+          onClick={() => {
+            if (data.length > 0) setListType("all");
+            vibrate();
+          }}
+        >
+          All
+        </button>
+        <button
+          className={`w-full px-1 text-sm h-8 ${
+            listType === "3m"
+              ? "rounded-xl bg-secondary font-bold"
+              : "text-secondaryText"
+          }`}
+          onClick={() => {
+            if (data.length > 0) setListType("3m");
+            vibrate();
+          }}
+        >
+          3m
+        </button>
+        <button
+          className={`w-full px-1 text-sm h-8 ${
+            listType === "2m"
+              ? "rounded-xl bg-secondary font-bold"
+              : "text-secondaryText"
+          }`}
+          onClick={() => {
+            setListType("2m");
+            vibrate();
+          }}
+        >
+          2m
+        </button>
+        <button
+          className={`w-full px-1 text-sm h-8 ${
+            listType === "1m"
+              ? "rounded-xl bg-secondary font-bold"
+              : "text-secondaryText"
+          }`}
+          onClick={() => {
+            setListType("1m");
+            vibrate();
+          }}
+        >
+          1m
+        </button>
+        <button
+          className={`w-full px-1 text-sm h-8 ${
+            listType === "2w"
+              ? "rounded-xl bg-secondary font-bold"
+              : "text-secondaryText"
+          }`}
+          onClick={() => {
+            setListType("2w");
+            vibrate();
+          }}
+        >
+          2w
+        </button>
+      </div>
     </div>
   );
 }

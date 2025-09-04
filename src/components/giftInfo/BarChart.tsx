@@ -1,31 +1,22 @@
 "use client";
 
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  LineElement,
-  PointElement,
+  BarElement,
+  CategoryScale,
   LinearScale,
   Tooltip,
-  CategoryScale,
   ChartOptions,
-  Filler,
 } from "chart.js";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 
-ChartJS.register(
-  LineElement,
-  PointElement,
-  LinearScale,
-  Tooltip,
-  CategoryScale,
-  Filler
-);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
-interface LineChartProps {
+interface BarChartProps {
   weekData: GiftWeekDataInterface[];
   lifeData: GiftLifeDataInterface[];
   selectedPrice: "ton" | "usd" | "onSale" | "volume" | "salesCount";
@@ -34,25 +25,22 @@ interface LineChartProps {
   onDataUpdate?: (data: { currentValue: number | null }) => void;
 }
 
-export default function LineChart({
+export default function BarChart({
   weekData,
   lifeData,
   selectedPrice,
   percentChange,
   setPercentChange,
   onDataUpdate,
-}: LineChartProps) {
+}: BarChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<ChartJS<"line">>(null);
-  const [gradient, setGradient] = useState<CanvasGradient | null>(null);
+  const chartRef = useRef<ChartJS<"bar">>(null);
   const [list, setList] = useState<
     (GiftLifeDataInterface | GiftWeekDataInterface)[]
   >(weekData.slice(-24));
   const [listType, setListType] = useState<
     "24h" | "3d" | "1w" | "1m" | "3m" | "all"
   >("24h");
-  const [low, setLow] = useState<number>();
-  const [high, setHigh] = useState<number>();
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {
@@ -101,30 +89,6 @@ export default function LineChart({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart) return;
-
-    const ctx = chart.ctx;
-    const chartArea = chart.chartArea;
-    const gradient = ctx.createLinearGradient(
-      0,
-      chartArea.top,
-      0,
-      chartArea.bottom
-    );
-
-    const topColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0.5)" : "rgba(239, 68, 68, 0.5)";
-    const bottomColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
-
-    gradient.addColorStop(0, topColor);
-    gradient.addColorStop(1, bottomColor);
-
-    setGradient(gradient);
-  }, [percentChange]);
 
   useEffect(() => {
     const lastPriceIndex = weekData.length - 1;
@@ -210,13 +174,9 @@ export default function LineChart({
         calculatedPercentChange = parseFloat(
           (((lastData - firstData) / firstData) * 100).toFixed(2)
         );
-        setLow(Math.min(...prices));
-        setHigh(Math.max(...prices));
         currentValue = Number.isFinite(lastData) ? lastData : null;
       } else {
         calculatedPercentChange = 0;
-        setLow(prices.length > 0 ? Math.min(...prices) : undefined);
-        setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
         currentValue = prices.length > 0 && Number.isFinite(prices[prices.length - 1]) ? prices[prices.length - 1] : null;
       }
     } else if (selectedPrice === "usd") {
@@ -229,13 +189,9 @@ export default function LineChart({
         calculatedPercentChange = parseFloat(
           (((lastData - firstData) / firstData) * 100).toFixed(2)
         );
-        setLow(Math.min(...prices));
-        setHigh(Math.max(...prices));
         currentValue = Number.isFinite(lastData) ? lastData : null;
       } else {
         calculatedPercentChange = 0;
-        setLow(prices.length > 0 ? Math.min(...prices) : undefined);
-        setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
         currentValue = prices.length > 0 && Number.isFinite(prices[prices.length - 1]) ? prices[prices.length - 1] : null;
       }
     } else if (selectedPrice === "onSale") {
@@ -248,13 +204,9 @@ export default function LineChart({
         calculatedPercentChange = parseFloat(
           (((lastData - firstData) / firstData) * 100).toFixed(2)
         );
-        setLow(Math.min(...amounts));
-        setHigh(Math.max(...amounts));
         currentValue = Number.isFinite(lastData) ? lastData : null;
       } else {
         calculatedPercentChange = 0;
-        setLow(amounts.length > 0 ? Math.min(...amounts) : undefined);
-        setHigh(amounts.length > 0 ? Math.max(...amounts) : undefined);
         currentValue = amounts.length > 0 && Number.isFinite(amounts[amounts.length - 1]) ? amounts[amounts.length - 1] : null;
       }
     } else if (selectedPrice === "volume") {
@@ -267,13 +219,9 @@ export default function LineChart({
         calculatedPercentChange = parseFloat(
           (((lastData - firstData) / firstData) * 100).toFixed(2)
         );
-        setLow(Math.min(...volumes));
-        setHigh(Math.max(...volumes));
         currentValue = Number.isFinite(lastData) ? lastData : null;
       } else {
         calculatedPercentChange = 0;
-        setLow(volumes.length > 0 ? Math.min(...volumes) : undefined);
-        setHigh(volumes.length > 0 ? Math.max(...volumes) : undefined);
         currentValue = volumes.length > 0 && Number.isFinite(volumes[volumes.length - 1]) ? volumes[volumes.length - 1] : null;
       }
     } else if (selectedPrice === "salesCount") {
@@ -286,17 +234,14 @@ export default function LineChart({
         calculatedPercentChange = parseFloat(
           (((lastData - firstData) / firstData) * 100).toFixed(2)
         );
-        setLow(Math.min(...counts));
-        setHigh(Math.max(...counts));
         currentValue = Number.isFinite(lastData) ? lastData : null;
       } else {
         calculatedPercentChange = 0;
-        setLow(counts.length > 0 ? Math.min(...counts) : undefined);
-        setHigh(counts.length > 0 ? Math.max(...counts) : undefined);
         currentValue = counts.length > 0 && Number.isFinite(counts[counts.length - 1]) ? counts[counts.length - 1] : null;
       }
     }
 
+    // Ensure calculatedPercentChange is finite, otherwise set to 0
     if (typeof setPercentChange === "function") {
       setPercentChange(Number.isFinite(calculatedPercentChange) ? calculatedPercentChange : 0);
     } else {
@@ -329,19 +274,9 @@ export default function LineChart({
       {
         label: selectedPrice === "onSale" ? "Amount On Sale" : selectedPrice === "volume" ? "Volume" : selectedPrice === "salesCount" ? "Sales Count" : "Price",
         data: values,
+        backgroundColor: percentChange >= 0 ? "rgba(34, 197, 94, 0.5)" : "rgba(239, 68, 68, 0.5)",
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
         borderWidth: 1,
-        tension: 0,
-        pointRadius: 0,
-        pointHoverRadius: 6,
-        fill: true,
-        backgroundColor:
-          gradient ||
-          (percentChange >= 0
-            ? "rgba(34, 197, 94, 0.2)"
-            : "rgba(239, 68, 68, 0.2)"),
-        pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        spanGaps: false,
       },
     ],
   };
@@ -350,7 +285,7 @@ export default function LineChart({
     (v): v is number => v !== null
   );
 
-  const options: ChartOptions<"line"> = {
+  const options: ChartOptions<"bar"> = {
     responsive: true,
     plugins: {
       legend: { display: false },
@@ -386,40 +321,7 @@ export default function LineChart({
             }`;
           },
         },
-        external: function (context) {
-          const { chart, tooltip } = context;
-          const ctx = chart.ctx;
-
-          if (!tooltip || !tooltip.opacity) {
-            return;
-          }
-
-          const tooltipX = tooltip.caretX;
-          const tooltipY = tooltip.caretY;
-
-          ctx.save();
-          ctx.beginPath();
-          ctx.setLineDash([5, 5]);
-          ctx.lineWidth = 1;
-          ctx.strokeStyle =
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.5)"
-              : "rgba(0, 0, 0, 0.5)";
-
-          ctx.moveTo(tooltipX, chart.chartArea.top);
-          ctx.lineTo(tooltipX, chart.chartArea.bottom);
-
-          ctx.moveTo(chart.chartArea.left, tooltipY);
-          ctx.lineTo(chart.chartArea.right, tooltipY);
-
-          ctx.stroke();
-          ctx.restore();
-        },
       },
-    },
-    interaction: {
-      mode: "index",
-      intersect: false,
     },
     scales: {
       x: {
@@ -436,7 +338,7 @@ export default function LineChart({
               : "rgba(0, 0, 0, 0.6)",
           padding: 0,
           autoSkip: true,
-          maxTicksLimit: 3,
+          maxTicksLimit: 4,
           maxRotation: 0,
           minRotation: 0,
         },
@@ -479,7 +381,7 @@ export default function LineChart({
       }
       ref={chartContainerRef}
     >
-      <Line ref={chartRef as any} data={data} options={options} />
+      <Bar ref={chartRef as any} data={data} options={options} />
       <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons">
         <button
           className={`w-full px-1 text-sm h-8 ${

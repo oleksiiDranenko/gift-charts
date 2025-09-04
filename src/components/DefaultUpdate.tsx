@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import axios from 'axios';
 import ProgressBar from '@ramonak/react-progress-bar';
 import useVibrate from '@/hooks/useVibrate';
+import Image from 'next/image';
 
 const fetchGifts = async () => {
   const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
@@ -55,15 +56,20 @@ const { data: gifts, isLoading, isFetching } = useQuery({
       {(isLoading || isFetching) ? (
         <div className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-background">
           
-          <div className="w-2/3 lg:w-1/2 max-w-96">
-            <h1 className='text-center text-lg font-semibold text-secondaryText mb-3'>
-              Loading gift data...
-            </h1>
+          <div className="w-2/3 lg:w-1/2 max-w-96 bg-secondaryTransparent p-5 rounded-2xl">
+            <div className='w-full flex flex-col items-center justify-center mb-7'>
+              <div className='p-5 bg-background rounded-full'>
+                <Image alt='Logo' src={'/images/logo.webp'} width={100} height={100}/>
+              </div>
+              <h1 className='mt-3 text-xl'>
+                Gift Charts
+              </h1>
+            </div>
             <ProgressBar
               completed={progress}
               bgColor="var(--primary)"
               height="5px"
-              baseBgColor="var(--secondary-transparent)"
+              baseBgColor="var(--secondary)"
               isLabelVisible={false}
               transitionDuration="0.5s"
               transitionTimingFunction="ease-in-out"
