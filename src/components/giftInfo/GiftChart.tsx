@@ -348,6 +348,14 @@ export default function GiftChart({
               return tooltipItem.raw === null
                 ? "No data"
                 : `On Sale: ${tooltipItem.raw}`;
+            } else if (selectedPrice === "volume") {
+              return tooltipItem.raw === null
+                ? "No data"
+                : `Volume: ${tooltipItem.raw} TON`;
+            } else if (selectedPrice === "salesCount") {
+              return tooltipItem.raw === null
+                ? "No data"
+                : `Amount sold: ${tooltipItem.raw}`;
             }
             return `Price: ${tooltipItem.raw} ${
               selectedPrice === "ton" ? "TON" : "USD"
