@@ -74,7 +74,7 @@ export default function SettingsModal({
                 <div className="w-full">
                   <div className="p-3 mt-3 bg-secondaryTransparent rounded-xl">
                     <h1 className="font-bold mb-3">Displayed Value:</h1>
-                  <div className={`w-full grid grid-cols-3 gap-1 rounded-xl`}>
+                  <div className={`w-full grid grid-cols-3 gap-1 rounded-xl bg-secondary`}>
                     <button
                       className={`w-full text-xs h-10 px-3  box-border ${
                         selectedPrice == "ton"
@@ -115,7 +115,7 @@ export default function SettingsModal({
                       >
                         On Sale
                       </button>
-                      <button
+                      {/* <button
                         className={`w-full text-xs h-10 px-3 box-border ${
                           selectedPrice == "volume"
                             ? "rounded-xl bg-primary font-bold text-white"
@@ -140,7 +140,7 @@ export default function SettingsModal({
                         }}
                       >
                         Sales Count
-                      </button>
+                      </button> */}
                     </>
                     }
                   </div>
