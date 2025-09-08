@@ -383,7 +383,7 @@ export default function BarChart({
     >
       <Bar ref={chartRef as any} data={data} options={options} />
       <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons">
-        <button
+        {/* <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
               ? "rounded-xl bg-secondary font-bold"
@@ -418,7 +418,7 @@ export default function BarChart({
           }}
         >
           1m
-        </button>
+        </button> */}
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1w"
