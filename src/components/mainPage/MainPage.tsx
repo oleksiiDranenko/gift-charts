@@ -19,6 +19,7 @@ import {
   TrendingDown,
   SlidersHorizontal,
 } from "lucide-react";
+import AddBanner from "./AddBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -173,8 +174,8 @@ export default function MainPage() {
             </span>
         </div> */}
 
-      <div className="w-full px-3 mb-5">
-        <Link
+      <div className='w-full px-3 mb-5'>
+        {/* <Link
           href="https://t.me/gift_charts"
           className="w-full h-20 p-3 pr-[120px] flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden"
         >
@@ -196,14 +197,14 @@ export default function MainPage() {
               height={100}
             />
           </div>
-        </Link>
-        {/* <AddBanner /> */}
+        </Link> */}
+        <AddBanner />
       </div>
 
       <SearchBar />
 
-      <div className="max-w-full mx-3 flex items-center justify-between gap-x-2 mb-3">
-        <div className="w-full flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden">
+      <div className='max-w-full mx-3 flex items-center justify-between gap-x-2 mb-3'>
+        <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden'>
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
               giftType === "line"
@@ -213,8 +214,7 @@ export default function MainPage() {
             onClick={() => {
               setGiftType("line");
               vibrate();
-            }}
-          >
+            }}>
             <Rows3 size={18} />
           </button>
           <button
@@ -226,12 +226,11 @@ export default function MainPage() {
             onClick={() => {
               setGiftType("block");
               vibrate();
-            }}
-          >
+            }}>
             <Grid2x2 size={18} />
           </button>
         </div>
-        <div className="w-full flex flex-row bg-secondaryTransparent rounded-xl">
+        <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl'>
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
               giftBackground === "color"
@@ -241,8 +240,7 @@ export default function MainPage() {
             onClick={() => {
               setGiftBackground("color");
               vibrate();
-            }}
-          >
+            }}>
             <PaintBucket size={18} />
           </button>
           <button
@@ -254,32 +252,29 @@ export default function MainPage() {
             onClick={() => {
               setGiftBackground("none");
               vibrate();
-            }}
-          >
+            }}>
             <CircleSlash2 size={18} />
           </button>
         </div>
         <Link
           className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
           href={"/gifts-list"}
-          onClick={() => vibrate()}
-        >
+          onClick={() => vibrate()}>
           <span>Customise</span>
-          <SlidersHorizontal size={14} strokeWidth={2.5} className="ml-[2px]" />
+          <SlidersHorizontal size={14} strokeWidth={2.5} className='ml-[2px]' />
         </Link>
       </div>
 
-      <div className="max-w-full mx-3 gap-x-1 flex items-center justify-between mb-3">
+      <div className='max-w-full mx-3 gap-x-1 flex items-center justify-between mb-3'>
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
             chosenFilter === "gainers"
               ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
-          onClick={() => setChosenFilter("gainers")}
-        >
+          onClick={() => setChosenFilter("gainers")}>
           <span>Gainers</span>
-          <TrendingUp size={14} className="ml-1" />
+          <TrendingUp size={14} className='ml-1' />
         </button>
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
@@ -287,10 +282,9 @@ export default function MainPage() {
               ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
-          onClick={() => setChosenFilter("losers")}
-        >
+          onClick={() => setChosenFilter("losers")}>
           <span>Losers</span>
-          <TrendingDown size={14} className="ml-1" />
+          <TrendingDown size={14} className='ml-1' />
         </button>
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
@@ -298,10 +292,9 @@ export default function MainPage() {
               ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
-          onClick={() => setChosenFilter("floor")}
-        >
+          onClick={() => setChosenFilter("floor")}>
           <span>Floor</span>
-          <Trophy size={14} className="ml-1" />
+          <Trophy size={14} className='ml-1' />
         </button>
         <button
           className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
@@ -309,14 +302,13 @@ export default function MainPage() {
               ? "font-bold text-foreground bg-secondary rounded-xl"
               : "text-secondaryText"
           }`}
-          onClick={() => setChosenFilter("saved")}
-        >
+          onClick={() => setChosenFilter("saved")}>
           <span>Saved</span>
-          <Star size={14} className="ml-1" />
+          <Star size={14} className='ml-1' />
         </button>
       </div>
 
-      <div className="w-full flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+      <div className='w-full flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
         {chosenFilter === "saved" ? (
           <>
             {userList.length !== 0 ? (
@@ -327,11 +319,11 @@ export default function MainPage() {
                 background={giftBackground}
               />
             ) : (
-              <div className="flex-none w-full text-center snap-start">
-                <div className="px-3 pt-3 pb-1 font-bold">
+              <div className='flex-none w-full text-center snap-start'>
+                <div className='px-3 pt-3 pb-1 font-bold'>
                   Your Watchlist is Empty
                 </div>
-                <div className="px-3 pt-3 pb-5 text-sm text-secondaryText">
+                <div className='px-3 pt-3 pb-5 text-sm text-secondaryText'>
                   {"Profile -> Settings -> Edit Watchlist"}
                 </div>
               </div>

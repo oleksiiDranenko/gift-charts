@@ -42,35 +42,34 @@ export default function Page() {
   }, [dispatch, giftsList]);
 
   return (
-    <main className="w-full lg:w-1/2 pt-[70px] px-3">
-      <h1 className="w-full text-xl font-bold mb-3 ml-1 flex flex-row gap-x-2">
+    <main className='w-full lg:w-1/2 pt-[70px] px-3'>
+      <h1 className='w-full text-xl font-bold mb-3 ml-1 flex flex-row gap-x-2'>
         Analytics Tools
       </h1>
-      <div className="mb-3 bg-secondaryTransparent rounded-xl overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-20 z-0 overflow-hidden">
+      <div className='mb-3 bg-secondaryTransparent rounded-xl overflow-hidden relative'>
+        <div className='absolute top-0 left-0 w-full h-20 z-0 overflow-hidden'>
           <Image
-            src="/images/heatmap.webp"
-            alt="heatmap background"
+            src='/images/heatmap.webp'
+            alt='heatmap background'
             fill
-            className="object-cover blur-[3px]"
+            className='object-cover blur-[3px]'
             priority
           />
         </div>
 
-        <div className="relative z-10">
-          <div className="w-full h-20" />
+        <div className='relative z-10'>
+          <div className='w-full h-20' />
 
-          <div className="w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg">
-            <div className="flex flex-row items-center font-bold text-lg gap-2">
-              <Grid2x2 size={24} className="text-primary" />
+          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+            <div className='flex flex-row items-center font-bold text-lg gap-2'>
+              <Grid2x2 size={24} className='text-primary' />
               <span>Heatmap</span>
             </div>
 
             <Link
-              href="/tools/treemap"
-              className="px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl"
-              onClick={() => vibrate()}
-            >
+              href='/tools/treemap'
+              className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl'
+              onClick={() => vibrate()}>
               <span>Try it now</span>
               <ChevronRight size={18} />
             </Link>
@@ -93,9 +92,9 @@ export default function Page() {
           </Link>
       </div> */}
 
-      <div className="w-full h-auto flex flex-col gap-3">
-        <IndexBlock name="Market Cap" id="68493d064b37eed02b7ae5af" />
-        <IndexBlock name="FDV" id="67faf0d0634d6e48d48360bc" />
+      <div className='w-full h-auto flex flex-col gap-3'>
+        <IndexBlock name='Market Cap' id='68493d064b37eed02b7ae5af' />
+        <IndexBlock name='FDV' id='67faf0d0634d6e48d48360bc' />
       </div>
     </main>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import {Link} from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
@@ -71,36 +71,33 @@ export default function IndexBlock({ name, id }: IndexProps) {
   return (
     <Link
       href={`/tools/index/${id}`}
-      className="w-full flex flex-row justify-between h-16 p-3 bg-secondaryTransparent rounded-xl"
-      onClick={() => vibrate()}
-    >
-      <div className="h-full flex flex-row items-center gap-x-2">
-        <Globe size={26} className="text-primary"/>
-        <span className="font-bold">{name}</span>
+      className='w-full flex flex-row justify-between h-16 p-3 bg-secondaryTransparent rounded-xl'
+      onClick={() => vibrate()}>
+      <div className='h-full flex flex-row items-center gap-x-2'>
+        <Globe size={26} className='text-primary' />
+        <span className='font-bold'>{name}</span>
       </div>
-      <div className="flex flex-col items-end justify-between">
-        <div className="flex flex-row items-center">
+      <div className='flex flex-col items-end justify-between'>
+        <div className='flex flex-row items-center'>
           <Image
-            alt="ton logo"
-            src="/images/toncoin.webp"
+            alt='ton logo'
+            src='/images/toncoin.webp'
             width={14}
             height={14}
-            className="mr-1"
+            className='mr-1'
           />
-          <span className="text-base font-bold">
+          <span className='text-base font-bold'>
             {formatNumber(indexValue)}
           </span>
         </div>
         <span
           className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
-              indexValue - previousIndexValue >= 0
-                  ? "text-green-500 bg-green-500"
-                  : indexValue - previousIndexValue < 0
-                  ? "text-red-500 bg-red-500"
-                  : "text-slate-500"
-                
-            }`}
-        >
+            indexValue - previousIndexValue >= 0
+              ? "text-green-500 bg-green-500"
+              : indexValue - previousIndexValue < 0
+              ? "text-red-500 bg-red-500"
+              : "text-slate-500"
+          }`}>
           {indexValue - previousIndexValue >= 0 ? "+" : null}
           {countPercentChange(previousIndexValue, indexValue)}%
         </span>
