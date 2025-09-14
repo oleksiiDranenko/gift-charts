@@ -77,20 +77,19 @@ export default function Page() {
         </div>
       </div>
 
-      {/* <div className="w-full h-16 p-3 mb-3 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl">
-          <h1 className="font-bold flex flex-row items-center gap-x-2">
-            <Gauge  size={26} className="text-primary"/>
-            {t("name")}
-          </h1>
-          <Link
-            href="/tools/fear-greed"
-            className="px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl"
-            onClick={() => vibrate()}
-          >
-            <span>Try it now</span>
-            <ChevronRight size={18} />
-          </Link>
-      </div> */}
+      <div className='w-full h-16 p-3 mb-3 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
+        <h1 className='font-bold flex flex-row items-center gap-x-2'>
+          <Gauge size={26} className='text-primary' />
+          {t("name")}
+        </h1>
+        <Link
+          href='/tools/fear-greed'
+          className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl'
+          onClick={() => vibrate()}>
+          <span>Try it now</span>
+          <ChevronRight size={18} />
+        </Link>
+      </div>
 
       <div className='w-full h-auto flex flex-col gap-3'>
         <IndexBlock name='Market Cap' id='68493d064b37eed02b7ae5af' />
