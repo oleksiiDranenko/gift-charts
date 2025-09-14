@@ -123,7 +123,9 @@ export default function Page() {
               )}
 
               {percent !== undefined && (
-                <span className='font-bold'>- {percent * 100}%</span>
+                <span className='font-bold'>
+                  - {(percent * 100).toFixed(0)}%
+                </span>
               )}
             </div>
           </div>
