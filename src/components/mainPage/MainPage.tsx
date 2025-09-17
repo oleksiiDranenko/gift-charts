@@ -19,7 +19,6 @@ import {
   TrendingDown,
   SlidersHorizontal,
 } from "lucide-react";
-import AddBanner from "./AddBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -174,31 +173,33 @@ export default function MainPage() {
             </span>
         </div> */}
 
-      <div className='w-full px-3 mb-5'>
-        {/* <Link
-          href="https://t.me/gift_charts"
-          className="w-full h-20 p-3 pr-[120px] flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden"
-        >
-          <div className="flex flex-col justify-center">
-            <div className="flex flex-row">
-              <h1 className=" text-white font-bold">
-                Subscribe to official channel!
-              </h1>
-            </div>
-            <p className="text-xs text-white/70">
-              Find out about the latest updates
-            </p>
-          </div>
-          <div className="absolute right-0 top-2">
+      <div className='w-full flex items-center justify-center px-3 mb-5 relative'>
+        <div className='w-full flex items-center justify-center relative rounded-lg overflow-hidden'>
+          {/* Background layer */}
+          <div
+            className='absolute inset-0 bg-center bg-cover'
+            style={{
+              backgroundImage: "url('/images/banner.png')",
+              filter: "blur(10px) brightness(1)",
+            }}
+          />
+          {/* Optional dark overlay */}
+          <div className='absolute inset-0 bg-black/40' />
+
+          {/* Foreground content */}
+          <Link
+            href='https://t.me/themis_gifts_bot?start=ref_754292445'
+            className='relative z-10 inline-block w-full md:w-2/3 lg:w-full 2xl:w-4/6 rounded-lg overflow-hidden'>
             <Image
-              src="https://gifts.coffin.meme/plush%20pepe/Aqua%20Plush.png"
-              alt="pepe"
-              width={100}
-              height={100}
+              src='/images/banner.png'
+              alt='pepe'
+              width={0}
+              height={0}
+              sizes='100vw'
+              className='w-full h-auto'
             />
-          </div>
-        </Link> */}
-        <AddBanner />
+          </Link>
+        </div>
       </div>
 
       <SearchBar />
