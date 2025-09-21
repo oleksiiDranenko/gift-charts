@@ -42,7 +42,7 @@ export default function Page() {
   }, [dispatch, giftsList]);
 
   return (
-    <main className='w-full lg:w-1/2 pt-[70px] px-3'>
+    <main className='w-full lg:w-5/6 pt-[70px] lg:pt-10 px-3'>
       <h1 className='w-full text-xl font-bold mb-3 ml-1 flex flex-row gap-x-2'>
         Analytics Tools
       </h1>

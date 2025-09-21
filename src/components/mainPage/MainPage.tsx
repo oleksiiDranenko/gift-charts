@@ -173,9 +173,8 @@ export default function MainPage() {
             </span>
         </div> */}
 
-      <div className='w-full flex items-center justify-center px-3 mb-5 relative'>
+      {/* <div className='w-full flex items-center justify-center px-3 mb-5 relative'>
         <div className='w-full flex items-center justify-center relative rounded-lg overflow-hidden'>
-          {/* Background layer */}
           <div
             className='absolute inset-0 bg-center bg-cover'
             style={{
@@ -183,15 +182,13 @@ export default function MainPage() {
               filter: "blur(10px) brightness(1)",
             }}
           />
-          {/* Optional dark overlay */}
-          <div className='absolute inset-0 bg-black/40' />
+          <div className='absolute inset-0 bg-black/20' />
 
-          {/* Foreground content */}
           <Link
             href='https://t.me/themis_gifts_bot?start=ref_754292445'
-            className='relative z-10 inline-block w-full md:w-2/3 lg:w-full 2xl:w-4/6 rounded-lg overflow-hidden'>
+            className='relative z-10 inline-block w-full md:w-2/3 lg:w-4/6 rounded-lg overflow-hidden'>
             <Image
-              src='/images/banner.png'
+              src='/images/mutantgifts_ru.png'
               alt='pepe'
               width={0}
               height={0}
@@ -200,7 +197,7 @@ export default function MainPage() {
             />
           </Link>
         </div>
-      </div>
+      </div> */}
 
       <SearchBar />
 

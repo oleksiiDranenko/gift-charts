@@ -136,9 +136,9 @@ const imagePlugin = (
   chartType: "change" | "marketCap",
   currency: "ton" | "usd",
   watermarkFontSize: number = 15, // Default watermark font size
-  textScale: number = 1,          // Default text scale
-  imageScale: number = 1,         // Default image scale
-  borderWidth: number = 0         // Absolute pixel border width
+  textScale: number = 1, // Default text scale
+  imageScale: number = 1, // Default image scale
+  borderWidth: number = 0 // Absolute pixel border width
 ) => ({
   id: "treemapImages",
   afterDatasetDraw(chart: any) {
@@ -583,22 +583,21 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
   }, [data, chartType, timeGap, currency]);
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="w-full lg:w-1/2 mb-3 px-3 flex gap-2">
+    <div className='w-full flex flex-col items-center'>
+      <div className='w-full lg:w-5/6 mb-3 px-3 flex gap-2'>
         <button
-          className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-xl bg-secondaryTransparent"
+          className='w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-xl bg-secondaryTransparent'
           onClick={() => {
             chartRef.current?.resetZoom();
             chartRef.current?.update("none");
             updateInteractivity(chartRef.current);
-          }}
-        >
+          }}>
           <RotateCcw size={16} />
           Reset Zoom
         </button>
-        <div className="w-full flex flex-row gap-x-2">
+        <div className='w-full flex flex-row gap-x-2'>
           <button
-            className="w-full flex items-center justify-center h-8 rounded-xl bg-secondaryTransparent"
+            className='w-full flex items-center justify-center h-8 rounded-xl bg-secondaryTransparent'
             onClick={() => {
               const zoom = chartRef.current.getZoomLevel?.() ?? 1;
               const newZoom = Math.max(1, zoom - 0.5);
@@ -609,20 +608,18 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
               }
               chartRef.current?.update("none");
               updateInteractivity(chartRef.current);
-            }}
-          >
+            }}>
             <ZoomOut size={16} />
           </button>
           <button
-            className="w-full flex items-center justify-center h-8 rounded-xl bg-secondaryTransparent"
+            className='w-full flex items-center justify-center h-8 rounded-xl bg-secondaryTransparent'
             onClick={() => {
               const zoom = chartRef.current.getZoomLevel?.() ?? 1;
               const newZoom = Math.min(10, zoom + 0.3);
               chartRef.current.zoom(newZoom / zoom);
               chartRef.current?.update("none");
               updateInteractivity(chartRef.current);
-            }}
-          >
+            }}>
             <ZoomIn size={16} />
           </button>
         </div>
@@ -631,16 +628,15 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
       <DownloadHeatmapModal
         trigger={
           <button
-            className="w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg bg-secondaryTransparent"
-            onClick={downloadImage}
-          >
+            className='w-full lg:w-5/6 flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg bg-secondaryTransparent'
+            onClick={downloadImage}>
             <Download size={16} />
             Download Heatmap as Image
           </button>
         }
       />
 
-      <div style={{ width: "100%", minHeight: "600px" }}>
+      <div className='w-full lg:w-5/6 min-h-[600px]'>
         <canvas ref={canvasRef} />
       </div>
     </div>

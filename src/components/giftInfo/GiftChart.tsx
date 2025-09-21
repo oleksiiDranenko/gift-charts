@@ -80,17 +80,16 @@ export default function GiftChart({
   };
 
   return (
-    <div className="h-auto w-full pl-3 pr-3">
+    <div className='h-auto w-full pl-3 pr-3'>
       <div
         className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${
           resolvedTheme === "dark"
             ? ""
             : "bg-secondaryTransparent rounded-xl pl-2"
-        }`}
-      >
-        <div className="h-full flex items-center">
+        }`}>
+        <div className='h-full flex items-center'>
           <Image
-            alt="gift"
+            alt='gift'
             src={`/gifts/${gift?.image}.webp`}
             width={55}
             height={55}
@@ -100,59 +99,58 @@ export default function GiftChart({
                 : "bg-background"
             } `}
           />
-          <h1 className="flex flex-col">
-            <span className="text-xl font-bold">{gift?.name}</span>
-            <span className="text-secondaryText text-sm flex justify-start">
+          <h1 className='flex flex-col'>
+            <span className='text-xl font-bold'>{gift?.name}</span>
+            <span className='text-secondaryText text-sm flex justify-start'>
               {gift ? formatNumber(gift?.upgradedSupply) : null}
             </span>
           </h1>
         </div>
-        <div className="w-1/3 h-14 pr-3 flex flex-col items-end justify-center">
-          <div className="flex flex-row items-center">
+        <div className='w-1/3 h-14 pr-3 flex flex-col items-end justify-center'>
+          <div className='flex flex-row items-center'>
             {selectedPrice === "ton" || chartType === "candle" ? (
               <Image
-                alt="TON logo"
-                src="/images/toncoin.webp"
+                alt='TON logo'
+                src='/images/toncoin.webp'
                 width={18}
                 height={18}
-                className="mr-2"
+                className='mr-2'
               />
             ) : selectedPrice === "usd" ? (
-              <span className="text-xl font-extrabold mr-2">$</span>
+              <span className='text-xl font-extrabold mr-2'>$</span>
             ) : selectedPrice === "onSale" ? (
-              <Store size={18} className="mr-2 font-bold" />
+              <Store size={18} className='mr-2 font-bold' />
             ) : selectedPrice === "volume" ? (
               <Image
-                alt="TON logo"
-                src="/images/toncoin.webp"
+                alt='TON logo'
+                src='/images/toncoin.webp'
                 width={18}
                 height={18}
-                className="mr-2"
+                className='mr-2'
               />
             ) : (
-              <ChartNoAxesColumn size={18} className="mr-2 font-bold" />
+              <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
             )}
-            <span className="text-xl font-extrabold">
+            <span className='text-xl font-extrabold'>
               {currentValue !== null ? currentValue.toFixed(2) : "N/A"}
             </span>
           </div>
           <span
             className={`text-sm ${
               percentChange >= 0 ? "text-green-500" : "text-red-500"
-            }`}
-          >
+            }`}>
             {(percentChange > 0 ? "+" : "") + percentChange.toFixed(2) + "%"}
           </span>
         </div>
       </div>
 
-      <div className="w-full h-fit mb-3 mt-3 flex flex-col gap-y-3">
-        <div className="w-full flex flex-row justify-between">
+      <div className='w-full h-fit mb-3 mt-3 flex flex-col gap-y-3'>
+        <div className='w-full flex flex-row justify-between'>
           <PriceDropdown
             selectedPrice={selectedPrice}
             handleSelectedPrice={setSelectedPrice}
           />
-          <div className="flex flex-row mr-2 box-border bg-secondaryTransparent rounded-xl gap-x-1">
+          <div className='flex flex-row mr-2 box-border bg-secondaryTransparent rounded-xl gap-x-1'>
             <button
               className={`text-xs h-8 px-3 box-border ${
                 chartType === "line"
@@ -162,8 +160,7 @@ export default function GiftChart({
               onClick={() => {
                 setChartType("line");
                 vibrate();
-              }}
-            >
+              }}>
               <ChartSpline size={16} />
             </button>
             <button
@@ -179,8 +176,7 @@ export default function GiftChart({
                   setChartType("candle");
                   vibrate();
                 }
-              }}
-            >
+              }}>
               <ChartCandlestick size={16} />
             </button>
             <button
@@ -192,8 +188,7 @@ export default function GiftChart({
               onClick={() => {
                 setChartType("bar");
                 vibrate();
-              }}
-            >
+              }}>
               <BarChart4 size={16} />
             </button>
           </div>
@@ -234,13 +229,12 @@ export default function GiftChart({
         />
       )}
 
-      <div className="w-full flex flex-row gap-x-3 mt-5">
+      <div className='w-full flex flex-row gap-x-3 mt-5'>
         <MarketsModal
           trigger={
             <button
-              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-xl text-white"
-              onClick={() => vibrate()}
-            >
+              className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-xl text-white'
+              onClick={() => vibrate()}>
               Sell
               <SquareArrowOutUpRight size={16} />
             </button>
@@ -249,9 +243,8 @@ export default function GiftChart({
         <MarketsModal
           trigger={
             <button
-              className="w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-xl text-white"
-              onClick={() => vibrate()}
-            >
+              className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-xl text-white'
+              onClick={() => vibrate()}>
               Buy
               <SquareArrowOutUpRight size={16} />
             </button>
@@ -269,8 +262,7 @@ export default function GiftChart({
                     ? "bg-secondaryTransparent"
                     : "bg-secondaryTransparent"
                 }`}
-                onClick={() => vibrate()}
-              >
+                onClick={() => vibrate()}>
                 <Component size={16} />
                 View Models
               </button>
@@ -281,16 +273,15 @@ export default function GiftChart({
         </div>
       )}
 
-      <div className="mt-5">
-        <div className="w-full flex flex-row justify-between items-center">
-          <div className="flex flex-row items-center">
-            <h2 className="text-lg font-bold">Yearly Performance</h2>
+      <div className='mt-5'>
+        <div className='w-full flex flex-row justify-between items-center'>
+          <div className='flex flex-row items-center'>
+            <h2 className='text-lg font-bold'>Yearly Performance</h2>
           </div>
           <div>
             <button
               onClick={() => setShowCalendar(!showCalendar)}
-              className="flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondary rounded-xl"
-            >
+              className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondary rounded-xl'>
               {showCalendar ? (
                 <>
                   Hide

@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import EditAssets from "@/components/account/edit-assets/EditAssets"
+import EditAssets from "@/components/account/edit-assets/EditAssets";
 
 export default function page() {
-    return (
-        <div className="w-full lg:w-1/2 pt-[70px] pb-24">
-            <EditAssets />
-        </div>
-    )
+  return (
+    <div className='w-full lg:w-5/6 pt-[70px] lg:pt-10 pb-24'>
+      <EditAssets />
+    </div>
+  );
 }

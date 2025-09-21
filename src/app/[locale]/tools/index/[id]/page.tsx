@@ -8,7 +8,7 @@ import IndexChart from "@/components/tools/IndexChart";
 import ReactLoading from "react-loading";
 import { useRouter } from "next/navigation";
 import IndexPie from "@/components/tools/IndexPie";
-import {Link} from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import useVibrate from "@/hooks/useVibrate";
 import CalendarHeatmap from "@/components/tools/calendar-heatmap/CalendarHeatmap";
@@ -53,31 +53,29 @@ export default function Page({ params }: any) {
   };
 
   return (
-    <div className="w-screen pt-[70px] pb-24 flex justify-center">
-      <div className="w-full lg:w-1/2">
+    <div className='w-screen pt-[70px] lg:pt-10 pb-24 flex justify-center'>
+      <div className='w-full lg:w-5/6'>
         {!loading && index ? (
-          <div className="flex flex-col">
-            <div className="w-full h-10 px-3 gap-x-3 flex items-center justify-between">
+          <div className='flex flex-col'>
+            <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>
               <Link
                 href={"/tools"}
-                className="w-fit flex flex-row items-center text-lg font-bold"
-                onClick={() => vibrate()}
-              >
+                className='w-fit flex flex-row items-center text-lg font-bold'
+                onClick={() => vibrate()}>
                 <ChevronLeft />
                 {"Go Back"}
               </Link>
             </div>
             <IndexChart index={index} indexData={data} />
-            <div className="mt-5 px-3">
-              <div className="w-full flex flex-row justify-between items-center">
-                <div className="flex flex-row items-center">
-                  <h2 className="text-lg font-bold">Yearly Performance</h2>
+            <div className='mt-5 px-3'>
+              <div className='w-full flex flex-row justify-between items-center'>
+                <div className='flex flex-row items-center'>
+                  <h2 className='text-lg font-bold'>Yearly Performance</h2>
                 </div>
                 <div>
                   <button
                     onClick={() => setShowCalendar(!showCalendar)}
-                    className="flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-xl"
-                  >
+                    className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-xl'>
                     {showCalendar ? (
                       <>
                         Hide
@@ -98,13 +96,13 @@ export default function Page({ params }: any) {
             </div>
           </div>
         ) : (
-          <div className="w-full flex justify-center">
+          <div className='w-full flex justify-center'>
             <ReactLoading
-              type="spin"
-              color="#0098EA"
+              type='spin'
+              color='#0098EA'
               height={30}
               width={30}
-              className="mt-5"
+              className='mt-5'
             />
           </div>
         )}
