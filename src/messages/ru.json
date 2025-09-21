@@ -1,49 +1,47 @@
 {
-	"add": {
-		"header": "Heart Locket floor price increase on September 1st?",
-		"text": "Predict events with",
-		"chance": "chance"
-	},
-	"filters": {
-		"hideFilters": "Hide Filters",
-		"showFilters": "Show Filters",
-		"filterGifts": "Filter Gifts",
-		"sortBy": "Sort By",
-		"price": "Price",
-		"marketCap": "Market Cap",
-		"change": "Change",
-		"supply": "Supply",
-		"initSupply": "Init. Supply",
-		"starsPrice": "Stars Price",
-		"value": "Value",
-		"low": "Low",
-		"high": "High",
-		"clearFilters": "Clear Filters",
-		"name": "Name",
-		"24hChange": "24h change",
-		"top": "Top"
-	},
+  "add": {
+    "url": "/images/mutantgifts-ru.webp"
+  },
+  "filters": {
+    "hideFilters": "Hide Filters",
+    "showFilters": "Show Filters",
+    "filterGifts": "Filter Gifts",
+    "sortBy": "Sort By",
+    "price": "Price",
+    "marketCap": "Market Cap",
+    "change": "Change",
+    "supply": "Supply",
+    "initSupply": "Init. Supply",
+    "starsPrice": "Stars Price",
+    "value": "Value",
+    "low": "Low",
+    "high": "High",
+    "clearFilters": "Clear Filters",
+    "name": "Name",
+    "24hChange": "24h change",
+    "top": "Top"
+  },
 
-	"timegap": {
-		"hour": "h",
-		"day": "d",
-		"week": "w",
-		"month": "m",
-		"all": "All"
-	},
+  "timegap": {
+    "hour": "h",
+    "day": "d",
+    "week": "w",
+    "month": "m",
+    "all": "All"
+  },
 
-	"number": {
-		"thousand": "K",
-		"million": "M"
-	},
+  "number": {
+    "thousand": "K",
+    "million": "M"
+  },
 
-	"buttons": {
-		"show": "Show",
-		"hide": "Hide",
-		"tryItNow": "Try it now"
-	},
+  "buttons": {
+    "show": "Show",
+    "hide": "Hide",
+    "tryItNow": "Try it now"
+  },
 
-	"navbar": {
+  "navbar": {
     "home": "Home",
     "tools": "Tools",
     "profile": "Account",
@@ -51,62 +49,62 @@
   },
 
   "mainPage": {
-		"addPoster": {
-			"title": "",
-			"description": ""
-		},
-		"searchBar": {
-			"placeholder": "Search gifts..."
-		},
-		"filters": {
-			"customise": "Customise",
-			"gainers": "Gainers",
-			"losers": "Losers",
-			"topPrice": "Top Price",
-			"saved": "Saved"
-		}
-	},
+    "addPoster": {
+      "title": "",
+      "description": ""
+    },
+    "searchBar": {
+      "placeholder": "Search gifts..."
+    },
+    "filters": {
+      "customise": "Customise",
+      "gainers": "Gainers",
+      "losers": "Losers",
+      "topPrice": "Top Price",
+      "saved": "Saved"
+    }
+  },
 
-	"giftInfo": {
-		"yearlyPerformance": "Yearly Performance",
-		"releaseDate": "Release Date",
-		"starsPrice": "Stars Price",
-		"upgradeStarsPrice": "Upgrade Stars Price",
-		"totalStarsPrice": "Total Stars Price",
-		"totalStarsPriceInUSD": "Total Stars Price in USD",
-		"totalStarsPriceInTON": "Total Stars Price in TON",
-		"initialSupply": "Inital Supply",
-		"supply": "Supply",
-		"upgradedSupply": "Upgraded Supply",
-		"percentUpdgraded": "Percent Upgraded",
-		"amountBurnt": "Amount Burnt",
-		"percentBurnt": "Percent Burnt"
-	},
+  "giftInfo": {
+    "yearlyPerformance": "Yearly Performance",
+    "releaseDate": "Release Date",
+    "starsPrice": "Stars Price",
+    "upgradeStarsPrice": "Upgrade Stars Price",
+    "totalStarsPrice": "Total Stars Price",
+    "totalStarsPriceInUSD": "Total Stars Price in USD",
+    "totalStarsPriceInTON": "Total Stars Price in TON",
+    "initialSupply": "Inital Supply",
+    "supply": "Supply",
+    "upgradedSupply": "Upgraded Supply",
+    "percentUpdgraded": "Percent Upgraded",
+    "amountBurnt": "Amount Burnt",
+    "percentBurnt": "Percent Burnt"
+  },
 
-	"tools": {
-		"heatmap": {
-			"name": "Heatmap",
-			"resetZoom": "Reset Zoom",
-			"download": "Download Heatmap as an Image"
-		},
-		"marketCap": "Market Cap"
-	},
+  "tools": {
+    "heatmap": {
+      "name": "Heatmap",
+      "resetZoom": "Reset Zoom",
+      "download": "Download Heatmap as an Image"
+    },
+    "marketCap": "Market Cap"
+  },
 
-	"settings": {
-		"colorTheme": {
-			"name": "Color Theme",
-			"light": "Light",
-			"dark": "Dark",
-			"system": "System"
-		}
-	},
+  "settings": {
+    "colorTheme": {
+      "name": "Color Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
 
-	"fearAndGreed": {
-		"name": "Fear & Greed",
-		"extremeFear": "Extreme fear",
-		"fear": "Fear",
-		"neutral": "Neutral",
-		"greed": "Greed",
-		"extremeGreed": "Extreme greed"
-	}
+  "fearAndGreed": {
+    "name": "Fear & Greed",
+    "extremeFear": "Extreme fear",
+    "fear": "Fear",
+    "neutral": "Neutral",
+    "greed": "Greed",
+    "extremeGreed": "Extreme greed"
+  }
 }

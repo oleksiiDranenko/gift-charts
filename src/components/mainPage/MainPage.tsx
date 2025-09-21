@@ -19,6 +19,7 @@ import {
   TrendingDown,
   SlidersHorizontal,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -27,6 +28,8 @@ export default function MainPage() {
   const filters = useAppSelector((state) => state.filters);
   const user = useAppSelector((state) => state.user);
 
+  const t = useTranslations("add");
+
   const [gainersList, setGainersList] = useState<GiftInterface[]>([]);
   const [losersList, setLosersList] = useState<GiftInterface[]>([]);
   const [topList, setTopList] = useState<GiftInterface[]>([]);
@@ -34,7 +37,6 @@ export default function MainPage() {
   const [chosenFilter, setChosenFilter] = useState<
     "gainers" | "losers" | "floor" | "saved"
   >("gainers");
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   const [giftType, setGiftType] = useState<"line" | "block">(
@@ -173,31 +175,31 @@ export default function MainPage() {
             </span>
         </div> */}
 
-      {/* <div className='w-full flex items-center justify-center px-3 mb-5 relative'>
+      <Link
+        href='https://t.me/mutant_gifts_bot/mutantgifts?startapp=r_367112725'
+        className='w-full flex items-center justify-center px-3 mb-5 relative'>
         <div className='w-full flex items-center justify-center relative rounded-lg overflow-hidden'>
           <div
             className='absolute inset-0 bg-center bg-cover'
             style={{
-              backgroundImage: "url('/images/banner.png')",
+              backgroundImage: "url('/images/mutantgifts-ru.webp')",
               filter: "blur(10px) brightness(1)",
             }}
           />
-          <div className='absolute inset-0 bg-black/20' />
+          <div className='absolute inset-0 bg-black/50' />
 
-          <Link
-            href='https://t.me/themis_gifts_bot?start=ref_754292445'
-            className='relative z-10 inline-block w-full md:w-2/3 lg:w-4/6 rounded-lg overflow-hidden'>
+          <div className='relative z-10 inline-block w-full md:w-2/3 lg:w-4/6 rounded-lg overflow-hidden'>
             <Image
-              src='/images/mutantgifts_ru.png'
+              src={t("url")}
               alt='pepe'
               width={0}
               height={0}
               sizes='100vw'
               className='w-full h-auto'
             />
-          </Link>
+          </div>
         </div>
-      </div> */}
+      </Link>
 
       <SearchBar />
 
