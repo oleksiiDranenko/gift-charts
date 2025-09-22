@@ -53,7 +53,7 @@ export default function Page({ params }: any) {
   };
 
   return (
-    <div className='w-screen pt-[70px] lg:pt-10 pb-24 flex justify-center'>
+    <div className='w-full pt-[70px] lg:pt-10 pb-24 flex justify-center'>
       <div className='w-full lg:w-5/6'>
         {!loading && index ? (
           <div className='flex flex-col'>
