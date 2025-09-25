@@ -13,7 +13,7 @@ export default function Vote() {
   const { resolvedTheme } = useTheme();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [hasVoted, setHasVoted] = useState<boolean>(false);
+  const [hasVoted, setHasVoted] = useState<boolean | null>(null);
   const [selectedVote, setSelectedVote] = useState<
     "negative" | "neutral" | "positive" | null
   >(null);
@@ -47,10 +47,10 @@ export default function Vote() {
 
   // Update hasVoted based on vote status
   useEffect(() => {
-    if (voteStatus?.userVote !== false) {
-      setHasVoted(true);
+    if (!isVoteStatusLoading && voteStatus) {
+      setHasVoted(voteStatus.userVote !== false);
     }
-  }, [voteStatus]);
+  }, [isVoteStatusLoading, voteStatus]);
 
   // TanStack Query mutation for submitting vote
   const voteMutation = useMutation({
@@ -103,7 +103,7 @@ export default function Vote() {
 
   return (
     <div className='w-full'>
-      {isVoteStatusLoading ? (
+      {isVoteStatusLoading || hasVoted === null ? (
         <div className='w-full flex items-center justify-center'>
           <ReactLoading
             type='spin'
