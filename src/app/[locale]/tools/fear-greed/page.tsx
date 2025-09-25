@@ -44,7 +44,7 @@ export default function Page() {
       {isLoading ? (
         <div>loading</div>
       ) : (
-        <div className='w-full lg:1/2 mt-3 flex flex-col lg:flex-row lg:justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
+        <div className='w-full lg:1/2 mt-3 flex flex-col lg:flex-row lg:justify-between items-center py-3 '>
           <h1 className='flex flex-row items-center gap-x-1 text-xl font-bold mb-2 lg:hidden'>
             <Gift size={18} strokeWidth={2} />
             {t("name")}

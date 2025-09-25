@@ -8,7 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { useEffect, useState, useRef } from "react";
 import IndexBlock from "@/components/tools/IndexBlock";
 import useVibrate from "@/hooks/useVibrate";
-import { ChevronRight, Gauge, Grid2x2 } from "lucide-react";
+import { ChevronRight, Gauge, Grid2x2, Smile, Vote } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
@@ -17,6 +17,7 @@ export default function Page() {
   const giftsList = useAppSelector((state) => state.giftsList);
   const indexList = useAppSelector((state) => state.indexList);
   const vibrate = useVibrate();
+  const user = useAppSelector((state) => state.user);
 
   const t = useTranslations("fearAndGreed");
 
@@ -91,7 +92,26 @@ export default function Page() {
         </Link>
       </div>
 
-      <div className='w-full h-auto flex flex-col gap-3'>
+      {user.token && (
+        <div className='w-full h-16 p-3 mb-5 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
+          <h1 className='font-bold flex flex-row items-center gap-x-2'>
+            <Smile size={26} className='text-primary' />
+            Market Sentiment
+          </h1>
+          <Link
+            href='/tools/vote'
+            className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl'
+            onClick={() => vibrate()}>
+            <span>Vote now</span>
+            <ChevronRight size={18} />
+          </Link>
+        </div>
+      )}
+
+      <h1 className='w-full text-xl font-bold mb-3 ml-1 flex flex-row gap-x-2'>
+        Indexes
+      </h1>
+      <div className='w-full h-auto flex flex-col gap-3 '>
         <IndexBlock name='Market Cap' id='68493d064b37eed02b7ae5af' />
         <IndexBlock name='FDV' id='67faf0d0634d6e48d48360bc' />
       </div>

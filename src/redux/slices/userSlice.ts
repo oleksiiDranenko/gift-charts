@@ -4,6 +4,7 @@ import { UserInterface } from '@/interfaces/UserInterface';
 const initialState: UserInterface = {
     _id: '',
     telegramId: '',
+    token: '',
     username: '',
     savedList: [],
     assets: [],

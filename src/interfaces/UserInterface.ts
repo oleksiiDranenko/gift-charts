@@ -7,6 +7,7 @@ export interface AssetInterface {
 export interface UserInterface {
     _id: string,
     telegramId: string,
+    token: string,
     username: string,
     assets: AssetInterface[],
     savedList: string[],

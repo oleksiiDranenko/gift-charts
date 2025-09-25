@@ -7,11 +7,11 @@
   --secondary: #d9e8ff;
   --secondary-transparent: #ffffff;
   --secondary-text: #5c6673;
-  --background: #f3f3f3;
+  --background: #f4f4f4;
   --foreground: #000000;
 }
 
-html.dark{
+html.dark {
   --primary: #3b82f6;
   --secondary: #374151;
   --secondary-transparent: #1f2937;
@@ -19,9 +19,6 @@ html.dark{
   --background: #111827;
   --foreground: #ffffff;
 }
-
-
-
 
 body {
   color: var(--foreground);
