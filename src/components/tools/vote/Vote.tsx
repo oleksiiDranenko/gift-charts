@@ -205,7 +205,7 @@ export default function Vote() {
                       ? "bg-yellow-500/10 text-yellow-500"
                       : "bg-green-500/10 text-green-500"
                   } rounded-xl`}>
-                  {parseFloat(voteStatus?.avgScore).toFixed(1) || 0}% -{" "}
+                  {parseFloat(voteStatus?.avgScore).toFixed(2) || 0}% -{" "}
                   {voteStatus?.avgScore < 20
                     ? "Very negative"
                     : voteStatus?.avgScore < 40
