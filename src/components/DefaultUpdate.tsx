@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { setDefaultFilters } from "@/redux/slices/filterListSlice";
@@ -9,6 +9,7 @@ import axios from "axios";
 import ProgressBar from "@ramonak/react-progress-bar";
 import useVibrate from "@/hooks/useVibrate";
 import Image from "next/image";
+import VoteModal from "./voteModal/VoteModal";
 
 const fetchGifts = async () => {
   const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
@@ -84,7 +85,10 @@ export default function DefaultUpdate({
           </div>
         </div>
       ) : (
-        <>{children}</>
+        <>
+          {/* <VoteModal /> */}
+          {children}
+        </>
       )}
     </>
   );
