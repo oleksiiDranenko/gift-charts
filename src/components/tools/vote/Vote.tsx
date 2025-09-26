@@ -194,7 +194,7 @@ export default function Vote() {
                   <UsersRound size={16} />
                   Total votes:{" "}
                   <span className='font-bold text-foreground'>
-                    {voteStatus?.totalVotes || 0}
+                    {parseFloat(voteStatus?.totalVotes).toFixed(1) || 0}
                   </span>
                 </span>
                 <span
