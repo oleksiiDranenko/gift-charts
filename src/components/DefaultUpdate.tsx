@@ -40,6 +40,22 @@ export default function DefaultUpdate({
     },
   });
 
+  const {} = useQuery(
+    ["voteStatus", "marketSentiment"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}/vote/marketSentiment`
+      );
+      return response.data;
+    },
+    {
+      onError: (error: any) => {
+        console.error("Error checking vote status:", error);
+      },
+      retry: false, // Don't retry on failure
+    }
+  );
+
   useEffect(() => {
     dispatch(setDefaultFilters());
   }, [dispatch]);

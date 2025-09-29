@@ -39,7 +39,6 @@ export default function EditWatchlist() {
     if (!user.telegramId) {
       setError("No Telegram ID provided. Please log in.");
       setLoading(false);
-      router.push("/login");
       return;
     }
 
@@ -166,40 +165,39 @@ export default function EditWatchlist() {
   };
 
   return (
-    <div className="w-full flex flex-col px-3">
+    <div className='w-full flex flex-col px-3'>
       {loading ? (
-        <div className="w-full flex justify-center">
+        <div className='w-full flex justify-center'>
           <ReactLoading
-            type="spin"
-            color="#0098EA"
+            type='spin'
+            color='#0098EA'
             height={30}
             width={30}
-            className="mt-5"
+            className='mt-5'
           />
         </div>
       ) : error ? (
-        <div className="w-full text-center text-red-500">{error}</div>
+        <div className='w-full text-center text-red-500'>{error}</div>
       ) : (
         <>
-          <div className="w-full flex flex-row justify-between gap-x-3">
+          <div className='w-full flex flex-row justify-between gap-x-3'>
             <BackButton />
 
             <button
-              className="w-1/2 h-10 bg-primary text-white rounded-xl"
+              className='w-1/2 h-10 bg-primary text-white rounded-xl'
               onClick={() => {
                 saveChanges();
                 vibrate();
-              }}
-            >
+              }}>
               Save
             </button>
           </div>
 
-          <div className="w-full mt-5 pr-2 gap-x-3">
-            <h2 className="w-full text-xl font-bold mb-3">Watchlist</h2>
+          <div className='w-full mt-5 pr-2 gap-x-3'>
+            <h2 className='w-full text-xl font-bold mb-3'>Watchlist</h2>
             {editedUser ? (
               editedUser.savedList.length === 0 ? (
-                <div className="pt-3 pb-5 text-secondaryText">
+                <div className='pt-3 pb-5 text-secondaryText'>
                   Your Watchlist is Empty
                 </div>
               ) : (
@@ -217,17 +215,15 @@ export default function EditWatchlist() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-xl"
-          >
+            className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-xl'>
             <ListPlus size={20} />
             Add Gift
           </button>
 
           <AddWatchlistItemModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          >
-            <div className="w-full p-3">
+            onClose={() => setIsModalOpen(false)}>
+            <div className='w-full p-3'>
               {addGiftList.length > 0 ? (
                 addGiftList.map((gift) => (
                   <AddListItem
@@ -239,7 +235,7 @@ export default function EditWatchlist() {
                   />
                 ))
               ) : (
-                <p className="text-center text-primary">No gifts available</p>
+                <p className='text-center text-primary'>No gifts available</p>
               )}
             </div>
           </AddWatchlistItemModal>

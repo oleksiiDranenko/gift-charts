@@ -20,6 +20,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import VoteBanner from "../tools/vote/VoteBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -163,43 +164,7 @@ export default function MainPage() {
 
   return (
     <div>
-      {/* <h1 className="flex flex-row items-center mb-3 px-3">
-            <Activity size={24}/>
-            <h1 className="text-2xl font-bold ml-1">
-                Gift Charts
-            </h1>
-        </h1> */}
-      {/* <div className="mx-3 mb-4">
-            <span className="text-secondaryText text-sm">
-                ✨ App is <span className="font-bold text-foreground">Free</span> but you can <Link href='/donate' className="font-bold text-primary underline">Donate!</Link>
-            </span>
-        </div> */}
-
-      <Link
-        href='https://t.me/mutant_gifts_bot/mutantgifts?startapp=r_367112725'
-        className='w-full flex items-center justify-center px-3 mb-5 relative'>
-        <div className='w-full flex items-center justify-center relative rounded-lg overflow-hidden'>
-          <div
-            className='absolute inset-0 bg-center bg-cover'
-            style={{
-              backgroundImage: "url('/images/mutantgifts-ru.webp')",
-              filter: "blur(10px) brightness(1)",
-            }}
-          />
-          <div className='absolute inset-0 bg-black/50' />
-
-          <div className='relative z-10 inline-block w-full md:w-2/3 lg:w-4/6 rounded-lg overflow-hidden'>
-            <Image
-              src={t("url")}
-              alt='pepe'
-              width={0}
-              height={0}
-              sizes='100vw'
-              className='w-full h-auto'
-            />
-          </div>
-        </div>
-      </Link>
+      {user.token && <VoteBanner />}
 
       <SearchBar />
 

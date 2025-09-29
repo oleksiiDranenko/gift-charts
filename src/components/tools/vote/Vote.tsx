@@ -37,9 +37,6 @@ export default function Vote() {
     {
       onError: (error: any) => {
         console.error("Error checking vote status:", error);
-        if (error.response?.status === 401) {
-          router.push("/login");
-        }
       },
       retry: false, // Don't retry on failure
     }
@@ -70,7 +67,6 @@ export default function Vote() {
     onError: (error: any) => {
       console.error("Error submitting vote:", error);
       if (error.response?.status === 401) {
-        router.push("/login");
       } else {
         alert(
           error.response?.data?.message ||
