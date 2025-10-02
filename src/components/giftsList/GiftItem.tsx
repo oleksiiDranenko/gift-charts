@@ -114,30 +114,31 @@ export default function GiftItem({
       }`}
       key={item._id}
       href={`/gift/${item._id}`}
-      onClick={() => vibrate()}
-    >
-      <div className=" flex flex-row items-center">
+      onClick={() => vibrate()}>
+      <div className=' flex flex-row items-center'>
         <Image
-          alt="gift image"
+          alt='gift image'
           src={`/gifts/${item.image}.webp`}
           width={50}
           height={50}
-          className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${resolvedTheme === 'dark' ? 'bg-secondary' : 'bg-background'}`}
+          className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
+            resolvedTheme === "dark" ? "bg-secondary " : "bg-background"
+          }`}
         />
-        <div className="flex flex-col gap-y-[2px]">
-          <span className="flex flex-row items-center text-base font-bold">
+        <div className='flex flex-col gap-y-[2px]'>
+          <span className='flex flex-row items-center text-base font-bold'>
             {item.name}
             {/* <span className="flex flex-row items-center gap-[2px] ml-1 text-xs font-normal p-1 text-green-500 bg-green-500 bg-opacity-10 rounded-xl">
                                 <Cannabis size={12}/>
                             </span> */}
 
             {item.preSale && (
-              <span className="text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-xl">
+              <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-xl'>
                 Pre-Market
               </span>
             )}
           </span>
-          <span className="text-secondaryText gap-y-1 w-fit rounded-lg text-xs font-normal">
+          <span className='text-secondaryText gap-y-1 w-fit rounded-lg text-xs font-normal'>
             {sortBy === "price"
               ? formatNumber(item.upgradedSupply) +
                 " / " +
@@ -171,21 +172,21 @@ export default function GiftItem({
         </div>
       </div>
 
-      <div className=" flex flex-row items-center justify-end">
-        <div className="w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3">
-          <div className="flex flex-row items-center">
+      <div className=' flex flex-row items-center justify-end'>
+        <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
+          <div className='flex flex-row items-center'>
             {currency === "ton" ? (
               <Image
-                alt="ton logo"
-                src="/images/toncoin.webp"
+                alt='ton logo'
+                src='/images/toncoin.webp'
                 width={15}
                 height={15}
-                className="mr-1"
+                className='mr-1'
               />
             ) : (
-              <span className="mr-1">$</span>
+              <span className='mr-1'>$</span>
             )}
-            <span className="text-base font-bold">
+            <span className='text-base font-bold'>
               {currency === "ton" && displayValue === "price"
                 ? item.priceTon
                 : currency === "ton" && displayValue === "marketCap"
@@ -207,8 +208,7 @@ export default function GiftItem({
                   ? "text-red-500 bg-red-500"
                   : "text-slate-500"
                 : "text-slate-500"
-            }`}
-          >
+            }`}>
             {percentChange !== "no data" && percentChange >= 0 && "+"}
             {percentChange}
             {percentChange !== "no data" ? "%" : null}

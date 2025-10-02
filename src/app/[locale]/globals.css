@@ -11,12 +11,21 @@
   --foreground: #000000;
 }
 
-html.dark {
+/* html.dark {
   --primary: #3b82f6;
   --secondary: #374151;
   --secondary-transparent: #1f2937;
   --secondary-text: #9ca3af;
   --background: #111827;
+  --foreground: #ffffff;
+} */
+
+html.dark {
+  --primary: #3b82f6;
+  --secondary: #1a1a1a;
+  --secondary-transparent: #131313;
+  --secondary-text: #9ca3af;
+  --background: #000000;
   --foreground: #ffffff;
 }
 
