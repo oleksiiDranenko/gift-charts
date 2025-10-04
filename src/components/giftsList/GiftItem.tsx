@@ -111,7 +111,7 @@ export default function GiftItem({
                   percentChange < 0 &&
                   "from-red-500/5 to-red-500/25"
             }`
-          : "bg-secondaryTransparent hover:bg-secondary"
+          : "bg-secondaryTransparent"
       }`}
       key={item._id}
       href={`/gift/${item._id}`}
