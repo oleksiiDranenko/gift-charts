@@ -135,7 +135,7 @@ export default function GiftBlockItem({
                 </div> */}
       </div>
 
-      <GiftItemChart />
+      {/* <GiftItemChart /> */}
 
       <div className=' flex flex-row items-center justify-end'>
         <div className='w-fit text-sm flex flex-col items-center justify-center'>
