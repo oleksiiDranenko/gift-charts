@@ -252,7 +252,7 @@ export default function GiftChart({
         />
       </div>
 
-      {/* {gift?.preSale ? null : (
+      {gift?.preSale ? null : (
         <div>
           <ModelsModal
             trigger={
@@ -271,7 +271,7 @@ export default function GiftChart({
             giftId={gift?._id ? gift._id : ""}
           />
         </div>
-      )} */}
+      )}
 
       <div className='mt-5'>
         <div className='w-full flex flex-row justify-between items-center'>

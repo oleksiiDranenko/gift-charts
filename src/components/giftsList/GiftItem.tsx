@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import { BadgeCheck, Cannabis } from "lucide-react";
 import { useTheme } from "next-themes";
+import GiftItemChart from "./GiftItemChart";
 
 interface PropsInterface {
   item: GiftInterface;
@@ -110,7 +111,7 @@ export default function GiftItem({
                   percentChange < 0 &&
                   "from-red-500/5 to-red-500/25"
             }`
-          : "bg-secondaryTransparent"
+          : "bg-secondaryTransparent hover:bg-secondary"
       }`}
       key={item._id}
       href={`/gift/${item._id}`}
@@ -171,6 +172,10 @@ export default function GiftItem({
           </span>
         </div>
       </div>
+
+      {/* <div className='h-12'>
+        <GiftItemChart />
+      </div> */}
 
       <div className=' flex flex-row items-center justify-end'>
         <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
