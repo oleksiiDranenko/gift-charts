@@ -42,11 +42,11 @@ html.dark {
 } */
 
 html.dark {
-  --primary: #76abae;
-  --secondary: #3d434f;
-  --secondary-transparent: #31363f;
+  --primary: #3b82f6;
+  --secondary: #2c3039;
+  --secondary-transparent: #24282f;
   --secondary-text: #9ca3af;
-  --background: #222831;
+  --background: #0f1216;
   --foreground: #ffffff;
 }
 
