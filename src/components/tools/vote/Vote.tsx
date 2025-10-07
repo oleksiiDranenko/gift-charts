@@ -159,7 +159,7 @@ export default function Vote() {
       ) : (
         <>
           <h1 className='w-full flex lg:hidden text-start text-2xl font-bold mb-3 p-3'>
-            How do investors feel about the Gifts market?
+            How do users feel about the Gifts market?
           </h1>
           <div className='w-full lg:1/2 mt-3 flex flex-col lg:flex-row lg:justify-between items-center py-3 '>
             <div className='w-full relative'>

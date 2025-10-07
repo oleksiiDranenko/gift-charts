@@ -80,17 +80,7 @@ export default function VoteBanner() {
 
   return (
     <>
-      {isVoteStatusLoading || hasVoted === null ? (
-        <div className='w-full flex items-center justify-center'>
-          <ReactLoading
-            type='spin'
-            color='#0098EA'
-            height={30}
-            width={30}
-            className='my-5'
-          />
-        </div>
-      ) : !hasVoted ? (
+      {isVoteStatusLoading || hasVoted === null ? null : !hasVoted ? (
         <div className='w-full px-3 mb-4'>
           <div className='w-full p-3 bg-secondaryTransparent rounded-xl'>
             <h1 className='w-full flex text-start text-lg font-bold mb-3'>

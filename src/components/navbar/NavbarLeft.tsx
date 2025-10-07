@@ -38,7 +38,7 @@ export default function NavbarLeft() {
       <Link
         className={`flex flex-row gap-x-2 items-center p-3 rounded-lg box-border hover:bg-secondary ${
           selectedPage === "home"
-            ? "text-white bg-primary hover:bg-primary"
+            ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
         }`}
         href='/'
@@ -52,7 +52,7 @@ export default function NavbarLeft() {
       <Link
         className={`flex flex-row gap-x-1 items-center p-3 rounded-lg box-border hover:bg-secondary ${
           selectedPage === "tools"
-            ? "text-white bg-primary hover:bg-primary"
+            ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
         }`}
         href='/tools'
@@ -66,7 +66,7 @@ export default function NavbarLeft() {
       <Link
         className={`flex flex-row gap-x-1 items-center p-3 rounded-lg box-border hover:bg-secondary ${
           selectedPage === "account"
-            ? "text-white bg-primary hover:bg-primary"
+            ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
         }`}
         href='/account'
@@ -80,7 +80,7 @@ export default function NavbarLeft() {
       <Link
         className={`flex flex-row gap-x-1 items-center p-3 rounded-lg box-border hover:bg-secondary ${
           selectedPage === "settings"
-            ? "text-white bg-primary hover:bg-primary"
+            ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
         }`}
         href='/settings'

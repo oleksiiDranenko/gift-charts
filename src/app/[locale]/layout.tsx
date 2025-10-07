@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import PageTransition from "@/components/PageTransition";
+import ModalWrapper from "@/components/ModalWrapper";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
@@ -32,10 +33,10 @@ export default async function RootLayout({
   return (
     <>
       <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-HFQGDBLR7K"
-        strategy="afterInteractive"
+        src='https://www.googletagmanager.com/gtag/js?id=G-HFQGDBLR7K'
+        strategy='afterInteractive'
       />
-      <Script id="google-analytics" strategy="afterInteractive">
+      <Script id='google-analytics' strategy='afterInteractive'>
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -48,11 +49,15 @@ export default async function RootLayout({
         <body className={inter.className}>
           <NextIntlClientProvider messages={messages}>
             <ReduxProvider>
-              <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+              <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
                 <ReactQueryProvider>
                   <Analytics />
                   <AppInitializer>
-                    <DefaultUpdate><PageTransition>{children}</PageTransition></DefaultUpdate>
+                    <DefaultUpdate>
+                      <PageTransition>
+                        <ModalWrapper>{children}</ModalWrapper>
+                      </PageTransition>
+                    </DefaultUpdate>
                   </AppInitializer>
                 </ReactQueryProvider>
               </ThemeProvider>

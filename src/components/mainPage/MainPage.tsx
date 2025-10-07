@@ -164,7 +164,7 @@ export default function MainPage() {
 
   return (
     <div>
-      {user.token && <VoteBanner />}
+      {/* {user.token && <VoteBanner />} */}
 
       <SearchBar />
 
