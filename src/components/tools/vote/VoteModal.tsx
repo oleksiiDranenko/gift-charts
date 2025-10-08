@@ -19,8 +19,8 @@ export default function VoteModal({
   isOpen: controlledOpen,
   onOpenChange,
 }: VoteModalProps) {
-  // Use external state if provided, else fall back to internal state
-  const [internalOpen, setInternalOpen] = useState(true);
+  // Initialize internalOpen to false to keep modal closed initially
+  const [internalOpen, setInternalOpen] = useState(false);
   const isOpen = controlledOpen ?? internalOpen;
 
   const vibrate = useVibrate();
@@ -51,9 +51,14 @@ export default function VoteModal({
 
   useEffect(() => {
     if (!isVoteStatusLoading && voteStatus) {
-      setHasVoted(voteStatus.userVote !== false);
+      const userHasVoted = voteStatus.userVote !== false;
+      setHasVoted(userHasVoted);
+      // Open modal only if user hasn't voted and isOpen isn't externally controlled
+      if (!userHasVoted && controlledOpen === undefined) {
+        setInternalOpen(true);
+      }
     }
-  }, [isVoteStatusLoading, voteStatus]);
+  }, [isVoteStatusLoading, voteStatus, controlledOpen]);
 
   // --- Mutation ---
   const voteMutation = useMutation({
