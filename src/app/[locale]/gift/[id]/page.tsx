@@ -100,7 +100,7 @@ export default function Page({ params }: any) {
               </div>
             </div>
             <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
-            <GiftStats gift={gift} />
+            {/* <GiftStats gift={gift} /> */}
           </div>
         ) : (
           <div className='text-center text-red-500'>
