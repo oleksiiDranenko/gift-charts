@@ -54,9 +54,7 @@ export default async function RootLayout({
                   <Analytics />
                   <AppInitializer>
                     <DefaultUpdate>
-                      <PageTransition>
-                        <ModalWrapper>{children}</ModalWrapper>
-                      </PageTransition>
+                      <PageTransition>{children}</PageTransition>
                     </DefaultUpdate>
                   </AppInitializer>
                 </ReactQueryProvider>
