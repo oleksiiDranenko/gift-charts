@@ -180,7 +180,7 @@ export default function MainPage() {
           <div className='flex flex-col justify-center'>
             <div className='flex flex-row'>
               <h1 className=' text-white font-bold'>
-                Subscribe to the official channel!
+                Gift Charts official channel
               </h1>
             </div>
             <p className='text-xs text-white/70'>

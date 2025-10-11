@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description: "Discover and share amazing content.",
     url: "https://giftcharts.com",
     siteName: "Gift Charts",
-    images: [],
+    images: [{ url: "/images/logo.webp" }],
     locale: "en_US",
     type: "website",
   },
