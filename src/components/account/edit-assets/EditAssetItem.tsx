@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
 import { Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PropsInterface {
   giftId: string;
@@ -28,6 +29,8 @@ export default function EditAssetItem({
   const vibrate = useVibrate();
   const [gift, setGift] = useState<GiftInterface>();
   const [inputAvgPrice, setInputAvgPrice] = useState<string | number>(avgPrice);
+
+  const translate = useTranslations("account");
 
   const filterGift = () => {
     const gift = giftsList.filter((item) => item._id === giftId);
@@ -93,7 +96,7 @@ export default function EditAssetItem({
 
         <div className='w-full flex flex-row justify-between items-center pr-3'>
           <div className='flex flex-row items-center justify-center gap-x-1'>
-            <span className='text-sm mr-2'>Avg price:</span>
+            <span className='text-sm mr-2'>{translate("avgPrice")}:</span>
             <input
               type='number'
               value={inputAvgPrice}
@@ -106,7 +109,7 @@ export default function EditAssetItem({
           </div>
 
           <div className='flex flex-row items-center justify-center gap-x-1'>
-            <span className='text-sm mr-2'>Amount:</span>
+            <span className='text-sm mr-2'>{translate("amount")}:</span>
             <div>
               <input
                 type='number'

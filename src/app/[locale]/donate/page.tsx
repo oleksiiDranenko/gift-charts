@@ -20,7 +20,7 @@ export default function Page() {
   };
 
   return (
-    <div className='w-screen pt-[70px] lg:pt-10 pb-24 flex justify-center'>
+    <div className='w-screen pt-[0px]  pb-24 flex justify-center'>
       <div className='w-full lg:w-5/6'>
         <BackButton />
         <div className='max-w-full flex justify-between items-center p-3 mt-3 mx-3 border border-secondary rounded-xl'>

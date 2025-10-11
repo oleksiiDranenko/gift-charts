@@ -3,6 +3,7 @@
 import useVibrate from "@/hooks/useVibrate";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Fragment, ReactNode, useState } from "react";
 
 interface Props {
@@ -21,6 +22,7 @@ export default function AddAssetModal({
 
   const isControlled = controlledIsOpen !== undefined;
   const isOpen = isControlled ? controlledIsOpen : internalOpen;
+  const translate = useTranslations("account");
 
   const handleOpen = () => {
     if (isControlled) onClose?.(); // if controlled, parent should set true
@@ -59,7 +61,9 @@ export default function AddAssetModal({
               leaveTo='translate-y-full opacity-0'>
               <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col'>
                 <div className='w-full h-10 flex justify-between items-center'>
-                  <h2 className='text-xl font-bold ml-3'>Add Gift</h2>
+                  <h2 className='text-xl font-bold ml-3'>
+                    {translate("addGift")}
+                  </h2>
                   <button
                     onClick={() => {
                       vibrate();

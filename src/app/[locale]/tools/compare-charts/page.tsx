@@ -95,7 +95,7 @@ export default function Page() {
   };
 
   return (
-    <div className='w-screen pt-[70px] lg:pt-10 px-3 pb-24 flex justify-center'>
+    <div className='w-screen pt-[0px]  px-3 pb-24 flex justify-center'>
       <div className='w-full lg:w-5/6'>
         {!loading ? (
           <div className='flex flex-col'>

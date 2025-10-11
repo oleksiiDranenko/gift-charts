@@ -356,30 +356,30 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
   };
 
   return (
-    <div className="h-auto w-full pl-3 pr-3">
-      <div className="w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center">
-        <div className="h-full flex items-center">
-          <h1 className="flex flex-col">
-            <span className="text-xl font-bold">{index.shortName}</span>
-            <span className="text-secondaryText text-sm flex justify-start">
+    <div className='h-auto w-full pl-3 pr-3'>
+      <div className='w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center'>
+        <div className='h-full flex items-center'>
+          <h1 className='flex flex-col'>
+            <span className='text-xl font-bold'>{index.shortName}</span>
+            <span className='text-secondaryText text-sm flex justify-start'>
               {index.name}
             </span>
           </h1>
         </div>
-        <div className="w-1/2 h-14 pr-3 flex flex-col items-end justify-center">
-          <div className="flex flex-row items-center">
+        <div className='w-1/2 h-14 pr-3 flex flex-col items-end justify-center'>
+          <div className='flex flex-row items-center'>
             {selectedPrice == "ton" ? (
               <Image
-                alt="ton logo"
-                src="/images/toncoin.webp"
+                alt='ton logo'
+                src='/images/toncoin.webp'
                 width={14}
                 height={14}
-                className="mr-1"
+                className='mr-1'
               />
             ) : (
-              <span className="text-base font-extrabold mr-1">$</span>
+              <span className='text-base font-extrabold mr-1'>$</span>
             )}
-            <span className="text-base font-extrabold">
+            <span className='text-base font-extrabold'>
               {selectedPrice == "ton"
                 ? formatNumberWithDots(Number(list[list.length - 1]?.priceTon))
                 : formatNumberWithDots(Number(list[list.length - 1]?.priceUsd))}
@@ -389,15 +389,14 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
           <span
             className={`text-sm font-bold ${
               percentChange >= 0 ? "text-green-500" : "text-red-500"
-            }`}
-          >
+            }`}>
             {(percentChange > 0 ? "+" : "") + percentChange + "%"}
           </span>
         </div>
       </div>
 
-      <div className="w-full mb-2 mt-5 flex flex-row justify-between">
-        <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
+      <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
+        <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
           <button
             className={`text-xs h-8 px-3 box-border ${
               selectedPrice == "ton"
@@ -407,8 +406,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             onClick={() => {
               setSelectedPrice("ton");
               vibrate();
-            }}
-          >
+            }}>
             Ton
           </button>
           <button
@@ -420,14 +418,19 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             onClick={() => {
               setSelectedPrice("usd");
               vibrate();
-            }}
-          >
+            }}>
             Usd
           </button>
         </div>
       </div>
 
-      <div className={resolvedTheme === 'dark' ? 'relative w-full' : 'w-full relative bg-secondaryTransparent rounded-xl'} ref={chartContainerRef}>
+      <div
+        className={
+          resolvedTheme === "dark"
+            ? "relative w-full"
+            : "w-full relative bg-secondaryTransparent rounded-xl"
+        }
+        ref={chartContainerRef}>
         <Line ref={chartRef} data={data} options={options} />
       </div>
 
@@ -440,7 +443,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
                 </span>
             </div> */}
 
-      <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl">
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType == "all"
@@ -450,8 +453,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
           onClick={() => {
             setListType("all");
             vibrate();
-          }}
-        >
+          }}>
           All
         </button>
         <button
@@ -463,8 +465,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
           onClick={() => {
             setListType("3m");
             vibrate();
-          }}
-        >
+          }}>
           3m
         </button>
         <button
@@ -476,8 +477,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
           onClick={() => {
             setListType("1m");
             vibrate();
-          }}
-        >
+          }}>
           1m
         </button>
         <button
@@ -489,15 +489,14 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
           onClick={() => {
             setListType("1w");
             vibrate();
-          }}
-        >
+          }}>
           1w
         </button>
       </div>
 
-      <div className="w-full p-3 mt-5 bg-secondaryTransparent rounded-xl">
-        <h1 className="font-bold text-lg">{index.name}</h1>
-        <p className="font-light mt-3 text-secondaryText">
+      <div className='w-full p-3 mt-5 bg-secondaryTransparent rounded-xl'>
+        <h1 className='font-bold text-lg'>{index.name}</h1>
+        <p className='font-light mt-3 text-secondaryText'>
           {index.description}
         </p>
       </div>

@@ -8,6 +8,7 @@ import useVibrate from "@/hooks/useVibrate";
 import { BadgeCheck, Cannabis } from "lucide-react";
 import { useTheme } from "next-themes";
 import GiftItemChart from "./GiftItemChart";
+import { useTranslations } from "next-intl";
 
 interface PropsInterface {
   item: GiftInterface;
@@ -37,6 +38,8 @@ export default function GiftItem({
   const { resolvedTheme } = useTheme();
 
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
+
+  const translateNumber = useTranslations("number");
 
   useEffect(() => {
     if (item.tonPrice24hAgo && item.usdPrice24hAgo) {
@@ -88,10 +91,24 @@ export default function GiftItem({
     }
     if (number >= 1000 && number < 1000000) {
       const shortNumber = (number / 1000).toFixed(1);
-      return `${shortNumber}K`;
+      return shortNumber;
     } else if (number >= 1000000) {
       const shortNumber = (number / 1000000).toFixed(1);
-      return `${shortNumber}M`;
+      return shortNumber;
+    }
+    return number.toString();
+  };
+
+  const formatNumberWithWord = (number: number | undefined | null) => {
+    if (number == null) {
+      return "N/A"; // Or another fallback value like "0" or ""
+    }
+    if (number >= 1000 && number < 1000000) {
+      const shortNumber = (number / 1000).toFixed(1);
+      return `${shortNumber}${translateNumber("thousand")}`;
+    } else if (number >= 1000000) {
+      const shortNumber = (number / 1000000).toFixed(1);
+      return `${shortNumber}${translateNumber("million")}`;
     }
     return number.toString();
   };
@@ -122,7 +139,7 @@ export default function GiftItem({
           src={`/gifts/${item.image}.webp`}
           width={50}
           height={50}
-          className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
+          className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-xl ${
             resolvedTheme === "dark" ? "bg-secondary " : "bg-background"
           }`}
         />
@@ -143,7 +160,7 @@ export default function GiftItem({
             {sortBy === "price"
               ? formatNumber(item.upgradedSupply) +
                 " / " +
-                formatNumber(item.supply)
+                formatNumberWithWord(item.supply)
               : sortBy === "marketCap" && displayValue === "price"
               ? formatNumber(
                   currency === "ton"
@@ -153,19 +170,19 @@ export default function GiftItem({
               : sortBy === "marketCap" && displayValue === "marketCap"
               ? formatNumber(item.upgradedSupply) +
                 " / " +
-                formatNumber(item.supply)
+                formatNumberWithWord(item.supply)
               : sortBy === "percentChange"
               ? formatNumber(item.upgradedSupply) +
                 " / " +
-                formatNumber(item.supply)
+                formatNumberWithWord(item.supply)
               : sortBy === "supply"
               ? formatNumber(item.upgradedSupply) +
                 " / " +
-                formatNumber(item.supply)
+                formatNumberWithWord(item.supply)
               : sortBy === "initSupply"
               ? formatNumber(item.upgradedSupply) +
                 " / " +
-                formatNumber(item.initSupply)
+                formatNumberWithWord(item.initSupply)
               : sortBy === "starsPrice"
               ? `${item.starsPrice} ⭐`
               : null}
@@ -195,11 +212,11 @@ export default function GiftItem({
               {currency === "ton" && displayValue === "price"
                 ? item.priceTon
                 : currency === "ton" && displayValue === "marketCap"
-                ? formatNumber(item.priceTon * item.upgradedSupply)
+                ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
                 : currency === "usd" && displayValue === "price"
-                ? item.priceUsd
+                ? item.priceUsd.toFixed(2)
                 : currency === "usd" && displayValue === "marketCap"
-                ? formatNumber(item.priceUsd * item.upgradedSupply)
+                ? formatNumberWithWord(item.priceUsd * item.upgradedSupply)
                 : null}
             </span>
           </div>

@@ -15,6 +15,7 @@ import EditWatchlistItem from "./EditWatchlistItem";
 import BackButton from "@/utils/ui/backButton";
 import { ListPlus } from "lucide-react";
 import AddWatchlistItemModal from "./AddWatchlistItemModal";
+import { useTranslations } from "next-intl";
 
 export default function EditWatchlist() {
   const vibrate = useVibrate();
@@ -34,6 +35,9 @@ export default function EditWatchlist() {
   const [error, setError] = useState<string | null>(null);
 
   const hasInitialized = useRef(false);
+
+  const translate = useTranslations("account");
+  const translateGeneral = useTranslations("general");
 
   useEffect(() => {
     if (!user.telegramId) {
@@ -189,16 +193,18 @@ export default function EditWatchlist() {
                 saveChanges();
                 vibrate();
               }}>
-              Save
+              {translateGeneral("save")}
             </button>
           </div>
 
           <div className='w-full mt-5 pr-2 gap-x-3'>
-            <h2 className='w-full text-xl font-bold mb-3'>Watchlist</h2>
+            <h2 className='w-full text-xl font-bold mb-3'>
+              {translate("watchlist")}
+            </h2>
             {editedUser ? (
               editedUser.savedList.length === 0 ? (
                 <div className='pt-3 pb-5 text-secondaryText'>
-                  Your Watchlist is Empty
+                  {translate("emptyWatchlist")}
                 </div>
               ) : (
                 editedUser.savedList.map((gift) => (
@@ -217,7 +223,7 @@ export default function EditWatchlist() {
             onClick={() => setIsModalOpen(true)}
             className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-xl'>
             <ListPlus size={20} />
-            Add Gift
+            {translate("addGift")}
           </button>
 
           <AddWatchlistItemModal
@@ -235,7 +241,9 @@ export default function EditWatchlist() {
                   />
                 ))
               ) : (
-                <p className='text-center text-primary'>No gifts available</p>
+                <p className='text-center text-primary'>
+                  {translate("noGifts")}
+                </p>
               )}
             </div>
           </AddWatchlistItemModal>

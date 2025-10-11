@@ -16,6 +16,7 @@ import useVibrate from "@/hooks/useVibrate";
 import BackButton from "@/utils/ui/backButton";
 import { ListPlus } from "lucide-react";
 import AddAssetModal from "./AddAssetModal";
+import { useTranslations } from "next-intl";
 
 export default function EditAssets() {
   const vibrate = useVibrate();
@@ -36,6 +37,9 @@ export default function EditAssets() {
 
   const [tonInput, setTonInput] = useState<string>("");
   const [usdInput, setUsdInput] = useState<string>("");
+
+  const translate = useTranslations("general");
+  const translate2 = useTranslations("account");
 
   useEffect(() => {
     if (!user.telegramId) {
@@ -237,85 +241,92 @@ export default function EditAssets() {
   };
 
   return (
-    <div className="w-full flex flex-col px-3">
+    <div className='w-full flex flex-col px-3'>
       {loading ? (
-        <div className="w-full flex justify-center">
+        <div className='w-full flex justify-center'>
           <ReactLoading
-            type="spin"
-            color="#0098EA"
+            type='spin'
+            color='#0098EA'
             height={30}
             width={30}
-            className="mt-5"
+            className='mt-5'
           />
         </div>
       ) : error ? (
-        <div className="w-full text-center text-red-500">{error}</div>
+        <div className='w-full text-center text-red-500'>{error}</div>
       ) : (
         <>
-          <div className="w-full flex flex-row justify-between gap-x-3">
+          <div className='w-full flex flex-row justify-between gap-x-3'>
             <BackButton />
 
             <button
-              className="w-1/2 h-10 bg-primary text-white rounded-xl"
+              className='w-1/2 h-10 bg-primary text-white rounded-xl'
               onClick={() => {
                 saveChanges();
                 vibrate();
-              }}
-            >
-              Save
+              }}>
+              {translate("save")}
             </button>
           </div>
 
-          <div className="w-full mt-5 pr-2">
-            <h2 className="w-full text-xl font-bold mb-3">Cash</h2>
+          <div className='w-full mt-5 pr-2'>
+            <h2 className='w-full text-xl font-bold mb-3'>
+              {translate2("cash")}
+            </h2>
 
-            <div className="w-full p-3 mb-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-xl">
-              <div className="flex flex-row items-center">
+            <div className='w-full p-3 mb-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-xl'>
+              <div className='flex flex-row items-center'>
                 <Image
-                  alt="Toncoin image"
+                  alt='Toncoin image'
                   src={`/images/toncoin.webp`}
                   width={50}
                   height={50}
                   className={`bg-secondary p-3 box-border mr-3 rounded-xl`}
                 />
-                <div className="flex flex-col">
-                  <span className="text-base font-bold">Toncoin</span>
+                <div className='flex flex-col'>
+                  <span className='text-base font-bold'>
+                    {translate("toncoin")}
+                  </span>
                 </div>
               </div>
 
               <input
-                type="number"
-                step="any"
+                type='number'
+                step='any'
                 value={tonInput}
                 onChange={handleTon}
-                className="w-32 h-10 text-center bg-secondaryTransparent border border-secondary  rounded-xl focus:outline-none focus:bg-secondary"
-                placeholder="0"
+                className='w-32 h-10 text-center bg-secondaryTransparent border border-secondary  rounded-xl focus:outline-none focus:bg-secondary'
+                placeholder='0'
               />
             </div>
 
-            <div className="w-full p-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-xl">
-              <div className="flex flex-row items-center">
-                <span className="bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-xl">
+            <div className='w-full p-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-xl'>
+              <div className='flex flex-row items-center'>
+                <span className='bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-xl'>
                   $
                 </span>
-                <div className="flex flex-col">
-                  <span className="text-base font-bold">US Dollar</span>
+                <div className='flex flex-col'>
+                  <span className='text-base font-bold'>
+                    {translate("usDollar")}
+                  </span>
                 </div>
               </div>
 
               <input
-                type="number"
-                step="any"
+                type='number'
+                step='any'
                 value={usdInput}
                 onChange={handleUsd}
-                className="w-32 h-10 text-center bg-secondaryTransparent border border-secondary rounded-xl focus:outline-none focus:bg-secondary"
-                placeholder="0"
+                className='w-32 h-10 text-center bg-secondaryTransparent border border-secondary rounded-xl focus:outline-none focus:bg-secondary'
+                placeholder='0'
               />
             </div>
           </div>
 
-          <div className="w-full mt-5 pr-2">
-            <h2 className="w-full text-xl font-bold mb-3">Assets</h2>
+          <div className='w-full mt-5 pr-2'>
+            <h2 className='w-full text-xl font-bold mb-3'>
+              {translate2("assets")}
+            </h2>
             {editedUser?.assets.map((asset) => (
               <EditAssetItem
                 giftId={asset.giftId}
@@ -332,17 +343,15 @@ export default function EditAssets() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-xl"
-          >
+            className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-xl'>
             <ListPlus size={20} />
-            Add Gift
+            {translate2("addGift")}
           </button>
 
           <AddAssetModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          >
-            <div className="w-full p-3">
+            onClose={() => setIsModalOpen(false)}>
+            <div className='w-full p-3'>
               {addGiftList.length > 0 ? (
                 addGiftList.map((gift) => (
                   <AddAssetItem
@@ -354,7 +363,9 @@ export default function EditAssets() {
                   />
                 ))
               ) : (
-                <p className="text-center text-gray-400">No gifts available</p>
+                <p className='text-center text-gray-400'>
+                  {translate2("noGifts")}
+                </p>
               )}
             </div>
           </AddAssetModal>

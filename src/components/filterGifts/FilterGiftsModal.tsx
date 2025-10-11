@@ -10,6 +10,7 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { setFilters } from "@/redux/slices/filterListSlice";
 import FilterGiftItem from "./FilterGiftItem";
+import { useTranslations } from "next-intl";
 
 interface Props {
   trigger: ReactNode;
@@ -23,6 +24,7 @@ export default function FilterGiftsModal({ trigger }: Props) {
   const giftsList = useAppSelector((state) => state.giftsList);
   const filters = useAppSelector((state) => state.filters);
   const list = useAppSelector((state) => state.filters.chosenGifts);
+  const translate = useTranslations("general");
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -91,7 +93,7 @@ export default function FilterGiftsModal({ trigger }: Props) {
                       onClick={() =>
                         dispatch(setFilters({ ...filters, chosenGifts: [] }))
                       }>
-                      <BrushCleaning size={14} /> Clear
+                      <BrushCleaning size={14} /> {translate("clear")}
                     </button>
                   </div>
                   <button

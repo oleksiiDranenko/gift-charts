@@ -1,6 +1,27 @@
 {
-  "add": {
-    "url": "/images/mutantgifts-en.webp"
+  "general": {
+    "save": "Save",
+    "clear": "Clear",
+    "close": "Close",
+    "toncoin": "Toncoin",
+    "usDollar": "US Dollar",
+    "buy": "Buy",
+    "sell": "Sell",
+    "show": "Show",
+    "hide": "Hide",
+    "tryItNow": "Try it now"
+  },
+  "account": {
+    "openInTelegram": "Please open app in Telegram",
+    "assets": "Assets",
+    "noAssets": "No assets yet",
+    "noGifts": "No gifts available",
+    "cash": "Cash",
+    "addGift": "Add Gift",
+    "avgPrice": "Avg price",
+    "amount": "Amount",
+    "watchlist": "Watchlist",
+    "emptyWatchlist": "Your Watchlist is Empty"
   },
   "filters": {
     "hideFilters": "Hide Filters",
@@ -19,7 +40,12 @@
     "clearFilters": "Clear Filters",
     "name": "Name",
     "24hChange": "24h change",
-    "top": "Top"
+    "top": "Top",
+    "ton": "Ton",
+    "usd": "Usd",
+    "onSale": "On sale",
+    "volume": "Volume",
+    "salesCount": "Sales count"
   },
 
   "timegap": {
@@ -35,12 +61,6 @@
     "million": "M"
   },
 
-  "buttons": {
-    "show": "Show",
-    "hide": "Hide",
-    "tryItNow": "Try it now"
-  },
-
   "navbar": {
     "home": "Home",
     "tools": "Tools",
@@ -49,20 +69,13 @@
   },
 
   "mainPage": {
-    "addPoster": {
-      "title": "",
-      "description": ""
-    },
-    "searchBar": {
-      "placeholder": "Search gifts..."
-    },
-    "filters": {
-      "customise": "Customise",
-      "gainers": "Gainers",
-      "losers": "Losers",
-      "topPrice": "Top Price",
-      "saved": "Saved"
-    }
+    "searchPlaceholder": "Search gifts...",
+    "customise": "Customise",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "floor": "floor",
+    "saved": "Saved",
+    "emptyWatchlist": "Your Watchlist is Empty"
   },
 
   "giftInfo": {
@@ -78,7 +91,8 @@
     "upgradedSupply": "Upgraded Supply",
     "percentUpdgraded": "Percent Upgraded",
     "amountBurnt": "Amount Burnt",
-    "percentBurnt": "Percent Burnt"
+    "percentBurnt": "Percent Burnt",
+    "viewModels": "View Models"
   },
 
   "tools": {

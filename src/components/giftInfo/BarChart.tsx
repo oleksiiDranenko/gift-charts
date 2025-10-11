@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -42,6 +43,8 @@ export default function BarChart({
     "24h" | "3d" | "1w" | "1m" | "3m" | "all"
   >("24h");
   const { resolvedTheme } = useTheme();
+
+  const translateTime = useTranslations("timegap");
 
   useEffect(() => {
     const chartContainer = chartContainerRef.current;
@@ -410,10 +413,9 @@ export default function BarChart({
           ? "relative"
           : "relative bg-secondaryTransparent rounded-xl"
       }
-      ref={chartContainerRef}
-    >
+      ref={chartContainerRef}>
       <Bar ref={chartRef as any} data={data} options={options} />
-      <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons">
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
@@ -422,9 +424,8 @@ export default function BarChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("all");
-          }}
-        >
-          All
+          }}>
+          {translateTime("all")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -434,9 +435,8 @@ export default function BarChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("3m");
-          }}
-        >
-          3m
+          }}>
+          3{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -446,9 +446,8 @@ export default function BarChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("1m");
-          }}
-        >
-          1m
+          }}>
+          1{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -458,9 +457,8 @@ export default function BarChart({
           }`}
           onClick={() => {
             setListType("1w");
-          }}
-        >
-          1w
+          }}>
+          1{translateTime("week")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -470,9 +468,8 @@ export default function BarChart({
           }`}
           onClick={() => {
             setListType("3d");
-          }}
-        >
-          3d
+          }}>
+          3{translateTime("day")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -482,9 +479,8 @@ export default function BarChart({
           }`}
           onClick={() => {
             setListType("24h");
-          }}
-        >
-          24h
+          }}>
+          24{translateTime("hour")}
         </button>
       </div>
     </div>

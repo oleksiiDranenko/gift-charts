@@ -13,6 +13,7 @@ import "chartjs-adapter-date-fns";
 import { useTheme } from "next-themes";
 import useVibrate from "@/hooks/useVibrate";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
+import { useTranslations } from "next-intl";
 
 Chart.register(...registerables, CandlestickController, CandlestickElement);
 
@@ -42,10 +43,14 @@ export default function CandleChart({
   const chartRef = useRef<
     Chart<"candlestick", CandlestickData[], unknown> | null | undefined
   >(null);
-  const [listType, setListType] = useState<"2w" | "1m" | "2m" | "3m" | "all">("2w");
+  const [listType, setListType] = useState<"2w" | "1m" | "2m" | "3m" | "all">(
+    "2w"
+  );
   const [list, setList] = useState<GiftLifeDataInterface[]>(data);
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
+
+  const translateTime = useTranslations("timegap");
 
   // Update data based on listType and append today's data if applicable
   useEffect(() => {
@@ -61,9 +66,7 @@ export default function CandleChart({
 
       if (nextDayStr === todayStr) {
         // Filter weekData for today's entries
-        const todayWeekData = weekData.filter(
-          (item) => item.date === todayStr
-        );
+        const todayWeekData = weekData.filter((item) => item.date === todayStr);
 
         if (todayWeekData.length > 0) {
           // Sort by time to ensure correct order for open/close
@@ -131,7 +134,11 @@ export default function CandleChart({
     let calculatedPercentChange = 0;
     let currentValue: number | null = null;
 
-    if (typeof firstOpen === "number" && typeof lastClose === "number" && firstOpen !== 0) {
+    if (
+      typeof firstOpen === "number" &&
+      typeof lastClose === "number" &&
+      firstOpen !== 0
+    ) {
       calculatedPercentChange = parseFloat(
         (((lastClose - firstOpen) / firstOpen) * 100).toFixed(2)
       );
@@ -275,15 +282,17 @@ export default function CandleChart({
   };
 
   return (
-    <div className="h-auto w-full">
+    <div className='h-auto w-full'>
       <ReactChart
         ref={chartRef}
-        type="candlestick"
+        type='candlestick'
         data={chartData}
         options={options}
-        className={resolvedTheme === "dark" ? "" : "bg-secondaryTransparent rounded-lg"}
+        className={
+          resolvedTheme === "dark" ? "" : "bg-secondaryTransparent rounded-lg"
+        }
       />
-      <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl">
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
@@ -293,9 +302,8 @@ export default function CandleChart({
           onClick={() => {
             if (data.length > 0) setListType("all");
             vibrate();
-          }}
-        >
-          All
+          }}>
+          {translateTime("all")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -306,9 +314,8 @@ export default function CandleChart({
           onClick={() => {
             if (data.length > 0) setListType("3m");
             vibrate();
-          }}
-        >
-          3m
+          }}>
+          3{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -319,9 +326,8 @@ export default function CandleChart({
           onClick={() => {
             setListType("2m");
             vibrate();
-          }}
-        >
-          2m
+          }}>
+          2{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -332,9 +338,8 @@ export default function CandleChart({
           onClick={() => {
             setListType("1m");
             vibrate();
-          }}
-        >
-          1m
+          }}>
+          1{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -345,9 +350,8 @@ export default function CandleChart({
           onClick={() => {
             setListType("2w");
             vibrate();
-          }}
-        >
-          2w
+          }}>
+          2{translateTime("week")}
         </button>
       </div>
     </div>

@@ -14,6 +14,27 @@ import { routing } from "@/i18n/routing";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import PageTransition from "@/components/PageTransition";
 import ModalWrapper from "@/components/ModalWrapper";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Gift Charts",
+    template: "% | Gift Charts",
+  },
+  description: "Telegram NFT gifts analytics",
+  openGraph: {
+    title: "My Awesome App",
+    description: "Discover and share amazing content.",
+    url: "https://giftcharts.com",
+    siteName: "Gift Charts",
+    images: [],
+    locale: "en_US",
+    type: "website",
+  },
+  icons: {
+    icon: "/images/logo.webp",
+  },
+};
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 

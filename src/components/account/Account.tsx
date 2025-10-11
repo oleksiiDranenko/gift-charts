@@ -8,11 +8,12 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import ReactLoading from "react-loading";
-import {Link} from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { countPercentChange } from "@/numberFormat/functions";
 import { Copy, Gift } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -50,6 +51,8 @@ export default function Account() {
   const [portfolioValue24hAgo, setPortfolioValue24hAgo] = useState<number>(0);
   const [portfolioInitValue, setPortfolioInitValue] = useState<number>(0);
   const [referralLink, setReferralLink] = useState("");
+
+  const translate = useTranslations("account");
 
   useEffect(() => {
     if (
@@ -225,24 +228,24 @@ export default function Account() {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center px-3 relative">
+    <div className='w-full flex flex-col justify-center px-3 relative'>
       {loading ? (
-        <div className="w-full flex justify-center">
+        <div className='w-full flex justify-center'>
           <ReactLoading
-            type="spin"
-            color="#0098EA"
+            type='spin'
+            color='#0098EA'
             height={30}
             width={30}
-            className="mt-5"
+            className='mt-5'
           />
         </div>
       ) : user.username === "_guest" ? (
-        <div className="w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl">
-          Please open this app in Telegram
+        <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl'>
+          {translate("openInTelegram")}
         </div>
       ) : (
         <>
-          <div className="w-full h-28 flex flex-row justify-center items-center relative">
+          <div className='w-full h-28 flex flex-row justify-center items-center relative'>
             {/* <button
               className="p-[6px] flex flex-row items-center gap-x-1 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-xl"
               onClick={handleClick}
@@ -251,20 +254,20 @@ export default function Account() {
               <span>Referral</span>
             </button> */}
 
-            <div className="flex flex-col items-center">
-              <div className="flex flex-row items-center">
+            <div className='flex flex-col items-center'>
+              <div className='flex flex-row items-center'>
                 {currency === "ton" ? (
                   <Image
-                    alt="ton logo"
-                    src="/images/toncoin.webp"
+                    alt='ton logo'
+                    src='/images/toncoin.webp'
                     width={30}
                     height={30}
-                    className="mr-2"
+                    className='mr-2'
                   />
                 ) : (
-                  <span className="text-4xl mr-1">$</span>
+                  <span className='text-4xl mr-1'>$</span>
                 )}
-                <h1 className="text-4xl font-bold">{portfolioValue}</h1>
+                <h1 className='text-4xl font-bold'>{portfolioValue}</h1>
               </div>
               <span
                 className={`mt-1 font-bold ${
@@ -284,8 +287,7 @@ export default function Account() {
                       0
                         ? "text-green-500"
                         : "text-red-500")
-                }`}
-              >
+                }`}>
                 {changeType === "24h%"
                   ? `${
                       countPercentChange(
@@ -318,8 +320,8 @@ export default function Account() {
             </div>
           </div>
 
-          <div className="flex flex-row gap-3 mt-3 justify-between">
-            <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
+          <div className='flex flex-row gap-3 mt-3 justify-between'>
+            <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   currency === "ton"
@@ -329,8 +331,7 @@ export default function Account() {
                 onClick={() => {
                   setCurrency("ton");
                   vibrate();
-                }}
-              >
+                }}>
                 Ton
               </button>
               <button
@@ -342,13 +343,12 @@ export default function Account() {
                 onClick={() => {
                   setCurrency("usd");
                   vibrate();
-                }}
-              >
+                }}>
                 Usd
               </button>
             </div>
 
-            <div className="flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1">
+            <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   changeType === "24h%" &&
@@ -357,8 +357,7 @@ export default function Account() {
                 onClick={() => {
                   setChangeType("24h%");
                   vibrate();
-                }}
-              >
+                }}>
                 24h %
               </button>
               <button
@@ -369,8 +368,7 @@ export default function Account() {
                 onClick={() => {
                   setChangeType("PNL");
                   vibrate();
-                }}
-              >
+                }}>
                 PNL
               </button>
               <button
@@ -381,31 +379,30 @@ export default function Account() {
                 onClick={() => {
                   setChangeType("PNL%");
                   vibrate();
-                }}
-              >
+                }}>
                 PNL %
               </button>
             </div>
           </div>
 
-          <div className="w-full h-auto">
-            <div className="mt-5 rounded-xl p-3 bg-secondaryTransparent">
-              <div className="w-full flex justify-between items-center text-xl font-bold mb-3">
-                <h2 className="flex flex-row items-center gap-x-1">
-                  <Gift size={20}/>
-                  Assets:
+          <div className='w-full h-auto'>
+            <div className='mt-5 rounded-xl p-3 bg-secondaryTransparent'>
+              <div className='w-full flex justify-between items-center text-xl font-bold mb-3'>
+                <h2 className='flex flex-row items-center gap-x-1'>
+                  <Gift size={20} />
+                  {translate("assets")}:
                 </h2>
-                <div className="flex flex-row items-center">
+                <div className='flex flex-row items-center'>
                   {currency === "ton" ? (
                     <Image
-                      alt="ton logo"
-                      src="/images/toncoin.webp"
+                      alt='ton logo'
+                      src='/images/toncoin.webp'
                       width={16}
                       height={16}
-                      className="mr-1"
+                      className='mr-1'
                     />
                   ) : (
-                    <span className="mr-1">$</span>
+                    <span className='mr-1'>$</span>
                   )}
                   <span>
                     {currency === "ton"
@@ -444,25 +441,25 @@ export default function Account() {
                   />
                 ))
               ) : (
-                <h2 className="text-secondary mt-3">No assets yet</h2>
+                <h2 className='text-secondary mt-3'>{translate("noAssets")}</h2>
               )}
             </div>
 
             {user?.ton !== 0 || user.usd !== 0 ? (
-              <div className="mt-5">
-                <div className="w-full flex justify-between items-center text-lg font-bold mb-3 pr-2">
-                  <h2>Cash</h2>
-                  <div className="flex flex-row items-center">
+              <div className='mt-5'>
+                <div className='w-full flex justify-between items-center text-lg font-bold mb-3 pr-2'>
+                  <h2>{translate("cash")}</h2>
+                  <div className='flex flex-row items-center'>
                     {currency === "ton" ? (
                       <Image
-                        alt="ton logo"
-                        src="/images/toncoin.webp"
+                        alt='ton logo'
+                        src='/images/toncoin.webp'
                         width={16}
                         height={16}
-                        className="mr-1"
+                        className='mr-1'
                       />
                     ) : (
-                      <span className="mr-1">$</span>
+                      <span className='mr-1'>$</span>
                     )}
                     <span>
                       {currency === "ton"
@@ -475,14 +472,14 @@ export default function Account() {
                 <div>
                   {user.ton !== 0 ? (
                     <Cash
-                      name="ton"
+                      name='ton'
                       amount={user.ton}
                       percentage={tonPercentage}
                     />
                   ) : null}
                   {user.usd !== 0 ? (
                     <Cash
-                      name="usd"
+                      name='usd'
                       amount={user.usd}
                       percentage={usdPercentage}
                     />

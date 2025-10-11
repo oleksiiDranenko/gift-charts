@@ -27,6 +27,7 @@ import ModelsModal from "./ModelsModal";
 import SettingsModal from "./PriceDropdown";
 import LineChart from "./LineChart";
 import PriceDropdown from "./PriceDropdown";
+import { useTranslations } from "next-intl";
 
 interface PropsInterface {
   gift: GiftInterface | null;
@@ -49,6 +50,9 @@ export default function GiftChart({
   const [percentChange, setPercentChange] = useState<number>(0);
   const [currentValue, setCurrentValue] = useState<number | null>(null);
   const { resolvedTheme } = useTheme();
+
+  const translateGeneral = useTranslations("general");
+  const translateInfo = useTranslations("giftInfo");
 
   const handleSelectedPrice = (
     value: "ton" | "usd" | "onSale" | "volume" | "salesCount"
@@ -235,7 +239,7 @@ export default function GiftChart({
             <button
               className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-xl text-white'
               onClick={() => vibrate()}>
-              Sell
+              {translateGeneral("sell")}
               <SquareArrowOutUpRight size={16} />
             </button>
           }
@@ -245,7 +249,7 @@ export default function GiftChart({
             <button
               className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-xl text-white'
               onClick={() => vibrate()}>
-              Buy
+              {translateGeneral("buy")}
               <SquareArrowOutUpRight size={16} />
             </button>
           }
@@ -264,7 +268,7 @@ export default function GiftChart({
                 }`}
                 onClick={() => vibrate()}>
                 <Component size={16} />
-                View Models
+                {translateInfo("viewModels")}
               </button>
             }
             giftName={gift?.name ? gift.name : ""}
@@ -276,7 +280,9 @@ export default function GiftChart({
       <div className='mt-5'>
         <div className='w-full flex flex-row justify-between items-center'>
           <div className='flex flex-row items-center'>
-            <h2 className='text-lg font-bold'>Yearly Performance</h2>
+            <h2 className='text-lg font-bold'>
+              {translateInfo("yearlyPerformance")}
+            </h2>
           </div>
           <div>
             <button
@@ -284,12 +290,12 @@ export default function GiftChart({
               className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondary rounded-xl'>
               {showCalendar ? (
                 <>
-                  Hide
+                  {translateGeneral("hide")}
                   <ChevronUp size={18} />
                 </>
               ) : (
                 <>
-                  Show
+                  {translateGeneral("show")}
                   <ChevronDown size={18} />
                 </>
               )}

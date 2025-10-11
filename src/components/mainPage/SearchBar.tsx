@@ -8,12 +8,14 @@ import { useAppSelector } from "@/redux/hooks";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function GiftSearchBar() {
   const giftsList = useAppSelector((state) => state.giftsList);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<GiftInterface | null>(null);
   const router = useRouter();
+  const translateMain = useTranslations("mainPage");
 
   const fuse = useMemo(
     () =>
@@ -43,7 +45,7 @@ export default function GiftSearchBar() {
             className='w-full h-12 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-xl focus:outline-none placeholder:text-sm placeholder:text-secondaryText'
             onChange={(e) => setQuery(e.target.value)}
             displayValue={(gift: GiftInterface) => gift?.name || ""}
-            placeholder='Search gifts...'
+            placeholder={translateMain("searchPlaceholder")}
           />
           <Search
             className='absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none'

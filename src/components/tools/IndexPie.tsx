@@ -1,15 +1,10 @@
-'use client'
+"use client";
 
-import { useAppSelector } from '@/redux/hooks';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend
-} from 'chart.js';
-import { ChartOptions } from 'chart.js';
-import { useEffect } from 'react';
-import { Pie } from 'react-chartjs-2';
+import { useAppSelector } from "@/redux/hooks";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { ChartOptions } from "chart.js";
+import { useEffect } from "react";
+import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -24,7 +19,9 @@ export default function IndexPie() {
   };
 
   const labels = giftsList.map((gift) => gift.name || gift._id);
-  const values = giftsList.map((gift) => (gift.priceTon || 0) * (gift.supply || 0));
+  const values = giftsList.map(
+    (gift) => (gift.priceTon || 0) * (gift.supply || 0)
+  );
   const backgroundColors = labels.map(() => generateRandomColor());
 
   const data = {
@@ -33,31 +30,30 @@ export default function IndexPie() {
       {
         data: values,
         backgroundColor: backgroundColors,
-        borderColor: '#fff',
+        borderColor: "#fff",
         borderWidth: 1,
       },
     ],
   };
 
-  const options: ChartOptions<'pie'> = {
+  const options: ChartOptions<"pie"> = {
     responsive: true,
-    maintainAspectRatio: false, 
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: "bottom",
         labels: {
-          color: '#fff',
+          color: "#fff",
         },
       },
     },
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-slate-800 bg-opacity-50 rounded-xl">
-      <div className="w-full h-full p-6">
+    <div className='w-full h-screen flex items-center justify-center bg-slate-800 bg-opacity-50 rounded-xl'>
+      <div className='w-full h-full p-6'>
         <Pie data={data} options={options} />
       </div>
     </div>
   );
-  
 }

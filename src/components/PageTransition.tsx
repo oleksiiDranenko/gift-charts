@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Transition } from "@headlessui/react";
+import { useAppSelector } from "@/redux/hooks";
 
 interface Props {
   children: React.ReactNode;
@@ -9,9 +10,13 @@ interface Props {
 
 export default function PageTransition({ children }: Props) {
   const pathname = usePathname();
+  const user = useAppSelector((state) => state.user);
 
   return (
-    <div className='relative w-full flex flex-row justify-center'>
+    <div
+      className={`relative w-full flex flex-row justify-center pt-5 ${
+        user.token && "pt-[70px]"
+      }`}>
       <Transition
         key={pathname}
         appear

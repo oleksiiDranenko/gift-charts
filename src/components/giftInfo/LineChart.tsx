@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   LineElement,
@@ -54,6 +55,8 @@ export default function LineChart({
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
   const { resolvedTheme } = useTheme();
+
+  const translateTime = useTranslations("timegap");
 
   useEffect(() => {
     const chartContainer = chartContainerRef.current;
@@ -217,7 +220,10 @@ export default function LineChart({
         calculatedPercentChange = 0;
         setLow(prices.length > 0 ? Math.min(...prices) : undefined);
         setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
-        currentValue = prices.length > 0 && Number.isFinite(prices[prices.length - 1]) ? prices[prices.length - 1] : null;
+        currentValue =
+          prices.length > 0 && Number.isFinite(prices[prices.length - 1])
+            ? prices[prices.length - 1]
+            : null;
       }
     } else if (selectedPrice === "usd") {
       const prices = list
@@ -236,11 +242,16 @@ export default function LineChart({
         calculatedPercentChange = 0;
         setLow(prices.length > 0 ? Math.min(...prices) : undefined);
         setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
-        currentValue = prices.length > 0 && Number.isFinite(prices[prices.length - 1]) ? prices[prices.length - 1] : null;
+        currentValue =
+          prices.length > 0 && Number.isFinite(prices[prices.length - 1])
+            ? prices[prices.length - 1]
+            : null;
       }
     } else if (selectedPrice === "onSale") {
       const amounts = list
-        .map((item) => (typeof item.amountOnSale === "number" ? item.amountOnSale : null))
+        .map((item) =>
+          typeof item.amountOnSale === "number" ? item.amountOnSale : null
+        )
         .filter((v): v is number => v !== null);
       if (amounts.length > 1 && amounts[0] !== 0) {
         const firstData = amounts[0];
@@ -255,7 +266,10 @@ export default function LineChart({
         calculatedPercentChange = 0;
         setLow(amounts.length > 0 ? Math.min(...amounts) : undefined);
         setHigh(amounts.length > 0 ? Math.max(...amounts) : undefined);
-        currentValue = amounts.length > 0 && Number.isFinite(amounts[amounts.length - 1]) ? amounts[amounts.length - 1] : null;
+        currentValue =
+          amounts.length > 0 && Number.isFinite(amounts[amounts.length - 1])
+            ? amounts[amounts.length - 1]
+            : null;
       }
     } else if (selectedPrice === "volume") {
       const volumes = list
@@ -274,11 +288,16 @@ export default function LineChart({
         calculatedPercentChange = 0;
         setLow(volumes.length > 0 ? Math.min(...volumes) : undefined);
         setHigh(volumes.length > 0 ? Math.max(...volumes) : undefined);
-        currentValue = volumes.length > 0 && Number.isFinite(volumes[volumes.length - 1]) ? volumes[volumes.length - 1] : null;
+        currentValue =
+          volumes.length > 0 && Number.isFinite(volumes[volumes.length - 1])
+            ? volumes[volumes.length - 1]
+            : null;
       }
     } else if (selectedPrice === "salesCount") {
       const counts = list
-        .map((item) => (typeof item.salesCount === "number" ? item.salesCount : null))
+        .map((item) =>
+          typeof item.salesCount === "number" ? item.salesCount : null
+        )
         .filter((v): v is number => v !== null);
       if (counts.length > 1 && counts[0] !== 0) {
         const firstData = counts[0];
@@ -293,12 +312,17 @@ export default function LineChart({
         calculatedPercentChange = 0;
         setLow(counts.length > 0 ? Math.min(...counts) : undefined);
         setHigh(counts.length > 0 ? Math.max(...counts) : undefined);
-        currentValue = counts.length > 0 && Number.isFinite(counts[counts.length - 1]) ? counts[counts.length - 1] : null;
+        currentValue =
+          counts.length > 0 && Number.isFinite(counts[counts.length - 1])
+            ? counts[counts.length - 1]
+            : null;
       }
     }
 
     if (typeof setPercentChange === "function") {
-      setPercentChange(Number.isFinite(calculatedPercentChange) ? calculatedPercentChange : 0);
+      setPercentChange(
+        Number.isFinite(calculatedPercentChange) ? calculatedPercentChange : 0
+      );
     } else {
       console.warn("setPercentChange is not a function");
     }
@@ -327,7 +351,14 @@ export default function LineChart({
     }),
     datasets: [
       {
-        label: selectedPrice === "onSale" ? "Amount On Sale" : selectedPrice === "volume" ? "Volume" : selectedPrice === "salesCount" ? "Sales Count" : "Price",
+        label:
+          selectedPrice === "onSale"
+            ? "Amount On Sale"
+            : selectedPrice === "volume"
+            ? "Volume"
+            : selectedPrice === "salesCount"
+            ? "Sales Count"
+            : "Price",
         data: values,
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
         borderWidth: 1,
@@ -477,10 +508,9 @@ export default function LineChart({
           ? "relative"
           : "relative bg-secondaryTransparent rounded-xl"
       }
-      ref={chartContainerRef}
-    >
+      ref={chartContainerRef}>
       <Line ref={chartRef as any} data={data} options={options} />
-      <div className="w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons">
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
@@ -489,9 +519,8 @@ export default function LineChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("all");
-          }}
-        >
-          All
+          }}>
+          {translateTime("all")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -501,9 +530,8 @@ export default function LineChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("3m");
-          }}
-        >
-          3m
+          }}>
+          3{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -513,9 +541,8 @@ export default function LineChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("1m");
-          }}
-        >
-          1m
+          }}>
+          1{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -525,9 +552,8 @@ export default function LineChart({
           }`}
           onClick={() => {
             setListType("1w");
-          }}
-        >
-          1w
+          }}>
+          1{translateTime("week")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -537,9 +563,8 @@ export default function LineChart({
           }`}
           onClick={() => {
             setListType("3d");
-          }}
-        >
-          3d
+          }}>
+          3{translateTime("day")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
@@ -549,9 +574,8 @@ export default function LineChart({
           }`}
           onClick={() => {
             setListType("24h");
-          }}
-        >
-          24h
+          }}>
+          24{translateTime("hour")}
         </button>
       </div>
     </div>

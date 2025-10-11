@@ -6,6 +6,7 @@ import { Fragment, ReactNode, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import useVibrate from "@/hooks/useVibrate";
+import { useTranslations } from "next-intl";
 
 interface MarketsModalProps {
   trigger: ReactNode; // Button or any clickable element
@@ -14,6 +15,7 @@ interface MarketsModalProps {
 export default function MarketsModal({ trigger }: MarketsModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const vibrate = useVibrate();
+  const translateGeneral = useTranslations("general");
 
   return (
     <>
@@ -148,7 +150,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                       setIsOpen(false);
                     }}
                     className='w-full px-4 py-2 bg-primary rounded-xl'>
-                    Close
+                    {translateGeneral("close")}
                   </button>
                 </div>
               </Dialog.Panel>

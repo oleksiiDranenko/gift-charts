@@ -157,7 +157,7 @@ export default function GiftBlockItem({
                 : currency === "ton" && displayValue === "marketCap"
                 ? formatNumber(item.priceTon * item.upgradedSupply)
                 : currency === "usd" && displayValue === "price"
-                ? item.priceUsd
+                ? item.priceUsd.toFixed(2)
                 : currency === "usd" && displayValue === "marketCap"
                 ? formatNumber(item.priceUsd * item.upgradedSupply)
                 : null}

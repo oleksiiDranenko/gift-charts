@@ -76,7 +76,7 @@ export default function DefaultUpdate({
     <>
       {isLoading || isFetching ? (
         <div className='fixed inset-0 z-50 flex flex-col justify-center items-center bg-background'>
-          <div className='w-2/3 lg:w-5/6 max-w-96 bg-secondaryTransparent p-5 rounded-2xl'>
+          <div className='w-2/3 lg:w-5/6 max-w-96 bg-secondaryTransparent p-5 rounded-xl'>
             <div className='w-full flex flex-col items-center justify-center mb-7'>
               <div className='p-5 bg-background rounded-full'>
                 <Image

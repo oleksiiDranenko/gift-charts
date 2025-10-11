@@ -23,7 +23,7 @@ export default function Page() {
   const vibrate = useVibrate();
 
   return (
-    <div className='w-full lg:w-5/6 pt-[70px] lg:pt-10 pb-24 px-3'>
+    <div className='w-full lg:w-5/6 pt-[0px]  pb-24 px-3'>
       <div className='w-full p-3 mb-3 gap-y-3 flex flex-col justify-center font-bold bg-secondaryTransparent rounded-xl'>
         <div className='flex flex-row items-center gap-x-3'>
           <Palette size={20} />
@@ -72,7 +72,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* <LanguageSwitcher/> */}
+      <LanguageSwitcher />
       {user.username !== "_guest" && (
         <div className='w-full flex flex-col items-center'>
           <Link

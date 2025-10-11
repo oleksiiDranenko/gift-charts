@@ -27,25 +27,23 @@ export default function FilterGiftItem({
       onClick={() => {
         onClick(gift);
         vibrate();
-      }}
-    >
+      }}>
       <div
         className={`w-8 h-8 mr-3 flex justify-center items-center border border-secondary rounded-xl ${
           selected && "bg-secondaryTransparent"
-        }`}
-      >
-        {selected && <Check size={16} className="text-primary" />}
+        }`}>
+        {selected && <Check size={16} className='text-primary' />}
       </div>
-      <div className="h-full flex flex-row items-center justify-start">
+      <div className='h-full flex flex-row items-center justify-start'>
         <Image
-          alt="gift image"
+          alt='gift image'
           src={`/gifts/${gift.image}.webp`}
           width={50}
           height={50}
-          className="w-[50px] h-[50px] p-[6px] !overflow-visible mr-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent"
+          className='w-[50px] h-[50px] p-[6px] !overflow-visible mr-2 rounded-xl bg-secondaryTransparent border border-secondaryTransparent'
         />
-        <div className="flex flex-col">
-          <span className="text-base font-bold">{gift.name}</span>
+        <div className='flex flex-col'>
+          <span className='text-base font-bold'>{gift.name}</span>
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ export default function MainPage() {
   const filters = useAppSelector((state) => state.filters);
   const user = useAppSelector((state) => state.user);
 
-  const t = useTranslations("add");
+  const translateMain = useTranslations("mainPage");
 
   const [gainersList, setGainersList] = useState<GiftInterface[]>([]);
   const [losersList, setLosersList] = useState<GiftInterface[]>([]);
@@ -173,6 +173,30 @@ export default function MainPage() {
   return (
     <div>
       {/* {user.token && <VoteBanner />} */}
+      <div className='w-full px-3 mb-5'>
+        <Link
+          href='https://t.me/gift_charts'
+          className='w-full h-20 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden'>
+          <div className='flex flex-col justify-center'>
+            <div className='flex flex-row'>
+              <h1 className='text-lg text-white font-bold'>
+                Subscribe to the official channel!
+              </h1>
+            </div>
+            <p className='text-sm text-white/70'>
+              Be informed about the upcoming updates
+            </p>
+          </div>
+          <div className='absolute -right-5 top-2'>
+            <Image
+              src='https://gifts.coffin.meme/plush%20pepe/Aqua%20Plush.png'
+              alt='pepe'
+              width={100}
+              height={100}
+            />
+          </div>
+        </Link>
+      </div>
 
       <SearchBar />
 
@@ -267,54 +291,54 @@ export default function MainPage() {
         </div>
       </div>
 
-      <div className='max-w-full mx-3 gap-x-1 flex items-center justify-between mb-3'>
-        <div className='w-full flex flex-row'>
+      <div className='max-w-full gap-x-3 flex items-center justify-between mb-3'>
+        <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
-            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+            className={`lg:w-full flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "gainers"
                 ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("gainers")}>
-            <span>Gainers</span>
+            <span>{translateMain("gainers")}</span>
             <TrendingUp size={14} className='ml-1' />
           </button>
           <button
-            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "losers"
                 ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("losers")}>
-            <span>Losers</span>
+            <span>{translateMain("losers")}</span>
             <TrendingDown size={14} className='ml-1' />
           </button>
           <button
-            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "floor"
                 ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("floor")}>
-            <span>Floor</span>
+            <span>{translateMain("floor")}</span>
             <Trophy size={14} className='ml-1' />
           </button>
           <button
-            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "saved"
                 ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("saved")}>
-            <span>Saved</span>
+            <span>{translateMain("saved")}</span>
             <Star size={14} className='ml-1' />
           </button>
         </div>
         <Link
-          className={`w-fit text-xs h-8 px-1 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
+          className={`w-fit lg:w-1/3 text-xs h-8 mr-3 px-3 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
           href={"/gifts-list"}
           onClick={() => vibrate()}>
-          <span>Customise</span>
+          <span>{translateMain("customise")}</span>
           <SlidersHorizontal size={14} strokeWidth={2.5} className='ml-[2px]' />
         </Link>
       </div>
@@ -333,7 +357,7 @@ export default function MainPage() {
             ) : (
               <div className='flex-none w-full text-center snap-start'>
                 <div className='px-3 pt-3 pb-1 font-bold'>
-                  Your Watchlist is Empty
+                  {translateMain("emptyWatchlist")}
                 </div>
                 <div className='px-3 pt-3 pb-5 text-sm text-secondaryText'>
                   {"Profile -> Settings -> Edit Watchlist"}

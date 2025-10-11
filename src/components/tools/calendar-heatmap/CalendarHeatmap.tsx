@@ -11,8 +11,18 @@ interface CalendarHeatmapProps {
 
 const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ lifeData }) => {
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
   const monthlyData = useMemo(() => {
@@ -31,7 +41,7 @@ const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ lifeData }) => {
       monthlyMap.get(monthKey)!.push({
         ...entry,
         date: dateObj.toISOString(),
-        name: ""
+        name: "",
       });
     });
 
@@ -80,26 +90,27 @@ const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({ lifeData }) => {
   };
 
   return (
-    <div className="w-full mt-3">
-      <div className="w-full rounded-xl overflow-hidden">
-        <div className="grid grid-cols-6 text-white">
+    <div className='w-full mt-3'>
+      <div className='w-full rounded-xl overflow-hidden'>
+        <div className='grid grid-cols-6 text-white'>
           {monthlyData.map((item, index) => (
             <div
               key={index}
               className={`aspect-square flex flex-col border border-background items-center justify-center text-xl ${getColor(
                 item.percentChange
-              )} ${item.percentChange === null && 'text-secondaryText'}`}
+              )} ${item.percentChange === null && "text-secondaryText"}`}
               title={
                 item.percentChange === null
                   ? `${item.month}: No data`
                   : `${item.month}: ${item.percentChange.toFixed(2)}%`
-              }
-            >
-              <span className="text-sm font-bold">{item.month}</span>
-              <span className="text-xs">
+              }>
+              <span className='text-sm font-bold'>{item.month}</span>
+              <span className='text-xs'>
                 {item.percentChange === null
                   ? ""
-                  : `${item.percentChange > 0 ? "+" : ""}${item.percentChange.toFixed(1)}%`}
+                  : `${
+                      item.percentChange > 0 ? "+" : ""
+                    }${item.percentChange.toFixed(1)}%`}
               </span>
             </div>
           ))}
