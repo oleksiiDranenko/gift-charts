@@ -72,7 +72,7 @@ export default function Page() {
         </div>
       </div>
 
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       {user.username !== "_guest" && (
         <div className='w-full flex flex-col items-center'>
           <Link

@@ -179,11 +179,11 @@ export default function MainPage() {
           className='w-full h-20 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden'>
           <div className='flex flex-col justify-center'>
             <div className='flex flex-row'>
-              <h1 className='text-lg text-white font-bold'>
+              <h1 className=' text-white font-bold'>
                 Subscribe to the official channel!
               </h1>
             </div>
-            <p className='text-sm text-white/70'>
+            <p className='text-xs text-white/70'>
               Be informed about the upcoming updates
             </p>
           </div>
