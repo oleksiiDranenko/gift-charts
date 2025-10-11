@@ -49,7 +49,7 @@ export default function ListHandler({
             ) : (
               <GiftBlockItem
                 item={item}
-                currency='ton'
+                currency={currency}
                 sortBy='price'
                 displayValue='price'
                 key={item._id}
