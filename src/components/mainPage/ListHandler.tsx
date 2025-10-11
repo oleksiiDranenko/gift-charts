@@ -9,12 +9,14 @@ interface PropsInterface {
   giftsList: GiftInterface[];
   type: "line" | "block";
   background: "color" | "none";
+  currency: "ton" | "usd";
 }
 
 export default function ListHandler({
   giftsList,
   type,
   background,
+  currency,
 }: PropsInterface) {
   return (
     <Transition
@@ -37,7 +39,7 @@ export default function ListHandler({
             type === "line" ? (
               <GiftItem
                 item={item}
-                currency='ton'
+                currency={currency}
                 sortBy='price'
                 displayValue='price'
                 key={item._id}

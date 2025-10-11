@@ -52,6 +52,12 @@ export default function MainPage() {
       : "none"
   );
 
+  const [currency, setCurrency] = useState<"ton" | "usd">(
+    typeof window !== "undefined"
+      ? (localStorage.getItem("currency") as "ton" | "usd") || "ton"
+      : "ton"
+  );
+
   useEffect(() => {
     if (isMounted) {
       localStorage.setItem("giftType", giftType);
@@ -65,9 +71,15 @@ export default function MainPage() {
   }, [giftBackground, isMounted]);
 
   useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem("currency", currency);
+    }
+  }, [currency, isMounted]);
+
+  useEffect(() => {
     if (giftsList.length > 0) {
       const sortedList = [...giftsList].sort((a, b) =>
-        filters.currency === "ton"
+        currency === "ton"
           ? filters.sort === "lowFirst"
             ? a.priceTon - b.priceTon
             : b.priceTon - a.priceTon
@@ -86,20 +98,18 @@ export default function MainPage() {
       const sortedGainers = [...giftsList]
         .filter((gift) => {
           const prev =
-            filters.currency === "ton"
-              ? gift.tonPrice24hAgo
-              : gift.usdPrice24hAgo;
+            currency === "ton" ? gift.tonPrice24hAgo : gift.usdPrice24hAgo;
 
           return typeof prev === "number" && prev > 0;
         })
         .sort((a, b) => {
           const changeA =
-            filters.currency === "ton"
+            currency === "ton"
               ? getChange(a.priceTon, a.tonPrice24hAgo ?? 1)
               : getChange(a.priceUsd, a.usdPrice24hAgo ?? 1);
 
           const changeB =
-            filters.currency === "ton"
+            currency === "ton"
               ? getChange(b.priceTon, b.tonPrice24hAgo ?? 1)
               : getChange(b.priceUsd, b.usdPrice24hAgo ?? 1);
 
@@ -112,20 +122,18 @@ export default function MainPage() {
       const sortedLosers = [...giftsList]
         .filter((gift) => {
           const prev =
-            filters.currency === "ton"
-              ? gift.tonPrice24hAgo
-              : gift.usdPrice24hAgo;
+            currency === "ton" ? gift.tonPrice24hAgo : gift.usdPrice24hAgo;
 
           return typeof prev === "number" && prev > 0;
         })
         .sort((a, b) => {
           const changeA =
-            filters.currency === "ton"
+            currency === "ton"
               ? getChange(a.priceTon, a.tonPrice24hAgo ?? 1)
               : getChange(a.priceUsd, a.usdPrice24hAgo ?? 1);
 
           const changeB =
-            filters.currency === "ton"
+            currency === "ton"
               ? getChange(b.priceTon, b.tonPrice24hAgo ?? 1)
               : getChange(b.priceUsd, b.usdPrice24hAgo ?? 1);
 
@@ -134,7 +142,7 @@ export default function MainPage() {
 
       setLosersList(sortedLosers);
     }
-  }, [filters, giftsList]);
+  }, [currency, filters, giftsList]);
 
   useEffect(() => {
     if (giftsList.length > 0 && user.savedList.length > 0) {
@@ -143,7 +151,7 @@ export default function MainPage() {
       );
 
       filteredList.sort((a, b) =>
-        filters.currency === "ton"
+        currency === "ton"
           ? filters.sort === "lowFirst"
             ? a.priceTon - b.priceTon
             : b.priceTon - a.priceTon
@@ -156,7 +164,7 @@ export default function MainPage() {
     } else {
       setUserList([]);
     }
-  }, [filters, giftsList, user.savedList]);
+  }, [currency, filters, giftsList, user.savedList]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -169,108 +177,146 @@ export default function MainPage() {
       <SearchBar />
 
       <div className='max-w-full mx-3 flex items-center justify-between gap-x-2 mb-3'>
-        <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden'>
-          <button
-            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-              giftType === "line"
-                ? "font-bold text-foreground bg-secondary rounded-xl"
-                : "text-secondaryText"
-            }`}
-            onClick={() => {
-              setGiftType("line");
-              vibrate();
-            }}>
-            <Rows3 size={18} />
-          </button>
-          <button
-            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-              giftType === "block"
-                ? "font-bold text-foreground bg-secondary rounded-xl"
-                : "text-secondaryText"
-            }`}
-            onClick={() => {
-              setGiftType("block");
-              vibrate();
-            }}>
-            <Grid2x2 size={18} />
-          </button>
+        <div className='w-1/2 flex flex-row gap-x-1'>
+          <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden'>
+            <button
+              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+                giftType === "line"
+                  ? "font-bold text-foreground bg-secondary rounded-xl"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setGiftType("line");
+                vibrate();
+              }}>
+              <Rows3 size={18} />
+            </button>
+            <button
+              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+                giftType === "block"
+                  ? "font-bold text-foreground bg-secondary rounded-xl"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setGiftType("block");
+                vibrate();
+              }}>
+              <Grid2x2 size={18} />
+            </button>
+          </div>
+          <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl'>
+            <button
+              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+                giftBackground === "color"
+                  ? "font-bold text-foreground bg-secondary rounded-xl"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setGiftBackground("color");
+                vibrate();
+              }}>
+              <PaintBucket size={18} />
+            </button>
+            <button
+              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+                giftBackground === "none"
+                  ? "font-bold text-foreground bg-secondary rounded-xl"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setGiftBackground("none");
+                vibrate();
+              }}>
+              <CircleSlash2 size={18} />
+            </button>
+          </div>
         </div>
-        <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl'>
+        <div className='w-1/2 flex flex-row items-center gap-x-1'>
+          <div className='w-full flex items-center justify-between gap-x-2 bg-secondaryTransparent rounded-xl'>
+            <button
+              className={`w-full flex flex-row items-center gap-x-2 justify-center text-sm h-8 ${
+                currency === "ton"
+                  ? "font-bold text-foreground bg-primary rounded-xl"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setCurrency("ton");
+                vibrate();
+              }}>
+              <Image
+                src='/images/toncoin.webp'
+                alt={""}
+                width={15}
+                height={15}
+              />{" "}
+              Ton
+            </button>
+            <button
+              className={`w-full flex flex-row items-center justify-center text-sm h-8 ${
+                currency === "usd"
+                  ? "font-bold text-foreground bg-primary rounded-xl"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setCurrency("usd");
+                vibrate();
+              }}>
+              $ Usd
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className='max-w-full mx-3 gap-x-1 flex items-center justify-between mb-3'>
+        <div className='w-full flex flex-row'>
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-              giftBackground === "color"
+              chosenFilter === "gainers"
                 ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
-            onClick={() => {
-              setGiftBackground("color");
-              vibrate();
-            }}>
-            <PaintBucket size={18} />
+            onClick={() => setChosenFilter("gainers")}>
+            <span>Gainers</span>
+            <TrendingUp size={14} className='ml-1' />
           </button>
           <button
             className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-              giftBackground === "none"
+              chosenFilter === "losers"
                 ? "font-bold text-foreground bg-secondary rounded-xl"
                 : "text-secondaryText"
             }`}
-            onClick={() => {
-              setGiftBackground("none");
-              vibrate();
-            }}>
-            <CircleSlash2 size={18} />
+            onClick={() => setChosenFilter("losers")}>
+            <span>Losers</span>
+            <TrendingDown size={14} className='ml-1' />
+          </button>
+          <button
+            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+              chosenFilter === "floor"
+                ? "font-bold text-foreground bg-secondary rounded-xl"
+                : "text-secondaryText"
+            }`}
+            onClick={() => setChosenFilter("floor")}>
+            <span>Floor</span>
+            <Trophy size={14} className='ml-1' />
+          </button>
+          <button
+            className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+              chosenFilter === "saved"
+                ? "font-bold text-foreground bg-secondary rounded-xl"
+                : "text-secondaryText"
+            }`}
+            onClick={() => setChosenFilter("saved")}>
+            <span>Saved</span>
+            <Star size={14} className='ml-1' />
           </button>
         </div>
         <Link
-          className={`w-full text-xs h-8 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
+          className={`w-fit text-xs h-8 px-1 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
           href={"/gifts-list"}
           onClick={() => vibrate()}>
           <span>Customise</span>
           <SlidersHorizontal size={14} strokeWidth={2.5} className='ml-[2px]' />
         </Link>
-      </div>
-
-      <div className='max-w-full mx-3 gap-x-1 flex items-center justify-between mb-3'>
-        <button
-          className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            chosenFilter === "gainers"
-              ? "font-bold text-foreground bg-secondary rounded-xl"
-              : "text-secondaryText"
-          }`}
-          onClick={() => setChosenFilter("gainers")}>
-          <span>Gainers</span>
-          <TrendingUp size={14} className='ml-1' />
-        </button>
-        <button
-          className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            chosenFilter === "losers"
-              ? "font-bold text-foreground bg-secondary rounded-xl"
-              : "text-secondaryText"
-          }`}
-          onClick={() => setChosenFilter("losers")}>
-          <span>Losers</span>
-          <TrendingDown size={14} className='ml-1' />
-        </button>
-        <button
-          className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            chosenFilter === "floor"
-              ? "font-bold text-foreground bg-secondary rounded-xl"
-              : "text-secondaryText"
-          }`}
-          onClick={() => setChosenFilter("floor")}>
-          <span>Floor</span>
-          <Trophy size={14} className='ml-1' />
-        </button>
-        <button
-          className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
-            chosenFilter === "saved"
-              ? "font-bold text-foreground bg-secondary rounded-xl"
-              : "text-secondaryText"
-          }`}
-          onClick={() => setChosenFilter("saved")}>
-          <span>Saved</span>
-          <Star size={14} className='ml-1' />
-        </button>
       </div>
 
       <div className='w-full flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
@@ -282,6 +328,7 @@ export default function MainPage() {
                 giftsList={userList}
                 type={giftType}
                 background={giftBackground}
+                currency={currency}
               />
             ) : (
               <div className='flex-none w-full text-center snap-start'>
@@ -308,6 +355,7 @@ export default function MainPage() {
             }
             type={giftType}
             background={giftBackground}
+            currency={currency}
           />
         )}
       </div>
