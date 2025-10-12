@@ -15,7 +15,7 @@ export default function PageTransition({ children }: Props) {
   return (
     <div
       className={`relative w-full flex flex-row justify-center pt-5 ${
-        user.token && "pt-[100px]"
+        user.token && "pt-[110px]"
       }`}>
       <Transition
         key={pathname}

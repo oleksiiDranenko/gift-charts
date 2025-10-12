@@ -78,7 +78,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className='w-full h-16 p-3 mb-3 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
+      {/* <div className='w-full h-16 p-3 mb-3 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
         <h1 className='font-bold flex flex-row items-center gap-x-2'>
           <Gauge size={26} className='text-primary' />
           {t("name")}
@@ -90,7 +90,7 @@ export default function Page() {
           <span>Try it now</span>
           <ChevronRight size={18} />
         </Link>
-      </div>
+      </div> */}
 
       {user.token && (
         <div className='w-full h-16 p-3 mb-5 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
