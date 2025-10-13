@@ -173,10 +173,10 @@ export default function MainPage() {
   return (
     <div>
       {/* {user.token && <VoteBanner />} */}
-      <div className='w-full px-3 mb-5'>
+      <div className='w-full px-3 mb-4'>
         <Link
           href='https://t.me/gift_charts'
-          className='w-full h-20 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden'>
+          className='w-full h-16 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden'>
           <div className='flex flex-col justify-center'>
             <div className='flex flex-row'>
               <h1 className=' text-white font-bold'>
@@ -187,12 +187,12 @@ export default function MainPage() {
               Be informed about the upcoming updates
             </p>
           </div>
-          <div className='absolute -right-5 top-2'>
+          <div className='absolute right-3 top-2'>
             <Image
-              src='https://gifts.coffin.meme/plush%20pepe/Aqua%20Plush.png'
-              alt='pepe'
-              width={100}
-              height={100}
+              src='/images/telegram-svgrepo-com.svg'
+              alt=''
+              width={50}
+              height={50}
             />
           </div>
         </Link>
@@ -260,7 +260,7 @@ export default function MainPage() {
             <button
               className={`w-full flex flex-row items-center gap-x-2 justify-center text-sm h-8 ${
                 currency === "ton"
-                  ? "font-bold text-foreground bg-primary rounded-xl"
+                  ? "font-bold text-white bg-primary rounded-xl"
                   : "text-secondaryText"
               }`}
               onClick={() => {
@@ -278,7 +278,7 @@ export default function MainPage() {
             <button
               className={`w-full flex flex-row items-center justify-center text-sm h-8 ${
                 currency === "usd"
-                  ? "font-bold text-foreground bg-primary rounded-xl"
+                  ? "font-bold text-white bg-primary rounded-xl"
                   : "text-secondaryText"
               }`}
               onClick={() => {
@@ -291,43 +291,43 @@ export default function MainPage() {
         </div>
       </div>
 
-      <div className='max-w-full gap-x-3 flex items-center justify-between mb-3'>
+      <div className='max-w-full gap-x-1 flex items-center justify-between mb-3'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
-            className={`lg:w-full flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 ${
+            className={`lg:w-full flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
               chosenFilter === "gainers"
-                ? "font-bold text-foreground bg-secondary rounded-xl"
-                : "text-secondaryText"
+                ? "font-bold text-foreground bg-secondary"
+                : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => setChosenFilter("gainers")}>
             <span>{translateMain("gainers")}</span>
             <TrendingUp size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
               chosenFilter === "losers"
-                ? "font-bold text-foreground bg-secondary rounded-xl"
-                : "text-secondaryText"
+                ? "font-bold text-foreground bg-secondary"
+                : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => setChosenFilter("losers")}>
             <span>{translateMain("losers")}</span>
             <TrendingDown size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
               chosenFilter === "floor"
-                ? "font-bold text-foreground bg-secondary rounded-xl"
-                : "text-secondaryText"
+                ? "font-bold text-foreground bg-secondary"
+                : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => setChosenFilter("floor")}>
             <span>{translateMain("floor")}</span>
             <Trophy size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
               chosenFilter === "saved"
-                ? "font-bold text-foreground bg-secondary rounded-xl"
-                : "text-secondaryText"
+                ? "font-bold text-foreground bg-secondary"
+                : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => setChosenFilter("saved")}>
             <span>{translateMain("saved")}</span>

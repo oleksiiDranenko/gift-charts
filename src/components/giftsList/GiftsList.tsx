@@ -252,8 +252,8 @@ export default function GiftsList({ loading }: PropsInterface) {
                     <option value={"marketCap"}>{t("marketCap")}</option>
                     <option value={"percentChange"}>{t("change")}</option>
                     <option value={"supply"}>{t("supply")}</option>
-                    <option value={"initSupply"}>{t("initSupply")}</option>
-                    <option value={"starsPrice"}>{t("starsPrice")}</option>
+                    {/* <option value={"initSupply"}>{t("initSupply")}</option>
+                    <option value={"starsPrice"}>{t("starsPrice")}</option> */}
                   </select>
                 </div>
 
