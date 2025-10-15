@@ -173,11 +173,11 @@ export default function MainPage() {
   return (
     <div>
       {/* {user.token && <VoteBanner />} */}
-      <div className='w-full px-3 mb-4'>
+      {/* <div className='w-full px-3 mb-4'>
         <Link
           href='https://t.me/gift_charts'
-          className='w-full h-16 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden'>
-          <div className='flex flex-col justify-center'>
+          className='w-full h-24 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden'>
+          <div className='flex flex-col justify-evenly'>
             <div className='flex flex-row'>
               <h1 className=' text-white font-bold'>
                 Gift Charts official channel
@@ -187,7 +187,7 @@ export default function MainPage() {
               Be informed about the upcoming updates
             </p>
           </div>
-          <div className='absolute right-3 top-2'>
+          <div className='absolute right-3 top-1/2absolute top-1/2 transform -translate-y-1/2'>
             <Image
               src='/images/telegram-svgrepo-com.svg'
               alt=''
@@ -196,7 +196,7 @@ export default function MainPage() {
             />
           </div>
         </Link>
-      </div>
+      </div> */}
 
       <SearchBar />
 
@@ -291,43 +291,43 @@ export default function MainPage() {
         </div>
       </div>
 
-      <div className='max-w-full gap-x-1 flex items-center justify-between mb-3'>
+      <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
-            className={`lg:w-full flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
+            className={`lg:w-full flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "gainers"
-                ? "font-bold text-foreground bg-secondary"
-                : "text-secondaryText bg-secondaryTransparent"
+                ? "font-bold text-foreground border-b border-primary"
+                : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("gainers")}>
             <span>{translateMain("gainers")}</span>
             <TrendingUp size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "losers"
-                ? "font-bold text-foreground bg-secondary"
-                : "text-secondaryText bg-secondaryTransparent"
+                ? "font-bold text-foreground border-b border-primary"
+                : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("losers")}>
             <span>{translateMain("losers")}</span>
             <TrendingDown size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "floor"
-                ? "font-bold text-foreground bg-secondary"
-                : "text-secondaryText bg-secondaryTransparent"
+                ? "font-bold text-foreground border-b border-primary"
+                : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("floor")}>
             <span>{translateMain("floor")}</span>
             <Trophy size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 rounded-xl ${
+            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "saved"
-                ? "font-bold text-foreground bg-secondary"
-                : "text-secondaryText bg-secondaryTransparent"
+                ? "font-bold text-foreground border-b border-primary"
+                : "text-secondaryText"
             }`}
             onClick={() => setChosenFilter("saved")}>
             <span>{translateMain("saved")}</span>
@@ -335,11 +335,10 @@ export default function MainPage() {
           </button>
         </div>
         <Link
-          className={`w-fit lg:w-1/3 text-xs h-8 mr-3 px-3 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
+          className={`w-fit lg:w-1/3 text-xs h-8 mr-3 px-4 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
           href={"/gifts-list"}
           onClick={() => vibrate()}>
-          <span>{translateMain("customise")}</span>
-          <SlidersHorizontal size={14} strokeWidth={2.5} className='ml-[2px]' />
+          <SlidersHorizontal size={14} strokeWidth={2.5} />
         </Link>
       </div>
 

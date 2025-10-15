@@ -18,6 +18,7 @@ import {
 } from "chart.js";
 import { useAppSelector } from "@/redux/hooks";
 import { useTheme } from "next-themes";
+import { IndexMonthDataInterface } from "@/interfaces/IndexMonthDataInterface";
 
 ChartJS.register(
   LineElement,
@@ -31,9 +32,14 @@ ChartJS.register(
 interface PropsInterface {
   index: IndexInterface;
   indexData: IndexDataInterface[];
+  indexMonthData: IndexMonthDataInterface[];
 }
 
-export default function IndexChart({ index, indexData }: PropsInterface) {
+export default function IndexChart({
+  index,
+  indexData,
+  indexMonthData,
+}: PropsInterface) {
   const vibrate = useVibrate();
   const giftsList = useAppSelector((state) => state.giftsList);
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -41,12 +47,15 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
 
   const [selectedPrice, setSelectedPrice] = useState<"ton" | "usd">("ton");
   const [percentChange, setPercentChange] = useState<number>(0);
+
   const [list, setList] = useState<IndexDataInterface[]>(indexData);
-  const [listType, setListType] = useState<"1w" | "1m" | "3m" | "all">("1w");
+
+  const [listType, setListType] = useState<
+    "1d" | "3d" | "1w" | "1m" | "3m" | "all"
+  >("1d");
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
   const [gradient, setGradient] = useState<CanvasGradient | null>(null);
-  const [newData, setNewData] = useState<IndexDataInterface>();
 
   const { resolvedTheme } = useTheme();
 
@@ -55,9 +64,7 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     const chartContainer = chartContainerRef.current;
     if (!chartContainer) return;
 
-    const preventScroll = (e: TouchEvent) => {
-      e.preventDefault();
-    };
+    const preventScroll = (e: TouchEvent) => e.preventDefault();
 
     chartContainer.addEventListener("touchstart", preventScroll, {
       passive: false,
@@ -112,138 +119,147 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
 
     gradient.addColorStop(0, topColor);
     gradient.addColorStop(1, bottomColor);
-
     setGradient(gradient);
   }, [percentChange]);
 
-  // Calculate newData and append it to list on mount
+  // ✅ FIX #2: keep latest document always at end of list
+  // ✅ update list based on listType and handle "VOL" differently
   useEffect(() => {
-    // Filter out preSale gifts
-    const nonPreSaleGifts = giftsList.filter((gift) => !gift.preSale);
+    if (!indexMonthData || indexMonthData.length === 0) return;
 
-    if (index.shortName === "FDV") {
-      let currentTon = 0;
-      let currentUsd = 0;
-      for (let gift of nonPreSaleGifts) {
-        const supply = gift.supply || 0;
-        const priceTon = gift.priceTon || 0;
-        const priceUsd = gift.priceUsd || 0;
-        currentTon += priceTon * supply;
-        currentUsd += priceUsd * supply;
-      }
+    const latestDoc = indexMonthData[indexMonthData.length - 1]; // newest doc
 
-      const newDataPoint = {
-        _id: index._id,
-        indexId: index._id,
-        date: "today",
-        priceTon: currentTon,
-        priceUsd: currentUsd,
+    // Helper to sum the last 48 month docs for VOL
+    const getSummedDoc = (): IndexDataInterface => {
+      const last48 = indexMonthData.slice(-48);
+      const totalTon = last48.reduce(
+        (acc, item) => acc + (item.priceTon || 0),
+        0
+      );
+      const totalUsd = last48.reduce(
+        (acc, item) => acc + (item.priceUsd || 0),
+        0
+      );
+
+      return {
+        ...latestDoc,
+        priceTon: totalTon,
+        priceUsd: totalUsd,
+        date: latestDoc.date,
       };
+    };
 
-      setNewData(newDataPoint);
-      setList([...indexData, newDataPoint]); // Append newData on mount
-    } else if (index.shortName === "TMC") {
-      let currentTon = 0;
-      let currentUsd = 0;
-      for (let gift of nonPreSaleGifts) {
-        const supply = gift.upgradedSupply || 0;
-        const priceTon = gift.priceTon || 0;
-        const priceUsd = gift.priceUsd || 0;
-        currentTon += priceTon * supply;
-        currentUsd += priceUsd * supply;
-      }
+    const ensureUnique = (arr: IndexDataInterface[]) =>
+      arr.filter(
+        (v, i, a) =>
+          a.findIndex((t) => t.date === v.date && t.priceTon === v.priceTon) ===
+          i
+      );
 
-      const newDataPoint = {
-        _id: index._id,
-        indexId: index._id,
-        date: "today",
-        priceTon: currentTon,
-        priceUsd: currentUsd,
-      };
-
-      setNewData(newDataPoint);
-      setList([...indexData, newDataPoint]); // Append newData on mount
-    }
-  }, [giftsList, index, indexData]);
-
-  // Update list based on listType
-  useEffect(() => {
-    if (!newData) return;
+    let newList: IndexDataInterface[] = [];
 
     switch (listType) {
+      case "1d":
+        newList = [...indexMonthData.slice(-48), latestDoc];
+        break;
+
+      case "3d":
+        newList = [...indexMonthData.slice(-144), latestDoc];
+        break;
+
       case "1w":
-        setList([...indexData.slice(-7), newData]);
+        newList =
+          index.shortName === "VOL"
+            ? [...indexData.slice(-7), getSummedDoc()]
+            : [...indexData.slice(-7), latestDoc];
         break;
+
       case "1m":
-        setList([...indexData.slice(-30), newData]);
+        newList =
+          index.shortName === "VOL"
+            ? [...indexData.slice(-30), getSummedDoc()]
+            : [...indexData.slice(-30), latestDoc];
         break;
+
       case "3m":
-        setList([...indexData.slice(-90), newData]);
+        newList =
+          index.shortName === "VOL"
+            ? [...indexData.slice(-90), getSummedDoc()]
+            : [...indexData.slice(-90), latestDoc];
         break;
+
       case "all":
-        setList([...indexData, newData]);
-        break;
-      default:
+        newList =
+          index.shortName === "VOL"
+            ? [...indexData, getSummedDoc()]
+            : [...indexData, latestDoc];
         break;
     }
-  }, [listType, indexData, newData]);
 
+    setList(ensureUnique(newList));
+  }, [listType, indexData, indexMonthData, index.shortName]);
+
+  // Calculate change
   useEffect(() => {
-    if (list.length === 0) return;
+    if (!list || list.length === 0) return;
 
     const prices = list.map((item) =>
       selectedPrice === "ton" ? item.priceTon : item.priceUsd
     );
-
-    if (selectedPrice === "ton") {
-      const firstData = list[0].priceTon;
-      const lastData = list[list.length - 1].priceTon;
-      const result =
-        firstData === 0
-          ? 0
-          : parseFloat((((lastData - firstData) / firstData) * 100).toFixed(2));
-      setPercentChange(result);
-      setLow(Math.min(...prices));
-      setHigh(Math.max(...prices));
-    } else {
-      const firstData = list[0].priceUsd;
-      const lastData = list[list.length - 1].priceUsd;
-      const result =
-        firstData === 0
-          ? 0
-          : parseFloat((((lastData - firstData) / firstData) * 100).toFixed(2));
-      setPercentChange(result);
-      setLow(Math.min(...prices));
-      setHigh(Math.max(...prices));
-    }
+    const first = prices[0];
+    const last = prices[prices.length - 1];
+    const pct =
+      first === 0 ? 0 : parseFloat((((last - first) / first) * 100).toFixed(2));
+    setPercentChange(pct);
+    setLow(Math.min(...prices));
+    setHigh(Math.max(...prices));
   }, [selectedPrice, list]);
 
-  const formatNumber = (number: number) => {
-    if (number >= 1000 && number < 1000000) {
-      const shortNumber = (number / 1000).toFixed(1);
-      return `${shortNumber}K`;
-    } else if (number >= 1000000) {
-      const shortNumber = (number / 1000000).toFixed(1);
-      return `${shortNumber}M`;
-    }
-    return number.toString();
-  };
+  const formatNumber = (num: number) =>
+    num >= 1_000_000
+      ? `${(num / 1_000_000).toFixed(1)}M`
+      : num >= 1_000
+      ? `${(num / 1_000).toFixed(1)}K`
+      : num.toString();
 
-  const formatNumberWithDots = (number: number) => {
-    const formattedNumber = new Intl.NumberFormat("de-DE").format(number);
-    return formattedNumber;
+  const formatNumberWithDots = (value: number, type: string) => {
+    if (typeof value !== "number" || isNaN(value)) return "0";
+
+    if (type === "price") {
+      // two decimal places, comma thousands separator, dot decimal
+      return new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+    }
+
+    if (type === "amount") {
+      // integer style with thousands separator, no decimals
+      return new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 0,
+      }).format(Math.round(value));
+    }
+
+    if (type === "percent") {
+      // percent display - show two decimals
+      return new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+    }
+
+    // fallback
+    return new Intl.NumberFormat("en-US").format(value);
   };
 
   const data = {
-    labels: list.map((item) => {
-      return item.date.slice(0, 5);
-    }),
+    labels: list.map((item) => item.date.slice(0, 5)),
     datasets: [
       {
         label: "Index Price",
-        data: list.map((item) => {
-          return selectedPrice === "ton" ? item.priceTon : item.priceUsd;
-        }),
+        data: list.map((item) =>
+          selectedPrice === "ton" ? item.priceTon : item.priceUsd
+        ),
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
         borderWidth: 1,
         tension: 0,
@@ -260,55 +276,26 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
     ],
   };
 
+  // ✅ FIX #3: move Math.max/min inside safe guards
+  const yData = data.datasets[0].data as number[];
+
   const options: ChartOptions<"line"> = {
     responsive: true,
     plugins: {
       legend: { display: false },
-      title: { display: false },
       tooltip: {
         enabled: true,
         mode: "index",
         intersect: false,
         callbacks: {
-          title: function (tooltipItems) {
-            const item = list[tooltipItems[0].dataIndex];
-            return item.date;
-          },
-          label: function (tooltipItem) {
-            return `Price: ${tooltipItem.raw} ${
-              selectedPrice == "ton" ? "TON" : "USD"
-            }`;
-          },
-        },
-        external: function (context) {
-          const { chart, tooltip } = context;
-          const ctx = chart.ctx;
-          if (!tooltip || !tooltip.opacity) {
-            return;
-          }
-          const tooltipX = tooltip.caretX;
-          const tooltipY = tooltip.caretY;
-          ctx.save();
-          ctx.beginPath();
-          ctx.setLineDash([5, 5]);
-          ctx.lineWidth = 1;
-          ctx.strokeStyle =
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.5)"
-              : "rgba(0, 0, 0, 0.5)";
-          ctx.moveTo(tooltipX, chart.chartArea.top);
-          ctx.lineTo(tooltipX, chart.chartArea.bottom);
-          ctx.moveTo(chart.chartArea.left, tooltipY);
-          ctx.lineTo(chart.chartArea.right, tooltipY);
-          ctx.stroke();
-          ctx.restore();
+          title: (tooltipItems) => list[tooltipItems[0].dataIndex].date,
+          label: (tooltipItem) =>
+            `Value: ${formatNumberWithDots(tooltipItem.raw as number, "price")}
+            `,
         },
       },
     },
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
+    interaction: { mode: "index", intersect: false },
     scales: {
       x: {
         grid: {
@@ -322,11 +309,8 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 0,
           autoSkip: true,
           maxTicksLimit: 3,
-          maxRotation: 0,
-          minRotation: 0,
         },
       },
       y: {
@@ -335,38 +319,35 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.05)"
               : "rgba(0, 0, 0, 0.05)",
-          drawTicks: true,
-          tickLength: 10,
         },
         ticks: {
           color:
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 10,
-          callback: function (value) {
-            return formatNumber(Number(value));
-          },
+          callback: (v) => formatNumber(Number(v)),
         },
         position: "right",
-        suggestedMax: Math.max(...data.datasets[0].data) * 1.1,
-        suggestedMin: Math.min(...data.datasets[0].data) * 0.9,
+        suggestedMax: yData.length ? Math.max(...yData) * 1.1 : undefined,
+        suggestedMin: yData.length ? Math.min(...yData) * 0.9 : undefined,
       },
     },
   };
 
   return (
     <div className='h-auto w-full pl-3 pr-3'>
+      {/* Header */}
       <div className='w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center'>
-        <div className='h-full flex items-center'>
-          <h1 className='flex flex-col'>
-            <span className='text-xl font-bold'>{index.shortName}</span>
+        <div className='w-3/5 h-full flex items-center'>
+          <h1 className='flex flex-col ml-3'>
+            <span className='text-lg font-bold'>{index.name}</span>
             <span className='text-secondaryText text-sm flex justify-start'>
-              {index.name}
+              Index
             </span>
           </h1>
         </div>
-        <div className='w-1/2 h-14 pr-3 flex flex-col items-end justify-center'>
+
+        <div className='w-2/5 h-14 pr-3 flex flex-col items-end justify-center'>
           <div className='flex flex-row items-center'>
             {selectedPrice == "ton" ? (
               <Image
@@ -381,8 +362,14 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
             )}
             <span className='text-base font-extrabold'>
               {selectedPrice == "ton"
-                ? formatNumberWithDots(Number(list[list.length - 1]?.priceTon))
-                : formatNumberWithDots(Number(list[list.length - 1]?.priceUsd))}
+                ? formatNumberWithDots(
+                    Number(list[list.length - 1]?.priceTon),
+                    "price"
+                  )
+                : formatNumberWithDots(
+                    Number(list[list.length - 1]?.priceUsd),
+                    "price"
+                  )}
             </span>
           </div>
 
@@ -395,34 +382,36 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         </div>
       </div>
 
-      <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
-        <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
-          <button
-            className={`text-xs h-8 px-3 box-border ${
-              selectedPrice == "ton"
-                ? "rounded-xl bg-primary font-bold text-white"
-                : null
-            }`}
-            onClick={() => {
-              setSelectedPrice("ton");
-              vibrate();
-            }}>
-            Ton
-          </button>
-          <button
-            className={`text-xs h-8 px-3  box-border ${
-              selectedPrice == "usd"
-                ? "rounded-xl bg-primary font-bold text-white"
-                : null
-            }`}
-            onClick={() => {
-              setSelectedPrice("usd");
-              vibrate();
-            }}>
-            Usd
-          </button>
+      {index.valueType === "price" && (
+        <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
+          <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
+            <button
+              className={`text-xs h-8 px-3 ${
+                selectedPrice == "ton"
+                  ? "rounded-xl bg-primary font-bold text-white"
+                  : ""
+              }`}
+              onClick={() => {
+                setSelectedPrice("ton");
+                vibrate();
+              }}>
+              Ton
+            </button>
+            <button
+              className={`text-xs h-8 px-3 ${
+                selectedPrice == "usd"
+                  ? "rounded-xl bg-primary font-bold text-white"
+                  : ""
+              }`}
+              onClick={() => {
+                setSelectedPrice("usd");
+                vibrate();
+              }}>
+              Usd
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div
         className={
@@ -434,64 +423,22 @@ export default function IndexChart({ index, indexData }: PropsInterface) {
         <Line ref={chartRef} data={data} options={options} />
       </div>
 
-      {/* <div className="w-full flex flex-row justify-between mt-3 gap-x-3">
-                <span className="w-1/2 flex justify-center items-center h-10 bg-red-600 bg-opacity-40 rounded-xl">
-                    Low: {low ? formatNumberWithDots(low) : null}
-                </span>
-                <span className="w-1/2 flex justify-center items-center h-10 bg-green-600 bg-opacity-40 rounded-xl">
-                    High: {high ? formatNumberWithDots(high) : null}
-                </span>
-            </div> */}
-
       <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType == "all"
-              ? "rounded-xl bg-secondary font-bold"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("all");
-            vibrate();
-          }}>
-          All
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType == "3m"
-              ? "rounded-xl bg-secondary font-bold"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("3m");
-            vibrate();
-          }}>
-          3m
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType == "1m"
-              ? "rounded-xl bg-secondary font-bold"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("1m");
-            vibrate();
-          }}>
-          1m
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType == "1w"
-              ? "rounded-xl bg-secondary font-bold"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("1w");
-            vibrate();
-          }}>
-          1w
-        </button>
+        {["all", "3m", "1m", "1w", "3d", "1d"].map((type) => (
+          <button
+            key={type}
+            className={`w-full px-1 text-sm h-8 ${
+              listType === type
+                ? "rounded-xl bg-secondary font-bold"
+                : "text-secondaryText"
+            }`}
+            onClick={() => {
+              setListType(type as any);
+              vibrate();
+            }}>
+            {type}
+          </button>
+        ))}
       </div>
 
       <div className='w-full p-3 mt-5 bg-secondaryTransparent rounded-xl'>

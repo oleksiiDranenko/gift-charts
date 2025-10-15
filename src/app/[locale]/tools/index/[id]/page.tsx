@@ -12,10 +12,12 @@ import { Link } from "@/i18n/navigation";
 import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import useVibrate from "@/hooks/useVibrate";
 import CalendarHeatmap from "@/components/tools/calendar-heatmap/CalendarHeatmap";
+import { IndexMonthDataInterface } from "@/interfaces/IndexMonthDataInterface";
 
 export default function Page({ params }: any) {
   const [index, setIndex] = useState<IndexInterface>();
   const [data, setData] = useState<IndexDataInterface[]>([]);
+  const [monthData, setMonthData] = useState<IndexMonthDataInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
@@ -34,8 +36,12 @@ export default function Page({ params }: any) {
         const dataRes = await axios.get(
           `${process.env.NEXT_PUBLIC_API}/indexData/get-all/${params.id}`
         );
+        const monthDataRes = await axios.get(
+          `${process.env.NEXT_PUBLIC_API}/indexMonthData/${params.id}`
+        );
         setIndex(indexRes.data);
         setData(dataRes.data);
+        setMonthData(monthDataRes.data);
 
         setLoading(false);
       } catch (error) {
@@ -66,7 +72,11 @@ export default function Page({ params }: any) {
                 {"Go Back"}
               </Link>
             </div>
-            <IndexChart index={index} indexData={data} />
+            <IndexChart
+              index={index}
+              indexData={data}
+              indexMonthData={monthData}
+            />
             <div className='mt-5 px-3'>
               <div className='w-full flex flex-row justify-between items-center'>
                 <div className='flex flex-row items-center'>
