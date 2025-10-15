@@ -14,6 +14,8 @@ import axios from "axios";
 import { countPercentChange } from "@/numberFormat/functions";
 import { Copy, Gift } from "lucide-react";
 import { useTranslations } from "next-intl";
+import PortfolioChart from "./PortfolioChart";
+import LineChart from "../giftInfo/LineChart";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -239,13 +241,14 @@ export default function Account() {
             className='mt-5'
           />
         </div>
-      ) : user.username === "_guest" ? (
-        <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl'>
-          {translate("openInTelegram")}
-        </div>
       ) : (
+        // : user.username === "_guest" ? (
+        //   <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl'>
+        //     {translate("openInTelegram")}
+        //   </div>
+        // )
         <>
-          <div className='w-full h-28 flex flex-row justify-center items-center relative'>
+          <div className='w-full mb-1 flex flex-row justify-start items-center relative'>
             {/* <button
               className="p-[6px] flex flex-row items-center gap-x-1 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-xl"
               onClick={handleClick}
@@ -254,71 +257,80 @@ export default function Account() {
               <span>Referral</span>
             </button> */}
 
-            <div className='flex flex-col items-center'>
+            <div className='flex flex-col gap-x-3'>
               <div className='flex flex-row items-center'>
                 {currency === "ton" ? (
                   <Image
                     alt='ton logo'
                     src='/images/toncoin.webp'
-                    width={30}
-                    height={30}
+                    width={25}
+                    height={25}
                     className='mr-2'
                   />
                 ) : (
-                  <span className='text-4xl mr-1'>$</span>
+                  <span className='text-3xl mr-1'>$</span>
                 )}
-                <h1 className='text-4xl font-bold'>{portfolioValue}</h1>
+                <h1 className='text-3xl font-bold'>123.43</h1>
               </div>
-              <span
-                className={`mt-1 font-bold ${
-                  changeType === "24h%"
-                    ? countPercentChange(
-                        portfolioValue24hAgo,
-                        portfolioValue
-                      ) >= 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                    : changeType === "PNL"
-                    ? portfolioValue - portfolioInitValue >= 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                    : changeType === "PNL%" &&
-                      (countPercentChange(portfolioInitValue, portfolioValue) >=
-                      0
-                        ? "text-green-500"
-                        : "text-red-500")
-                }`}>
-                {changeType === "24h%"
-                  ? `${
-                      countPercentChange(
-                        portfolioValue24hAgo,
-                        portfolioValue
-                      ) >= 0
-                        ? "+"
-                        : ""
-                    }
+              <div className='flex flex-row items-center gap-x-2 mt-1 ml-1'>
+                <span className='text-sm text-secondaryText'>Last 30 days</span>
+                <span
+                  className={`flex flex-row items-center text-sm font-bold  ${
+                    changeType === "24h%"
+                      ? countPercentChange(
+                          portfolioValue24hAgo,
+                          portfolioValue
+                        ) >= 0
+                        ? "text-green-500 "
+                        : "text-red-500"
+                      : changeType === "PNL"
+                      ? portfolioValue - portfolioInitValue >= 0
+                        ? "text-green-500 "
+                        : "text-red-500 "
+                      : changeType === "PNL%" &&
+                        (countPercentChange(
+                          portfolioInitValue,
+                          portfolioValue
+                        ) >= 0
+                          ? "text-green-500 "
+                          : "text-red-500 ")
+                  }`}>
+                  {changeType === "24h%"
+                    ? `${
+                        countPercentChange(
+                          portfolioValue24hAgo,
+                          portfolioValue
+                        ) >= 0
+                          ? "+"
+                          : ""
+                      }
                 ${countPercentChange(
                   portfolioValue24hAgo,
                   portfolioValue
                 ).toFixed(2)}% `
-                  : changeType === "PNL"
-                  ? `${portfolioValue - portfolioInitValue > 0 && "+"} ${(
-                      portfolioValue - portfolioInitValue
-                    ).toFixed(2)}`
-                  : changeType === "PNL%" &&
-                    `${
-                      countPercentChange(portfolioInitValue, portfolioValue) >=
-                      0
-                        ? "+"
-                        : ""
-                    }
+                    : changeType === "PNL"
+                    ? `${portfolioValue - portfolioInitValue > 0 && "+"} ${(
+                        portfolioValue - portfolioInitValue
+                      ).toFixed(2)}`
+                    : changeType === "PNL%" &&
+                      `${
+                        countPercentChange(
+                          portfolioInitValue,
+                          portfolioValue
+                        ) >= 0
+                          ? "+"
+                          : ""
+                      }
                 ${countPercentChange(
                   portfolioInitValue,
                   portfolioValue
                 ).toFixed(2)}% `}
-              </span>
+                </span>
+              </div>
             </div>
           </div>
+
+          <PortfolioChart />
 
           <div className='flex flex-row gap-3 mt-3 justify-between'>
             <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
@@ -386,30 +398,12 @@ export default function Account() {
           </div>
 
           <div className='w-full h-auto'>
-            <div className='mt-5 rounded-xl p-3 bg-secondaryTransparent'>
+            <div className='mt-5 rounded-xl'>
               <div className='w-full flex justify-between items-center text-xl font-bold mb-3'>
                 <h2 className='flex flex-row items-center gap-x-1'>
                   <Gift size={20} />
                   {translate("assets")}:
                 </h2>
-                <div className='flex flex-row items-center'>
-                  {currency === "ton" ? (
-                    <Image
-                      alt='ton logo'
-                      src='/images/toncoin.webp'
-                      width={16}
-                      height={16}
-                      className='mr-1'
-                    />
-                  ) : (
-                    <span className='mr-1'>$</span>
-                  )}
-                  <span>
-                    {currency === "ton"
-                      ? assetsPriceTon.toFixed(2)
-                      : assetsPriceUsd.toFixed(2)}
-                  </span>
-                </div>
               </div>
 
               {assetsArray.length !== 0 ? (
@@ -441,7 +435,9 @@ export default function Account() {
                   />
                 ))
               ) : (
-                <h2 className='text-secondary mt-3'>{translate("noAssets")}</h2>
+                <h2 className='text-secondaryText text-sm mt-3'>
+                  {translate("noAssets")}
+                </h2>
               )}
             </div>
 
