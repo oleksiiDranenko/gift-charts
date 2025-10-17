@@ -338,7 +338,7 @@ export default function MainPage() {
           className={`w-fit text-xs h-8 lg:h-7 mr-3 px-4 flex flex-row text-nowrap gap-x-2 items-center justify-center font-bold text-white bg-primary rounded-xl`}
           href={"/gifts-list"}
           onClick={() => vibrate()}>
-          Customise list
+          <span className='hidden lg:block'>Customise list</span>
           <SlidersHorizontal size={14} strokeWidth={2.5} />
         </Link>
       </div>
