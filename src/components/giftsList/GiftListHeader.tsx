@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function GiftListHeader() {
   return (
     <div className='w-full hidden lg:flex flex-row my-3 pb-3 font-bold border-b border-secondaryTransparent'>
