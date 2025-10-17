@@ -2,7 +2,6 @@
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
-import { setIndexList } from "@/redux/slices/indexListSlice";
 import axios from "axios";
 import { Link } from "@/i18n/navigation";
 import { useEffect } from "react";
@@ -11,15 +10,16 @@ import useVibrate from "@/hooks/useVibrate";
 import { ChevronRight, Grid2x2, Smile } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useQuery } from "react-query";
 
 export default function Page() {
   const dispatch = useAppDispatch();
   const giftsList = useAppSelector((state) => state.giftsList);
-  const indexList = useAppSelector((state) => state.indexList);
   const vibrate = useVibrate();
   const user = useAppSelector((state) => state.user);
   const t = useTranslations("fearAndGreed");
 
+  // ✅ Fetch gifts (still via Redux)
   useEffect(() => {
     (async () => {
       try {
@@ -29,18 +29,27 @@ export default function Page() {
           );
           dispatch(setGiftsList(giftsRes.data));
         }
-        if (indexList.length === 0) {
-          const indexRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/indexes/get-all`
-          );
-          dispatch(setIndexList(indexRes.data));
-          console.log(indexRes);
-        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching gifts:", error);
       }
     })();
-  }, [dispatch, giftsList, indexList]);
+  }, [dispatch, giftsList]);
+
+  // ✅ Fetch indexes with TanStack Query
+  const {
+    data: indexList,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["indexes"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}/indexes/get-all`
+      );
+      return res.data;
+    },
+  });
 
   return (
     <main className='w-full lg:w-5/6 pt-[0px] pb-24 px-3'>
@@ -103,18 +112,38 @@ export default function Page() {
       </h1>
 
       <div className='w-full h-auto flex flex-col gap-3'>
-        {[...indexList]
-          .sort((a, b) => a.orderIndex - b.orderIndex)
-          .map((index) => (
-            <IndexBlock
-              key={index._id}
-              id={index._id}
-              name={index.name}
-              valueType={index.valueType}
-              tonPrice={index.tonPrice}
-              tonPrice24hAgo={index.tonPrice24hAgo}
-            />
-          ))}
+        {/* ✅ Loading placeholder */}
+        {isLoading && (
+          <>
+            {[...Array(5)].map((_, i) => (
+              <div className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-xl animate-pulse' />
+            ))}
+          </>
+        )}
+
+        {/* ✅ Error state */}
+        {isError && (
+          <p className='text-red-500 text-sm'>
+            Failed to load indexes: {(error as Error).message}
+          </p>
+        )}
+
+        {/* ✅ Data rendering */}
+        {!isLoading &&
+          !isError &&
+          indexList &&
+          [...indexList]
+            .sort((a, b) => a.orderIndex - b.orderIndex)
+            .map((index: any) => (
+              <IndexBlock
+                key={index._id}
+                id={index._id}
+                name={index.name}
+                valueType={index.valueType}
+                tonPrice={index.tonPrice}
+                tonPrice24hAgo={index.tonPrice24hAgo}
+              />
+            ))}
       </div>
     </main>
   );

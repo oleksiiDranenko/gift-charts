@@ -200,11 +200,11 @@ export default function MainPage() {
 
       <SearchBar />
 
-      <div className='max-w-full mx-3 flex items-center justify-between gap-x-2 mb-3'>
-        <div className='w-1/2 flex flex-row gap-x-1'>
-          <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden'>
+      <div className='max-w-full mx-3 flex items-center justify-between lg:justify-start gap-x-2 mb-3 lg:mb-4'>
+        <div className='w-1/2 lg:w-fit flex flex-row gap-x-1'>
+          <div className='w-full lg:w-fit flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden'>
             <button
-              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
                 giftType === "line"
                   ? "font-bold text-foreground bg-secondary rounded-xl"
                   : "text-secondaryText"
@@ -216,7 +216,7 @@ export default function MainPage() {
               <Rows3 size={18} />
             </button>
             <button
-              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
                 giftType === "block"
                   ? "font-bold text-foreground bg-secondary rounded-xl"
                   : "text-secondaryText"
@@ -228,9 +228,9 @@ export default function MainPage() {
               <Grid2x2 size={18} />
             </button>
           </div>
-          <div className='w-full flex flex-row bg-secondaryTransparent rounded-xl'>
+          <div className='w-full lg:w-fit flex flex-row bg-secondaryTransparent rounded-xl'>
             <button
-              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
                 giftBackground === "color"
                   ? "font-bold text-foreground bg-secondary rounded-xl"
                   : "text-secondaryText"
@@ -242,7 +242,7 @@ export default function MainPage() {
               <PaintBucket size={18} />
             </button>
             <button
-              className={`w-full flex flex-row items-center justify-center text-xs h-8 ${
+              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
                 giftBackground === "none"
                   ? "font-bold text-foreground bg-secondary rounded-xl"
                   : "text-secondaryText"
@@ -255,10 +255,10 @@ export default function MainPage() {
             </button>
           </div>
         </div>
-        <div className='w-1/2 flex flex-row items-center gap-x-1'>
-          <div className='w-full flex items-center justify-between gap-x-2 bg-secondaryTransparent rounded-xl'>
+        <div className='w-1/2 lg:w-fit flex flex-row items-center gap-x-1'>
+          <div className='w-full lg:w-fit flex items-center justify-between gap-x-2 bg-secondaryTransparent rounded-xl'>
             <button
-              className={`w-full flex flex-row items-center gap-x-2 justify-center text-sm h-8 ${
+              className={`w-full lg:px-3 flex flex-row items-center gap-x-2 justify-center text-sm h-8 ${
                 currency === "ton"
                   ? "font-bold text-white bg-primary rounded-xl"
                   : "text-secondaryText"
@@ -276,7 +276,7 @@ export default function MainPage() {
               Ton
             </button>
             <button
-              className={`w-full flex flex-row items-center justify-center text-sm h-8 ${
+              className={`w-full lg:px-3 flex flex-row items-center justify-center text-sm h-8 ${
                 currency === "usd"
                   ? "font-bold text-white bg-primary rounded-xl"
                   : "text-secondaryText"
@@ -294,7 +294,7 @@ export default function MainPage() {
       <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
-            className={`lg:w-full flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={` flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "gainers"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
@@ -304,7 +304,7 @@ export default function MainPage() {
             <TrendingUp size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={` flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "losers"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
@@ -314,7 +314,7 @@ export default function MainPage() {
             <TrendingDown size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={` flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "floor"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
@@ -324,7 +324,7 @@ export default function MainPage() {
             <Trophy size={14} className='ml-1' />
           </button>
           <button
-            className={`lg:w-full flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={` flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
               chosenFilter === "saved"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
@@ -335,9 +335,10 @@ export default function MainPage() {
           </button>
         </div>
         <Link
-          className={`w-fit lg:w-1/3 text-xs h-8 mr-3 px-4 flex items-center justify-center font-bold text-white bg-primary rounded-xl`}
+          className={`w-fit text-xs h-8 lg:h-7 mr-3 px-4 flex flex-row text-nowrap gap-x-2 items-center justify-center font-bold text-white bg-primary rounded-xl`}
           href={"/gifts-list"}
           onClick={() => vibrate()}>
+          Customise list
           <SlidersHorizontal size={14} strokeWidth={2.5} />
         </Link>
       </div>
@@ -357,9 +358,6 @@ export default function MainPage() {
               <div className='flex-none w-full text-center snap-start'>
                 <div className='px-3 pt-3 pb-1 font-bold'>
                   {translateMain("emptyWatchlist")}
-                </div>
-                <div className='px-3 pt-3 pb-5 text-sm text-secondaryText'>
-                  {"Profile -> Settings -> Edit Watchlist"}
                 </div>
               </div>
             )}

@@ -38,50 +38,62 @@ export default function GiftItem({
   const { resolvedTheme } = useTheme();
 
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
+  const [percentChange24h, setPercentChange24h] = useState<number | "no data">(
+    0
+  );
+  const [percentChangeWeek, setPercentChangeWeek] = useState<
+    number | "no data"
+  >(0);
+  const [percentChangeMonth, setPercentChangeMonth] = useState<
+    number | "no data"
+  >(0);
 
   const translateNumber = useTranslations("number");
 
   useEffect(() => {
-    if (item.tonPrice24hAgo && item.usdPrice24hAgo) {
-      if (currency === "ton") {
-        if (timeGap === "24h") {
-          setPercentChange(
-            countPercentChange(item.tonPrice24hAgo, item.priceTon)
-          );
-        } else if (timeGap === "1w") {
-          item.tonPriceWeekAgo
-            ? setPercentChange(
-                countPercentChange(item.tonPriceWeekAgo, item.priceTon)
-              )
-            : setPercentChange("no data");
-        } else if (timeGap === "1m") {
-          item.tonPriceMonthAgo
-            ? setPercentChange(
-                countPercentChange(item.tonPriceMonthAgo, item.priceTon)
-              )
-            : setPercentChange("no data");
-        }
-      } else {
-        if (timeGap === "24h") {
-          setPercentChange(
-            countPercentChange(item.usdPrice24hAgo, item.priceUsd)
-          );
-        } else if (timeGap === "1w") {
-          item.usdPriceWeekAgo
-            ? setPercentChange(
-                countPercentChange(item.usdPriceWeekAgo, item.priceUsd)
-              )
-            : setPercentChange("no data");
-        } else if (timeGap === "1m" || timeGap === "all") {
-          item.usdPriceMonthAgo
-            ? setPercentChange(
-                countPercentChange(item.usdPriceMonthAgo, item.priceUsd)
-              )
-            : setPercentChange("no data");
-        }
+    // Helper: pick the right price depending on currency
+    const currentPrice = currency === "ton" ? item.priceTon : item.priceUsd;
+    const price24hAgo =
+      currency === "ton" ? item.tonPrice24hAgo : item.usdPrice24hAgo;
+    const priceWeekAgo =
+      currency === "ton" ? item.tonPriceWeekAgo : item.usdPriceWeekAgo;
+    const priceMonthAgo =
+      currency === "ton" ? item.tonPriceMonthAgo : item.usdPriceMonthAgo;
+
+    // --- Update main percentChange (based on selected timeGap) ---
+    if (price24hAgo && currentPrice) {
+      if (timeGap === "24h") {
+        setPercentChange(countPercentChange(price24hAgo, currentPrice));
+      } else if (timeGap === "1w") {
+        priceWeekAgo
+          ? setPercentChange(countPercentChange(priceWeekAgo, currentPrice))
+          : setPercentChange("no data");
+      } else if (timeGap === "1m" || timeGap === "all") {
+        priceMonthAgo
+          ? setPercentChange(countPercentChange(priceMonthAgo, currentPrice))
+          : setPercentChange("no data");
       }
     } else {
       setPercentChange("no data");
+    }
+
+    // --- Always calculate 24h / week / month changes for display ---
+    if (price24hAgo && currentPrice) {
+      setPercentChange24h(countPercentChange(price24hAgo, currentPrice));
+    } else {
+      setPercentChange24h("no data");
+    }
+
+    if (priceWeekAgo && currentPrice) {
+      setPercentChangeWeek(countPercentChange(priceWeekAgo, currentPrice));
+    } else {
+      setPercentChangeWeek("no data");
+    }
+
+    if (priceMonthAgo && currentPrice) {
+      setPercentChangeMonth(countPercentChange(priceMonthAgo, currentPrice));
+    } else {
+      setPercentChangeMonth("no data");
     }
   }, [currency, timeGap]);
 
@@ -118,125 +130,342 @@ export default function GiftItem({
   };
 
   return (
-    <Link
-      className={`w-full h-16 mb-2 flex flex-row items-center justify-between rounded-xl ${
-        background === "color"
-          ? `bg-gradient-to-r ${
-              percentChange !== "no data" && percentChange >= 0
-                ? "from-green-500/5 to-green-500/25"
-                : percentChange !== "no data" &&
-                  percentChange < 0 &&
-                  "from-red-500/5 to-red-500/25"
-            }`
-          : "bg-secondaryTransparent"
-      }`}
-      key={item._id}
-      href={`/gift/${item._id}`}
-      onClick={() => vibrate()}>
-      <div className=' flex flex-row items-center'>
-        <Image
-          alt='gift image'
-          src={`/gifts/${item.image}.webp`}
-          width={50}
-          height={50}
-          className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
-            resolvedTheme === "dark" ? "bg-secondary " : "bg-background"
-          }`}
-        />
-        <div className='flex flex-col gap-y-[2px]'>
-          <span className='flex flex-row items-center text-base font-bold'>
-            {item.name}
-            {/* <span className="flex flex-row items-center gap-[2px] ml-1 text-xs font-normal p-1 text-green-500 bg-green-500 bg-opacity-10 rounded-xl">
-                                <Cannabis size={12}/>
-                            </span> */}
+    <>
+      <Link
+        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-xl ${
+          background === "color"
+            ? `bg-gradient-to-r ${
+                percentChange !== "no data" && percentChange >= 0
+                  ? "from-green-500/5 to-green-500/25"
+                  : percentChange !== "no data" &&
+                    percentChange < 0 &&
+                    "from-red-500/5 to-red-500/25"
+              }`
+            : "bg-secondaryTransparent"
+        }`}
+        key={item._id}
+        href={`/gift/${item._id}`}
+        onClick={() => vibrate()}>
+        <div className=' flex flex-row items-center'>
+          <Image
+            alt='gift image'
+            src={`/gifts/${item.image}.webp`}
+            width={50}
+            height={50}
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
+              resolvedTheme === "dark" ? "bg-secondary " : "bg-background"
+            }`}
+          />
+          <div className='flex flex-col gap-y-[2px]'>
+            <span className='flex flex-row items-center text-base font-bold'>
+              {item.name}
 
-            {item.preSale && (
-              <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-xl'>
-                Pre-Market
-              </span>
-            )}
-          </span>
-          <span className='text-secondaryText gap-y-1 w-fit rounded-lg text-xs font-normal'>
-            {sortBy === "price"
-              ? formatNumber(item.upgradedSupply) +
-                " / " +
-                formatNumberWithWord(item.supply)
-              : sortBy === "marketCap" && displayValue === "price"
-              ? formatNumber(
-                  currency === "ton"
-                    ? item.priceTon * item.upgradedSupply
-                    : item.priceUsd * item.upgradedSupply
-                )
-              : sortBy === "marketCap" && displayValue === "marketCap"
-              ? formatNumber(item.upgradedSupply) +
-                " / " +
-                formatNumberWithWord(item.supply)
-              : sortBy === "percentChange"
-              ? formatNumber(item.upgradedSupply) +
-                " / " +
-                formatNumberWithWord(item.supply)
-              : sortBy === "supply"
-              ? formatNumber(item.upgradedSupply) +
-                " / " +
-                formatNumberWithWord(item.supply)
-              : sortBy === "initSupply"
-              ? formatNumber(item.upgradedSupply) +
-                " / " +
-                formatNumberWithWord(item.initSupply)
-              : sortBy === "starsPrice"
-              ? `${item.starsPrice} ⭐`
-              : null}
-          </span>
-        </div>
-      </div>
-
-      {/* <div className='h-12'>
-        <GiftItemChart />
-      </div> */}
-
-      <div className=' flex flex-row items-center justify-end'>
-        <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
-          <div className='flex flex-row items-center'>
-            {currency === "ton" ? (
-              <Image
-                alt='ton logo'
-                src='/images/toncoin.webp'
-                width={15}
-                height={15}
-                className='mr-1'
-              />
-            ) : (
-              <span className='mr-1'>$</span>
-            )}
-            <span className='text-base font-bold'>
-              {currency === "ton" && displayValue === "price"
-                ? item.priceTon
-                : currency === "ton" && displayValue === "marketCap"
-                ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
-                : currency === "usd" && displayValue === "price"
-                ? item.priceUsd.toFixed(2)
-                : currency === "usd" && displayValue === "marketCap"
-                ? formatNumberWithWord(item.priceUsd * item.upgradedSupply)
+              {item.preSale && (
+                <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-xl'>
+                  Pre-Market
+                </span>
+              )}
+            </span>
+            <span className='text-secondaryText gap-y-1 w-fit rounded-lg text-xs font-normal'>
+              {sortBy === "price"
+                ? formatNumber(item.upgradedSupply) +
+                  " / " +
+                  formatNumberWithWord(item.supply)
+                : sortBy === "marketCap" && displayValue === "price"
+                ? formatNumber(
+                    currency === "ton"
+                      ? item.priceTon * item.upgradedSupply
+                      : item.priceUsd * item.upgradedSupply
+                  )
+                : sortBy === "marketCap" && displayValue === "marketCap"
+                ? formatNumber(item.upgradedSupply) +
+                  " / " +
+                  formatNumberWithWord(item.supply)
+                : sortBy === "percentChange"
+                ? formatNumber(item.upgradedSupply) +
+                  " / " +
+                  formatNumberWithWord(item.supply)
+                : sortBy === "supply"
+                ? formatNumber(item.upgradedSupply) +
+                  " / " +
+                  formatNumberWithWord(item.supply)
+                : sortBy === "initSupply"
+                ? formatNumber(item.upgradedSupply) +
+                  " / " +
+                  formatNumberWithWord(item.initSupply)
+                : sortBy === "starsPrice"
+                ? `${item.starsPrice} ⭐`
                 : null}
             </span>
           </div>
-
-          <span
-            className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
-              percentChange !== "no data"
-                ? percentChange >= 0
-                  ? "text-green-500 bg-green-500"
-                  : percentChange < 0
-                  ? "text-red-500 bg-red-500"
-                  : "text-slate-500"
-                : "text-slate-500"
-            }`}>
-            {percentChange !== "no data" && percentChange >= 0 && "+"}
-            {percentChange}
-            {percentChange !== "no data" ? "%" : null}
-          </span>
         </div>
+
+        <div className=' flex flex-row items-center justify-end'>
+          <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
+            <div className='flex flex-row items-center'>
+              {currency === "ton" ? (
+                <Image
+                  alt='ton logo'
+                  src='/images/toncoin.webp'
+                  width={15}
+                  height={15}
+                  className='mr-1'
+                />
+              ) : (
+                <span className='mr-1'>$</span>
+              )}
+              <span className='text-base font-bold'>
+                {currency === "ton" && displayValue === "price"
+                  ? item.priceTon
+                  : currency === "ton" && displayValue === "marketCap"
+                  ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
+                  : currency === "usd" && displayValue === "price"
+                  ? item.priceUsd.toFixed(2)
+                  : currency === "usd" && displayValue === "marketCap"
+                  ? formatNumberWithWord(item.priceUsd * item.upgradedSupply)
+                  : null}
+              </span>
+            </div>
+
+            <span
+              className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                percentChange !== "no data"
+                  ? percentChange >= 0
+                    ? "text-green-500 bg-green-500"
+                    : percentChange < 0
+                    ? "text-red-500 bg-red-500"
+                    : "text-slate-500"
+                  : "text-slate-500"
+              }`}>
+              {percentChange !== "no data" && percentChange >= 0 && "+"}
+              {percentChange}
+              {percentChange !== "no data" ? "%" : null}
+            </span>
+          </div>
+        </div>
+      </Link>
+
+      {/* wide screen */}
+      {/* wide screen */}
+      {/* wide screen */}
+      {/* wide screen */}
+      {/* wide screen */}
+      {/* wide screen */}
+      {/* wide screen */}
+      {/* wide screen */}
+
+      <div className='hidden lg:block'>
+        <Link
+          className={`w-full h-16 flex flex-row items-center justify-between ${
+            background === "color"
+              ? `bg-gradient-to-r ${
+                  percentChange !== "no data" && percentChange >= 0
+                    ? "from-green-500/5 to-green-500/25"
+                    : percentChange !== "no data" &&
+                      percentChange < 0 &&
+                      "from-red-500/5 to-red-500/25"
+                }`
+              : "bg-none hover:bg-secondaryTransparent"
+          }`}
+          key={item._id}
+          href={`/gift/${item._id}`}
+          onClick={() => vibrate()}>
+          <div className='w-1/3 flex flex-row items-center'>
+            <Image
+              alt='gift image'
+              src={`/gifts/${item.image}.webp`}
+              width={50}
+              height={50}
+              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
+                resolvedTheme === "dark"
+                  ? "bg-secondaryTransparent "
+                  : "bg-background"
+              }`}
+            />
+
+            <div className='flex flex-col gap-y-[2px]'>
+              <span className='flex flex-row items-center text-base font-bold'>
+                {item.name}
+                {item.preSale && (
+                  <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-xl'>
+                    Pre-Market
+                  </span>
+                )}
+              </span>
+              <span className='text-secondaryText gap-y-1 w-fit rounded-lg text-xs font-normal'>
+                {sortBy === "price"
+                  ? formatNumber(item.upgradedSupply) +
+                    " / " +
+                    formatNumberWithWord(item.supply)
+                  : sortBy === "marketCap" && displayValue === "price"
+                  ? formatNumber(
+                      currency === "ton"
+                        ? item.priceTon * item.upgradedSupply
+                        : item.priceUsd * item.upgradedSupply
+                    )
+                  : sortBy === "marketCap" && displayValue === "marketCap"
+                  ? formatNumber(item.upgradedSupply) +
+                    " / " +
+                    formatNumberWithWord(item.supply)
+                  : sortBy === "percentChange"
+                  ? formatNumber(item.upgradedSupply) +
+                    " / " +
+                    formatNumberWithWord(item.supply)
+                  : sortBy === "supply"
+                  ? formatNumber(item.upgradedSupply) +
+                    " / " +
+                    formatNumberWithWord(item.supply)
+                  : sortBy === "initSupply"
+                  ? formatNumber(item.upgradedSupply) +
+                    " / " +
+                    formatNumberWithWord(item.initSupply)
+                  : sortBy === "starsPrice"
+                  ? `${item.starsPrice} ⭐`
+                  : null}
+              </span>
+            </div>
+          </div>
+
+          <div className='w-1/3 flex flex-row'>
+            <div className='w-full flex flex-row justify-start items-center'>
+              {currency === "ton" ? (
+                <Image
+                  alt='ton logo'
+                  src='/images/toncoin.webp'
+                  width={15}
+                  height={15}
+                  className='mr-1'
+                />
+              ) : (
+                <span className='mr-1 text-sm'>$</span>
+              )}
+              <span className='text-sm'>
+                {currency === "ton" ? item.priceTon : item.priceUsd.toFixed(2)}
+              </span>
+            </div>
+
+            <div className='w-full flex flex-row justify-start items-center'>
+              {currency === "ton" ? (
+                <Image
+                  alt='ton logo'
+                  src='/images/toncoin.webp'
+                  width={15}
+                  height={15}
+                  className='mr-1'
+                />
+              ) : (
+                <span className='mr-1 text-sm'>$</span>
+              )}
+              <span className='text-sm'>
+                {currency === "ton"
+                  ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
+                  : formatNumberWithWord(item.priceUsd * item.upgradedSupply)}
+              </span>
+            </div>
+          </div>
+
+          <div className='w-1/3 flex flex-row'>
+            <div className='w-full flex flex-row justify-start items-center'>
+              <span
+                className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                  percentChange24h !== "no data"
+                    ? percentChange24h >= 0
+                      ? "text-green-500 bg-green-500"
+                      : percentChange24h < 0
+                      ? "text-red-500 bg-red-500"
+                      : "text-slate-500"
+                    : "text-slate-500"
+                }`}>
+                {percentChange24h !== "no data" && percentChange24h >= 0 && "+"}
+                {percentChange24h}
+                {percentChange24h !== "no data" ? "%" : null}
+              </span>
+            </div>
+
+            <div className='w-full flex flex-row justify-start items-center'>
+              <span
+                className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                  percentChangeWeek !== "no data"
+                    ? percentChangeWeek >= 0
+                      ? "text-green-500 bg-green-500"
+                      : percentChangeWeek < 0
+                      ? "text-red-500 bg-red-500"
+                      : "text-slate-500"
+                    : "text-slate-500"
+                }`}>
+                {percentChangeWeek !== "no data" &&
+                  percentChangeWeek >= 0 &&
+                  "+"}
+                {percentChangeWeek}
+                {percentChangeWeek !== "no data" ? "%" : null}
+              </span>
+            </div>
+
+            <div className='w-full flex flex-row justify-start items-center'>
+              <span
+                className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                  percentChangeMonth !== "no data"
+                    ? percentChangeMonth >= 0
+                      ? "text-green-500 bg-green-500"
+                      : percentChangeMonth < 0
+                      ? "text-red-500 bg-red-500"
+                      : "text-slate-500"
+                    : "text-slate-500"
+                }`}>
+                {percentChangeMonth !== "no data" &&
+                  percentChangeMonth >= 0 &&
+                  "+"}
+                {percentChangeMonth}
+                {percentChangeMonth !== "no data" ? "%" : null}
+              </span>
+            </div>
+          </div>
+
+          {/* <div className=' flex flex-row items-center justify-end'>
+            <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
+              <div className='flex flex-row items-center'>
+                {currency === "ton" ? (
+                  <Image
+                    alt='ton logo'
+                    src='/images/toncoin.webp'
+                    width={15}
+                    height={15}
+                    className='mr-1'
+                  />
+                ) : (
+                  <span className='mr-1'>$</span>
+                )}
+                <span className='text-base font-bold'>
+                  {currency === "ton" && displayValue === "price"
+                    ? item.priceTon
+                    : currency === "ton" && displayValue === "marketCap"
+                    ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
+                    : currency === "usd" && displayValue === "price"
+                    ? item.priceUsd.toFixed(2)
+                    : currency === "usd" && displayValue === "marketCap"
+                    ? formatNumberWithWord(item.priceUsd * item.upgradedSupply)
+                    : null}
+                </span>
+              </div>
+
+              <span
+                className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                  percentChange !== "no data"
+                    ? percentChange >= 0
+                      ? "text-green-500 bg-green-500"
+                      : percentChange < 0
+                      ? "text-red-500 bg-red-500"
+                      : "text-slate-500"
+                    : "text-slate-500"
+                }`}>
+                {percentChange !== "no data" && percentChange >= 0 && "+"}
+                {percentChange}
+                {percentChange !== "no data" ? "%" : null}
+              </span>
+            </div>
+          </div> */}
+        </Link>
       </div>
-    </Link>
+    </>
   );
 }

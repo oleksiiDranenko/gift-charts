@@ -4,6 +4,7 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import GiftItem from "../giftsList/GiftItem";
 import GiftBlockItem from "../giftsList/GiftBlockItem";
 import { Transition } from "@headlessui/react";
+import GiftListHeader from "../giftsList/GiftListHeader";
 
 interface PropsInterface {
   giftsList: GiftInterface[];
@@ -35,6 +36,7 @@ export default function ListHandler({
               ? "grid grid-flow-row grid-cols-4 md:grid-cols-5 gap-x-2 px-2"
               : "px-2"
           }>
+          {type === "line" ? <GiftListHeader /> : null}
           {giftsList.map((item: GiftInterface) =>
             type === "line" ? (
               <GiftItem

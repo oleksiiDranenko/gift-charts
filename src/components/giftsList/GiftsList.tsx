@@ -11,6 +11,7 @@ import { BrushCleaning, Eye, EyeClosed, Funnel } from "lucide-react";
 import BackButton from "@/utils/ui/backButton";
 import FilterGiftsModal from "../filterGifts/FilterGiftsModal";
 import { useTranslations } from "next-intl";
+import GiftListHeader from "./GiftListHeader";
 
 interface PropsInterface {
   loading: boolean;
@@ -318,7 +319,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           ) : null}
 
-          <div className='w-full bg-secondaryTransparent rounded-xl'>
+          <div className='w-full lg:hidden bg-secondaryTransparent rounded-xl mb-3'>
             <div className='w-full flex flex-col'>
               <div className='w-full flex flex-row justify-between gap-x-3'>
                 <button
@@ -361,30 +362,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           </div>
 
-          <div className='w-full mt-2 flex flex-row items-center justify-between h-6 text-xs text-secondaryText'>
-            <div className=''>
-              {t("name")} /{" "}
-              {filters.sortBy === "price" ||
-              filters.sortBy === "supply" ||
-              filters.sortBy === "percentChange"
-                ? "Supply"
-                : filters.sortBy === "marketCap"
-                ? filters.displayValue === "marketCap"
-                  ? "Supply"
-                  : "Market Cap"
-                : filters.sortBy === "initSupply"
-                ? "Init. Supply"
-                : filters.sortBy === "starsPrice"
-                ? "Stars Price"
-                : null}
-            </div>
-
-            <div className=''>
-              {filters.displayValue === "price" ? "Price" : "Market Cap"} /{" "}
-              {timeGap === "24h" ? "24h " : timeGap === "1w" ? "1w " : "1m "}{" "}
-              {t("change")}
-            </div>
-          </div>
+          <GiftListHeader />
 
           <div className='w-full'>
             {list.map((item: GiftInterface) => (
