@@ -116,7 +116,10 @@ export default function Page() {
         {isLoading && (
           <>
             {[...Array(5)].map((_, i) => (
-              <div className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-xl animate-pulse' />
+              <div
+                key={i}
+                className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-xl animate-pulse'
+              />
             ))}
           </>
         )}
