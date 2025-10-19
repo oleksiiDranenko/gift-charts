@@ -78,7 +78,7 @@ export default function DefaultUpdate({
         <div className='fixed inset-0 z-50 flex flex-col justify-center items-center bg-background'>
           <div className='w-1/2 lg:w-5/6 max-w-96  rounded-xl'>
             <div className='w-full flex flex-col items-center justify-center mb-5'>
-              <div className='p-5 bg-background rounded-full'>
+              <div className='p-5 bg-background rounded-full animate-pulse'>
                 <Image
                   alt='Logo'
                   src={"/images/logo.webp"}

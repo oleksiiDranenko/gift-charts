@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
   description: "Telegram NFT gifts analytics",
   openGraph: {
-    title: "My Awesome App",
-    description: "Discover and share amazing content.",
+    title: "Gift Charts",
+    description: "Telegram NFT gifts analytics",
     url: "https://giftcharts.com",
     siteName: "Gift Charts",
     images: [{ url: "/images/logo.webp" }],

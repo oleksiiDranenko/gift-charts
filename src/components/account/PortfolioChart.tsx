@@ -13,9 +13,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useTheme } from "next-themes";
-import axios from "axios";
-import { useQuery } from "react-query";
-import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
+import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 
 ChartJS.register(
   LineElement,
@@ -26,39 +24,31 @@ ChartJS.register(
   Filler
 );
 
-export default function PortfolioChart() {
+interface PortfolioChartProps {
+  data: GiftWeekDataInterface[];
+  currency: "ton" | "usd";
+}
+
+export default function PortfolioChart({
+  data,
+  currency,
+}: PortfolioChartProps) {
   const chartRef = useRef<ChartJS<"line">>(null);
   const { resolvedTheme } = useTheme();
   const [gradient, setGradient] = useState<CanvasGradient | null>(null);
 
-  async function fetchLifeData(name: string) {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API}/lifeChart`,
-      {
-        params: { name },
-      }
-    );
-    return data;
-  }
+  // 🧩 Determine which value array to use based on currency
+  const values =
+    currency === "ton"
+      ? data.map((item) => item.priceTon)
+      : data.map((item) => item.priceUsd);
 
-  const {
-    data: lifeList = [],
-    isLoading: isLifeLoading,
-    isError: isLifeError,
-  } = useQuery<GiftLifeDataInterface[], Error>(
-    ["lifeData", "Heart Locket"],
-    () => fetchLifeData("Heart Locket")
-  );
+  const labels = data.map((item) => item.time);
 
-  // Extract chart data safely
-  const labels = lifeList.map((item) => item.date.slice(0, 5));
-
-  const values = lifeList.map((item) => item.priceUsd);
-
-  // Filter numeric values for chart scaling
+  // Filter numeric values
   const numericValues = values.filter((v): v is number => v !== null);
 
-  // Calculate % change for color indication
+  // 🧮 Calculate percent change (first vs last)
   const percentChange =
     numericValues.length > 1
       ? ((numericValues[numericValues.length - 1] - numericValues[0]) /
@@ -66,7 +56,7 @@ export default function PortfolioChart() {
         100
       : 0;
 
-  // 🎨 Create gradient dynamically when theme or chart area changes
+  // 🎨 Create gradient when theme, currency, or data changes
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart) return;
@@ -77,18 +67,20 @@ export default function PortfolioChart() {
 
     const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
     const topColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0.4)" : "rgba(239, 68, 68, 0.4)";
-    const bottomColor = "rgba(34, 197, 94, 0)";
+      percentChange >= 0 ? "rgba(34,197,94,0.4)" : "rgba(239,68,68,0.4)";
+    const bottomColor =
+      percentChange >= 0 ? "rgba(34,197,94,0)" : "rgba(239,68,68,0)";
     g.addColorStop(0, topColor);
     g.addColorStop(1, bottomColor);
     setGradient(g);
-  }, [resolvedTheme, percentChange, lifeList]);
+  }, [resolvedTheme, percentChange, data, currency]);
 
-  const data = {
+  const chartData = {
     labels,
     datasets: [
       {
-        label: "Portfolio Value ($)",
+        label:
+          currency === "usd" ? "Portfolio Value ($)" : "Portfolio Value (TON)",
         data: values,
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
         borderWidth: 1.5,
@@ -97,9 +89,8 @@ export default function PortfolioChart() {
         fill: true,
         backgroundColor:
           gradient ||
-          (percentChange >= 0
-            ? "rgba(34, 197, 94, 0.2)"
-            : "rgba(239, 68, 68, 0.2)"),
+          (percentChange >= 0 ? "rgba(34,197,94,0.2)" : "rgba(239,68,68,0.2)"),
+        pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
       },
     ],
   };
@@ -113,7 +104,10 @@ export default function PortfolioChart() {
         mode: "index",
         intersect: false,
         callbacks: {
-          label: (tooltipItem) => `$${tooltipItem.raw}`,
+          label: (tooltipItem) =>
+            currency === "usd"
+              ? `$${(tooltipItem.raw as number).toFixed(2)}`
+              : `${(tooltipItem.raw as number).toFixed(2)} TON`,
         },
       },
     },
@@ -124,11 +118,7 @@ export default function PortfolioChart() {
     scales: {
       x: {
         ticks: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
-          maxTicksLimit: 3,
+          display: false, // 👈 hides tick labels completely
         },
       },
       y: {
@@ -136,8 +126,8 @@ export default function PortfolioChart() {
         ticks: {
           color:
             resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
+              ? "rgba(255,255,255,0.6)"
+              : "rgba(0,0,0,0.6)",
           padding: 3,
         },
         suggestedMax:
@@ -151,10 +141,6 @@ export default function PortfolioChart() {
       },
     },
   };
-
-  if (isLifeLoading) return <div>Loading chart...</div>;
-  if (isLifeError) return <div>Failed to load chart data.</div>;
-
   return (
     <div
       className={
@@ -162,7 +148,12 @@ export default function PortfolioChart() {
           ? "relative"
           : "relative bg-secondaryTransparent rounded-xl p-4"
       }>
-      <Line ref={chartRef as any} data={data} options={options} height={150} />
+      <Line
+        ref={chartRef as any}
+        data={chartData}
+        options={options}
+        height={150}
+      />
     </div>
   );
 }
