@@ -37,7 +37,7 @@ export default function ListHandler({
               : "px-2"
           }>
           {type === "line" ? <GiftListHeader /> : null}
-          {giftsList.map((item: GiftInterface) =>
+          {giftsList.map((item: GiftInterface, i) =>
             type === "line" ? (
               <GiftItem
                 item={item}
@@ -47,6 +47,7 @@ export default function ListHandler({
                 key={item._id}
                 background={background}
                 timeGap='24h'
+                number={i}
               />
             ) : (
               <GiftBlockItem

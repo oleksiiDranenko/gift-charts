@@ -365,7 +365,7 @@ export default function GiftsList({ loading }: PropsInterface) {
           <GiftListHeader />
 
           <div className='w-full'>
-            {list.map((item: GiftInterface) => (
+            {list.map((item: GiftInterface, i) => (
               <GiftItem
                 item={item}
                 currency={filters.currency}
@@ -374,6 +374,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                 key={item._id}
                 timeGap={timeGap}
                 background='none'
+                number={i}
               />
             ))}
           </div>

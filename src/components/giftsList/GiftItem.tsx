@@ -23,6 +23,7 @@ interface PropsInterface {
   displayValue: "price" | "marketCap";
   timeGap: "24h" | "1w" | "1m" | "all";
   background: "color" | "none";
+  number: number;
 }
 
 export default function GiftItem({
@@ -32,6 +33,7 @@ export default function GiftItem({
   displayValue,
   timeGap,
   background,
+  number,
 }: PropsInterface) {
   const vibrate = useVibrate();
 
@@ -256,7 +258,7 @@ export default function GiftItem({
 
       <div className='hidden lg:block'>
         <Link
-          className={`w-full h-16 flex flex-row items-center justify-between ${
+          className={`w-full h-16 flex flex-row items-center justify-between border-b border-secondaryTransparent ${
             background === "color"
               ? `bg-gradient-to-r ${
                   percentChange !== "no data" && percentChange >= 0
@@ -271,14 +273,17 @@ export default function GiftItem({
           href={`/gift/${item._id}`}
           onClick={() => vibrate()}>
           <div className='w-1/3 flex flex-row items-center'>
+            <span className='mx-5 text-secondaryText text-sm'>
+              {number + 1}
+            </span>
             <Image
               alt='gift image'
               src={`/gifts/${item.image}.webp`}
               width={50}
               height={50}
-              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
+              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-xl ${
                 resolvedTheme === "dark"
-                  ? "bg-secondaryTransparent "
+                  ? "bg-secondaryTransparent"
                   : "bg-background"
               }`}
             />

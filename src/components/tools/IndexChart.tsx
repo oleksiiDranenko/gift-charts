@@ -168,10 +168,7 @@ export default function IndexChart({
         break;
 
       case "1w":
-        newList =
-          index.shortName === "VOL"
-            ? [...indexData.slice(-7), getSummedDoc()]
-            : [...indexData.slice(-7), latestDoc];
+        newList = [...indexMonthData.slice(-7 * 48), latestDoc];
         break;
 
       case "1m":
@@ -439,13 +436,6 @@ export default function IndexChart({
             {type}
           </button>
         ))}
-      </div>
-
-      <div className='w-full p-3 mt-5 bg-secondaryTransparent rounded-xl'>
-        <h1 className='font-bold text-lg'>{index.name}</h1>
-        <p className='font-light mt-3 text-secondaryText'>
-          {index.description}
-        </p>
       </div>
     </div>
   );
