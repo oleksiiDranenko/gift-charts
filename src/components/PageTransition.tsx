@@ -15,36 +15,36 @@ export default function PageTransition({ children }: Props) {
 
   const [isMobile, setIsMobile] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      import("@twa-dev/sdk")
-        .then((WebApp) => {
-          const telegramWebApp = WebApp.default;
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     import("@twa-dev/sdk")
+  //       .then((WebApp) => {
+  //         const telegramWebApp = WebApp.default;
 
-          if (telegramWebApp) {
-            telegramWebApp.ready();
+  //         if (telegramWebApp) {
+  //           telegramWebApp.ready();
 
-            // Check environment
-            const isTelegram = !!telegramWebApp.initDataUnsafe?.user;
-            const platform = telegramWebApp.platform;
+  //           // Check environment
+  //           const isTelegram = !!telegramWebApp.initDataUnsafe?.user;
+  //           const platform = telegramWebApp.platform;
 
-            if (isTelegram && (platform === "ios" || platform === "android")) {
-              setIsMobile(true);
-            } else {
-              setIsMobile(false);
-            }
-          }
-        })
-        .catch((err) => {
-          console.error("Failed to load @twa-dev/sdk", err);
-        });
-    }
-  }, []);
+  //           if (isTelegram && (platform === "ios" || platform === "android")) {
+  //             setIsMobile(true);
+  //           } else {
+  //             setIsMobile(false);
+  //           }
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.error("Failed to load @twa-dev/sdk", err);
+  //       });
+  //   }
+  // }, []);
 
   return (
     <div
-      className={`relative w-full flex flex-row justify-center pt-5 ${
-        isMobile && "pt-[110px]"
+      className={`relative w-full flex flex-row justify-center ${
+        isMobile && "pt-[110px] lg:pt-5"
       }}`}>
       <Transition
         key={pathname}
