@@ -230,7 +230,6 @@ export default function EditAssets() {
 
         dispatch(setUser(updateRes.data.user));
         router.push("/account");
-        alert("Changes saved successfully!");
       } else {
         setError("Cannot save changes: No user data available.");
       }
