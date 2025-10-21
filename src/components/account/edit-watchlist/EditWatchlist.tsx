@@ -148,6 +148,7 @@ export default function EditWatchlist() {
           assets: editedUser.assets,
           ton: editedUser.ton,
           usd: editedUser.usd,
+          token: user.token,
         };
 
         const updateRes = await axios.patch(
