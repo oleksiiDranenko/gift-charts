@@ -3,17 +3,17 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Asset from "./Asset";
-import Cash from "./Cash";
+import ReactLoading from "react-loading";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
-import ReactLoading from "react-loading";
-import { Link } from "@/i18n/navigation";
-import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { countPercentChange } from "@/numberFormat/functions";
-import { Copy, Gift } from "lucide-react";
+import useVibrate from "@/hooks/useVibrate";
+import PortfolioChart from "./PortfolioChart";
+import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
+import { useQuery } from "react-query";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -30,52 +30,38 @@ interface AssetDisplayInterface {
 
 export default function Account() {
   const vibrate = useVibrate();
+  const translate = useTranslations("account");
 
   const giftsList = useAppSelector((state) => state.giftsList);
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const [currency, setCurrency] = useState<"ton" | "usd">("ton");
-  const [changeType, setChangeType] = useState<"24h%" | "PNL" | "PNL%">("24h%");
-  const [loading, setLoading] = useState<boolean>(true);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([]);
-  const [assetsPriceTon, setAssetsPriceTon] = useState<number>(0);
-  const [assetsPriceUsd, setAssetsPriceUsd] = useState<number>(0);
-
-  const [ton, setTon] = useState<number>(3);
-  const [tonPercentage, setTonPercentage] = useState<number>(0);
-  const [usdPercentage, setUsdPercentage] = useState<number>(0);
-
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
-  const [portfolioValue24hAgo, setPortfolioValue24hAgo] = useState<number>(0);
-  const [portfolioInitValue, setPortfolioInitValue] = useState<number>(0);
-  const [referralLink, setReferralLink] = useState("");
+  const [portfolioValuePrev, setPortfolioValuePrev] = useState<number>(0);
 
-  const translate = useTranslations("account");
+  // 🟢 1. TanStack Query to fetch and cache chart data
+  const {
+    data: chartData = [],
+    isLoading: chartLoading,
+    isError: chartError,
+  } = useQuery<GiftWeekDataInterface[]>({
+    queryKey: ["userChart", user.telegramId],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
+      );
+      return data;
+    },
+    enabled: !!user.telegramId, // Only run when user is known
+    staleTime: 1000 * 60 * 5, // Cache valid for 5 minutes
+    refetchOnWindowFocus: false,
+  });
 
+  // 🟣 2. Fetch gifts if not in Redux store
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.Telegram?.WebApp?.initDataUnsafe?.user
-    ) {
-      const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
-      const link = `https://t.me/gift_charts_bot?start=ref_${userId}`;
-      setReferralLink(link);
-    }
-  }, []);
-
-  const handleClick = () => {
-    if (referralLink) {
-      navigator.clipboard.writeText(referralLink);
-      alert("Referral link copied!");
-    } else {
-      alert("Referral link not available.");
-    }
-  };
-
-  useEffect(() => {
-    console.log(user);
     const fetchGifts = async () => {
       try {
         setLoading(true);
@@ -84,7 +70,6 @@ export default function Account() {
             `${process.env.NEXT_PUBLIC_API}/gifts`
           );
           dispatch(setGiftsList(giftsRes.data));
-          setTon(giftsList[1].priceUsd / giftsList[1].priceTon);
         }
       } catch (error) {
         console.error("Error fetching gifts:", error);
@@ -92,48 +77,48 @@ export default function Account() {
         setLoading(false);
       }
     };
-
     fetchGifts();
   }, [dispatch, giftsList]);
 
+  // 🟢 3. Calculate portfolio change based on cached chart data
   useEffect(() => {
-    if (giftsList.length > 0) {
-      const latestGift = giftsList[giftsList.length - 1];
-      setTon(latestGift.priceUsd / latestGift.priceTon);
+    if (chartData.length > 1) {
+      const first = chartData[0];
+      const last = chartData[chartData.length - 1];
+
+      if (currency === "ton") {
+        setPortfolioValue(last.priceTon);
+        setPortfolioValuePrev(first.priceTon);
+      } else {
+        setPortfolioValue(last.priceUsd);
+        setPortfolioValuePrev(first.priceUsd);
+      }
     }
-    setCashPercentages();
-    updateAssetsArray();
-  }, [user, currency, giftsList]);
+  }, [chartData, currency]);
 
+  // 🟣 4. Build assets list
   useEffect(() => {
-    setCashPercentages();
-    updateAssetsArray();
-  }, [user, currency, giftsList]);
-
-  const updateAssetsArray = () => {
-    if (giftsList.length > 0) {
-      const updatedAssets = (user.assets || [])
+    if (giftsList.length > 0 && user.assets) {
+      const updatedAssets = user.assets
         .map((asset: { giftId: string; amount: number; avgPrice: number }) => {
           const gift = giftsList.find(
             (gift: GiftInterface) => gift._id === asset.giftId
           );
-          if (gift) {
-            return {
-              _id: gift._id,
-              name: gift.name,
-              image: gift.image,
-              currency: currency,
-              amount: asset.amount,
-              avgPrice: asset.avgPrice,
-              priceTon: gift.priceTon,
-              priceUsd: gift.priceUsd,
-              tonPrice24hAgo: gift.tonPrice24hAgo,
-              usdPrice24hAgo: gift.usdPrice24hAgo,
-            };
-          }
-          return undefined;
+          if (!gift) return undefined;
+          return {
+            _id: gift._id,
+            name: gift.name,
+            image: gift.image,
+            currency,
+            amount: asset.amount,
+            avgPrice: asset.avgPrice,
+            priceTon: gift.priceTon,
+            priceUsd: gift.priceUsd,
+            tonPrice24hAgo: gift.tonPrice24hAgo,
+            usdPrice24hAgo: gift.usdPrice24hAgo,
+          };
         })
-        .filter((asset): asset is AssetDisplayInterface => asset !== undefined);
+        .filter(Boolean) as AssetDisplayInterface[];
 
       updatedAssets.sort((a, b) => {
         const valueA =
@@ -144,88 +129,8 @@ export default function Account() {
       });
 
       setAssetsArray(updatedAssets);
-
-      const totalPriceTon = updatedAssets.reduce(
-        (sum, asset) => sum + asset.priceTon * asset.amount,
-        0
-      );
-      const totalPriceUsd = updatedAssets.reduce(
-        (sum, asset) => sum + asset.priceUsd * asset.amount,
-        0
-      );
-      const totalPriceTon24Ago = updatedAssets.reduce(
-        (sum, asset) => sum + asset.tonPrice24hAgo * asset.amount,
-        0
-      );
-      const totalPriceUsd24Ago = updatedAssets.reduce(
-        (sum, asset) => sum + asset.usdPrice24hAgo * asset.amount,
-        0
-      );
-
-      setAssetsPriceTon(totalPriceTon);
-      setAssetsPriceUsd(totalPriceUsd);
-
-      // Calculate initial portfolio value (using avgPrice, stored in TON)
-      const initialAssetsValue = updatedAssets.reduce(
-        (sum, asset) =>
-          sum +
-          (currency === "ton" ? asset.avgPrice : asset.avgPrice * ton) *
-            asset.amount,
-        0
-      );
-
-      // Calculate portfolio values (current, past, and initial)
-      if (currency === "ton") {
-        const current = parseFloat(
-          (totalPriceTon + user.ton + user.usd / ton).toFixed(2)
-        );
-        const past = parseFloat(
-          (totalPriceTon24Ago + user.ton + user.usd / ton).toFixed(2)
-        );
-        const initial = parseFloat(
-          (initialAssetsValue + user.ton + user.usd / ton).toFixed(2)
-        );
-        setPortfolioValue(current);
-        setPortfolioValue24hAgo(past);
-        setPortfolioInitValue(initial);
-      } else {
-        const current = parseFloat(
-          (totalPriceUsd + user.ton * ton + user.usd).toFixed(2)
-        );
-        const past = parseFloat(
-          (totalPriceUsd24Ago + user.ton * ton + user.usd).toFixed(2)
-        );
-        const initial = parseFloat(
-          (initialAssetsValue + user.ton * ton + user.usd).toFixed(2)
-        );
-        setPortfolioValue(current);
-        setPortfolioValue24hAgo(past);
-        setPortfolioInitValue(initial);
-      }
     }
-  };
-
-  const setCashPercentages = () => {
-    if (user) {
-      if (currency === "ton") {
-        const totalTon = user.ton + user.usd / ton;
-        setTonPercentage(
-          totalTon ? Math.round((user.ton / totalTon) * 100) : 0
-        );
-        setUsdPercentage(
-          totalTon ? Math.round((user.usd / ton / totalTon) * 100) : 0
-        );
-      } else {
-        const totalUsd = user.ton * ton + user.usd;
-        setTonPercentage(
-          totalUsd ? Math.round(((user.ton * ton) / totalUsd) * 100) : 0
-        );
-        setUsdPercentage(
-          totalUsd ? Math.round((user.usd / totalUsd) * 100) : 0
-        );
-      }
-    }
-  };
+  }, [giftsList, currency, user.assets]);
 
   return (
     <div className='w-full flex flex-col justify-center px-3 relative'>
@@ -245,248 +150,109 @@ export default function Account() {
         </div>
       ) : (
         <>
-          <div className='w-full h-28 flex flex-row justify-center items-center relative'>
-            {/* <button
-              className="p-[6px] flex flex-row items-center gap-x-1 left-0 top-0 absolute text-xs bg-secondaryTransparent border border-secondary rounded-xl"
-              onClick={handleClick}
-            >
-              <Copy size={14} className="text-primary"/>
-              <span>Referral</span>
-            </button> */}
-
-            <div className='flex flex-col items-center'>
+          {/* Portfolio Header */}
+          <div className='w-full flex flex-row justify-start items-center relative'>
+            <div className='flex flex-col gap-x-3'>
               <div className='flex flex-row items-center'>
                 {currency === "ton" ? (
                   <Image
                     alt='ton logo'
                     src='/images/toncoin.webp'
-                    width={30}
-                    height={30}
+                    width={25}
+                    height={25}
                     className='mr-2'
                   />
                 ) : (
-                  <span className='text-4xl mr-1'>$</span>
+                  <span className='text-3xl mr-1'>$</span>
                 )}
-                <h1 className='text-4xl font-bold'>{portfolioValue}</h1>
+                {chartLoading ? (
+                  <h1 className='text-3xl font-bold text-secondaryText animate-pulse'>
+                    ...
+                  </h1>
+                ) : (
+                  <h1 className='text-3xl font-bold'>
+                    {portfolioValue.toFixed(2)}
+                  </h1>
+                )}
               </div>
-              <span
-                className={`mt-1 font-bold ${
-                  changeType === "24h%"
-                    ? countPercentChange(
-                        portfolioValue24hAgo,
-                        portfolioValue
-                      ) >= 0
+              <div className='flex flex-row items-center gap-x-2 mt-1 ml-1'>
+                <span className='text-sm text-secondaryText'>
+                  Last 24 hours
+                </span>
+                <span
+                  className={`flex flex-row items-center text-sm font-bold ${
+                    countPercentChange(portfolioValuePrev, portfolioValue) >= 0
                       ? "text-green-500"
                       : "text-red-500"
-                    : changeType === "PNL"
-                    ? portfolioValue - portfolioInitValue >= 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                    : changeType === "PNL%" &&
-                      (countPercentChange(portfolioInitValue, portfolioValue) >=
-                      0
-                        ? "text-green-500"
-                        : "text-red-500")
-                }`}>
-                {changeType === "24h%"
-                  ? `${
-                      countPercentChange(
-                        portfolioValue24hAgo,
-                        portfolioValue
-                      ) >= 0
-                        ? "+"
-                        : ""
-                    }
-                ${countPercentChange(
-                  portfolioValue24hAgo,
-                  portfolioValue
-                ).toFixed(2)}% `
-                  : changeType === "PNL"
-                  ? `${portfolioValue - portfolioInitValue > 0 && "+"} ${(
-                      portfolioValue - portfolioInitValue
-                    ).toFixed(2)}`
-                  : changeType === "PNL%" &&
-                    `${
-                      countPercentChange(portfolioInitValue, portfolioValue) >=
-                      0
-                        ? "+"
-                        : ""
-                    }
-                ${countPercentChange(
-                  portfolioInitValue,
-                  portfolioValue
-                ).toFixed(2)}% `}
-              </span>
+                  }`}>
+                  {countPercentChange(portfolioValuePrev, portfolioValue) >= 0
+                    ? "+"
+                    : ""}
+                  {countPercentChange(
+                    portfolioValuePrev,
+                    portfolioValue
+                  ).toFixed(2)}
+                  %
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className='flex flex-row gap-3 mt-3 justify-between'>
-            <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
-              <button
-                className={`text-xs h-8 px-3 box-border ${
-                  currency === "ton"
-                    ? "rounded-xl bg-primary font-bold text-white"
-                    : null
-                }`}
-                onClick={() => {
-                  setCurrency("ton");
-                  vibrate();
-                }}>
-                Ton
-              </button>
-              <button
-                className={`text-xs h-8 px-3 box-border ${
-                  currency === "usd"
-                    ? "rounded-xl bg-primary font-bold text-white"
-                    : null
-                }`}
-                onClick={() => {
-                  setCurrency("usd");
-                  vibrate();
-                }}>
-                Usd
-              </button>
-            </div>
+          {/* Cached Portfolio Chart */}
+          <PortfolioChart data={chartData} currency={currency} />
 
-            <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
-              <button
-                className={`text-xs h-8 px-3 box-border ${
-                  changeType === "24h%" &&
-                  "rounded-xl bg-primary font-bold text-white"
-                }`}
-                onClick={() => {
-                  setChangeType("24h%");
-                  vibrate();
-                }}>
-                24h %
-              </button>
-              <button
-                className={`text-xs h-8 px-3 box-border ${
-                  changeType === "PNL" &&
-                  "rounded-xl bg-primary font-bold text-white"
-                }`}
-                onClick={() => {
-                  setChangeType("PNL");
-                  vibrate();
-                }}>
-                PNL
-              </button>
-              <button
-                className={`text-xs h-8 px-3 box-border ${
-                  changeType === "PNL%" &&
-                  "rounded-xl bg-primary font-bold text-white"
-                }`}
-                onClick={() => {
-                  setChangeType("PNL%");
-                  vibrate();
-                }}>
-                PNL %
-              </button>
-            </div>
-          </div>
-
-          <div className='w-full h-auto'>
-            <div className='mt-5 rounded-xl p-3 bg-secondaryTransparent'>
-              <div className='w-full flex justify-between items-center text-xl font-bold mb-3'>
-                <h2 className='flex flex-row items-center gap-x-1'>
-                  <Gift size={20} />
-                  {translate("assets")}:
-                </h2>
-                <div className='flex flex-row items-center'>
-                  {currency === "ton" ? (
-                    <Image
-                      alt='ton logo'
-                      src='/images/toncoin.webp'
-                      width={16}
-                      height={16}
-                      className='mr-1'
-                    />
-                  ) : (
-                    <span className='mr-1'>$</span>
-                  )}
-                  <span>
-                    {currency === "ton"
-                      ? assetsPriceTon.toFixed(2)
-                      : assetsPriceUsd.toFixed(2)}
-                  </span>
-                </div>
+          {/* Assets List */}
+          <div className='w-full h-auto mt-3'>
+            <div className='w-full flex justify-between items-end mb-5'>
+              <h2 className='flex flex-row items-center text-lg font-bold'>
+                Portfolio
+              </h2>
+              <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
+                <button
+                  className={`text-sm h-8 px-5 box-border ${
+                    currency === "ton"
+                      ? "rounded-xl bg-primary font-bold text-white"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setCurrency("ton");
+                    vibrate();
+                  }}>
+                  Ton
+                </button>
+                <button
+                  className={`text-sm h-8 px-5 box-border ${
+                    currency === "usd"
+                      ? "rounded-xl bg-primary font-bold text-white"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setCurrency("usd");
+                    vibrate();
+                  }}>
+                  Usd
+                </button>
               </div>
-
-              {assetsArray.length !== 0 ? (
-                assetsArray.map((asset) => (
-                  <Asset
-                    _id={asset._id}
-                    name={asset.name}
-                    image={asset.image}
-                    currency={currency}
-                    amount={asset.amount}
-                    avgPrice={asset.avgPrice}
-                    priceTon={asset.priceTon}
-                    priceUsd={asset.priceUsd}
-                    assetsPrice={
-                      currency === "ton" ? assetsPriceTon : assetsPriceUsd
-                    }
-                    percentChange={
-                      currency === "ton"
-                        ? countPercentChange(
-                            asset.tonPrice24hAgo,
-                            asset.priceTon
-                          )
-                        : countPercentChange(
-                            asset.usdPrice24hAgo,
-                            asset.priceUsd
-                          )
-                    }
-                    key={asset._id}
-                  />
-                ))
-              ) : (
-                <h2 className='text-secondary mt-3'>{translate("noAssets")}</h2>
-              )}
             </div>
 
-            {user?.ton !== 0 || user.usd !== 0 ? (
-              <div className='mt-5'>
-                <div className='w-full flex justify-between items-center text-lg font-bold mb-3 pr-2'>
-                  <h2>{translate("cash")}</h2>
-                  <div className='flex flex-row items-center'>
-                    {currency === "ton" ? (
-                      <Image
-                        alt='ton logo'
-                        src='/images/toncoin.webp'
-                        width={16}
-                        height={16}
-                        className='mr-1'
-                      />
-                    ) : (
-                      <span className='mr-1'>$</span>
-                    )}
-                    <span>
-                      {currency === "ton"
-                        ? (user.ton + user.usd / ton).toFixed(2)
-                        : (user.ton * ton + user.usd).toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  {user.ton !== 0 ? (
-                    <Cash
-                      name='ton'
-                      amount={user.ton}
-                      percentage={tonPercentage}
-                    />
-                  ) : null}
-                  {user.usd !== 0 ? (
-                    <Cash
-                      name='usd'
-                      amount={user.usd}
-                      percentage={usdPercentage}
-                    />
-                  ) : null}
-                </div>
-              </div>
-            ) : null}
+            {assetsArray.length > 0 ? (
+              assetsArray.map((asset) => (
+                <Asset
+                  key={asset._id}
+                  {...asset}
+                  assetsPrice={portfolioValue}
+                  percentChange={
+                    currency === "ton"
+                      ? countPercentChange(asset.tonPrice24hAgo, asset.priceTon)
+                      : countPercentChange(asset.usdPrice24hAgo, asset.priceUsd)
+                  }
+                />
+              ))
+            ) : (
+              <h2 className='text-secondaryText text-sm mt-3'>
+                {translate("noAssets")}
+              </h2>
+            )}
           </div>
         </>
       )}

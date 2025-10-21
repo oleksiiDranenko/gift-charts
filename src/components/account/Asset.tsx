@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTheme } from "next-themes";
+import useVibrate from "@/hooks/useVibrate";
 
 interface PropsInterface {
   _id: string;
@@ -30,10 +31,12 @@ export default function Asset({
   percentChange,
 }: PropsInterface) {
   const { resolvedTheme } = useTheme();
+  const vibrate = useVibrate();
   return (
     <Link
-      className='w-full h-16 flex flex-row items-center justify-between'
-      href={`/gift/${_id}`}>
+      className='w-full h-16 pr-3 pl-2 mb-2 rounded-xl flex flex-row items-center bg-secondaryTransparent justify-between'
+      href={`/gift/${_id}`}
+      onClick={() => vibrate()}>
       <div className='w-full flex flex-row items-center justify-between'>
         <div className=' flex flex-row items-center'>
           <Image
@@ -41,7 +44,7 @@ export default function Asset({
             src={`/gifts/${image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-xl ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
               resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
             }`}
           />
