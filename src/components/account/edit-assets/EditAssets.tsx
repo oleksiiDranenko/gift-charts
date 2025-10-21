@@ -269,7 +269,7 @@ export default function EditAssets() {
             </button>
           </div>
 
-          <div className='w-full mt-5 pr-2'>
+          {/* <div className='w-full mt-5 pr-2'>
             <h2 className='w-full text-xl font-bold mb-3'>
               {translate2("cash")}
             </h2>
@@ -321,7 +321,7 @@ export default function EditAssets() {
                 placeholder='0'
               />
             </div>
-          </div>
+          </div> */}
 
           <div className='w-full mt-5 pr-2'>
             <h2 className='w-full text-xl font-bold mb-3'>

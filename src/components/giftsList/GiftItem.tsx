@@ -139,7 +139,7 @@ export default function GiftItem({
           src={`/gifts/${item.image}.webp`}
           width={50}
           height={50}
-          className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-xl ${
+          className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
             resolvedTheme === "dark" ? "bg-secondary " : "bg-background"
           }`}
         />
