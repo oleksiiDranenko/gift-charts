@@ -144,6 +144,10 @@ export default function Account() {
             className='mt-5'
           />
         </div>
+      ) : user.username === "_guest" ? (
+        <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl'>
+          {translate("openInTelegram")}
+        </div>
       ) : (
         <>
           {/* Portfolio Header */}
