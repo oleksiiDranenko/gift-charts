@@ -13,10 +13,7 @@ export default function PageTransition({ children }: Props) {
   const user = useAppSelector((state) => state.user);
 
   return (
-    <div
-      className={`relative w-full flex flex-row justify-center pt-5 ${
-        user.token && "pt-[110px]"
-      }`}>
+    <div className={`relative w-full flex flex-row justify-center pt-[110px]`}>
       <Transition
         key={pathname}
         appear

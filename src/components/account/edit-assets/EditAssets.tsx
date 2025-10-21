@@ -203,7 +203,8 @@ export default function EditAssets() {
         );
 
         const updatedUser = {
-          username: editedUser.username,
+          telegramId: user.telegramId,
+          username: user.username,
           savedList: editedUser.savedList,
           assets: validAssets.map((asset) => ({
             giftId: asset.giftId,
@@ -230,6 +231,7 @@ export default function EditAssets() {
 
         dispatch(setUser(updateRes.data.user));
         router.push("/account");
+        alert("Changes saved successfully!");
       } else {
         setError("Cannot save changes: No user data available.");
       }

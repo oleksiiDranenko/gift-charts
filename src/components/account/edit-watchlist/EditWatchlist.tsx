@@ -158,6 +158,7 @@ export default function EditWatchlist() {
 
         dispatch(setUser(updateRes.data.user));
         router.push("/account");
+        alert("Changes saved successfully!");
       } else {
         setError("Cannot save changes: No user data or Telegram ID available.");
       }
