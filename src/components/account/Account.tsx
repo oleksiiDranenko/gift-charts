@@ -50,10 +50,14 @@ export default function Account() {
   } = useQuery<GiftWeekDataInterface[]>({
     queryKey: ["userChart", user.telegramId],
     queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
-      );
-      return data;
+      if (user.assets.length > 0) {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
+        );
+        return data;
+      } else {
+        return [];
+      }
     },
     enabled: !!user.telegramId, // Only run when user is known
     staleTime: 1000 * 60 * 5, // Cache valid for 5 minutes
