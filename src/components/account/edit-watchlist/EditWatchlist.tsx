@@ -157,8 +157,7 @@ export default function EditWatchlist() {
         );
 
         dispatch(setUser(updateRes.data.user));
-        router.push("/account");
-        alert("Changes saved successfully!");
+        router.back();
       } else {
         setError("Cannot save changes: No user data or Telegram ID available.");
       }
@@ -185,16 +184,9 @@ export default function EditWatchlist() {
       ) : (
         <>
           <div className='w-full flex flex-row justify-between gap-x-3'>
-            <BackButton />
-
-            <button
-              className='w-1/2 h-10 bg-primary text-white rounded-xl'
-              onClick={() => {
-                saveChanges();
-                vibrate();
-              }}>
-              {translateGeneral("save")}
-            </button>
+            <div onClick={saveChanges}>
+              <BackButton />
+            </div>
           </div>
 
           <div className='w-full mt-5 pr-2 gap-x-3'>

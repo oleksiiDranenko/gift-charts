@@ -14,6 +14,7 @@ import PortfolioChart from "./PortfolioChart";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
+import { Link } from "@/i18n/navigation";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -60,7 +61,6 @@ export default function Account() {
       }
     },
     enabled: !!user.telegramId, // Only run when user is known
-    staleTime: 1000 * 60 * 5, // Cache valid for 5 minutes
     refetchOnWindowFocus: false,
   });
 
@@ -152,9 +152,8 @@ export default function Account() {
         <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl'>
           {translate("openInTelegram")}
         </div>
-      ) : (
+      ) : assetsArray.length > 0 ? (
         <>
-          {/* Portfolio Header */}
           <div className='w-full flex flex-row justify-start items-center relative'>
             <div className='flex flex-col gap-x-3'>
               <div className='flex flex-row items-center'>
@@ -239,26 +238,28 @@ export default function Account() {
               </div>
             </div>
 
-            {assetsArray.length > 0 ? (
-              assetsArray.map((asset) => (
-                <Asset
-                  key={asset._id}
-                  {...asset}
-                  assetsPrice={portfolioValue}
-                  percentChange={
-                    currency === "ton"
-                      ? countPercentChange(asset.tonPrice24hAgo, asset.priceTon)
-                      : countPercentChange(asset.usdPrice24hAgo, asset.priceUsd)
-                  }
-                />
-              ))
-            ) : (
-              <h2 className='text-secondaryText text-sm mt-3'>
-                {translate("noAssets")}
-              </h2>
-            )}
+            {assetsArray.map((asset) => (
+              <Asset
+                key={asset._id}
+                {...asset}
+                assetsPrice={portfolioValue}
+                percentChange={
+                  currency === "ton"
+                    ? countPercentChange(asset.tonPrice24hAgo, asset.priceTon)
+                    : countPercentChange(asset.usdPrice24hAgo, asset.priceUsd)
+                }
+              />
+            ))}
           </div>
         </>
+      ) : (
+        <div className='w-full h-1/2 flex flex-col justify-center items-center'>
+          <Link
+            href={"/settings/edit-assets"}
+            className='px-3 py-2 text-sm text-white bg-primary rounded-xl'>
+            Add Gifts to portfolio
+          </Link>
+        </div>
       )}
     </div>
   );

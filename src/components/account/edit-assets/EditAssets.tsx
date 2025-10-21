@@ -230,8 +230,7 @@ export default function EditAssets() {
         );
 
         dispatch(setUser(updateRes.data.user));
-        router.push("/account");
-        alert("Changes saved successfully!");
+        router.back();
       } else {
         setError("Cannot save changes: No user data available.");
       }
@@ -258,16 +257,9 @@ export default function EditAssets() {
       ) : (
         <>
           <div className='w-full flex flex-row justify-between gap-x-3'>
-            <BackButton />
-
-            <button
-              className='w-1/2 h-10 bg-primary text-white rounded-xl'
-              onClick={() => {
-                saveChanges();
-                vibrate();
-              }}>
-              {translate("save")}
-            </button>
+            <div onClick={saveChanges}>
+              <BackButton />
+            </div>
           </div>
 
           {/* <div className='w-full mt-5 pr-2'>
@@ -328,6 +320,11 @@ export default function EditAssets() {
             <h2 className='w-full text-xl font-bold mb-3'>
               {translate2("assets")}
             </h2>
+            {editedUser && editedUser.savedList.length === 0 && (
+              <div className='pt-3 pb-5 text-secondaryText'>
+                Your Assets list is empty
+              </div>
+            )}
             {editedUser?.assets.map((asset) => (
               <EditAssetItem
                 giftId={asset.giftId}
