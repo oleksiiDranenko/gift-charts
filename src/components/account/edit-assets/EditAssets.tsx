@@ -320,7 +320,7 @@ export default function EditAssets() {
             <h2 className='w-full text-xl font-bold mb-3'>
               {translate2("assets")}
             </h2>
-            {editedUser && editedUser.savedList.length === 0 && (
+            {editedUser && editedUser.assets.length === 0 && (
               <div className='pt-3 pb-5 text-secondaryText'>
                 Your Assets list is empty
               </div>
