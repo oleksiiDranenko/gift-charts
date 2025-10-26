@@ -1,60 +1,67 @@
-// components/MarketsModal.tsx
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
-import { BrushCleaning, Trash, X } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { BrushCleaning, X } from "lucide-react";
 import GiftInterface from "@/interfaces/GiftInterface";
-import { setGiftsList } from "@/redux/slices/giftsListSlice";
-import { setFilters } from "@/redux/slices/filterListSlice";
 import FilterGiftItem from "./FilterGiftItem";
 import { useTranslations } from "next-intl";
 
 interface Props {
   trigger: ReactNode;
+  giftsList: GiftInterface[];
+  list: GiftInterface[];
+  setList: React.Dispatch<React.SetStateAction<GiftInterface[]>>;
 }
 
-export default function FilterGiftsModal({ trigger }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+export default function FilterGiftsModal({
+  trigger,
+  giftsList,
+  list,
+  setList,
+}: Props) {
+  const [isOpen, setIsOpen] = useState(false);
   const vibrate = useVibrate();
-
-  const dispatch = useAppDispatch();
-  const giftsList = useAppSelector((state) => state.giftsList);
-  const filters = useAppSelector((state) => state.filters);
-  const list = useAppSelector((state) => state.filters.chosenGifts);
   const translate = useTranslations("general");
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [sortedGifts, setSortedGifts] = useState<GiftInterface[]>([]);
+  const [selected, setSelected] = useState<GiftInterface[]>([]);
 
   useEffect(() => {
-    const sortedGifts = [...giftsList].sort(
-      (a: GiftInterface, b: GiftInterface) => a.name.localeCompare(b.name)
-    );
+    const sorted = [...giftsList].sort((a, b) => a.name.localeCompare(b.name));
+    setSortedGifts(sorted);
+  }, [giftsList]);
 
-    if (JSON.stringify(sortedGifts) !== JSON.stringify(giftsList)) {
-      dispatch(setGiftsList(sortedGifts));
+  useEffect(() => {
+    if (selected.length === 0) {
+      setList(giftsList);
+    } else {
+      setList(selected);
     }
-    setLoading(false);
-  }, [dispatch, giftsList]);
+  }, [selected, giftsList, setList]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelected(list.length === giftsList.length ? [] : list);
+    }
+  }, [isOpen, giftsList, list]);
 
   const handleSelection = (item: GiftInterface) => {
-    if (list.includes(item)) {
-      dispatch(
-        setFilters({
-          ...filters,
-          chosenGifts: list.filter((el) => item._id !== el._id),
-        })
-      );
-    } else {
-      dispatch(setFilters({ ...filters, chosenGifts: [...list, item] }));
-    }
+    setSelected((prev) =>
+      prev.some((el) => el._id === item._id)
+        ? prev.filter((el) => el._id !== item._id)
+        : [...prev, item]
+    );
+  };
+
+  const clearSelection = () => {
+    setSelected([]);
+    setList(giftsList);
   };
 
   return (
     <>
-      {/* Clone the trigger element and attach onClick */}
       <span onClick={() => setIsOpen(true)} className='inline-block w-full'>
         {trigger}
       </span>
@@ -64,7 +71,6 @@ export default function FilterGiftsModal({ trigger }: Props) {
           as='div'
           className='relative z-50'
           onClose={() => setIsOpen(false)}>
-          {/* Backdrop */}
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-200'
@@ -85,39 +91,34 @@ export default function FilterGiftsModal({ trigger }: Props) {
               leave='transform transition ease-in duration-200'
               leaveFrom='translate-y-0 opacity-100'
               leaveTo='translate-y-full opacity-0'>
-              <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col'>
-                <div className='w-full h-10 flex justify-between items-center'>
-                  <div className='flex flex-row'>
-                    <button
-                      className='flex flex-row items-center justify-center gap-x-1 text-primary h-8 px-3 bg-secondaryTransparent rounded-xl'
-                      onClick={() =>
-                        dispatch(setFilters({ ...filters, chosenGifts: [] }))
-                      }>
-                      <BrushCleaning size={14} /> {translate("clear")}
-                    </button>
-                  </div>
+              <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background flex flex-col'>
+                <div className='w-full h-10 pb-3 flex justify-between items-center'>
+                  <button
+                    className='flex flex-row items-center justify-center gap-x-1 text-red-500 h-8 px-3 bg-secondaryTransparent rounded-2xl'
+                    onClick={clearSelection}>
+                    <BrushCleaning size={14} /> {translate("clear")}
+                  </button>
+
                   <button
                     onClick={() => {
                       vibrate();
                       setIsOpen(false);
                     }}
-                    className='w-fit p-2 bg-secondaryTransparent border border-secondary rounded-full'>
+                    className='w-fit p-2 bg-secondaryTransparent rounded-full'>
                     <X size={18} />
                   </button>
                 </div>
 
                 <div className='flex-1 overflow-y-scroll'>
-                  {giftsList.map((gift) => {
-                    return (
-                      <FilterGiftItem
-                        gift={gift}
-                        selected={list.includes(gift) ? true : false}
-                        onClick={handleSelection}
-                        key={gift._id}
-                      />
-                    );
-                  })}
-                  <div className='h-10'></div>
+                  {sortedGifts.map((gift) => (
+                    <FilterGiftItem
+                      key={gift._id}
+                      gift={gift}
+                      selected={selected.some((el) => el._id === gift._id)}
+                      onClick={handleSelection}
+                    />
+                  ))}
+                  <div className='h-10' />
                 </div>
               </Dialog.Panel>
             </Transition.Child>

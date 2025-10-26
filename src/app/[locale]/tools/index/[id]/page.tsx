@@ -13,6 +13,7 @@ import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import useVibrate from "@/hooks/useVibrate";
 import CalendarHeatmap from "@/components/tools/calendar-heatmap/CalendarHeatmap";
 import { IndexMonthDataInterface } from "@/interfaces/IndexMonthDataInterface";
+import BackButton from "@/utils/ui/backButton";
 
 export default function Page({ params }: any) {
   const [index, setIndex] = useState<IndexInterface>();
@@ -64,13 +65,7 @@ export default function Page({ params }: any) {
         {!loading && index ? (
           <div className='flex flex-col'>
             <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>
-              <Link
-                href={"/tools"}
-                className='w-fit flex flex-row items-center text-lg font-bold'
-                onClick={() => vibrate()}>
-                <ChevronLeft />
-                {"Go Back"}
-              </Link>
+              <BackButton />
             </div>
             <IndexChart
               index={index}
@@ -85,7 +80,7 @@ export default function Page({ params }: any) {
                 <div>
                   <button
                     onClick={() => setShowCalendar(!showCalendar)}
-                    className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-xl'>
+                    className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-2xl'>
                     {showCalendar ? (
                       <>
                         Hide

@@ -63,13 +63,14 @@
 
   "navbar": {
     "home": "Home",
+    "gifts": "Gifts",
     "tools": "Tools",
     "profile": "Account",
     "settings": "Settings"
   },
 
   "mainPage": {
-    "searchPlaceholder": "Search gifts...",
+    "searchPlaceholder": "Search Gifts",
     "customise": "Customise",
     "gainers": "Gainers",
     "losers": "Losers",

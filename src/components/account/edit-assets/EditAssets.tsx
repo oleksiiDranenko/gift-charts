@@ -266,14 +266,14 @@ export default function EditAssets() {
               {translate2("cash")}
             </h2>
 
-            <div className='w-full p-3 mb-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-xl'>
+            <div className='w-full p-3 mb-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-2xl'>
               <div className='flex flex-row items-center'>
                 <Image
                   alt='Toncoin image'
                   src={`/images/toncoin.webp`}
                   width={50}
                   height={50}
-                  className={`bg-secondary p-3 box-border mr-3 rounded-xl`}
+                  className={`bg-secondary p-3 box-border mr-3 rounded-2xl`}
                 />
                 <div className='flex flex-col'>
                   <span className='text-base font-bold'>
@@ -287,14 +287,14 @@ export default function EditAssets() {
                 step='any'
                 value={tonInput}
                 onChange={handleTon}
-                className='w-32 h-10 text-center bg-secondaryTransparent border border-secondary  rounded-xl focus:outline-none focus:bg-secondary'
+                className='w-32 h-10 text-center bg-secondaryTransparent border border-secondary  rounded-2xl focus:outline-none focus:bg-secondary'
                 placeholder='0'
               />
             </div>
 
-            <div className='w-full p-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-xl'>
+            <div className='w-full p-3 flex flex-row items-center justify-between bg-secondaryTransparent rounded-2xl'>
               <div className='flex flex-row items-center'>
-                <span className='bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-xl'>
+                <span className='bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-2xl'>
                   $
                 </span>
                 <div className='flex flex-col'>
@@ -309,7 +309,7 @@ export default function EditAssets() {
                 step='any'
                 value={usdInput}
                 onChange={handleUsd}
-                className='w-32 h-10 text-center bg-secondaryTransparent border border-secondary rounded-xl focus:outline-none focus:bg-secondary'
+                className='w-32 h-10 text-center bg-secondaryTransparent border border-secondary rounded-2xl focus:outline-none focus:bg-secondary'
                 placeholder='0'
               />
             </div>
@@ -340,7 +340,7 @@ export default function EditAssets() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-xl'>
+            className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-2xl'>
             <ListPlus size={20} />
             {translate2("addGift")}
           </button>

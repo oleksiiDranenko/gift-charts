@@ -126,9 +126,9 @@ export default function Page() {
         </div>
 
         <div className='w-full lg:w-5/6 gap-x-3 flex justify-end'>
-          <div className='w-1/2 bg-secondaryTransparent  rounded-xl'>
+          <div className='w-1/2 bg-secondaryTransparent  rounded-2xl'>
             <button
-              className={`w-1/2 text-sm h-8 box-border rounded-xl ${
+              className={`w-1/2 text-sm h-8 box-border rounded-2xl ${
                 listType === "change" ? "bg-primary font-bold text-white" : null
               }`}
               onClick={() => {
@@ -138,7 +138,7 @@ export default function Page() {
               Change
             </button>
             <button
-              className={`w-1/2 text-sm h-8 box-border rounded-xl ${
+              className={`w-1/2 text-sm h-8 box-border rounded-2xl ${
                 listType === "marketCap"
                   ? "bg-primary font-bold text-white"
                   : null
@@ -151,9 +151,9 @@ export default function Page() {
             </button>
           </div>
 
-          <div className='w-1/2 bg-secondaryTransparent rounded-xl'>
+          <div className='w-1/2 bg-secondaryTransparent rounded-2xl'>
             <button
-              className={`w-1/2 text-sm h-8 box-border rounded-xl ${
+              className={`w-1/2 text-sm h-8 box-border rounded-2xl ${
                 currency === "ton" ? "bg-primary font-bold text-white" : null
               }`}
               onClick={() => {
@@ -163,7 +163,7 @@ export default function Page() {
               TON
             </button>
             <button
-              className={`w-1/2 text-sm h-8 box-border rounded-xl ${
+              className={`w-1/2 text-sm h-8 box-border rounded-2xl ${
                 currency === "usd" ? "bg-primary font-bold text-white" : null
               }`}
               onClick={() => {
@@ -175,11 +175,11 @@ export default function Page() {
           </div>
         </div>
 
-        <div className='w-full lg:w-5/6 bg-secondaryTransparent rounded-xl'>
+        <div className='w-full lg:w-5/6 bg-secondaryTransparent rounded-2xl'>
           <div className='w-full flex flex-col'>
             <div className='w-full flex flex-row justify-between gap-x-3'>
               <button
-                className={`w-full text-sm h-8 rounded-xl ${
+                className={`w-full text-sm h-8 rounded-2xl ${
                   timeGap === "1m" ? "bg-primary font-bold text-white" : null
                 }`}
                 onClick={() => {
@@ -189,7 +189,7 @@ export default function Page() {
                 1m
               </button>
               <button
-                className={`w-full text-sm h-8 rounded-xl ${
+                className={`w-full text-sm h-8 rounded-2xl ${
                   timeGap === "1w" ? "bg-primary font-bold text-white" : null
                 }`}
                 onClick={() => {
@@ -199,7 +199,7 @@ export default function Page() {
                 1w
               </button>
               <button
-                className={`w-full text-sm h-8 rounded-xl ${
+                className={`w-full text-sm h-8 rounded-2xl ${
                   timeGap === "24h" ? "bg-primary font-bold text-white" : null
                 }`}
                 onClick={() => {
@@ -212,11 +212,11 @@ export default function Page() {
           </div>
         </div>
 
-        <div className='w-full lg:w-5/6 bg-secondaryTransparent  rounded-xl'>
+        <div className='w-full lg:w-5/6 bg-secondaryTransparent  rounded-2xl'>
           <div className='w-full flex flex-col'>
             <div className='w-full flex flex-row justify-between gap-x-3'>
               <button
-                className={`w-full text-sm h-8 rounded-xl ${
+                className={`w-full text-sm h-8 rounded-2xl ${
                   amount === giftsList.length
                     ? "bg-primary font-bold text-white"
                     : null
@@ -228,7 +228,7 @@ export default function Page() {
                 All
               </button>
               <button
-                className={`w-full text-sm h-8 rounded-xl ${
+                className={`w-full text-sm h-8 rounded-2xl ${
                   amount === 50 ? "bg-primary font-bold text-white" : null
                 }`}
                 onClick={() => {
@@ -238,7 +238,7 @@ export default function Page() {
                 Top 50
               </button>
               <button
-                className={`w-full text-sm h-8 rounded-xl ${
+                className={`w-full text-sm h-8 rounded-2xl ${
                   amount === 35 ? "bg-primary font-bold text-white" : null
                 }`}
                 onClick={() => {
@@ -248,7 +248,7 @@ export default function Page() {
                 Top 35
               </button>
               <button
-                className={`w-full text-sm h-8 rounded-xl ${
+                className={`w-full text-sm h-8 rounded-2xl ${
                   amount === 25 ? "bg-primary font-bold text-white" : null
                 }`}
                 onClick={() => {

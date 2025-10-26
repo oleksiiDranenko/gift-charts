@@ -7,13 +7,12 @@ export default function BackButton() {
   const vibrate = useVibrate();
   return (
     <button
-      className="w-fit flex flex-row items-center text-lg font-bold"
+      className='w-fit flex flex-row items-center font-bold'
       onClick={() => {
         router.back();
         vibrate();
-      }}
-    >
-      <ChevronLeft size={20}/>
+      }}>
+      <ChevronLeft size={20} />
       {"Go Back"}
     </button>
   );

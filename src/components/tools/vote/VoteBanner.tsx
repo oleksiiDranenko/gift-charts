@@ -82,42 +82,42 @@ export default function VoteBanner() {
     <>
       {isVoteStatusLoading || hasVoted === null ? null : !hasVoted ? (
         <div className='w-full px-3 mb-4'>
-          <div className='w-full p-3 bg-secondaryTransparent rounded-xl'>
+          <div className='w-full p-3 bg-secondaryTransparent rounded-2xl'>
             <h1 className='w-full flex text-start text-lg font-bold mb-3'>
               How do you feel about the Gifts market?
             </h1>
             <div className='w-full gap-x-2 flex flex-row mb-3'>
               <button
-                className={`w-full text-sm ${
+                className={`w-full h-8 text-sm ${
                   selectedVote === "negative"
                     ? "bg-red-500 text-white font-bold"
-                    : "border border-secondary text-secondaryText"
-                } rounded-xl p-1`}
+                    : "text-secondaryText"
+                } rounded-2xl p-1`}
                 onClick={() => setSelectedVote("negative")}>
                 Negative
               </button>
               <button
-                className={`w-full text-sm ${
+                className={`w-full h-8 text-sm ${
                   selectedVote === "neutral"
                     ? "bg-yellow-500 text-white font-bold"
-                    : "border border-secondary text-secondaryText"
-                } rounded-xl p-1`}
+                    : "text-secondaryText"
+                } rounded-2xl p-1`}
                 onClick={() => setSelectedVote("neutral")}>
                 Neutral
               </button>
               <button
-                className={`w-full text-sm ${
+                className={`w-full h-8 text-sm ${
                   selectedVote === "positive"
                     ? "bg-green-500 text-white font-bold"
-                    : "border border-secondary text-secondaryText"
-                } rounded-xl p-1`}
+                    : "text-secondaryText"
+                } rounded-2xl p-1`}
                 onClick={() => setSelectedVote("positive")}>
                 Positive
               </button>
             </div>
 
             <button
-              className='w-full flex items-center justify-center text-sm text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-xl'
+              className='w-full flex items-center justify-center text-sm text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-2xl'
               onClick={handleVoteSubmit}
               disabled={selectedVote === null || voteMutation.isLoading}>
               <Check size={16} />

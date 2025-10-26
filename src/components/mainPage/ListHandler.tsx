@@ -33,7 +33,7 @@ export default function ListHandler({
         <div
           className={
             type === "block"
-              ? "grid grid-flow-row grid-cols-4 md:grid-cols-5 gap-x-2 px-2"
+              ? "grid grid-flow-row grid-cols-4 gap-x-2 px-2"
               : "px-2"
           }>
           {type === "line" ? <GiftListHeader /> : null}

@@ -27,7 +27,7 @@ export default function PriceDropdown({
     <div className='relative min-w-36 h-8'>
       <Listbox value={selectedPrice} onChange={handleSelectedPrice}>
         <div className='relative'>
-          <Listbox.Button className='w-full h-full flex justify-between items-center px-3 py-1 rounded-xl bg-secondaryTransparent gap-x-2'>
+          <Listbox.Button className='w-full h-full flex justify-between items-center px-3 py-1 rounded-2xl bg-secondaryTransparent gap-x-2'>
             <span>{translate(selectedPrice)}</span>
             <ChevronsUpDown size={16} />
           </Listbox.Button>
@@ -37,7 +37,7 @@ export default function PriceDropdown({
             leave='transition ease-in duration-100'
             leaveFrom='opacity-100'
             leaveTo='opacity-0'>
-            <Listbox.Options className='z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-xl focus:outline-none text-sm ring-0'>
+            <Listbox.Options className='z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-2xl focus:outline-none text-sm ring-0'>
               {priceOptions.map((price) => (
                 <Listbox.Option
                   key={price}

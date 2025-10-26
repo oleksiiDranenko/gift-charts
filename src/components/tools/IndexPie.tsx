@@ -50,7 +50,7 @@ export default function IndexPie() {
   };
 
   return (
-    <div className='w-full h-screen flex items-center justify-center bg-slate-800 bg-opacity-50 rounded-xl'>
+    <div className='w-full h-screen flex items-center justify-center bg-slate-800 bg-opacity-50 rounded-2xl'>
       <div className='w-full h-full p-6'>
         <Pie data={data} options={options} />
       </div>

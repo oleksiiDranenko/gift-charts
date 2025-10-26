@@ -55,6 +55,16 @@ export default function DefaultUpdate({
     }
   );
 
+  useQuery({
+    queryKey: ["monthData"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}/indexMonthData/68493d064b37eed02b7ae5af`
+      );
+      return data.slice(-336);
+    },
+  });
+
   useEffect(() => {
     dispatch(setDefaultFilters());
   }, [dispatch]);
@@ -76,9 +86,9 @@ export default function DefaultUpdate({
     <>
       {isLoading || isFetching ? (
         <div className='fixed inset-0 z-50 flex flex-col justify-center items-center bg-background'>
-          <div className='w-1/2 lg:w-5/6 max-w-96  rounded-xl'>
-            <div className='w-full flex flex-col items-center justify-center mb-5'>
-              <div className='p-5 bg-background rounded-full animate-pulse'>
+          <div className='w-1/2 lg:w-5/6 max-w-96  rounded-2xl'>
+            <div className='w-full flex flex-col items-center justify-center mb-3'>
+              <div className='p-5 bg-background rounded-full'>
                 <Image
                   alt='Logo'
                   src={"/images/logo.webp"}
@@ -90,7 +100,7 @@ export default function DefaultUpdate({
             <ProgressBar
               completed={progress}
               bgColor='var(--primary)'
-              height='5px'
+              height='6px'
               baseBgColor='var(--secondary)'
               isLabelVisible={false}
               transitionDuration='0.5s'

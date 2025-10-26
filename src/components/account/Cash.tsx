@@ -10,7 +10,7 @@ interface PropsInterface {
 
 export default function Cash({ name, amount, percentage }: PropsInterface) {
   return (
-    <div className='w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-xl'>
+    <div className='w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-2xl'>
       <div className=' flex flex-row items-center'>
         {name === "ton" ? (
           <Image
@@ -18,10 +18,10 @@ export default function Cash({ name, amount, percentage }: PropsInterface) {
             src={`/images/toncoin.webp`}
             width={50}
             height={50}
-            className={`bg-secondary p-3 box-border mr-3 rounded-xl`}
+            className={`bg-secondary p-3 box-border mr-3 rounded-2xl`}
           />
         ) : (
-          <span className='bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-xl'>
+          <span className='bg-secondary h-[50px] w-[50px] flex justify-center items-center text-xl font-bold box-border mr-3 rounded-2xl'>
             $
           </span>
         )}

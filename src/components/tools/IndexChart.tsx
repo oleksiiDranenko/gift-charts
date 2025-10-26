@@ -381,11 +381,11 @@ export default function IndexChart({
 
       {index.valueType === "price" && (
         <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
-          <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
+          <div className='flex flex-row box-border bg-secondaryTransparent rounded-2xl gap-x-1'>
             <button
               className={`text-xs h-8 px-3 ${
                 selectedPrice == "ton"
-                  ? "rounded-xl bg-primary font-bold text-white"
+                  ? "rounded-2xl bg-primary font-bold text-white"
                   : ""
               }`}
               onClick={() => {
@@ -397,7 +397,7 @@ export default function IndexChart({
             <button
               className={`text-xs h-8 px-3 ${
                 selectedPrice == "usd"
-                  ? "rounded-xl bg-primary font-bold text-white"
+                  ? "rounded-2xl bg-primary font-bold text-white"
                   : ""
               }`}
               onClick={() => {
@@ -414,19 +414,19 @@ export default function IndexChart({
         className={
           resolvedTheme === "dark"
             ? "relative w-full"
-            : "w-full relative bg-secondaryTransparent rounded-xl"
+            : "w-full relative bg-secondaryTransparent rounded-2xl"
         }
         ref={chartContainerRef}>
         <Line ref={chartRef} data={data} options={options} />
       </div>
 
-      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-2xl'>
         {["all", "3m", "1m", "1w", "3d", "1d"].map((type) => (
           <button
             key={type}
             className={`w-full px-1 text-sm h-8 ${
               listType === type
-                ? "rounded-xl bg-secondary font-bold"
+                ? "rounded-2xl bg-secondary font-bold"
                 : "text-secondaryText"
             }`}
             onClick={() => {

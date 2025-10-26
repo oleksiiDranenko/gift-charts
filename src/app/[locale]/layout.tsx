@@ -67,7 +67,7 @@ export default async function RootLayout({
       </Script>
 
       <html lang={locale}>
-        <body className={inter.className}>
+        <body className={`${inter.className} min-h-screen overflow-auto`}>
           <NextIntlClientProvider messages={messages}>
             <ReduxProvider>
               <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>

@@ -81,7 +81,7 @@ export default function IndexBlock({
   return (
     <Link
       href={`/tools/index/${id}`}
-      className='w-full flex flex-row justify-between items-center h-18 p-3 bg-secondaryTransparent rounded-xl'
+      className='w-full flex flex-row justify-between items-center h-18 p-3 bg-secondaryTransparent rounded-2xl'
       onClick={() => vibrate()}>
       <div className='h-full flex flex-row items-center gap-x-2'>
         <AlignEndHorizontal size={22} className='text-primary' />
@@ -109,7 +109,7 @@ export default function IndexBlock({
         </div>
 
         <span
-          className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+          className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
             diff > 0
               ? "text-green-500 bg-green-500"
               : diff < 0

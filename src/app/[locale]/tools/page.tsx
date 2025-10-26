@@ -58,7 +58,7 @@ export default function Page() {
       </h1>
 
       {/* Heatmap Section */}
-      <div className='mb-3 bg-secondaryTransparent rounded-xl overflow-hidden relative'>
+      <div className='mb-3 bg-secondaryTransparent rounded-2xl overflow-hidden relative'>
         <div className='absolute top-0 left-0 w-full h-20 z-0 overflow-hidden'>
           <Image
             src='/images/heatmap.webp'
@@ -80,7 +80,7 @@ export default function Page() {
 
             <Link
               href='/tools/treemap'
-              className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl'
+              className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-2xl'
               onClick={() => vibrate()}>
               <span>Try it now</span>
               <ChevronRight size={18} />
@@ -91,14 +91,14 @@ export default function Page() {
 
       {/* Market Sentiment */}
       {user.token && (
-        <div className='w-full h-16 p-3 mb-5 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
+        <div className='w-full h-16 p-3 mb-5 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-2xl'>
           <h1 className='font-bold flex flex-row items-center gap-x-2'>
             <Smile size={26} className='text-primary' />
             Market Sentiment
           </h1>
           <Link
             href='/tools/vote'
-            className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-xl'
+            className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-2xl'
             onClick={() => vibrate()}>
             <span>Vote now</span>
             <ChevronRight size={18} />
@@ -118,7 +118,7 @@ export default function Page() {
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-xl animate-pulse'
+                className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-2xl animate-pulse'
               />
             ))}
           </>

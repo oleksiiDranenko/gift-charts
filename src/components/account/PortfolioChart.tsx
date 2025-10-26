@@ -147,6 +147,7 @@ export default function PortfolioChart({
 
   const options: ChartOptions<"line"> = {
     responsive: true,
+    maintainAspectRatio: false,
     // onHover: function (event, elements) {
     //   if (elements.length > 0) {
     //     const newIndex = elements[0].index;
@@ -205,34 +206,15 @@ export default function PortfolioChart({
       mode: "index",
       intersect: false,
     },
+    layout: {
+      padding: 0, // remove internal padding
+    },
     scales: {
       x: {
-        grid: {
-          display: false,
-        },
-        ticks: { display: false },
+        display: false, // completely remove x-axis visuals and space
       },
       y: {
-        grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.00)"
-              : "rgba(0, 0, 0, 0.00)",
-          drawTicks: true,
-          tickLength: 10,
-        },
-        ticks: {
-          display: false,
-        },
-        position: "right",
-        suggestedMax:
-          numericValues.length > 0
-            ? Math.max(...numericValues) * 1.01
-            : undefined,
-        suggestedMin:
-          numericValues.length > 0
-            ? Math.min(...numericValues) * 0.99
-            : undefined,
+        display: false, // completely remove y-axis visuals and space
       },
     },
   };
@@ -241,7 +223,7 @@ export default function PortfolioChart({
       className={
         resolvedTheme === "dark"
           ? "relative"
-          : "relative bg-secondaryTransparent rounded-xl p-4"
+          : "relative bg-secondaryTransparent rounded-2xl p-4"
       }
       ref={chartContainerRef}>
       <Line

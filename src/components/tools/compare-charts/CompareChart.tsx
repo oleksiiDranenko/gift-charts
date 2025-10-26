@@ -311,7 +311,9 @@ export default function CompareCharts({
           <div className='w-1/2 flex flex-row box-border'>
             <button
               className={`w-2/5 text-sm h-10 box-border ${
-                selectedPrice === "ton" ? "rounded-xl bg-primary font-bold" : ""
+                selectedPrice === "ton"
+                  ? "rounded-2xl bg-primary font-bold"
+                  : ""
               }`}
               onClick={() => {
                 setSelectedPrice("ton");
@@ -321,7 +323,9 @@ export default function CompareCharts({
             </button>
             <button
               className={`w-2/5 text-sm h-10 box-border ${
-                selectedPrice === "usd" ? "rounded-xl bg-primary font-bold" : ""
+                selectedPrice === "usd"
+                  ? "rounded-2xl bg-primary font-bold"
+                  : ""
               }`}
               onClick={() => {
                 setSelectedPrice("usd");
@@ -345,7 +349,7 @@ export default function CompareCharts({
         <div className='w-full flex flex-row justify-between gap-x-3'>
           <button
             className={`w-full text-sm h-10 ${
-              listType === "all" ? "rounded-xl bg-primary font-bold" : ""
+              listType === "all" ? "rounded-2xl bg-primary font-bold" : ""
             }`}
             onClick={() => {
               if (lifeData.length > 0) setListType("all");
@@ -355,7 +359,7 @@ export default function CompareCharts({
           </button>
           <button
             className={`w-full text-sm h-10 ${
-              listType === "1m" ? "rounded-xl bg-primary font-bold" : ""
+              listType === "1m" ? "rounded-2xl bg-primary font-bold" : ""
             }`}
             onClick={() => {
               if (lifeData.length > 0) setListType("1m");
@@ -365,7 +369,7 @@ export default function CompareCharts({
           </button>
           <button
             className={`w-full text-sm h-10 ${
-              listType === "1w" ? "rounded-xl bg-primary font-bold" : ""
+              listType === "1w" ? "rounded-2xl bg-primary font-bold" : ""
             }`}
             onClick={() => {
               if (weekData.length > 0) setListType("1w");
@@ -375,7 +379,7 @@ export default function CompareCharts({
           </button>
           <button
             className={`w-full text-sm h-10 ${
-              listType === "24h" ? "rounded-xl bg-primary font-bold" : ""
+              listType === "24h" ? "rounded-2xl bg-primary font-bold" : ""
             }`}
             onClick={() => {
               if (weekData.length > 0) setListType("24h");

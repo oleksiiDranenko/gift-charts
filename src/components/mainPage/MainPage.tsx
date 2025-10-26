@@ -8,19 +8,13 @@ import { useEffect, useState, useRef } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import ListHandler from "./ListHandler";
 import SearchBar from "./SearchBar";
-import {
-  Trophy,
-  Star,
-  Grid2x2,
-  Rows3,
-  PaintBucket,
-  CircleSlash2,
-  TrendingUp,
-  TrendingDown,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Trophy, Star, TrendingUp, TrendingDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import VoteBanner from "../tools/vote/VoteBanner";
+import IndexChart from "./IndexChart";
+import axios from "axios";
+import { useQuery } from "react-query";
+import IndexWidget from "./IndexWidget";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -172,11 +166,10 @@ export default function MainPage() {
 
   return (
     <div>
-      {/* {user.token && <VoteBanner />} */}
       {/* <div className='w-full px-3 mb-4'>
         <Link
           href='https://t.me/gift_charts'
-          className='w-full h-24 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-xl relative overflow-hidden'>
+          className='w-full h-24 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-2xl relative overflow-hidden'>
           <div className='flex flex-col justify-evenly'>
             <div className='flex flex-row'>
               <h1 className=' text-white font-bold'>
@@ -200,95 +193,12 @@ export default function MainPage() {
 
       <SearchBar />
 
-      <div className='max-w-full mx-3 flex items-center justify-between lg:justify-start gap-x-2 mb-3 lg:mb-4'>
-        <div className='w-1/2 lg:w-fit flex flex-row gap-x-1'>
-          <div className='w-full lg:w-fit flex flex-row bg-secondaryTransparent rounded-xl overflow-hidden'>
-            <button
-              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
-                giftType === "line"
-                  ? "font-bold text-foreground bg-secondary rounded-xl"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setGiftType("line");
-                vibrate();
-              }}>
-              <Rows3 size={18} />
-            </button>
-            <button
-              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
-                giftType === "block"
-                  ? "font-bold text-foreground bg-secondary rounded-xl"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setGiftType("block");
-                vibrate();
-              }}>
-              <Grid2x2 size={18} />
-            </button>
-          </div>
-          <div className='w-full lg:w-fit flex flex-row bg-secondaryTransparent rounded-xl'>
-            <button
-              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
-                giftBackground === "color"
-                  ? "font-bold text-foreground bg-secondary rounded-xl"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setGiftBackground("color");
-                vibrate();
-              }}>
-              <PaintBucket size={18} />
-            </button>
-            <button
-              className={`w-full lg:px-3 flex flex-row items-center justify-center text-xs h-8 ${
-                giftBackground === "none"
-                  ? "font-bold text-foreground bg-secondary rounded-xl"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setGiftBackground("none");
-                vibrate();
-              }}>
-              <CircleSlash2 size={18} />
-            </button>
-          </div>
-        </div>
-        <div className='w-1/2 lg:w-fit flex flex-row items-center gap-x-1'>
-          <div className='w-full lg:w-fit flex items-center justify-between gap-x-2 bg-secondaryTransparent rounded-xl'>
-            <button
-              className={`w-full lg:px-3 flex flex-row items-center gap-x-2 justify-center text-sm h-8 ${
-                currency === "ton"
-                  ? "font-bold text-white bg-primary rounded-xl"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setCurrency("ton");
-                vibrate();
-              }}>
-              <Image
-                src='/images/toncoin.webp'
-                alt={""}
-                width={15}
-                height={15}
-              />{" "}
-              Ton
-            </button>
-            <button
-              className={`w-full lg:px-3 flex flex-row items-center justify-center text-sm h-8 ${
-                currency === "usd"
-                  ? "font-bold text-white bg-primary rounded-xl"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setCurrency("usd");
-                vibrate();
-              }}>
-              $ Usd
-            </button>
-          </div>
-        </div>
+      <div className='px-3 mb-3'>
+        <IndexWidget
+          currency={currency}
+          indexId='68493d064b37eed02b7ae5af'
+          indexName='Market Cap'
+        />
       </div>
 
       <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
@@ -334,13 +244,6 @@ export default function MainPage() {
             <Star size={14} className='ml-1' />
           </button>
         </div>
-        <Link
-          className={`w-fit text-xs h-8 lg:h-7 mr-3 px-4 flex flex-row text-nowrap gap-x-2 items-center justify-center font-bold text-white bg-primary rounded-xl`}
-          href={"/gifts-list"}
-          onClick={() => vibrate()}>
-          <span className='hidden lg:block'>Customise list</span>
-          <SlidersHorizontal size={14} strokeWidth={2.5} />
-        </Link>
       </div>
 
       <div className='w-full flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
@@ -349,7 +252,7 @@ export default function MainPage() {
             {userList.length !== 0 ? (
               <ListHandler
                 key={chosenFilter}
-                giftsList={userList}
+                giftsList={userList.slice(0, 5)}
                 type={giftType}
                 background={giftBackground}
                 currency={currency}
@@ -367,11 +270,17 @@ export default function MainPage() {
             key={chosenFilter}
             giftsList={
               chosenFilter === "gainers"
-                ? gainersList
+                ? giftType === "line"
+                  ? gainersList.slice(0, 3)
+                  : gainersList.slice(0, 8)
                 : chosenFilter === "losers"
-                ? losersList
+                ? giftType === "line"
+                  ? losersList.slice(0, 3)
+                  : losersList.slice(0, 8)
                 : chosenFilter === "floor"
-                ? topList
+                ? giftType === "line"
+                  ? topList.slice(0, 3)
+                  : topList.slice(0, 8)
                 : []
             }
             type={giftType}
