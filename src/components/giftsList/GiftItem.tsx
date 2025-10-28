@@ -262,7 +262,7 @@ export default function GiftItem({
 
       <div className='hidden lg:block'>
         <Link
-          className={`w-full h-16 flex flex-row items-center justify-between border-b border-secondaryTransparent ${
+          className={`w-full h-16 flex flex-row items-center justify-between  ${
             background === "color"
               ? `bg-gradient-to-r ${
                   percentChange !== "no data" && percentChange >= 0
@@ -271,7 +271,9 @@ export default function GiftItem({
                       percentChange < 0 &&
                       "from-red-500/5 to-red-500/25"
                 }`
-              : "bg-none hover:bg-secondaryTransparent"
+              : resolvedTheme === "dark"
+              ? "bg-none hover:bg-secondaryTransparent border-b border-secondaryTransparent rounded-2xl"
+              : "bg-secondaryTransparent hover:bg-background border-b border-secondary rounded-2xl"
           }`}
           key={item._id}
           href={`/gift/${item._id}`}

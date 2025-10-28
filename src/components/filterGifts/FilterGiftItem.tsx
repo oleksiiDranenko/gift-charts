@@ -20,7 +20,7 @@ export default function FilterGiftItem({
 
   return (
     <div
-      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start ${
+      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-between ${
         selected && "bg-secondaryTransparent"
       } rounded-2xl`}
       key={gift._id}
@@ -28,12 +28,6 @@ export default function FilterGiftItem({
         onClick(gift);
         vibrate();
       }}>
-      <div
-        className={`w-8 h-8 mr-3 flex justify-center items-center border border-secondary rounded-2xl ${
-          selected && "bg-secondaryTransparent"
-        }`}>
-        {selected && <Check size={16} className='text-primary' />}
-      </div>
       <div className='h-full flex flex-row items-center justify-start'>
         <Image
           alt='gift image'
@@ -45,6 +39,12 @@ export default function FilterGiftItem({
         <div className='flex flex-col'>
           <span className='text-base font-bold'>{gift.name}</span>
         </div>
+      </div>
+      <div
+        className={`w-8 h-8 mr-3 flex justify-center items-center border border-secondary rounded-xl ${
+          selected && "bg-secondaryTransparent"
+        }`}>
+        {selected && <Check size={16} className='text-primary' />}
       </div>
     </div>
   );
