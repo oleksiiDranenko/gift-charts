@@ -4,7 +4,7 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppSelector } from "@/redux/hooks";
 import GiftItem from "./GiftItem";
 import GiftListHeader from "./GiftListHeader";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDownWideNarrow, Funnel, Search, X } from "lucide-react";
 import FilterGiftsModal from "../filterGifts/FilterGiftsModal";
 import SortGiftsModal from "../filterGifts/SortGiftsModal";
@@ -25,6 +25,27 @@ export default function GiftsList({ loading }: PropsInterface) {
   const [selectedList, setSelectedList] = useState<"all" | "saved">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [list, setList] = useState<GiftInterface[]>(giftsList);
+
+  const [isSticky, setIsSticky] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0,
+        rootMargin: "0px",
+      }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     let updatedList = [...giftsList];
@@ -88,53 +109,62 @@ export default function GiftsList({ loading }: PropsInterface) {
             />
           </div>
 
+          <div ref={sentinelRef} />
+
           {selectedList === "saved" && user.savedList.length === 0 ? null : (
-            <div className='w-full flex flex-row gap-x-1 mb-5'>
-              <div className='relative w-full'>
-                <input
-                  className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
-                  placeholder='Search gift'
-                  value={searchQuery}
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-
-                <Search
-                  className='absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-secondaryText'
-                  size={18}
-                />
-
-                {searchQuery && (
-                  <button
-                    onClick={clearSearch}
-                    className='absolute right-3 top-1/2 transform -translate-y-1/2 text-secondaryText hover:text-foreground transition-colors'>
-                    <X size={16} />
-                  </button>
-                )}
-              </div>
-              <div className='w-fit flex flex-row gap-x-1'>
-                <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
-                  <SortGiftsModal
-                    trigger={
-                      <button className='h-11 w-full flex items-center justify-center'>
-                        <ArrowDownWideNarrow size={16} />
-                      </button>
-                    }
-                    giftsList={giftsList}
-                    list={list}
-                    setList={setList}
+            <div
+              className={`w-full sticky top-0 z-30 bg-background transition-all duration-200 ${
+                isSticky ? "pt-[110px]" : "pt-0"
+              }`}>
+              <div className='w-full flex flex-row gap-x-1 mb-3'>
+                <div className='relative w-full'>
+                  <input
+                    className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
+                    placeholder='Search gift'
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
                   />
+
+                  <Search
+                    className='absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-secondaryText'
+                    size={18}
+                  />
+
+                  {searchQuery && (
+                    <button
+                      onClick={clearSearch}
+                      className='absolute right-3 top-1/2 transform -translate-y-1/2 text-secondaryText hover:text-foreground transition-colors'>
+                      <X size={16} />
+                    </button>
+                  )}
                 </div>
-                <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
-                  <FilterGiftsModal
-                    trigger={
-                      <button className='h-11 w-full flex items-center justify-center'>
-                        <Funnel size={16} />
-                      </button>
-                    }
-                    giftsList={giftsList}
-                    list={list}
-                    setList={setList}
-                  />
+
+                <div className='w-fit flex flex-row gap-x-1'>
+                  <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
+                    <SortGiftsModal
+                      trigger={
+                        <button className='h-11 w-full flex items-center justify-center'>
+                          <ArrowDownWideNarrow size={16} />
+                        </button>
+                      }
+                      giftsList={giftsList}
+                      list={list}
+                      setList={setList}
+                    />
+                  </div>
+
+                  <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
+                    <FilterGiftsModal
+                      trigger={
+                        <button className='h-11 w-full flex items-center justify-center'>
+                          <Funnel size={16} />
+                        </button>
+                      }
+                      giftsList={giftsList}
+                      list={list}
+                      setList={setList}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
