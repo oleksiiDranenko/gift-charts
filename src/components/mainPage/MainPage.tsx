@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import VoteBanner from "../tools/vote/VoteBanner";
+import ImageBanner from "../banners/ImageBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -197,6 +198,11 @@ export default function MainPage() {
           </div>
         </Link>
       </div> */}
+
+      {/* <ImageBanner
+        imageUrl={"/images/banner_mutant_gifts.png"}
+        productUrl={"https://t.me/themis_gifts_bot?start=ref_754292445"}
+      /> */}
 
       <SearchBar />
 
