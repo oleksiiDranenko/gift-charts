@@ -10,6 +10,7 @@ import FilterGiftsModal from "../filterGifts/FilterGiftsModal";
 import SortGiftsModal from "../filterGifts/SortGiftsModal";
 import InfoMessage from "../generalHints/InfoMessage";
 import { useRouter } from "@/i18n/navigation";
+import ListHandler from "../mainPage/ListHandler";
 
 interface PropsInterface {
   loading: boolean;
@@ -28,6 +29,23 @@ export default function GiftsList({ loading }: PropsInterface) {
 
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  // ✅ Unified settings from localStorage
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("settings");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          console.warn("Failed to parse settings from localStorage");
+        }
+      }
+    }
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
+
+  const { currency, giftType, giftBackground } = settings;
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -75,46 +93,42 @@ export default function GiftsList({ loading }: PropsInterface) {
   };
 
   return (
-    <div className='w-full h-auto flex flex-col items-center px-3'>
+    <div className='w-full h-auto flex flex-col items-center'>
       {giftsList !== undefined ? (
         <>
-          <div className='relative w-full flex flex-row justify-between mb-5'>
-            <button
-              className={`w-full text-sm pb-2 text-center transition-colors duration-300 ${
-                selectedList === "all"
-                  ? "text-foreground font-bold"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setSelectedList("all");
-              }}>
-              All Gifts
-            </button>
-            <button
-              className={`w-full text-sm pb-2 text-center transition-colors duration-300 ${
-                selectedList === "saved"
-                  ? "text-foreground font-bold"
-                  : "text-secondaryText"
-              }`}
-              onClick={() => {
-                setSelectedList("saved");
-              }}>
-              Saved
-            </button>
+          <div className='w-full px-3'>
+            <div className='relative w-full flex flex-row justify-between mb-5 '>
+              <button
+                className={`w-full text-sm pb-2 text-center transition-colors duration-300 ${
+                  selectedList === "all"
+                    ? "text-foreground font-bold"
+                    : "text-secondaryText"
+                }`}
+                onClick={() => setSelectedList("all")}>
+                All Gifts
+              </button>
+              <button
+                className={`w-full text-sm pb-2 text-center transition-colors duration-300 ${
+                  selectedList === "saved"
+                    ? "text-foreground font-bold"
+                    : "text-secondaryText"
+                }`}
+                onClick={() => setSelectedList("saved")}>
+                Saved
+              </button>
 
-            <span
-              className={`absolute bottom-0 h-[2px] bg-primary transition-all duration-300 ease-in-out ${
-                selectedList === "all" ? "left-0 w-1/2" : "left-1/2 w-1/2"
-              }`}
-            />
+              <span
+                className={`absolute bottom-0 h-[2px] bg-primary transition-all duration-300 ease-in-out ${
+                  selectedList === "all" ? "left-0 w-1/2" : "left-1/2 w-1/2"
+                }`}
+              />
+            </div>
           </div>
-
           <div ref={sentinelRef} />
-
           {selectedList === "saved" && user.savedList.length === 0 ? null : (
             <div
-              className={`w-full sticky top-0 z-30 bg-background transition-all duration-200 ${
-                isSticky ? "pt-[110px]" : "pt-0"
+              className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-200 ${
+                isSticky ? "pt-[110px] lg:pt-5" : "pt-0"
               }`}>
               <div className='w-full flex flex-row gap-x-1 mb-3'>
                 <div className='relative w-full'>
@@ -170,9 +184,6 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           )}
 
-          {selectedList === "saved" && user.savedList.length === 0 ? null : (
-            <GiftListHeader />
-          )}
           <div className='w-full'>
             {selectedList === "saved" && user.savedList.length === 0 ? (
               <InfoMessage
@@ -181,18 +192,12 @@ export default function GiftsList({ loading }: PropsInterface) {
                 onClick={() => router.push("/settings/edit-watchlist")}
               />
             ) : list.length > 0 ? (
-              list.map((item, i) => (
-                <GiftItem
-                  key={item._id}
-                  item={item}
-                  currency={filters.currency}
-                  sortBy={filters.sortBy}
-                  displayValue={filters.displayValue}
-                  timeGap={"24h"}
-                  background='none'
-                  number={i}
-                />
-              ))
+              <ListHandler
+                giftsList={list}
+                type={giftType}
+                background={giftBackground}
+                currency={currency}
+              />
             ) : (
               <InfoMessage
                 text={`No gifts matching "${searchQuery}"`}

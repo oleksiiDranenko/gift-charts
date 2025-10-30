@@ -4,16 +4,12 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppSelector } from "@/redux/hooks";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import ListHandler from "./ListHandler";
 import SearchBar from "./SearchBar";
 import { Trophy, Star, TrendingUp, TrendingDown } from "lucide-react";
 import { useTranslations } from "next-intl";
-import VoteBanner from "../tools/vote/VoteBanner";
-import IndexChart from "./IndexChart";
-import axios from "axios";
-import { useQuery } from "react-query";
 import IndexWidget from "./IndexWidget";
 
 export default function MainPage() {
@@ -34,41 +30,33 @@ export default function MainPage() {
   >("gainers");
   const [isMounted, setIsMounted] = useState(false);
 
-  const [giftType, setGiftType] = useState<"line" | "block">(
-    typeof window !== "undefined"
-      ? (localStorage.getItem("giftType") as "line" | "block") || "line"
-      : "line"
-  );
+  // ✅ Unified settings object (replaces separate localStorage keys)
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("settings");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          console.warn("Failed to parse settings from localStorage");
+        }
+      }
+    }
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
 
-  const [giftBackground, setGiftBackground] = useState<"color" | "none">(
-    typeof window !== "undefined"
-      ? (localStorage.getItem("giftBackground") as "color" | "none") || "none"
-      : "none"
-  );
+  const { currency, giftType, giftBackground } = settings;
 
-  const [currency, setCurrency] = useState<"ton" | "usd">(
-    typeof window !== "undefined"
-      ? (localStorage.getItem("currency") as "ton" | "usd") || "ton"
-      : "ton"
-  );
-
+  // ✅ Sync settings to localStorage
   useEffect(() => {
     if (isMounted) {
-      localStorage.setItem("giftType", giftType);
+      localStorage.setItem("settings", JSON.stringify(settings));
     }
-  }, [giftType, isMounted]);
+  }, [settings, isMounted]);
 
   useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem("giftBackground", giftBackground);
-    }
-  }, [giftBackground, isMounted]);
-
-  useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem("currency", currency);
-    }
-  }, [currency, isMounted]);
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (giftsList.length > 0) {
@@ -160,37 +148,8 @@ export default function MainPage() {
     }
   }, [currency, filters, giftsList, user.savedList]);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   return (
     <div>
-      {/* <div className='w-full px-3 mb-4'>
-        <Link
-          href='https://t.me/gift_charts'
-          className='w-full h-24 p-3 flex flex-row bg-gradient-to-br from-cyan-950 to-cyan-700 rounded-2xl relative overflow-hidden'>
-          <div className='flex flex-col justify-evenly'>
-            <div className='flex flex-row'>
-              <h1 className=' text-white font-bold'>
-                Gift Charts official channel
-              </h1>
-            </div>
-            <p className='text-xs text-white/70'>
-              Be informed about the upcoming updates
-            </p>
-          </div>
-          <div className='absolute right-3 top-1/2absolute top-1/2 transform -translate-y-1/2'>
-            <Image
-              src='/images/telegram-svgrepo-com.svg'
-              alt=''
-              width={50}
-              height={50}
-            />
-          </div>
-        </Link>
-      </div> */}
-
       <SearchBar />
 
       <div className='px-3 mb-3'>
@@ -204,7 +163,7 @@ export default function MainPage() {
       <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
-            className={` flex ml-3 flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={`flex ml-3 items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "gainers"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
@@ -214,7 +173,7 @@ export default function MainPage() {
             <TrendingUp size={14} className='ml-1' />
           </button>
           <button
-            className={` flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={`flex items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "losers"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
@@ -224,7 +183,7 @@ export default function MainPage() {
             <TrendingDown size={14} className='ml-1' />
           </button>
           <button
-            className={` flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={`flex items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "floor"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
@@ -234,7 +193,7 @@ export default function MainPage() {
             <Trophy size={14} className='ml-1' />
           </button>
           <button
-            className={` flex flex-row items-center justify-center px-3 text-xs h-8 box-border ${
+            className={`flex items-center justify-center px-3 text-xs h-8 ${
               chosenFilter === "saved"
                 ? "font-bold text-foreground border-b border-primary"
                 : "text-secondaryText"
