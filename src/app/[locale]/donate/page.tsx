@@ -2,6 +2,7 @@
 
 import useVibrate from "@/hooks/useVibrate";
 import BackButton from "@/utils/ui/backButton";
+import { Check, Copy, HeartHandshake } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -20,28 +21,29 @@ export default function Page() {
   };
 
   return (
-    <div className='w-screen pt-[0px]  pb-24 flex justify-center'>
+    <div className='w-full lg:w-5/6 pt-[0px] pb-24 flex flex-col px-3'>
       <div className='w-full lg:w-5/6'>
         <BackButton />
-        <div className='max-w-full flex justify-between items-center p-3 mt-3 mx-3 border border-secondary rounded-2xl'>
-          <span className='text-xl font-bold'>🤝 Donate</span>
-          <button
-            onClick={handleCopy}
-            className='flex flex-row items-center justify-center font-bold p-3 gap-x-2 rounded-2xl border border-secondary bg-secondaryTransparent'
-            title='Copy to clipboard'>
-            <Image
-              src={"/images/toncoin.webp"}
-              alt='ton logo'
-              height={16}
-              width={16}
-            />
-            {copied ? "Copied!" : "Copy Address"}
-          </button>
-        </div>
+      </div>
+      <div className='flex flex-col mt-3 items-center'>
+        <h1 className='text-xl font-bold mb-1 flex flex-row items-center gap-x-1'>
+          <HeartHandshake size={20} />
+          Donate
+        </h1>
+        <p className='mb-3'>Thanks you for supporting the app!</p>
 
-        <div className='max-w-full flex flex-col text-center p-3 mt-3 mx-3 border border-secondary rounded-2xl'>
-          <h1 className='font-bold mb-3'>Wallet Address:</h1>
-          <span className='text-primary'>{walletAddress}</span>
+        <div
+          onClick={handleCopy}
+          className='relative bg-secondaryTransparent rounded-2xl flex flex-col py-3 pl-3 pr-8 mb-3'>
+          <span className='text-foreground font-bold mb-1'>
+            TON Wallet Address
+          </span>
+          <p className='text-secondaryText'>{walletAddress}</p>
+          {copied ? (
+            <Check className='absolute top-3 right-3 text-primary' size={20} />
+          ) : (
+            <Copy className='absolute top-3 right-3 text-primary' size={20} />
+          )}
         </div>
       </div>
     </div>

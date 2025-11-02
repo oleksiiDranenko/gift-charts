@@ -34,6 +34,16 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/logo.webp",
   },
+  metadataBase: new URL("https://giftcharts.com"),
+  alternates: {
+    canonical: "https://giftcharts.com",
+  },
+  keywords: [
+    "telegram gifts analytics",
+    "telegram nft analytics",
+    "telegram collectibles tracker",
+    "gift charts",
+  ],
 };
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });

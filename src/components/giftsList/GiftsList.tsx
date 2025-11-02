@@ -11,6 +11,7 @@ import SortGiftsModal from "../filterGifts/SortGiftsModal";
 import InfoMessage from "../generalHints/InfoMessage";
 import { useRouter } from "@/i18n/navigation";
 import ListHandler from "../mainPage/ListHandler";
+import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 
 interface PropsInterface {
   loading: boolean;
@@ -127,10 +128,10 @@ export default function GiftsList({ loading }: PropsInterface) {
           <div ref={sentinelRef} />
           {selectedList === "saved" && user.savedList.length === 0 ? null : (
             <div
-              className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-200 ${
-                isSticky ? "pt-[110px] lg:pt-5" : "pt-0"
+              className={`w-full sticky px-3 top-0 z-30 bg-background/70 backdrop-blur-md rounded-b-2xl transition-all duration-200 ${
+                isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
               }`}>
-              <div className='w-full flex flex-row gap-x-1 mb-3'>
+              <div className='w-full flex flex-row gap-x-1 mb-2'>
                 <div className='relative w-full'>
                   <input
                     className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
@@ -185,6 +186,7 @@ export default function GiftsList({ loading }: PropsInterface) {
           )}
 
           <div className='w-full'>
+            <ScrollToTopButton />
             {selectedList === "saved" && user.savedList.length === 0 ? (
               <InfoMessage
                 text='You dont have any gifts saved'

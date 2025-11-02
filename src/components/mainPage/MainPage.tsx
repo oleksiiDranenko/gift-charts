@@ -248,6 +248,12 @@ export default function MainPage() {
           />
         )}
       </div>
+
+      {/* <Link
+        href={"/donate"}
+        className='w-full p-3 bg-secondaryTransparent rounded-2xl'>
+        Donate
+      </Link> */}
     </div>
   );
 }

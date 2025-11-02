@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
+/** Duration (ms) before hiding the button after scroll stops */
+const HIDE_DELAY = 2000;
+
 /** Finds the nearest scrollable ancestor */
 function getScrollableParent(
   node: HTMLElement | null
@@ -31,6 +34,7 @@ export default function ScrollToTopButton() {
   const scrollRootRef = useRef<HTMLElement | Document | Window | null>(null);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  // Observe visibility using sentinel
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
@@ -51,20 +55,38 @@ export default function ScrollToTopButton() {
     return () => observer.disconnect();
   }, []);
 
-  // Handle temporary disappearance after 2s
+  // Handle visibility + reset timeout on scroll
   useEffect(() => {
-    if (isVisible) {
-      setIsTemporarilyVisible(true);
-      if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    const root = scrollRootRef.current;
+    if (!root) return;
 
+    const scrollTarget =
+      root instanceof HTMLElement
+        ? root
+        : root instanceof Window
+        ? window
+        : document;
+
+    const resetHideTimer = () => {
+      if (hideTimeout.current) clearTimeout(hideTimeout.current);
+      setIsTemporarilyVisible(true);
       hideTimeout.current = setTimeout(() => {
         setIsTemporarilyVisible(false);
-      }, 4000);
+      }, HIDE_DELAY);
+    };
+
+    // Only start timer when button is visible
+    if (isVisible) {
+      resetHideTimer();
+      scrollTarget.addEventListener("scroll", resetHideTimer, {
+        passive: true,
+      });
     } else {
       setIsTemporarilyVisible(false);
     }
 
     return () => {
+      scrollTarget.removeEventListener("scroll", resetHideTimer);
       if (hideTimeout.current) clearTimeout(hideTimeout.current);
     };
   }, [isVisible]);
@@ -87,7 +109,7 @@ export default function ScrollToTopButton() {
 
   return (
     <>
-      {/* Sentinel (1px invisible trigger) */}
+      {/* Sentinel */}
       <div ref={sentinelRef} className='invisible h-px w-full' />
 
       {/* Floating button */}
