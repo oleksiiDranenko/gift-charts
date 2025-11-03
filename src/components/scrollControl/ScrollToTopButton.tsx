@@ -120,10 +120,10 @@ export default function ScrollToTopButton() {
           ${
             isTemporarilyVisible
               ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-5 pointer-events-none"
+              : "opacity-0 translate-y-10 pointer-events-none"
           }
           hover:scale-105 active:scale-95`}>
-        <ArrowUp size={20} />
+        <ArrowUp size={24} />
       </button>
     </>
   );
