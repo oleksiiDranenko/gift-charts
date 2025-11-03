@@ -128,7 +128,7 @@ export default function GiftsList({ loading }: PropsInterface) {
           <div ref={sentinelRef} />
           {selectedList === "saved" && user.savedList.length === 0 ? null : (
             <div
-              className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-200 ${
+              className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-300 ${
                 isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
               }`}>
               <div className='w-full flex flex-row gap-x-1 mb-2'>
