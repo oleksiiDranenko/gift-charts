@@ -118,8 +118,8 @@ export default function GiftBlockItem({
         <Image
           alt='gift image'
           src={`/gifts/${item.image}.webp`}
-          width={60}
-          height={60}
+          width={70}
+          height={70}
           className={`p-1 ${borderColor ? "border" : ""}'`}
           style={borderColor ? { borderColor: `${borderColor}80` } : {}}
         />
@@ -151,7 +151,7 @@ export default function GiftBlockItem({
             ) : (
               <span className='mr-1'>$</span>
             )}
-            <span className='text-base font-bold'>
+            <span className='text-sm font-bold'>
               {currency === "ton" && displayValue === "price"
                 ? item.priceTon
                 : currency === "ton" && displayValue === "marketCap"
@@ -165,7 +165,7 @@ export default function GiftBlockItem({
           </div>
 
           <span
-            className={`py-[2px] px-1 mt-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+            className={`py-[2px] px-1 mt-2 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
               percentChange !== "no data"
                 ? percentChange >= 0
                   ? "text-green-500 bg-green-500"

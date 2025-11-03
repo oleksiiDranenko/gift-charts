@@ -233,7 +233,7 @@ export default function GiftChart({
         />
       )}
 
-      <div className='w-full flex flex-row gap-x-3 mt-5'>
+      <div className='w-full flex flex-row gap-x-2 mt-5'>
         <MarketsModal
           trigger={
             <button

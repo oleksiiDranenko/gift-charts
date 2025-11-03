@@ -248,10 +248,7 @@ export default function CandleChart({
           display: false,
         },
         grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.05)",
+          display: false,
         },
       },
       y: {

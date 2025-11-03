@@ -360,10 +360,7 @@ export default function BarChart({
     scales: {
       x: {
         grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.05)",
+          display: false,
         },
         ticks: {
           color:
