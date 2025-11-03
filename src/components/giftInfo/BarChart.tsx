@@ -391,16 +391,17 @@ export default function BarChart({
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 10,
+          padding: 3,
+          maxTicksLimit: 7,
         },
         position: "right",
         suggestedMax:
           numericValues.length > 0
-            ? Math.max(...numericValues) * 1.1
+            ? Math.max(...numericValues) * 1.05
             : undefined,
         suggestedMin:
           numericValues.length > 0
-            ? Math.min(...numericValues) * 0.9
+            ? Math.min(...numericValues) * 0.95
             : undefined,
       },
     },
@@ -414,7 +415,7 @@ export default function BarChart({
           : "relative bg-secondaryTransparent rounded-2xl"
       }
       ref={chartContainerRef}>
-      <Bar ref={chartRef as any} data={data} options={options} />
+      <Bar ref={chartRef as any} data={data} options={options} height={250} />
       <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-2xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${

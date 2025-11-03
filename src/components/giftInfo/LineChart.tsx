@@ -455,10 +455,7 @@ export default function LineChart({
     scales: {
       x: {
         grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.05)",
+          display: false,
         },
         ticks: {
           color:
@@ -486,7 +483,8 @@ export default function LineChart({
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 10,
+          padding: 3,
+          maxTicksLimit: 7,
         },
         position: "right",
         suggestedMax:
@@ -509,7 +507,7 @@ export default function LineChart({
           : "relative bg-secondaryTransparent rounded-2xl"
       }
       ref={chartContainerRef}>
-      <Line ref={chartRef as any} data={data} options={options} />
+      <Line ref={chartRef as any} data={data} options={options} height={250} />
       <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-2xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${

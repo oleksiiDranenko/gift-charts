@@ -273,10 +273,11 @@ export default function CandleChart({
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 10,
+          padding: 3,
+          maxTicksLimit: 7,
         },
-        suggestedMax: maxPrice * 1.1,
-        suggestedMin: minPrice * 0.9,
+        suggestedMax: maxPrice * 1.05,
+        suggestedMin: minPrice * 0.95,
       },
     },
   };
@@ -291,6 +292,7 @@ export default function CandleChart({
         className={
           resolvedTheme === "dark" ? "" : "bg-secondaryTransparent rounded-lg"
         }
+        height={250}
       />
       <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-2xl'>
         <button
