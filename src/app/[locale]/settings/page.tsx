@@ -14,6 +14,7 @@ import {
   CircleSlash2,
   Gift,
   Grid2x2,
+  LayoutGrid,
   MonitorCog,
   Moon,
   PaintBucket,
@@ -176,7 +177,7 @@ export default function Page() {
                     : "text-secondaryText"
                 }`}
                 onClick={() => updateSetting("giftType", "block")}>
-                <Grid2x2 size={18} />
+                <LayoutGrid size={18} />
               </button>
             </div>
             <div className='flex bg-secondary rounded-2xl'>

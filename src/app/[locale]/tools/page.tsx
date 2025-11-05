@@ -7,7 +7,13 @@ import { Link } from "@/i18n/navigation";
 import { useEffect } from "react";
 import IndexBlock from "@/components/tools/IndexBlock";
 import useVibrate from "@/hooks/useVibrate";
-import { ChevronRight, Grid2x2, Smile } from "lucide-react";
+import {
+  ChevronRight,
+  Gauge,
+  Grid2x2,
+  LayoutDashboard,
+  Smile,
+} from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
@@ -57,57 +63,64 @@ export default function Page() {
         Analytics Tools
       </h1>
 
-      {/* Heatmap Section */}
-      <div className='mb-3 bg-secondaryTransparent rounded-2xl overflow-hidden relative'>
-        <div className='absolute top-0 left-0 w-full h-20 z-0 overflow-hidden'>
-          <Image
-            src='/images/heatmap.webp'
-            alt='heatmap background'
-            fill
-            className='object-cover blur-[3px]'
-            priority
-          />
-        </div>
-
-        <div className='relative z-10'>
-          <div className='w-full h-20' />
-
+      <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
+        <Link
+          className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+          href={"/tools/treemap"}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
-            <div className='flex flex-row items-center font-bold text-lg gap-2'>
-              <Grid2x2 size={24} className='text-primary' />
-              <span>Heatmap</span>
+            <div className='flex flex-row items-center gap-x-3'>
+              <LayoutDashboard size={28} className='text-green-500' />
+              <div className='flex flex-col'>
+                <span className='font-bold text-lg'>Heatmap</span>
+                <span className='text-sm text-secondaryText'>
+                  View market state at heatmap chart
+                </span>
+              </div>
             </div>
 
-            <Link
-              href='/tools/treemap'
-              className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-2xl'
-              onClick={() => vibrate()}>
-              <span>Try it now</span>
-              <ChevronRight size={18} />
-            </Link>
+            <ChevronRight size={20} />
           </div>
-        </div>
+        </Link>
+
+        <Link
+          className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+          href={"/tools/fear-greed"}>
+          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+            <div className='flex flex-row items-center gap-x-3'>
+              <Gauge size={28} className='text-green-500' />
+              <div className='flex flex-col'>
+                <span className='font-bold text-lg'>Fear & Greed</span>
+                <span className='text-sm text-secondaryText'>
+                  See how others feel about the market
+                </span>
+              </div>
+            </div>
+
+            <ChevronRight size={20} />
+          </div>
+        </Link>
+
+        <Link
+          className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+          href={"/tools/vote"}>
+          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+            <div className='flex flex-row items-center gap-x-3'>
+              <Smile size={28} className='text-green-500' />
+              <div className='flex flex-col'>
+                <span className='font-bold text-lg'>Market Sentiment</span>
+                <span className='text-sm text-secondaryText'>
+                  See how others feel about the market
+                </span>
+              </div>
+            </div>
+
+            <ChevronRight size={20} />
+          </div>
+        </Link>
       </div>
 
-      {/* Market Sentiment */}
-      {user.token && (
-        <div className='w-full h-16 p-3 mb-5 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-2xl'>
-          <h1 className='font-bold flex flex-row items-center gap-x-2'>
-            <Smile size={26} className='text-primary' />
-            Market Sentiment
-          </h1>
-          <Link
-            href='/tools/vote'
-            className='px-3 h-8 text-sm text-white flex items-center bg-primary rounded-2xl'
-            onClick={() => vibrate()}>
-            <span>Vote now</span>
-            <ChevronRight size={18} />
-          </Link>
-        </div>
-      )}
-
       {/* Indexes */}
-      <h1 className='w-full text-xl font-bold mb-3 mt-1 ml-1 flex flex-row gap-x-2'>
+      <h1 className='w-full text-xl font-bold mb-3 mt-5 ml-1 flex flex-row gap-x-2'>
         Indexes
       </h1>
 

@@ -3,8 +3,9 @@
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
-import { AlignEndHorizontal, Gift } from "lucide-react";
+import { AlignEndHorizontal, Gift, Info, TrendingUpDown } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 interface IndexProps {
   name: string;
@@ -24,6 +25,7 @@ export default function IndexBlock({
   const [indexValue, setIndexValue] = useState<number>(0);
   const [previousIndexValue, setPreviousIndexValue] = useState<number>(0);
   const vibrate = useVibrate();
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     if (typeof tonPrice === "number") setIndexValue(tonPrice);
@@ -81,10 +83,14 @@ export default function IndexBlock({
   return (
     <Link
       href={`/tools/index/${id}`}
-      className='w-full flex flex-row justify-between items-center h-18 p-3 bg-secondaryTransparent rounded-2xl'
+      className={`w-full flex flex-row justify-between items-center h-18 p-3 rounded-2xl ${
+        resolvedTheme === "dark"
+          ? "border-b-2 border-secondaryTransparent"
+          : "bg-secondaryTransparent"
+      }`}
       onClick={() => vibrate()}>
       <div className='h-full flex flex-row items-center gap-x-2'>
-        <AlignEndHorizontal size={22} className='text-primary' />
+        <Info size={22} className='text-primary' />
         <span className='font-bold'>{name}</span>
       </div>
 
