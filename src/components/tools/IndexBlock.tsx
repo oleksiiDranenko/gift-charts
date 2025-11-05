@@ -90,7 +90,7 @@ export default function IndexBlock({
       }`}
       onClick={() => vibrate()}>
       <div className='h-full flex flex-row items-center gap-x-2'>
-        <Info size={22} className='text-primary' />
+        <Info size={28} className='text-primary' />
         <span className='font-bold'>{name}</span>
       </div>
 

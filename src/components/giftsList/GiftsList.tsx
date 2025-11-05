@@ -100,7 +100,7 @@ export default function GiftsList({ loading }: PropsInterface) {
           <div className='w-full px-3'>
             <div className='relative w-full flex flex-row justify-between mb-5 '>
               <button
-                className={`w-full text-sm pb-2 text-center transition-colors duration-300 ${
+                className={`w-full pb-2 text-center transition-colors duration-300 ${
                   selectedList === "all"
                     ? "text-foreground font-bold"
                     : "text-secondaryText"
@@ -109,7 +109,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                 All Gifts
               </button>
               <button
-                className={`w-full text-sm pb-2 text-center transition-colors duration-300 ${
+                className={`w-full pb-2 text-center transition-colors duration-300 ${
                   selectedList === "saved"
                     ? "text-foreground font-bold"
                     : "text-secondaryText"
@@ -119,7 +119,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               </button>
 
               <span
-                className={`absolute bottom-0 h-[2px] bg-primary transition-all duration-300 ease-in-out ${
+                className={`absolute bottom-0 h-[2px] bg-foreground transition-all duration-300 ease-in-out ${
                   selectedList === "all" ? "left-0 w-1/2" : "left-1/2 w-1/2"
                 }`}
               />
@@ -135,7 +135,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                 <div className='relative w-full'>
                   <input
                     className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
-                    placeholder='Search gift'
+                    placeholder='Search gifts'
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
                   />

@@ -59,7 +59,7 @@ export default function Page() {
 
   return (
     <main className='w-full lg:w-5/6 pt-[0px] pb-24 px-3'>
-      <h1 className='w-full text-xl font-bold mb-3 ml-1 flex flex-row gap-x-2'>
+      <h1 className='w-full text-xl font-bold mb-5 ml-1 flex flex-row gap-x-2'>
         Analytics Tools
       </h1>
 
@@ -69,7 +69,7 @@ export default function Page() {
           href={"/tools/treemap"}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
-              <LayoutDashboard size={28} className='text-green-500' />
+              <LayoutDashboard size={28} className='text-primary' />
               <div className='flex flex-col'>
                 <span className='font-bold text-lg'>Heatmap</span>
                 <span className='text-sm text-secondaryText'>
@@ -78,7 +78,7 @@ export default function Page() {
               </div>
             </div>
 
-            <ChevronRight size={20} />
+            <ChevronRight size={20} className='text-primary' />
           </div>
         </Link>
 
@@ -87,7 +87,7 @@ export default function Page() {
           href={"/tools/fear-greed"}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
-              <Gauge size={28} className='text-green-500' />
+              <Gauge size={28} className='text-primary' />
               <div className='flex flex-col'>
                 <span className='font-bold text-lg'>Fear & Greed</span>
                 <span className='text-sm text-secondaryText'>
@@ -96,27 +96,29 @@ export default function Page() {
               </div>
             </div>
 
-            <ChevronRight size={20} />
+            <ChevronRight size={20} className='text-primary' />
           </div>
         </Link>
 
-        <Link
-          className='bg-secondaryTransparent rounded-2xl overflow-hidden'
-          href={"/tools/vote"}>
-          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
-            <div className='flex flex-row items-center gap-x-3'>
-              <Smile size={28} className='text-green-500' />
-              <div className='flex flex-col'>
-                <span className='font-bold text-lg'>Market Sentiment</span>
-                <span className='text-sm text-secondaryText'>
-                  See how others feel about the market
-                </span>
+        {!user.token && (
+          <Link
+            className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+            href={"/tools/vote"}>
+            <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+              <div className='flex flex-row items-center gap-x-3'>
+                <Smile size={28} className='text-primary' />
+                <div className='flex flex-col'>
+                  <span className='font-bold text-lg'>Market Sentiment</span>
+                  <span className='text-sm text-secondaryText'>
+                    See how others feel about the market
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <ChevronRight size={20} />
-          </div>
-        </Link>
+              <ChevronRight size={20} className='text-primary' />
+            </div>
+          </Link>
+        )}
       </div>
 
       {/* Indexes */}

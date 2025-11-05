@@ -21,7 +21,7 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className='w-full p-3 mb-3 gap-y-3 flex flex-row justify-between bg-secondaryTransparent rounded-2xl'>
+    <div className='w-full p-3 gap-y-3 flex flex-row justify-between bg-secondaryTransparent rounded-2xl'>
       <div className='flex flex-row items-center font-bold'>Language</div>
       <div
         className={`flex flex-row ${
@@ -30,7 +30,7 @@ export default function LanguageSwitcher() {
         {routing.locales.map((locale) => (
           <button
             key={locale}
-            className={`w-full flex flex-col items-center justify-center gap-y-1 px-3 h-8 text-xs ${
+            className={`w-full h-full flex flex-col items-center justify-center gap-y-1 px-3 text-xs ${
               locale === currentLocale
                 ? "font-bold text-foreground bg-primary text-white rounded-2xl"
                 : "text-secondaryText"
