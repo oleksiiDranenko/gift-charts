@@ -14,6 +14,10 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { BiSolidGift } from "react-icons/bi";
+import { IoHome, IoSettingsSharp, IoBarChart } from "react-icons/io5";
+import { FaCircleUser } from "react-icons/fa6";
+
 export default function NavbarBottom() {
   const pathname = usePathname(); // Returns pathname without locale (e.g., /tools)
   const vibrate = useVibrate();
@@ -49,7 +53,7 @@ export default function NavbarBottom() {
             setSelectedPage("home");
             vibrate();
           }}>
-          <House size={24} />
+          <IoHome size={24} />
           <span className='text-xs'>{t("home")}</span>
         </Link>
         <Link
@@ -61,7 +65,7 @@ export default function NavbarBottom() {
             setSelectedPage("gifts");
             vibrate();
           }}>
-          <Gift size={24} />
+          <BiSolidGift size={24} />
           <span className='text-xs'>{t("gifts")}</span>
         </Link>
         <Link
@@ -73,7 +77,7 @@ export default function NavbarBottom() {
             setSelectedPage("tools");
             vibrate();
           }}>
-          <ChartCandlestick size={24} />
+          <IoBarChart size={24} />
           <span className='text-xs'>{t("tools")}</span>
         </Link>
         <Link
@@ -85,7 +89,7 @@ export default function NavbarBottom() {
             setSelectedPage("account");
             vibrate();
           }}>
-          <UserRound size={24} />
+          <FaCircleUser size={24} />
           <span className='text-xs'>{t("profile")}</span>
         </Link>
         <Link
@@ -97,7 +101,7 @@ export default function NavbarBottom() {
             setSelectedPage("settings");
             vibrate();
           }}>
-          <Settings size={24} />
+          <IoSettingsSharp size={24} />
           <span className='text-xs'>{t("settings")}</span>
         </Link>
       </div>
