@@ -100,7 +100,7 @@ export default function Page() {
           </div>
         </Link>
 
-        {!user.token && (
+        {true && (
           <Link
             className='bg-secondaryTransparent rounded-2xl overflow-hidden'
             href={"/tools/vote"}>

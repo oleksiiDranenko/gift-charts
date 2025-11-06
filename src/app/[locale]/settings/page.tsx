@@ -75,7 +75,7 @@ export default function Page() {
   return (
     <div className='w-full lg:w-5/6 pt-0 pb-24 px-3 space-y-3'>
       <h1 className='text-xl font-bold'>Account settings</h1>
-      {user.username === "_guest" && (
+      {user.username && (
         <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>
           <Link
             href='/settings/edit-assets'
