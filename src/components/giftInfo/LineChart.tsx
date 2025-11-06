@@ -507,7 +507,7 @@ export default function LineChart({
           : "relative bg-secondaryTransparent rounded-2xl"
       }
       ref={chartContainerRef}>
-      <Line ref={chartRef as any} data={data} options={options} height={250} />
+      <Line ref={chartRef as any} data={data} options={options} />
       <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-2xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${
