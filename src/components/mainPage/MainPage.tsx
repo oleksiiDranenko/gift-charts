@@ -199,12 +199,12 @@ export default function MainPage() {
         </Link>
       </div> */}
 
-      <ImageBanner
+      {/* <ImageBanner
         imageUrl={"/images/banner_mutant_gifts.png"}
         productUrl={
           "https://t.me/mutant_gifts_bot/mutantgifts?startapp=r_367112725"
         }
-      />
+      /> */}
 
       <SearchBar />
 
