@@ -192,16 +192,6 @@ export default function MainPage() {
             <span>{translateMain("floor")}</span>
             <Trophy size={14} className='ml-1' />
           </button>
-          <button
-            className={`flex items-center justify-center px-3 text-xs h-8 ${
-              chosenFilter === "saved"
-                ? "font-bold text-foreground border-b border-primary"
-                : "text-secondaryText"
-            }`}
-            onClick={() => setChosenFilter("saved")}>
-            <span>{translateMain("saved")}</span>
-            <Star size={14} className='ml-1' />
-          </button>
         </div>
       </div>
 

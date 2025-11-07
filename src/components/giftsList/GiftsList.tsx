@@ -158,8 +158,18 @@ export default function GiftsList({ loading }: PropsInterface) {
                   <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
                     <SortGiftsModal
                       trigger={
-                        <button className='h-11 w-full flex items-center justify-center'>
-                          <ArrowDownWideNarrow size={16} />
+                        <button className='h-11 w-full text-secondaryText flex items-center justify-center'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 24 24'
+                            fill='currentColor'
+                            className='size-4'>
+                            <path
+                              fillRule='evenodd'
+                              d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
                         </button>
                       }
                       giftsList={giftsList}
@@ -171,8 +181,18 @@ export default function GiftsList({ loading }: PropsInterface) {
                   <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
                     <FilterGiftsModal
                       trigger={
-                        <button className='h-11 w-full flex items-center justify-center'>
-                          <Funnel size={16} />
+                        <button className='h-11 w-full text-secondaryText flex items-center justify-center'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 24 24'
+                            fill='currentColor'
+                            className='size-4'>
+                            <path
+                              fillRule='evenodd'
+                              d='M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
                         </button>
                       }
                       giftsList={giftsList}
