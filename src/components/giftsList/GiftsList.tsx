@@ -12,6 +12,7 @@ import InfoMessage from "../generalHints/InfoMessage";
 import { useRouter } from "@/i18n/navigation";
 import ListHandler from "../mainPage/ListHandler";
 import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
+import useVibrate from "@/hooks/useVibrate";
 
 interface PropsInterface {
   loading: boolean;
@@ -23,6 +24,8 @@ export default function GiftsList({ loading }: PropsInterface) {
   const user = useAppSelector((state) => state.user);
 
   const router = useRouter();
+
+  const vibrate = useVibrate();
 
   const [selectedList, setSelectedList] = useState<"all" | "saved">("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -158,7 +161,9 @@ export default function GiftsList({ loading }: PropsInterface) {
                   <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
                     <SortGiftsModal
                       trigger={
-                        <button className='h-11 w-full text-secondaryText flex items-center justify-center'>
+                        <button
+                          className='h-11 w-full text-secondaryText flex items-center justify-center'
+                          onClick={() => vibrate()}>
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
                             viewBox='0 0 24 24'
@@ -181,7 +186,9 @@ export default function GiftsList({ loading }: PropsInterface) {
                   <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
                     <FilterGiftsModal
                       trigger={
-                        <button className='h-11 w-full text-secondaryText flex items-center justify-center'>
+                        <button
+                          className='h-11 w-full text-secondaryText flex items-center justify-center'
+                          onClick={() => vibrate()}>
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
                             viewBox='0 0 24 24'

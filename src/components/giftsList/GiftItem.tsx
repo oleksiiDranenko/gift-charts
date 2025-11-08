@@ -152,7 +152,7 @@ export default function GiftItem({
         onClick={() => vibrate()}>
         <div className=' flex flex-row items-center'>
           <Image
-            alt='gift image'
+            alt={item.name}
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
@@ -218,7 +218,7 @@ export default function GiftItem({
                   className='mr-1'
                 />
               ) : (
-                <span className='mr-1'>$</span>
+                <span className='mr-[2px] text-secondaryText'>$</span>
               )}
               <span className='text-base font-bold'>
                 {currency === "ton" && displayValue === "price"

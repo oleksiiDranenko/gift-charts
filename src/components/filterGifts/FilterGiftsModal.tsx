@@ -7,6 +7,7 @@ import { BrushCleaning, X } from "lucide-react";
 import GiftInterface from "@/interfaces/GiftInterface";
 import FilterGiftItem from "./FilterGiftItem";
 import { useTranslations } from "next-intl";
+import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 
 interface Props {
   trigger: ReactNode;
@@ -94,9 +95,21 @@ export default function FilterGiftsModal({
               <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background flex flex-col'>
                 <div className='w-full h-10 pb-3 flex justify-between items-center'>
                   <button
-                    className='flex flex-row items-center justify-center gap-x-1 text-red-500 h-8 px-3 bg-secondaryTransparent rounded-2xl'
+                    className='flex flex-row items-center justify-center gap-x-1 text-secondaryText h-8 px-3 bg-secondaryTransparent rounded-2xl'
                     onClick={clearSelection}>
-                    <BrushCleaning size={14} /> {translate("clear")}
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='currentColor'
+                      className='size-5'>
+                      <path
+                        fillRule='evenodd'
+                        d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+
+                    {translate("clear")}
                   </button>
 
                   <button
@@ -110,6 +123,7 @@ export default function FilterGiftsModal({
                 </div>
 
                 <div className='flex-1 overflow-y-scroll'>
+                  <ScrollToTopButton />
                   {sortedGifts.map((gift) => (
                     <FilterGiftItem
                       key={gift._id}

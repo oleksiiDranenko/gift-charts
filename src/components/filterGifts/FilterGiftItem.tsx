@@ -20,7 +20,7 @@ export default function FilterGiftItem({
 
   return (
     <div
-      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-between ${
+      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start ${
         selected && "bg-secondaryTransparent"
       } rounded-2xl`}
       key={gift._id}
@@ -28,6 +28,33 @@ export default function FilterGiftItem({
         onClick(gift);
         vibrate();
       }}>
+      <div className={`w-8 h-8 mr-3 flex justify-center items-center`}>
+        {selected ? (
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            className='size-6 text-primary'>
+            <path
+              fillRule='evenodd'
+              d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z'
+              clipRule='evenodd'
+            />
+          </svg>
+        ) : (
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            className='size-6 text-secondary'>
+            <path
+              fillRule='evenodd'
+              d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z'
+              clipRule='evenodd'
+            />
+          </svg>
+        )}
+      </div>
       <div className='h-full flex flex-row items-center justify-start'>
         <Image
           alt='gift image'
@@ -39,12 +66,6 @@ export default function FilterGiftItem({
         <div className='flex flex-col'>
           <span className='text-base font-bold'>{gift.name}</span>
         </div>
-      </div>
-      <div
-        className={`w-8 h-8 mr-3 flex justify-center items-center border border-secondary rounded-xl ${
-          selected && "bg-secondaryTransparent"
-        }`}>
-        {selected && <Check size={16} className='text-primary' />}
       </div>
     </div>
   );
