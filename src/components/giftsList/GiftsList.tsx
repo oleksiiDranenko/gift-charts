@@ -162,7 +162,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     <SortGiftsModal
                       trigger={
                         <button
-                          className='h-11 w-full text-secondaryText flex items-center justify-center'
+                          className='h-11 w-full flex items-center justify-center'
                           onClick={() => vibrate()}>
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -183,11 +183,11 @@ export default function GiftsList({ loading }: PropsInterface) {
                     />
                   </div>
 
-                  <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
+                  <div className='h-full relative w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
                     <FilterGiftsModal
                       trigger={
                         <button
-                          className='h-11 w-full text-secondaryText flex items-center justify-center'
+                          className='h-11  w-full flex items-center justify-center'
                           onClick={() => vibrate()}>
                           <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -200,6 +200,9 @@ export default function GiftsList({ loading }: PropsInterface) {
                               clipRule='evenodd'
                             />
                           </svg>
+                          {list.length < giftsList.length && (
+                            <div className='absolute bg-primary w-2 h-2 rounded-full top-[7px] right-[7px]' />
+                          )}
                         </button>
                       }
                       giftsList={giftsList}
