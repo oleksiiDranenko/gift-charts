@@ -2,7 +2,6 @@
 
 import useVibrate from "@/hooks/useVibrate";
 import GiftInterface from "@/interfaces/GiftInterface";
-import { Check, Star } from "lucide-react";
 import Image from "next/image";
 
 interface PropsInterface {
@@ -20,21 +19,22 @@ export default function FilterGiftItem({
 
   return (
     <div
-      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start ${
-        selected && "bg-secondaryTransparent"
-      } rounded-2xl`}
+      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start rounded-2xl
+        transition-all duration-200 ease-in-out
+        ${selected ? "bg-secondaryTransparent" : "bg-transparent"}
+      `}
       key={gift._id}
       onClick={() => {
         onClick(gift);
         vibrate();
       }}>
-      <div className={`w-8 h-8 mr-3 flex justify-center items-center`}>
+      <div className='w-8 h-8 mr-3 flex justify-center items-center transition-colors duration-300'>
         {selected ? (
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 24 24'
             fill='currentColor'
-            className='size-6 text-primary'>
+            className='size-6 text-primary transition-colors duration-300'>
             <path
               fillRule='evenodd'
               d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z'
@@ -46,7 +46,7 @@ export default function FilterGiftItem({
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 24 24'
             fill='currentColor'
-            className='size-6 text-secondary'>
+            className='size-6 text-secondary transition-colors duration-300'>
             <path
               fillRule='evenodd'
               d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z'
@@ -55,6 +55,7 @@ export default function FilterGiftItem({
           </svg>
         )}
       </div>
+
       <div className='h-full flex flex-row items-center justify-start'>
         <Image
           alt='gift image'

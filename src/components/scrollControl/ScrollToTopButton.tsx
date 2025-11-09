@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
+import useVibrate from "@/hooks/useVibrate";
 
 /** Duration (ms) before hiding the button after scroll stops */
 const HIDE_DELAY = 2000;
@@ -33,6 +34,8 @@ export default function ScrollToTopButton() {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const scrollRootRef = useRef<HTMLElement | Document | Window | null>(null);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const vibrate = useVibrate();
 
   // Observe visibility using sentinel
   useEffect(() => {
@@ -92,6 +95,7 @@ export default function ScrollToTopButton() {
   }, [isVisible]);
 
   const scrollToTop = () => {
+    vibrate();
     const root = scrollRootRef.current;
     if (root && root instanceof HTMLElement) {
       root.scrollTo({ top: 0, behavior: "smooth" });
@@ -127,7 +131,7 @@ export default function ScrollToTopButton() {
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 24 24'
           fill='currentColor'
-          className='size-6 -rotate-45'>
+          className='size-7 -rotate-45'>
           <path
             fillRule='evenodd'
             d='M9.315 7.584C12.195 3.883 16.695 1.5 21.75 1.5a.75.75 0 0 1 .75.75c0 5.056-2.383 9.555-6.084 12.436A6.75 6.75 0 0 1 9.75 22.5a.75.75 0 0 1-.75-.75v-4.131A15.838 15.838 0 0 1 6.382 15H2.25a.75.75 0 0 1-.75-.75 6.75 6.75 0 0 1 7.815-6.666ZM15 6.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z'
