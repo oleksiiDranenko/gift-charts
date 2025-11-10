@@ -172,10 +172,7 @@ export default function IndexChart({
         break;
 
       case "1m":
-        newList =
-          index.shortName === "VOL"
-            ? [...indexData.slice(-30), getSummedDoc()]
-            : [...indexData.slice(-30), latestDoc];
+        newList = [...indexMonthData, latestDoc];
         break;
 
       case "3m":
