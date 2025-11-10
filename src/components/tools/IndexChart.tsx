@@ -52,7 +52,7 @@ export default function IndexChart({
   const [list, setList] = useState<IndexDataInterface[]>(indexData);
 
   const [listType, setListType] = useState<
-    "1d" | "3d" | "1w" | "1m" | "3m" | "all"
+    "1d" | "3d" | "1w" | "1m" | "3m" | "All"
   >("1d");
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
@@ -183,7 +183,7 @@ export default function IndexChart({
             : [...indexData.slice(-90), latestDoc];
         break;
 
-      case "all":
+      case "All":
         newList =
           index.shortName === "VOL"
             ? [...indexData, getSummedDoc()]
