@@ -47,6 +47,7 @@ export default function FilterGiftsModal({
   useEffect(() => {
     if (isOpen) {
       setSelected(list.length === giftsList.length ? [] : list);
+      setSearchTerm("");
     }
   }, [isOpen, giftsList, list]);
 
@@ -70,10 +71,19 @@ export default function FilterGiftsModal({
     setSearchTerm("");
   };
 
-  // 🔍 Filter gifts by search term
-  const filteredGifts = sortedGifts.filter((gift) =>
-    gift.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // 🔍 Filter + sort gifts by search term
+  const filteredGifts = [...sortedGifts]
+    .filter((gift) =>
+      gift.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      const aSelected = selected.some((el) => el._id === a._id);
+      const bSelected = selected.some((el) => el._id === b._id);
+      // ✅ Move selected gifts to top
+      if (aSelected && !bSelected) return -1;
+      if (!aSelected && bSelected) return 1;
+      return a.name.localeCompare(b.name);
+    });
 
   return (
     <>

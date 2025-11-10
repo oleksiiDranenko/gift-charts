@@ -20,7 +20,7 @@ export default function FilterGiftItem({
   return (
     <div
       className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start rounded-2xl
-        transition-all duration-200 ease-in-out
+        transition-all duration-200 ease-in-out border-b-2 border-secondaryTransparent
         ${selected ? "bg-secondaryTransparent" : "bg-transparent"}
       `}
       key={gift._id}
