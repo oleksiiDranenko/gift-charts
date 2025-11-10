@@ -43,9 +43,8 @@ export default function PageTransition({ children }: Props) {
 
   return (
     <div
-      className={`relative w-full flex flex-row justify-center ${
-        isMobile && "pt-[110px] lg:pt-5"
-      }}`}>
+      className={`relative w-full flex flex-row justify-center  pt-[110px] lg:pt-10
+      `}>
       <Transition
         key={pathname}
         appear

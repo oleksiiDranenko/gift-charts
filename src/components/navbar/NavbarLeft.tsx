@@ -33,7 +33,7 @@ export default function NavbarLeft() {
     <div className='hidden lg:block fixed left-0 top-0 h-screen w-64 z-40 bg-secondaryTransparent rounded-r-lg p-3 space-y-3'>
       <div className='flex flex-row gap-x-2 mb-6 mt-3'>
         <Image src={"/images/logo.webp"} alt={""} width={30} height={30} />
-        <h1 className='text-lg '>Gift Charts</h1>
+        <h1 className='text-xl font-bold'>Gift Charts</h1>
       </div>
       <Link
         className={`flex flex-row gap-x-2 items-center p-3 rounded-lg box-border hover:bg-secondary ${

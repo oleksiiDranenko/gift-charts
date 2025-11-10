@@ -1,4 +1,8 @@
 {
+  "add": {
+    "title": "Developer channel",
+    "description": "@giftshitpost - thoughts and insights"
+  },
   "general": {
     "save": "Save",
     "clear": "Clear",
