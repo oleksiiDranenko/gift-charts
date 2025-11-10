@@ -19,6 +19,7 @@ import {
 import { useAppSelector } from "@/redux/hooks";
 import { useTheme } from "next-themes";
 import { IndexMonthDataInterface } from "@/interfaces/IndexMonthDataInterface";
+import { Gift } from "lucide-react";
 
 ChartJS.register(
   LineElement,
@@ -343,7 +344,10 @@ export default function IndexChart({
 
         <div className='w-2/5 h-14 pr-3 flex flex-col items-end justify-center'>
           <div className='flex flex-row items-center'>
-            {selectedPrice == "ton" ? (
+            {index.valueType === "amount" ? (
+              <Gift size={15} className='mr-1' />
+            ) : index.valueType === "percent" ? null : selectedPrice ===
+              "ton" ? (
               <Image
                 alt='ton logo'
                 src='/images/toncoin.webp'
@@ -364,6 +368,7 @@ export default function IndexChart({
                     Number(list[list.length - 1]?.priceUsd),
                     "price"
                   )}
+              {index.valueType === "percent" && "%"}
             </span>
           </div>
 

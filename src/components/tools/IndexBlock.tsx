@@ -103,7 +103,7 @@ export default function IndexBlock({
           )}
 
           <span className='text-sm font-bold'>
-            {formatNumber(indexValue, valueType)}{" "}
+            {formatNumber(indexValue, valueType)}
             {valueType === "percent" && "%"}
           </span>
         </div>
