@@ -41,15 +41,6 @@ html.dark {
   --foreground: #ffffff;
 }
 
-/* html.dark {
-  --primary: #3b82f6;
-  --secondary: #374151;
-  --secondary-transparent: #1f2937;
-  --secondary-text: #9ca3af;
-  --background: #111827;
-  --foreground: #ffffff;
-} */
-
 body {
   color: var(--foreground);
   background: var(--background);
