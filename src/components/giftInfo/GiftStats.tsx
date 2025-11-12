@@ -33,12 +33,12 @@ export default function GiftStats({ gift }: PropsInterface) {
   return (
     <div className='w-full mt-8 px-3'>
       <div className='text-secondaryText p-5 bg-secondaryTransparent rounded-xl'>
-        <p className='mb-8 w-full flex justify-between'>
+        {/* <p className='mb-8 w-full flex justify-between'>
           <span className='font-light'>{"Release Date: "}</span>
           <span className='text-foreground'>
             {formatDate(gift.releaseDate)}
           </span>
-        </p>
+        </p> */}
 
         <p className='mb-3 w-full flex justify-between'>
           <span className='font-light'>{"Inital Supply: "}</span>
