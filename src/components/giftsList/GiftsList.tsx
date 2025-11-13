@@ -72,6 +72,8 @@ export default function GiftsList({ loading }: PropsInterface) {
   useEffect(() => {
     let updatedList = [...giftsList];
 
+    updatedList.sort((a, b) => b.priceUsd - a.priceUsd);
+
     if (selectedList === "saved" && user?.savedList?.length) {
       updatedList = updatedList.filter((gift) =>
         user.savedList.includes(gift._id)
@@ -137,7 +139,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               <div className='w-full flex flex-row gap-x-1 mb-2'>
                 <div className='relative w-full'>
                   <input
-                    className='w-full h-11 pl-10 pr-10 bg-background border-b-2 border-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
+                    className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
                     placeholder='Search gifts'
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
