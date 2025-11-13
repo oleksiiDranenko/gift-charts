@@ -41,14 +41,14 @@ html.dark {
   --foreground: #ffffff;
 } */
 
-html.dark {
+/* html.dark {
   --primary: #3b82f6;
   --secondary: #374151;
   --secondary-transparent: #1f2937;
   --secondary-text: #9ca3af;
   --background: #111827;
   --foreground: #ffffff;
-}
+} */
 
 /* html.dark {
   --primary: #3b82f6;
@@ -59,7 +59,7 @@ html.dark {
   --background: #0e131f;
   --foreground: #ffffff;
 } */
-/* 
+
 html.dark {
   --primary: #3b82f6;
   --secondary: #2c3039;
@@ -67,7 +67,7 @@ html.dark {
   --secondary-text: #9ca3af;
   --background: #0f1216;
   --foreground: #ffffff;
-} */
+}
 
 body {
   color: var(--foreground);

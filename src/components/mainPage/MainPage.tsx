@@ -151,7 +151,7 @@ export default function MainPage() {
 
   return (
     <div>
-      <div className='w-full px-3 mb-4'>
+      <div className='w-full px-3 mb-5'>
         <Link
           href='https://t.me/giftshitpost'
           className='w-full h-20 p-3 flex flex-row bg-gradient-to-br from-primary to-[#2776f4] rounded-xl relative overflow-hidden'>
@@ -194,30 +194,30 @@ export default function MainPage() {
       <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
-            className={`flex ml-3 items-center justify-center px-3 text-xs h-8 ${
+            className={`flex ml-3 items-center justify-center px-3 text-xs h-8 rounded-2xl ${
               chosenFilter === "gainers"
-                ? "font-bold text-foreground border-b border-primary"
-                : "text-secondaryText"
+                ? "font-bold text-foreground bg-secondary rounded-2xl"
+                : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => setChosenFilter("gainers")}>
             <span>{translateMain("gainers")}</span>
             <TrendingUp size={14} className='ml-1' />
           </button>
           <button
-            className={`flex items-center justify-center px-3 text-xs h-8 ${
+            className={`flex items-center justify-center px-3 text-xs h-8 rounded-2xl ${
               chosenFilter === "losers"
-                ? "font-bold text-foreground border-b border-primary"
-                : "text-secondaryText"
+                ? "font-bold text-foreground bg-secondary rounded-2xl"
+                : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => setChosenFilter("losers")}>
             <span>{translateMain("losers")}</span>
             <TrendingDown size={14} className='ml-1' />
           </button>
           <button
-            className={`flex items-center justify-center px-3 text-xs h-8 ${
+            className={`flex items-center justify-center px-3 text-xs h-8 rounded-2xl ${
               chosenFilter === "floor"
-                ? "font-bold text-foreground border-b border-primary"
-                : "text-secondaryText"
+                ? "font-bold text-foreground bg-secondary "
+                : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => setChosenFilter("floor")}>
             <span>{translateMain("floor")}</span>
