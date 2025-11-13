@@ -103,31 +103,37 @@ export default function GiftsList({ loading }: PropsInterface) {
       {giftsList !== undefined ? (
         <>
           <div className='w-full px-3'>
-            <div className='relative w-full flex flex-row justify-between mb-5 '>
+            <div className='relative w-full flex flex-row justify-between mb-5 bg-secondaryTransparent rounded-2xl'>
               <button
-                className={`w-full pb-2 text-center transition-colors duration-300 ${
+                className={`w-full py-2 text-center text-sm rounded-2xl ${
                   selectedList === "all"
-                    ? "text-foreground font-bold"
+                    ? "text-foreground font-bold bg-primary rounded-2xl"
                     : "text-secondaryText"
                 }`}
-                onClick={() => setSelectedList("all")}>
+                onClick={() => {
+                  setSelectedList("all");
+                  vibrate();
+                }}>
                 All Gifts
               </button>
               <button
-                className={`w-full pb-2 text-center transition-colors duration-300 ${
+                className={`w-full py-2 text-center text-sm rounded-2xl ${
                   selectedList === "saved"
-                    ? "text-foreground font-bold"
+                    ? "text-foreground font-bold bg-primary"
                     : "text-secondaryText"
                 }`}
-                onClick={() => setSelectedList("saved")}>
+                onClick={() => {
+                  setSelectedList("saved");
+                  vibrate();
+                }}>
                 Saved
               </button>
 
-              <span
+              {/* <span
                 className={`absolute bottom-0 h-[2px] bg-foreground transition-all duration-300 ease-in-out ${
                   selectedList === "all" ? "left-0 w-1/2" : "left-1/2 w-1/2"
                 }`}
-              />
+              /> */}
             </div>
           </div>
           <div ref={sentinelRef} />

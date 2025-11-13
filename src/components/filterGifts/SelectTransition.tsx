@@ -19,14 +19,13 @@ export default function SectionTransition({
 
   return (
     <div
-      ref={ref}
       style={{
         overflow: "hidden",
         maxHeight: open ? `${height}px` : "0px",
         opacity: open ? 1 : 0,
-        transition: "max-height 0.4s ease, opacity 0.3s ease",
+        transition: "max-height 0.35s ease, opacity 0.25s ease",
       }}>
-      {children}
+      <div ref={ref}>{children}</div>
     </div>
   );
 }

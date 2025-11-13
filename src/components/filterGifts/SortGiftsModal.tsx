@@ -5,6 +5,7 @@ import { Fragment, ReactNode, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import GiftInterface from "@/interfaces/GiftInterface";
 import SectionTransition from "./SelectTransition";
+import { useTranslations } from "next-intl";
 
 interface Props {
   trigger: ReactNode;
@@ -32,12 +33,26 @@ export default function SortGiftsModal({
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState<"sort" | "order" | null>(null);
-  const [selectedSort, setSelectedSort] = useState<string>("Price (USD)");
+  const [selectedSort, setSelectedSort] = useState<string>("Price (TON)");
   const [selectedOrder, setSelectedOrder] = useState<
-    "High → Low" | "Low → High"
-  >("High → Low");
+    "High first" | "Low first"
+  >("High first");
 
+  const translate = useTranslations("general");
   const vibrate = useVibrate();
+
+  const resetAll = () => {
+    vibrate();
+    setSelectedSort("Price (TON)");
+    setSelectedOrder("High first");
+    setOpenSection(null);
+  };
+
+  const closeModal = () => {
+    vibrate();
+    setIsOpen(false);
+    setOpenSection(null);
+  };
 
   return (
     <>
@@ -49,7 +64,10 @@ export default function SortGiftsModal({
         <Dialog
           as='div'
           className='relative z-50'
-          onClose={() => setIsOpen(false)}>
+          onClose={() => {
+            setIsOpen(false);
+            setOpenSection(null);
+          }}>
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-200'
@@ -72,12 +90,31 @@ export default function SortGiftsModal({
               leaveTo='translate-y-full opacity-0'>
               <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background flex flex-col'>
                 {/* HEADER */}
-                <div className='w-full h-10 pb-3 flex justify-end items-center'>
+                <div className='w-full h-10 pb-3 flex justify-between items-center'>
                   <button
-                    onClick={() => {
-                      vibrate();
-                      setIsOpen(false);
-                    }}
+                    className={`flex flex-row items-center justify-center gap-x-1 ${
+                      selectedSort === "Price (TON)" &&
+                      selectedOrder === "High first"
+                        ? "opacity-50"
+                        : ""
+                    } h-8 px-3 bg-secondaryTransparent rounded-2xl`}
+                    onClick={resetAll}>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='currentColor'
+                      className='size-5'>
+                      <path
+                        fillRule='evenodd'
+                        d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                    {translate("reset")}
+                  </button>
+
+                  <button
+                    onClick={closeModal}
                     className='w-fit p-2 bg-secondaryTransparent rounded-full'>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
@@ -94,15 +131,15 @@ export default function SortGiftsModal({
                 </div>
 
                 {/* BODY */}
-                <div className='w-full flex flex-col gap-3 pt-2 overflow-y-auto'>
+                <div className='flex-1 overflow-y-auto flex flex-col gap-3 pt-2'>
                   {/* Sort By Section */}
-                  <div className='bg-secondaryTransparent rounded-2xl overflow-hidden'>
+                  <div className='bg-secondaryTransparent rounded-2xl overflow-visible'>
                     <button
                       onClick={() => {
-                        setOpenSection(openSection === "sort" ? null : "sort");
                         vibrate();
+                        setOpenSection(openSection === "sort" ? null : "sort");
                       }}
-                      className='w-full flex justify-between items-center p-4 py-3 gap-y-2 text-left text-foreground'>
+                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -131,8 +168,8 @@ export default function SortGiftsModal({
                             label={option}
                             selected={selectedSort === option}
                             onClick={() => {
-                              setSelectedSort(option);
                               vibrate();
+                              setSelectedSort(option);
                             }}
                           />
                         ))}
@@ -141,15 +178,15 @@ export default function SortGiftsModal({
                   </div>
 
                   {/* Order Section */}
-                  <div className='bg-secondaryTransparent rounded-2xl overflow-hidden'>
+                  <div className='bg-secondaryTransparent rounded-2xl overflow-visible'>
                     <button
                       onClick={() => {
+                        vibrate();
                         setOpenSection(
                           openSection === "order" ? null : "order"
                         );
-                        vibrate();
                       }}
-                      className='w-full flex justify-between items-center p-4 py-3 gap-y-2 text-left text-foreground'>
+                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -176,14 +213,14 @@ export default function SortGiftsModal({
                     <SectionTransition open={openSection === "order"}>
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {["High → Low", "Low → High"].map((order) => (
+                        {["High first", "Low first"].map((order) => (
                           <OptionButton
                             key={order}
                             label={order}
                             selected={selectedOrder === order}
                             onClick={() => {
-                              setSelectedOrder(order as any);
                               vibrate();
+                              setSelectedOrder(order as any);
                             }}
                           />
                         ))}
