@@ -125,7 +125,7 @@ export default function IndexChart({ data, currency }: IndexChartProps) {
         ref={chartRef as any}
         data={chartData}
         options={options}
-        className='w-full max-h-16 pb-1'
+        className='w-full max-h-20 pb-1'
       />
     </div>
   );

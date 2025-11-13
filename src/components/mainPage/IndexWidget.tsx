@@ -61,7 +61,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
   return (
     <Link
       href={`/tools/index/${indexId}`}
-      className={`flex flex-col box-border h-36 rounded-2xl overflow-hidden ${
+      className={`flex flex-col box-border h-40 rounded-2xl overflow-hidden ${
         isLoading && "animate-pulse"
       }`}>
       {!isLoading ? (
