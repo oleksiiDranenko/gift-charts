@@ -1,4 +1,8 @@
 {
+  "add": {
+    "title": "Канал разработчика",
+    "description": "@giftshitpost - Мысли и инсайды"
+  },
   "general": {
     "save": "Save",
     "clear": "Clear",
