@@ -59,8 +59,11 @@ export default function GiftsList({ loading }: PropsInterface) {
   }, []);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsSticky(!entry.isIntersecting);
@@ -74,7 +77,7 @@ export default function GiftsList({ loading }: PropsInterface) {
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, []);
+  }, [isMounted]);
 
   useEffect(() => {
     let updatedList = [...giftsList];
