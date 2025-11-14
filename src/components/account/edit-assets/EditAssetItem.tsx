@@ -69,9 +69,9 @@ export default function EditAssetItem({
   };
 
   return (
-    <div className='w-full h-auto my-3 py-3 gap-2 flex flex-row bg-secondaryTransparent rounded-3xl'>
+    <div className='w-full h-auto my-3 py-3 gap-2 flex flex-row bg-secondaryTransparent rounded-2xl'>
       <button
-        className='m-2 px-3 min-h-full text-red-600 bg-red-600/10 rounded-3xl'
+        className='m-2 px-3 min-h-full text-red-600 bg-red-600/10 rounded-2xl'
         onClick={() => {
           removeGift(giftId);
           vibrate();
@@ -86,7 +86,7 @@ export default function EditAssetItem({
               src={`/gifts/${gift?.image}.webp`}
               width={50}
               height={50}
-              className={`bg-secondary p-1 mr-3 rounded-3xl`}
+              className={`bg-secondary p-1 mr-3 rounded-2xl`}
             />
             <div className='flex flex-col'>
               <span className='text-base font-bold'>{gift?.name}</span>
@@ -104,7 +104,7 @@ export default function EditAssetItem({
               onBlur={handleBlur}
               placeholder='0'
               min='0'
-              className='w-14 h-8 text-center bg-secondaryTransparent border border-secondary rounded-3xl focus:outline-none'
+              className='w-14 h-8 text-center bg-secondaryTransparent border border-secondary rounded-2xl focus:outline-none'
             />
           </div>
 
@@ -117,7 +117,7 @@ export default function EditAssetItem({
                 onChange={handleAmount}
                 placeholder='0'
                 min='0'
-                className='w-14 h-8 text-center bg-secondaryTransparent border border-secondary rounded-3xl focus:outline-none'
+                className='w-14 h-8 text-center bg-secondaryTransparent border border-secondary rounded-2xl focus:outline-none'
               />
             </div>
           </div>

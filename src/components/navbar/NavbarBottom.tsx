@@ -62,7 +62,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("home")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
             selectedPage === "gifts" ? "text-primary" : "text-secondaryText"
           }`}
           href='/gifts-list'
@@ -82,7 +82,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("gifts")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
             selectedPage === "tools" ? "text-primary" : "text-secondaryText"
           }`}
           href='/tools'
@@ -106,7 +106,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("tools")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
             selectedPage === "account" ? "text-primary" : "text-secondaryText"
           }`}
           href='/account'
@@ -130,7 +130,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("profile")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
             selectedPage === "settings" ? "text-primary" : "text-secondaryText"
           }`}
           href='/settings'

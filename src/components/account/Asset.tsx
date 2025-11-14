@@ -34,7 +34,7 @@ export default function Asset({
   const vibrate = useVibrate();
   return (
     <Link
-      className='w-full h-16 pr-3 pl-2 mb-2 rounded-3xl flex flex-row items-center bg-secondaryTransparent justify-between'
+      className='w-full h-16 pr-3 pl-2 mb-2 rounded-2xl flex flex-row items-center bg-secondaryTransparent justify-between'
       href={`/gift/${_id}`}
       onClick={() => vibrate()}>
       <div className='w-full flex flex-row items-center justify-between'>
@@ -83,7 +83,7 @@ export default function Asset({
             </div>
 
             <span
-              className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+              className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
                 percentChange >= 0
                   ? "text-green-500 bg-green-500"
                   : percentChange < 0

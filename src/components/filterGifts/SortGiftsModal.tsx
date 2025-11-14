@@ -97,7 +97,7 @@ export default function SortGiftsModal({
                       selectedOrder === "High first"
                         ? "opacity-50"
                         : ""
-                    } h-8 px-3 bg-secondaryTransparent rounded-3xl`}
+                    } h-8 px-3 bg-secondaryTransparent rounded-2xl`}
                     onClick={resetAll}>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
@@ -133,7 +133,7 @@ export default function SortGiftsModal({
                 {/* BODY */}
                 <div className='flex-1 overflow-y-auto flex flex-col gap-3 pt-2'>
                   {/* Sort By Section */}
-                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+                  <div className='bg-secondaryTransparent rounded-2xl overflow-visible'>
                     <button
                       onClick={() => {
                         vibrate();
@@ -178,7 +178,7 @@ export default function SortGiftsModal({
                   </div>
 
                   {/* Order Section */}
-                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+                  <div className='bg-secondaryTransparent rounded-2xl overflow-visible'>
                     <button
                       onClick={() => {
                         vibrate();
@@ -267,7 +267,7 @@ function OptionButton({
   return (
     <button
       onClick={onClick}
-      className={`text-left px-3 py-3 rounded-3xl flex flex-row items-center gap-x-2 transition-colors ${
+      className={`text-left px-3 py-3 rounded-2xl flex flex-row items-center gap-x-2 transition-colors ${
         selected
           ? "bg-secondary text-foreground font-bold"
           : "text-secondaryText hover:bg-secondaryTransparent"

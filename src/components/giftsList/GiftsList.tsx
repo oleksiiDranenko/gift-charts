@@ -144,7 +144,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               </button>
 
               <span
-                className={`absolute bottom-0 h-[2px] rounded-3xl bg-foreground transition-all duration-300 ease-in-out ${
+                className={`absolute bottom-0 h-[2px] rounded-2xl bg-foreground transition-all duration-300 ease-in-out ${
                   selectedList === "all" ? "left-0 w-1/2" : "left-1/2 w-1/2"
                 }`}
               />
@@ -159,7 +159,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               <div className='w-full flex flex-row gap-x-1 mb-2'>
                 <div className='relative w-full'>
                   <input
-                    className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
+                    className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent placeholder:text-secondaryText placeholder:text-sm'
                     placeholder='Search gifts'
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
@@ -180,7 +180,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                 </div>
 
                 <div className='w-fit flex flex-row gap-x-1'>
-                  <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-3xl'>
+                  <div className='h-full w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
                     <SortGiftsModal
                       trigger={
                         <button
@@ -205,7 +205,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     />
                   </div>
 
-                  <div className='h-full relative w-11 flex justify-center items-center bg-secondaryTransparent rounded-3xl'>
+                  <div className='h-full relative w-11 flex justify-center items-center bg-secondaryTransparent rounded-2xl'>
                     <FilterGiftsModal
                       trigger={
                         <button
@@ -237,7 +237,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           )}
 
-          <div className='w-full pt-3'>
+          <div className='w-full pt-2'>
             <ScrollToTopButton />
             {giftsList.length === 0 && selectedList === "all" ? (
               <ListSkeleton

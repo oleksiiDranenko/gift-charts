@@ -149,7 +149,7 @@ export default function Account() {
           />
         </div>
       ) : user.username === "_guest" ? (
-        <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-3xl'>
+        <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-2xl'>
           {translate("openInTelegram")}
         </div>
       ) : assetsArray.length > 0 ? (
@@ -210,11 +210,11 @@ export default function Account() {
               <h2 className='flex flex-row items-center text-lg font-bold'>
                 Portfolio
               </h2>
-              <div className='flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
+              <div className='flex flex-row box-border bg-secondaryTransparent rounded-2xl gap-x-1'>
                 <button
                   className={`text-sm h-8 px-5 box-border ${
                     currency === "ton"
-                      ? "rounded-3xl bg-primary font-bold text-white"
+                      ? "rounded-2xl bg-primary font-bold text-white"
                       : ""
                   }`}
                   onClick={() => {
@@ -226,7 +226,7 @@ export default function Account() {
                 <button
                   className={`text-sm h-8 px-5 box-border ${
                     currency === "usd"
-                      ? "rounded-3xl bg-primary font-bold text-white"
+                      ? "rounded-2xl bg-primary font-bold text-white"
                       : ""
                   }`}
                   onClick={() => {
@@ -256,7 +256,7 @@ export default function Account() {
         <div className='w-full h-1/2 flex flex-col justify-center items-center'>
           <Link
             href={"/settings/edit-assets"}
-            className='px-3 py-2 text-sm text-white bg-primary rounded-3xl'>
+            className='px-3 py-2 text-sm text-white bg-primary rounded-2xl'>
             Add Gifts to portfolio
           </Link>
         </div>

@@ -134,7 +134,7 @@ export default function GiftItem({
   return (
     <>
       <Link
-        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-3xl active:scale-[98%]  duration-200 ${
+        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-2xl active:scale-[95%] duration-200 ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0
@@ -144,7 +144,7 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "bg-secondaryLight"
+            ? "border-secondaryTransparent border-b-2"
             : "bg-secondaryTransparent"
         }`}
         key={item._id}
@@ -156,7 +156,7 @@ export default function GiftItem({
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-2xl ${
               resolvedTheme === "dark"
                 ? "bg-secondaryTransparent "
                 : "bg-background"
@@ -167,7 +167,7 @@ export default function GiftItem({
               {item.name}
 
               {item.preSale && (
-                <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-3xl'>
+                <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-2xl'>
                   Pre-Market
                 </span>
               )}
@@ -234,7 +234,7 @@ export default function GiftItem({
             </div>
 
             <span
-              className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+              className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
                 percentChange !== "no data"
                   ? percentChange >= 0
                     ? "text-green-500 bg-green-500"
@@ -272,8 +272,8 @@ export default function GiftItem({
                       "from-red-500/5 to-red-500/25"
                 }`
               : resolvedTheme === "dark"
-              ? "bg-none hover:bg-secondaryTransparent border-b border-secondaryTransparent rounded-3xl"
-              : "bg-secondaryTransparent hover:bg-background border-b border-secondary rounded-3xl"
+              ? "bg-none hover:bg-secondaryTransparent border-b border-secondaryTransparent rounded-2xl"
+              : "bg-secondaryTransparent hover:bg-background border-b border-secondary rounded-2xl"
           }`}
           key={item._id}
           href={`/gift/${item._id}`}
@@ -287,7 +287,7 @@ export default function GiftItem({
               src={`/gifts/${item.image}.webp`}
               width={50}
               height={50}
-              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl ${
+              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-2xl ${
                 resolvedTheme === "dark"
                   ? "bg-secondaryTransparent"
                   : "bg-background"
@@ -298,7 +298,7 @@ export default function GiftItem({
               <span className='flex flex-row items-center text-base font-bold'>
                 {item.name}
                 {item.preSale && (
-                  <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-3xl'>
+                  <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-2xl'>
                     Pre-Market
                   </span>
                 )}
@@ -378,7 +378,7 @@ export default function GiftItem({
           <div className='w-1/3 flex flex-row'>
             <div className='w-full flex flex-row justify-start items-center'>
               <span
-                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
                   percentChange24h !== "no data"
                     ? percentChange24h >= 0
                       ? "text-green-500 bg-green-500"
@@ -395,7 +395,7 @@ export default function GiftItem({
 
             <div className='w-full flex flex-row justify-start items-center'>
               <span
-                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
                   percentChangeWeek !== "no data"
                     ? percentChangeWeek >= 0
                       ? "text-green-500 bg-green-500"
@@ -414,7 +414,7 @@ export default function GiftItem({
 
             <div className='w-full flex flex-row justify-start items-center'>
               <span
-                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
                   percentChangeMonth !== "no data"
                     ? percentChangeMonth >= 0
                       ? "text-green-500 bg-green-500"
@@ -460,7 +460,7 @@ export default function GiftItem({
               </div>
 
               <span
-                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
                   percentChange !== "no data"
                     ? percentChange >= 0
                       ? "text-green-500 bg-green-500"

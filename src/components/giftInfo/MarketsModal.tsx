@@ -51,7 +51,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
               leave='ease-in duration-150'
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'>
-              <Dialog.Panel className='w-full lg:w-5/6 p-3 rounded-3xl bg-secondaryTransparent'>
+              <Dialog.Panel className='w-full lg:w-5/6 p-3 rounded-2xl bg-secondaryTransparent'>
                 <div className='w-full mt-2'>
                   <h2 className='mb-3 text-lg font-bold'>Off-Chain:</h2>
                   <div className='w-full flex flex-row gap-x-4'>
@@ -66,7 +66,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         alt={""}
                         width={70}
                         height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
+                        className='rounded-2xl shadow-sm shadow-secondary'
                       />
                       <span>Portals</span>
                     </Link>
@@ -83,7 +83,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         alt={""}
                         width={70}
                         height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
+                        className='rounded-2xl shadow-sm shadow-secondary'
                       />
                       <span>Tonnel</span>
                     </Link>
@@ -98,7 +98,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         alt={""}
                         width={70}
                         height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
+                        className='rounded-2xl shadow-sm shadow-secondary'
                       />
                       <span>MRKT</span>
                     </Link>
@@ -120,7 +120,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         alt={""}
                         width={70}
                         height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
+                        className='rounded-2xl shadow-sm shadow-secondary'
                       />
                       <span>Fragment</span>
                     </Link>
@@ -136,7 +136,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                         alt={""}
                         width={70}
                         height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
+                        className='rounded-2xl shadow-sm shadow-secondary'
                       />
                       <span>GetGems</span>
                     </Link>
@@ -149,7 +149,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                       vibrate();
                       setIsOpen(false);
                     }}
-                    className='w-full px-4 py-2 bg-primary rounded-3xl'>
+                    className='w-full px-4 py-2 bg-primary rounded-2xl'>
                     {translateGeneral("close")}
                   </button>
                 </div>

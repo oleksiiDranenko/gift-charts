@@ -213,7 +213,7 @@ export default function EditWatchlist() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-3xl'>
+            className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-2xl'>
             <ListPlus size={20} />
             {translate("addGift")}
           </button>

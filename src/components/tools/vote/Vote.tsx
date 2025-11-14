@@ -120,7 +120,7 @@ export default function Vote() {
                 selectedVote === "negative"
                   ? "bg-red-500 text-white font-bold"
                   : " bg-secondaryTransparent"
-              } rounded-3xl p-2`}
+              } rounded-2xl p-2`}
               onClick={() => setSelectedVote("negative")}>
               Negative
             </button>
@@ -129,7 +129,7 @@ export default function Vote() {
                 selectedVote === "neutral"
                   ? "bg-yellow-500 text-white font-bold"
                   : " bg-secondaryTransparent"
-              } rounded-3xl p-2`}
+              } rounded-2xl p-2`}
               onClick={() => setSelectedVote("neutral")}>
               Neutral
             </button>
@@ -138,14 +138,14 @@ export default function Vote() {
                 selectedVote === "positive"
                   ? "bg-green-500 text-white font-bold"
                   : " bg-secondaryTransparent"
-              } rounded-3xl p-2`}
+              } rounded-2xl p-2`}
               onClick={() => setSelectedVote("positive")}>
               Positive
             </button>
           </div>
 
           <button
-            className='w-full flex items-center justify-center text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-3xl mb-5'
+            className='w-full flex items-center justify-center text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-2xl mb-5'
             onClick={handleVoteSubmit}
             disabled={selectedVote === null || voteMutation.isLoading}>
             <Check size={16} />
@@ -185,7 +185,7 @@ export default function Vote() {
               <h1 className='w-full hidden lg:block text-start text-2xl font-bold mb-3 p-3'>
                 How do investors feel about the Gifts market?
               </h1>
-              <div className='w-full h-full flex flex-col space-y-3 p-3 bg-secondaryTransparent rounded-3xl mb-3'>
+              <div className='w-full h-full flex flex-col space-y-3 p-3 bg-secondaryTransparent rounded-2xl mb-3'>
                 <span className='flex flex-row items-center justify-center gap-x-1 text-secondaryText'>
                   <UsersRound size={16} />
                   Total votes:{" "}
@@ -200,7 +200,7 @@ export default function Vote() {
                       : voteStatus?.avgScore <= 60
                       ? "bg-yellow-500/10 text-yellow-500"
                       : "bg-green-500/10 text-green-500"
-                  } rounded-3xl`}>
+                  } rounded-2xl`}>
                   {parseFloat(voteStatus?.avgScore).toFixed(2) || 0}% -{" "}
                   {voteStatus?.avgScore < 20
                     ? "Very negative"
@@ -216,7 +216,7 @@ export default function Vote() {
             </div>
           </div>
 
-          <div className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
+          <div className='w-full p-3 bg-secondaryTransparent rounded-2xl'>
             <div className='space-y-3'>
               <div className='space-y-2'>
                 <span className='flex justify-between'>
@@ -225,9 +225,9 @@ export default function Vote() {
                     {percentages.positive}%
                   </span>
                 </span>
-                <div className='w-full bg-secondary rounded-3xl'>
+                <div className='w-full bg-secondary rounded-2xl'>
                   <div
-                    className='h-3 bg-green-500 rounded-3xl'
+                    className='h-3 bg-green-500 rounded-2xl'
                     style={{ width: `${percentages.positive}%` }}></div>
                 </div>
               </div>
@@ -239,9 +239,9 @@ export default function Vote() {
                     {percentages.neutral}%
                   </span>
                 </span>
-                <div className='w-full bg-secondary rounded-3xl'>
+                <div className='w-full bg-secondary rounded-2xl'>
                   <div
-                    className='h-3 bg-yellow-500 rounded-3xl'
+                    className='h-3 bg-yellow-500 rounded-2xl'
                     style={{ width: `${percentages.neutral}%` }}></div>
                 </div>
               </div>
@@ -253,9 +253,9 @@ export default function Vote() {
                     {percentages.negative}%
                   </span>
                 </span>
-                <div className='w-full bg-secondary rounded-3xl'>
+                <div className='w-full bg-secondary rounded-2xl'>
                   <div
-                    className='h-3 bg-red-500 rounded-3xl'
+                    className='h-3 bg-red-500 rounded-2xl'
                     style={{ width: `${percentages.negative}%` }}></div>
                 </div>
               </div>

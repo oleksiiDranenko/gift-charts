@@ -22,14 +22,14 @@ export default function AddAssetItem({
   const translate = useTranslations("account");
 
   return (
-    <div className='w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-3xl'>
+    <div className='w-full h-16 flex flex-row items-center justify-between focus:bg-slate-800 focus:bg-opacity-35 rounded-2xl'>
       <div className=' flex flex-row items-center'>
         <Image
           alt='gift image'
           src={`/gifts/${image}.webp`}
           width={50}
           height={50}
-          className={`bg-secondaryTransparent p-1 mr-3 rounded-3xl`}
+          className={`bg-secondaryTransparent p-1 mr-3 rounded-2xl`}
         />
         <div className='flex flex-col'>
           <span className='text-base font-bold'>{name}</span>
@@ -37,7 +37,7 @@ export default function AddAssetItem({
       </div>
 
       <button
-        className='h-8 px-3 bg-primary text-sm rounded-3xl'
+        className='h-8 px-3 bg-primary text-sm rounded-2xl'
         onClick={() => {
           addGift(_id);
           vibrate();

@@ -7,7 +7,7 @@ export default function BackButton() {
   const vibrate = useVibrate();
   return (
     <button
-      className='w-fit flex flex-row items-center font-bold'
+      className='w-fit flex flex-row items-center font-bold active:scale-[95%] duration-200'
       onClick={() => {
         router.back();
         vibrate();

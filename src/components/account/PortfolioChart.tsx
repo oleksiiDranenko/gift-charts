@@ -223,7 +223,7 @@ export default function PortfolioChart({
       className={
         resolvedTheme === "dark"
           ? "relative"
-          : "relative bg-secondaryTransparent rounded-3xl p-4"
+          : "relative bg-secondaryTransparent rounded-2xl p-4"
       }
       ref={chartContainerRef}>
       <Line

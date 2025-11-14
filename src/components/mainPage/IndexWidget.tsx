@@ -61,7 +61,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
   return (
     <Link
       href={`/tools/index/${indexId}`}
-      className={`flex flex-col box-border h-40 rounded-3xl overflow-hidden ${
+      className={`flex flex-col box-border h-40 rounded-2xl overflow-hidden ${
         isLoading && "animate-pulse"
       }`}>
       {!isLoading ? (
@@ -98,7 +98,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
             </div>
 
             <span
-              className={`py-[2px] px-2 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
+              className={`py-[2px] px-2 rounded-2xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
                 percentChange < 0
                   ? "text-red-500 bg-red-500"
                   : "text-green-500 bg-green-500"
