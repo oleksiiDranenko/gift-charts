@@ -151,7 +151,7 @@ export default function MainPage() {
 
   return (
     <div>
-      <div className='w-full px-3 mb-5'>
+      <div className='w-full px-3 mb-4'>
         <Link
           href='https://t.me/giftshitpost'
           className='w-full h-20 p-3 flex flex-row bg-gradient-to-br from-primary to-[#2776f4] rounded-xl relative overflow-hidden'>

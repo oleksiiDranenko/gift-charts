@@ -103,11 +103,11 @@ export default function GiftsList({ loading }: PropsInterface) {
       {giftsList !== undefined ? (
         <>
           <div className='w-full px-3'>
-            <div className='relative w-full flex flex-row justify-between mb-5 bg-secondaryTransparent rounded-2xl'>
+            <div className='relative w-full flex flex-row justify-between mb-5'>
               <button
-                className={`w-full py-2 text-center text-sm rounded-2xl ${
+                className={`w-full pb-3 text-center transition-colors duration-300  ${
                   selectedList === "all"
-                    ? "text-foreground font-bold bg-primary rounded-2xl"
+                    ? "text-foreground font-bold"
                     : "text-secondaryText"
                 }`}
                 onClick={() => {
@@ -117,9 +117,9 @@ export default function GiftsList({ loading }: PropsInterface) {
                 All Gifts
               </button>
               <button
-                className={`w-full py-2 text-center text-sm rounded-2xl ${
+                className={`w-full pb-3 text-center transition-colors duration-300  ${
                   selectedList === "saved"
-                    ? "text-foreground font-bold bg-primary"
+                    ? "text-foreground font-bold"
                     : "text-secondaryText"
                 }`}
                 onClick={() => {
@@ -129,11 +129,11 @@ export default function GiftsList({ loading }: PropsInterface) {
                 Saved
               </button>
 
-              {/* <span
-                className={`absolute bottom-0 h-[2px] bg-foreground transition-all duration-300 ease-in-out ${
+              <span
+                className={`absolute bottom-0 h-[2px] rounded-2xl bg-foreground transition-all duration-300 ease-in-out ${
                   selectedList === "all" ? "left-0 w-1/2" : "left-1/2 w-1/2"
                 }`}
-              /> */}
+              />
             </div>
           </div>
           <div ref={sentinelRef} />
