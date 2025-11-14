@@ -80,7 +80,7 @@ export default function Page() {
         <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>
           <Link
             href='/settings/edit-assets'
-            className='w-full h-14 px-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-2xl'
+            className='w-full h-14 px-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
             onClick={() => vibrate}>
             <span className='flex flex-row items-center gap-3'>
               <Gift size={20} className='text-primary' />
@@ -90,7 +90,7 @@ export default function Page() {
           </Link>
           <Link
             href='/settings/edit-watchlist'
-            className='w-full h-14 px-3 flex flex-row justify-between items-center font-bold bg-secondaryTransparent rounded-2xl'
+            className='w-full h-14 px-3 flex flex-row justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
             onClick={() => vibrate}>
             <span className='flex flex-row items-center gap-3'>
               <Star size={20} className='text-primary' />
@@ -104,18 +104,18 @@ export default function Page() {
       <h1 className='text-xl font-bold pt-3'>General settings</h1>
 
       <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
-        <div className='w-full p-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-2xl'>
+        <div className='w-full p-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'>
           <h1>Color Theme</h1>
           <div
             className={`flex flex-row ${
               resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
-            } rounded-2xl`}>
+            } rounded-3xl`}>
             {["light", "dark", "system"].map((t) => (
               <button
                 key={t}
                 className={`w-full p-3 flex justify-center ${
                   theme === t
-                    ? "font-bold text-white bg-primary rounded-2xl"
+                    ? "font-bold text-white bg-primary rounded-3xl"
                     : "text-secondaryText"
                 }`}
                 onClick={() => setTheme(t)}>
@@ -130,18 +130,18 @@ export default function Page() {
         <LanguageSwitcher />
 
         {/* Currency */}
-        <div className='w-full h-14 px-3 flex justify-between items-center bg-secondaryTransparent rounded-2xl'>
+        <div className='w-full h-14 px-3 flex justify-between items-center bg-secondaryTransparent rounded-3xl'>
           <h1 className='font-bold'>Currency</h1>
           <div
             className={`flex ${
               resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
-            } gap-x-2 rounded-2xl`}>
+            } gap-x-2 rounded-3xl`}>
             {(["ton", "usd"] as const).map((c) => (
               <button
                 key={c}
                 className={`px-3 flex items-center justify-center gap-2 text-xs h-8 ${
                   settings.currency === c
-                    ? "font-bold text-white bg-primary rounded-2xl"
+                    ? "font-bold text-white bg-primary rounded-3xl"
                     : "text-secondaryText"
                 }`}
                 onClick={() => updateSetting("currency", c)}>
@@ -160,18 +160,18 @@ export default function Page() {
         </div>
       </div>
       {/* Gift Style */}
-      <div className='w-full p-3 flex flex-col font-bold bg-secondaryTransparent rounded-2xl'>
+      <div className='w-full p-3 flex flex-col font-bold bg-secondaryTransparent rounded-3xl'>
         <div className='flex justify-between'>
           <h1>Gift style</h1>
           <div className='flex gap-x-1'>
             <div
               className={`flex ${
                 resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
-              } rounded-2xl overflow-hidden`}>
+              } rounded-3xl overflow-hidden`}>
               <button
                 className={`px-3 h-8 ${
                   settings.giftType === "line"
-                    ? "font-bold text-white bg-primary rounded-2xl"
+                    ? "font-bold text-white bg-primary rounded-3xl"
                     : "text-secondaryText"
                 }`}
                 onClick={() => updateSetting("giftType", "line")}>
@@ -180,7 +180,7 @@ export default function Page() {
               <button
                 className={`px-3 h-8 ${
                   settings.giftType === "block"
-                    ? "font-bold text-white bg-primary rounded-2xl"
+                    ? "font-bold text-white bg-primary rounded-3xl"
                     : "text-secondaryText"
                 }`}
                 onClick={() => updateSetting("giftType", "block")}>
@@ -190,11 +190,11 @@ export default function Page() {
             <div
               className={`flex ${
                 resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
-              } rounded-2xl`}>
+              } rounded-3xl`}>
               <button
                 className={`px-3 h-8 ${
                   settings.giftBackground === "none"
-                    ? "font-bold text-white bg-primary rounded-2xl"
+                    ? "font-bold text-white bg-primary rounded-3xl"
                     : "text-secondaryText"
                 }`}
                 onClick={() => updateSetting("giftBackground", "none")}>
@@ -203,7 +203,7 @@ export default function Page() {
               <button
                 className={`px-3 h-8 ${
                   settings.giftBackground === "color"
-                    ? "font-bold text-white bg-primary rounded-2xl"
+                    ? "font-bold text-white bg-primary rounded-3xl"
                     : "text-secondaryText"
                 }`}
                 onClick={() => updateSetting("giftBackground", "color")}>
@@ -213,7 +213,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className='w-full mt-3 px-3 pt-3 pb-1 bg-background rounded-2xl'>
+        <div className='w-full mt-3 px-3 pt-3 pb-1 bg-background rounded-3xl'>
           {settings.giftType === "line" ? (
             gifts.length === 0 ? (
               <ListSkeleton type='line' count={1} hideHeader={true} />

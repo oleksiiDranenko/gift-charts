@@ -45,7 +45,7 @@ export default function NavbarLeft() {
         <h1 className='text-lg '>Gift Charts</h1>
       </Link>
       <Link
-        className={`flex flex-row gap-x-2 items-center p-3 rounded-2xl box-border hover:bg-secondary ${
+        className={`flex flex-row gap-x-2 items-center p-3 rounded-3xl box-border hover:bg-secondary ${
           selectedPage === "home"
             ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
@@ -59,7 +59,7 @@ export default function NavbarLeft() {
         <span>{t("home")}</span>
       </Link>
       <Link
-        className={`flex flex-row gap-x-2 items-center p-3 rounded-2xl box-border hover:bg-secondary ${
+        className={`flex flex-row gap-x-2 items-center p-3 rounded-3xl box-border hover:bg-secondary ${
           selectedPage === "gifts"
             ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
@@ -73,7 +73,7 @@ export default function NavbarLeft() {
         <span>{t("gifts")}</span>
       </Link>
       <Link
-        className={`flex flex-row gap-x-1 items-center p-3 rounded-2xl box-border hover:bg-secondary ${
+        className={`flex flex-row gap-x-1 items-center p-3 rounded-3xl box-border hover:bg-secondary ${
           selectedPage === "tools"
             ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
@@ -87,7 +87,7 @@ export default function NavbarLeft() {
         <span>{t("tools")}</span>
       </Link>
       <Link
-        className={`flex flex-row gap-x-1 items-center p-3 rounded-2xl box-border hover:bg-secondary ${
+        className={`flex flex-row gap-x-1 items-center p-3 rounded-3xl box-border hover:bg-secondary ${
           selectedPage === "account"
             ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"
@@ -101,7 +101,7 @@ export default function NavbarLeft() {
         <span>{t("profile")}</span>
       </Link>
       <Link
-        className={`flex flex-row gap-x-1 items-center p-3 rounded-2xl box-border hover:bg-secondary ${
+        className={`flex flex-row gap-x-1 items-center p-3 rounded-3xl box-border hover:bg-secondary ${
           selectedPage === "settings"
             ? "text-white bg-primary hover:!bg-primary"
             : "text-secondaryText"

@@ -123,7 +123,7 @@ export default function FilterGiftsModal({
                     <button
                       className={`flex flex-row items-center justify-center gap-x-1 ${
                         selected.length === 0 ? "opacity-50" : ""
-                      } h-8 px-3 bg-secondaryTransparent rounded-2xl`}
+                      } h-8 px-3 bg-secondaryTransparent rounded-3xl`}
                       onClick={clearSelection}>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
@@ -178,7 +178,7 @@ export default function FilterGiftsModal({
                   {/* Search Input */}
                   <div className='relative w-full my-1'>
                     <input
-                      className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none placeholder:text-secondaryText placeholder:text-sm'
+                      className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none placeholder:text-secondaryText placeholder:text-sm'
                       placeholder='Search gifts'
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}

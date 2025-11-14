@@ -41,7 +41,7 @@ export default function NavbarBottom() {
     <div className='lg:hidden fixed bottom-0 mb-0 w-screen z-40 flex justify-center gap-3 items-center'>
       <div className='w-full flex flex-row justify-between items-center pt-3 pb-10 px-3 rounded-t-2xl bg-secondaryTransparent'>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
             selectedPage === "home" ? "text-primary " : "text-secondaryText"
           }`}
           href='/'
@@ -62,7 +62,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("home")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
             selectedPage === "gifts" ? "text-primary" : "text-secondaryText"
           }`}
           href='/gifts-list'
@@ -82,7 +82,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("gifts")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
             selectedPage === "tools" ? "text-primary" : "text-secondaryText"
           }`}
           href='/tools'
@@ -106,7 +106,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("tools")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
             selectedPage === "account" ? "text-primary" : "text-secondaryText"
           }`}
           href='/account'
@@ -130,7 +130,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("profile")}</span>
         </Link>
         <Link
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
             selectedPage === "settings" ? "text-primary" : "text-secondaryText"
           }`}
           href='/settings'

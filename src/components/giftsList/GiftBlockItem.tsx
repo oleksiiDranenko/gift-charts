@@ -100,7 +100,7 @@ export default function GiftBlockItem({
 
   return (
     <Link
-      className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-2xl ${
+      className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-3xl active:scale-[98%]  duration-200 ${
         background === "color"
           ? `bg-gradient-to-b ${
               percentChange !== "no data" && percentChange >= 0
@@ -165,7 +165,7 @@ export default function GiftBlockItem({
           </div>
 
           <span
-            className={`py-[2px] px-1 mt-2 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+            className={`py-[2px] px-1 mt-2 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
               percentChange !== "no data"
                 ? percentChange >= 0
                   ? "text-green-500 bg-green-500"

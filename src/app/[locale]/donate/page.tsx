@@ -34,7 +34,7 @@ export default function Page() {
 
         <div
           onClick={handleCopy}
-          className='relative bg-secondaryTransparent rounded-2xl flex flex-col py-3 pl-3 pr-8 mb-3'>
+          className='relative bg-secondaryTransparent rounded-3xl flex flex-col py-3 pl-3 pr-8 mb-3'>
           <span className='text-foreground font-bold mb-1'>
             TON Wallet Address
           </span>

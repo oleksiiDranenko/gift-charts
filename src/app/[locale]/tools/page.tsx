@@ -65,7 +65,7 @@ export default function Page() {
 
       <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
         <Link
-          className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+          className='bg-secondaryTransparent rounded-3xl overflow-hidden'
           href={"/tools/treemap"}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
@@ -94,7 +94,7 @@ export default function Page() {
         </Link>
 
         <Link
-          className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+          className='bg-secondaryTransparent rounded-3xl overflow-hidden'
           href={"/tools/fear-greed"}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
@@ -113,7 +113,7 @@ export default function Page() {
 
         {true && (
           <Link
-            className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+            className='bg-secondaryTransparent rounded-3xl overflow-hidden'
             href={"/tools/vote"}>
             <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
               <div className='flex flex-row items-center gap-x-3'>
@@ -148,14 +148,14 @@ export default function Page() {
         Indexes
       </h1>
 
-      <div className='w-full h-auto flex flex-col gap-3'>
+      <div className='w-full h-auto flex flex-col gap-2'>
         {/* ✅ Loading placeholder */}
         {isLoading && (
           <>
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-2xl animate-pulse'
+                className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-3xl animate-pulse'
               />
             ))}
           </>

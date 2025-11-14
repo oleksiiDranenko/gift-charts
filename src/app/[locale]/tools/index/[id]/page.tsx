@@ -80,7 +80,7 @@ export default function Page({ params }: any) {
                 <div>
                   <button
                     onClick={() => setShowCalendar(!showCalendar)}
-                    className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-2xl'>
+                    className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-3xl'>
                     {showCalendar ? (
                       <>
                         Hide

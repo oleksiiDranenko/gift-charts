@@ -126,7 +126,7 @@ export default function VoteModal({
             leaveFrom='translate-y-0 opacity-100'
             leaveTo='translate-y-full opacity-0'>
             <Dialog.Panel className='w-full lg:w-5/6 h-2/3 lg:h-5/6 p-3 rounded-t-xl bg-background flex flex-col border-t border-secondaryTransparent'>
-              <div className="w-full h-52 lg:h-80 rounded-2xl mb-1 bg-[url('/images/gift-banner.jpg')] bg-center bg-no-repeat bg-cover"></div>
+              <div className="w-full h-52 lg:h-80 rounded-3xl mb-1 bg-[url('/images/gift-banner.jpg')] bg-center bg-no-repeat bg-cover"></div>
 
               <div>
                 <h1 className='w-full flex text-start text-2xl font-bold mb-3 p-3'>
@@ -145,7 +145,7 @@ export default function VoteModal({
                             ? "bg-yellow-500 font-bold text-white"
                             : "bg-green-500 font-bold text-white"
                           : "bg-secondaryTransparent"
-                      } text-secondaryText rounded-2xl p-2`}
+                      } text-secondaryText rounded-3xl p-2`}
                       onClick={() => {
                         setSelectedVote(type as any);
                         vibrate();
@@ -156,7 +156,7 @@ export default function VoteModal({
                 </div>
 
                 <button
-                  className='w-full flex items-center justify-center text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-2xl mb-5'
+                  className='w-full flex items-center justify-center text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-3xl mb-5'
                   onClick={handleVoteSubmit}
                   disabled={!selectedVote || voteMutation.isLoading}>
                   <Check size={16} />
