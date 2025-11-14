@@ -22,6 +22,7 @@ import {
   Star,
   Sun,
 } from "lucide-react";
+import ListSkeleton from "@/components/giftsList/ListSkeleton";
 
 type Settings = {
   currency: "ton" | "usd";
@@ -214,15 +215,21 @@ export default function Page() {
 
         <div className='w-full mt-3 px-3 pt-3 pb-1 bg-background rounded-2xl'>
           {settings.giftType === "line" ? (
-            <GiftItem
-              item={gifts[0]}
-              currency={settings.currency}
-              sortBy='supply'
-              displayValue='price'
-              timeGap='24h'
-              background={settings.giftBackground}
-              number={0}
-            />
+            gifts.length === 0 ? (
+              <ListSkeleton type='line' count={1} hideHeader={true} />
+            ) : (
+              <GiftItem
+                item={gifts[0]}
+                currency={settings.currency}
+                sortBy='supply'
+                displayValue='price'
+                timeGap='24h'
+                background={settings.giftBackground}
+                number={0}
+              />
+            )
+          ) : gifts.length === 0 ? (
+            <ListSkeleton type='block' count={1} />
           ) : (
             <div className='grid grid-cols-4 gap-x-2 px-2'>
               <GiftBlockItem

@@ -13,6 +13,7 @@ import { useRouter } from "@/i18n/navigation";
 import ListHandler from "../mainPage/ListHandler";
 import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 import useVibrate from "@/hooks/useVibrate";
+import ListSkeleton from "./ListSkeleton";
 
 interface PropsInterface {
   loading: boolean;
@@ -22,6 +23,8 @@ export default function GiftsList({ loading }: PropsInterface) {
   const giftsList = useAppSelector((state) => state.giftsList);
   const filters = useAppSelector((state) => state.filters);
   const user = useAppSelector((state) => state.user);
+
+  const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter();
 
@@ -50,6 +53,10 @@ export default function GiftsList({ loading }: PropsInterface) {
   });
 
   const { currency, giftType, giftBackground } = settings;
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -97,6 +104,10 @@ export default function GiftsList({ loading }: PropsInterface) {
   const clearSearch = () => {
     setSearchQuery("");
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div className='w-full h-auto flex flex-col items-center'>
@@ -223,9 +234,14 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           )}
 
-          <div className='w-full'>
+          <div className='w-full pt-3'>
             <ScrollToTopButton />
-            {selectedList === "saved" && user.savedList.length === 0 ? (
+            {giftsList.length === 0 && selectedList === "all" ? (
+              <ListSkeleton
+                type={giftType}
+                count={giftType === "line" ? 15 : 20}
+              />
+            ) : selectedList === "saved" && user.savedList.length === 0 ? (
               <InfoMessage
                 text='You dont have any gifts saved'
                 buttonText='Add gifts to saved'

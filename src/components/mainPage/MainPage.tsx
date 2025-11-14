@@ -11,6 +11,7 @@ import SearchBar from "./SearchBar";
 import { Trophy, Star, TrendingUp, TrendingDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import IndexWidget from "./IndexWidget";
+import ListSkeleton from "../giftsList/ListSkeleton";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -149,6 +150,10 @@ export default function MainPage() {
     }
   }, [currency, filters, giftsList, user.savedList]);
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <div>
       <div className='w-full px-3 mb-4'>
@@ -245,6 +250,8 @@ export default function MainPage() {
               </div>
             )}
           </>
+        ) : giftsList.length === 0 ? (
+          <ListSkeleton type={giftType} count={giftType === "line" ? 3 : 8} />
         ) : (
           <ListHandler
             key={chosenFilter}

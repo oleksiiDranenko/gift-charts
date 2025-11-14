@@ -111,9 +111,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
           {monthData && <IndexChart data={monthData} currency={currency} />}
         </>
       ) : (
-        <div className='h-full w-full flex items-center justify-center text-secondaryText bg-secondaryTransparent animate-pulse'>
-          Loading Chart
-        </div>
+        <div className='h-full w-full flex items-center justify-center text-secondaryText bg-secondaryTransparent animate-pulse' />
       )}
     </Link>
   );
