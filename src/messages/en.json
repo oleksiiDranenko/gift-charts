@@ -16,6 +16,30 @@
     "hide": "Hide",
     "tryItNow": "Try it now"
   },
+  "donate": {
+    "donate": "Donate",
+    "thankYou": "Thanks you for supporting the app!",
+    "tonWallet": "TON Wallet Address"
+  },
+  "settings": {
+    "accountSettings": "Account settings",
+    "editAssets": "Edit Assets",
+    "editWatchlist": "Edit Watchlist",
+    "generalSettings": "General settings",
+    "colorTheme": "Color Theme",
+    "currency": "Currency",
+    "giftStyle": "Gift Style"
+  },
+  "tools": {
+    "analyticsTools": "Analytics Tools",
+    "heatmap": "Heatmap",
+    "heatmapDescription": " View market state at heatmap chart",
+    "fearGreed": "Fear & Greed",
+    "fearGreedDescription": "See how others feel about the market",
+    "marketSentiment": "Market Sentiment",
+    "marketSentimentDescription": "See how others feel about the market",
+    "indexes": "Indexes"
+  },
   "account": {
     "openInTelegram": "Please open app in Telegram",
     "assets": "Assets",
@@ -99,24 +123,6 @@
     "amountBurnt": "Amount Burnt",
     "percentBurnt": "Percent Burnt",
     "viewModels": "View Models"
-  },
-
-  "tools": {
-    "heatmap": {
-      "name": "Heatmap",
-      "resetZoom": "Reset Zoom",
-      "download": "Download Heatmap as an Image"
-    },
-    "marketCap": "Market Cap"
-  },
-
-  "settings": {
-    "colorTheme": {
-      "name": "Color Theme",
-      "light": "Light",
-      "dark": "Dark",
-      "system": "System"
-    }
   },
 
   "fearAndGreed": {

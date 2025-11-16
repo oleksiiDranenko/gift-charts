@@ -3,12 +3,14 @@
 import useVibrate from "@/hooks/useVibrate";
 import BackButton from "@/utils/ui/backButton";
 import { Check, Copy, HeartHandshake } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
 
 export default function Page() {
   const [copied, setCopied] = useState(false);
   const walletAddress = "UQBs_lO45Mcj5oxXtUmu-ZLpC-4cUBWUNKUm7QpPSsx0U28S";
+  const translate = useTranslations("donate");
 
   const handleCopy = async () => {
     try {
@@ -28,15 +30,15 @@ export default function Page() {
       <div className='flex flex-col mt-3 items-center'>
         <h1 className='text-xl font-bold mb-1 flex flex-row items-center gap-x-1'>
           <HeartHandshake size={20} />
-          Donate
+          {translate("donate")}
         </h1>
-        <p className='mb-3'>Thanks you for supporting the app!</p>
+        <p className='mb-3'>{translate("thankYou")}</p>
 
         <div
           onClick={handleCopy}
           className='relative bg-secondaryTransparent rounded-2xl flex flex-col py-3 pl-3 pr-8 mb-3'>
           <span className='text-foreground font-bold mb-1'>
-            TON Wallet Address
+            {translate("tonWallet")}
           </span>
           <p className='text-secondaryText'>{walletAddress}</p>
           {copied ? (

@@ -23,6 +23,7 @@ import {
   Sun,
 } from "lucide-react";
 import ListSkeleton from "@/components/giftsList/ListSkeleton";
+import { useTranslations } from "next-intl";
 
 type Settings = {
   currency: "ton" | "usd";
@@ -35,6 +36,7 @@ export default function Page() {
   const gifts = useAppSelector((state) => state.giftsList);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const vibrate = useVibrate();
+  const translate = useTranslations("settings");
 
   const [settings, setSettings] = useState<Settings>({
     currency: "ton",
@@ -75,7 +77,7 @@ export default function Page() {
 
   return (
     <div className='w-full lg:w-5/6 pt-0 pb-24 px-3 space-y-3'>
-      <h1 className='text-xl font-bold'>Account settings</h1>
+      <h1 className='text-xl font-bold'>{translate("accountSettings")}</h1>
       {user.username && (
         <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>
           <Link
@@ -84,7 +86,7 @@ export default function Page() {
             onClick={() => vibrate}>
             <span className='flex flex-row items-center gap-3'>
               <Gift size={20} className='text-primary' />
-              Edit Assets
+              {translate("editAssets")}
             </span>
             <ChevronRight size={20} className='text-primary' />
           </Link>
@@ -94,18 +96,18 @@ export default function Page() {
             onClick={() => vibrate}>
             <span className='flex flex-row items-center gap-3'>
               <Star size={20} className='text-primary' />
-              Edit Watchlist
+              {translate("editWatchlist")}
             </span>
             <ChevronRight size={20} className='text-primary' />
           </Link>
         </div>
       )}
 
-      <h1 className='text-xl font-bold pt-3'>General settings</h1>
+      <h1 className='text-xl font-bold pt-3'>{translate("generalSettings")}</h1>
 
       <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
         <div className='w-full p-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-2xl'>
-          <h1>Color Theme</h1>
+          <h1>{translate("colorTheme")}</h1>
           <div
             className={`flex flex-row ${
               resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
@@ -131,7 +133,7 @@ export default function Page() {
 
         {/* Currency */}
         <div className='w-full h-14 px-3 flex justify-between items-center bg-secondaryTransparent rounded-2xl'>
-          <h1 className='font-bold'>Currency</h1>
+          <h1 className='font-bold'>{translate("currency")}</h1>
           <div
             className={`flex ${
               resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
@@ -162,7 +164,7 @@ export default function Page() {
       {/* Gift Style */}
       <div className='w-full p-3 flex flex-col font-bold bg-secondaryTransparent rounded-2xl'>
         <div className='flex justify-between'>
-          <h1>Gift style</h1>
+          <h1>{translate("giftStyle")}</h1>
           <div className='flex gap-x-1'>
             <div
               className={`flex ${

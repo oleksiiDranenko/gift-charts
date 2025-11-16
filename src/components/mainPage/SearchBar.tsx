@@ -14,6 +14,7 @@ import {
   SquareArrowOutUpRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import useVibrate from "@/hooks/useVibrate";
 
 export default function GiftSearchBar() {
   const giftsList = useAppSelector((state) => state.giftsList);
@@ -21,6 +22,7 @@ export default function GiftSearchBar() {
   const [selected, setSelected] = useState<GiftInterface | null>(null);
   const router = useRouter();
   const translateMain = useTranslations("mainPage");
+  const vibrate = useVibrate();
 
   const fuse = useMemo(
     () =>
@@ -51,6 +53,7 @@ export default function GiftSearchBar() {
             onChange={(e) => setQuery(e.target.value)}
             displayValue={(gift: GiftInterface) => gift?.name || ""}
             placeholder={translateMain("searchPlaceholder")}
+            onFocus={() => vibrate()}
           />
           <Search
             className='absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-secondaryText'

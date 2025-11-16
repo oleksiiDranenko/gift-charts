@@ -134,7 +134,7 @@ export default function GiftItem({
   return (
     <>
       <Link
-        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-2xl active:scale-[95%] duration-200 ${
+        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-2xl ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0

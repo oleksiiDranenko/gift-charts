@@ -23,7 +23,7 @@ export default function Page() {
   const giftsList = useAppSelector((state) => state.giftsList);
   const vibrate = useVibrate();
   const user = useAppSelector((state) => state.user);
-  const t = useTranslations("fearAndGreed");
+  const translate = useTranslations("tools");
 
   // ✅ Fetch gifts (still via Redux)
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function Page() {
   return (
     <main className='w-full lg:w-5/6 pt-[0px] pb-24 px-3'>
       <h1 className='w-full text-xl font-bold mb-5 ml-1 flex flex-row gap-x-2'>
-        Analytics Tools
+        {translate("analyticsTools")}
       </h1>
 
       <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
@@ -82,9 +82,11 @@ export default function Page() {
               </svg>
 
               <div className='flex flex-col'>
-                <span className='font-bold text-lg'>Heatmap</span>
+                <span className='font-bold text-lg'>
+                  {translate("heatmap")}
+                </span>
                 <span className='text-sm text-secondaryText'>
-                  View market state at heatmap chart
+                  {translate("heatmapDescription")}
                 </span>
               </div>
             </div>
@@ -100,9 +102,11 @@ export default function Page() {
             <div className='flex flex-row items-center gap-x-3'>
               <Gauge size={28} className='text-primary' />
               <div className='flex flex-col'>
-                <span className='font-bold text-lg'>Fear & Greed</span>
+                <span className='font-bold text-lg'>
+                  {translate("fearGreed")}
+                </span>
                 <span className='text-sm text-secondaryText'>
-                  See how others feel about the market
+                  {translate("fearGreedDescription")}
                 </span>
               </div>
             </div>
@@ -130,9 +134,11 @@ export default function Page() {
                 </svg>
 
                 <div className='flex flex-col'>
-                  <span className='font-bold text-lg'>Market Sentiment</span>
+                  <span className='font-bold text-lg'>
+                    {translate("marketSentiment")}
+                  </span>
                   <span className='text-sm text-secondaryText'>
-                    See how others feel about the market
+                    {translate("marketSentimentDescription")}
                   </span>
                 </div>
               </div>
@@ -145,7 +151,7 @@ export default function Page() {
 
       {/* Indexes */}
       <h1 className='w-full text-xl font-bold mb-3 mt-5 ml-1 flex flex-row gap-x-2'>
-        Indexes
+        {translate("indexes")}
       </h1>
 
       <div className='w-full h-auto flex flex-col gap-2'>
