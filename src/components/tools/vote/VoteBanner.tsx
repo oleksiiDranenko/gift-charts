@@ -83,7 +83,7 @@ export default function VoteBanner() {
       {isVoteStatusLoading || hasVoted === null ? null : !hasVoted ? (
         <div className='w-full px-3 mb-4'>
           <div className='w-full p-3 bg-secondaryTransparent rounded-2xl'>
-            <h1 className='w-full flex text-start text-lg font-bold mb-3'>
+            <h1 className='w-full flex text-start text-xl font-bold mb-3'>
               How do you feel about the Gifts market?
             </h1>
             <div className='w-full gap-x-2 flex flex-row mb-3'>
@@ -91,7 +91,7 @@ export default function VoteBanner() {
                 className={`w-full h-8 text-sm ${
                   selectedVote === "negative"
                     ? "bg-red-500 text-white font-bold"
-                    : "text-secondaryText"
+                    : "text-secondaryText bg-secondary"
                 } rounded-2xl p-1`}
                 onClick={() => setSelectedVote("negative")}>
                 Negative
@@ -100,7 +100,7 @@ export default function VoteBanner() {
                 className={`w-full h-8 text-sm ${
                   selectedVote === "neutral"
                     ? "bg-yellow-500 text-white font-bold"
-                    : "text-secondaryText"
+                    : "text-secondaryText bg-secondary"
                 } rounded-2xl p-1`}
                 onClick={() => setSelectedVote("neutral")}>
                 Neutral
@@ -109,7 +109,7 @@ export default function VoteBanner() {
                 className={`w-full h-8 text-sm ${
                   selectedVote === "positive"
                     ? "bg-green-500 text-white font-bold"
-                    : "text-secondaryText"
+                    : "text-secondaryText bg-secondary"
                 } rounded-2xl p-1`}
                 onClick={() => setSelectedVote("positive")}>
                 Positive

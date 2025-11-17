@@ -12,6 +12,7 @@ import { Trophy, Star, TrendingUp, TrendingDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import IndexWidget from "./IndexWidget";
 import ListSkeleton from "../giftsList/ListSkeleton";
+import VoteBanner from "../tools/vote/VoteBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -156,10 +157,10 @@ export default function MainPage() {
 
   return (
     <div>
-      {/* <div className='w-full px-3 mb-4'>
+      <div className='w-full px-3 mb-4'>
         <Link
           href='https://t.me/giftshitpost'
-          className='w-full h-20 p-3 flex flex-row bg-gradient-to-br from-primary to-[#2776f4] rounded-2xl relative overflow-hidden'>
+          className='w-full h-20 p-3 flex flex-row bg-primary rounded-2xl relative overflow-hidden'>
           <div className='flex flex-col justify-evenly'>
             <div className='flex flex-row'>
               <h1 className='flex flex-row gap-x-1 items-center text-white font-bold text-lg'>
@@ -184,7 +185,7 @@ export default function MainPage() {
             </svg>
           </div>
         </Link>
-      </div> */}
+      </div>
 
       <SearchBar />
 
@@ -240,7 +241,7 @@ export default function MainPage() {
         </div>
       </div>
 
-      <div className='w-full flex flex-row mb-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
+      <div className='w-full flex flex-row mb-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
         {chosenFilter === "saved" ? (
           <>
             {userList.length !== 0 ? (
@@ -285,6 +286,8 @@ export default function MainPage() {
           />
         )}
       </div>
+
+      {/* <VoteBanner /> */}
 
       {/* <Link
         href={"/donate"}
