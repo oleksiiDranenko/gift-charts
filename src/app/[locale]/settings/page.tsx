@@ -106,7 +106,7 @@ export default function Page() {
       <h1 className='text-xl font-bold pt-3'>{translate("generalSettings")}</h1>
 
       <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
-        <div className='w-full p-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-2xl'>
+        <div className='w-full h-14 box-border p-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-2xl'>
           <h1>{translate("colorTheme")}</h1>
           <div
             className={`flex flex-row ${
@@ -115,7 +115,7 @@ export default function Page() {
             {["light", "dark", "system"].map((t) => (
               <button
                 key={t}
-                className={`w-full p-3 flex justify-center ${
+                className={`w-full py-2 px-3 flex justify-center ${
                   theme === t
                     ? "font-bold text-white bg-primary rounded-2xl"
                     : "text-secondaryText"
@@ -132,7 +132,7 @@ export default function Page() {
         <LanguageSwitcher />
 
         {/* Currency */}
-        <div className='w-full h-14 px-3 flex justify-between items-center bg-secondaryTransparent rounded-2xl'>
+        <div className='w-full h-14 box-border px-3 flex justify-between items-center bg-secondaryTransparent rounded-2xl'>
           <h1 className='font-bold'>{translate("currency")}</h1>
           <div
             className={`flex ${

@@ -26,6 +26,7 @@
     "editAssets": "Edit Assets",
     "editWatchlist": "Edit Watchlist",
     "generalSettings": "General settings",
+    "language": "language",
     "colorTheme": "Color Theme",
     "currency": "Currency",
     "giftStyle": "Gift Style"
@@ -38,7 +39,8 @@
     "fearGreedDescription": "See how others feel about the market",
     "marketSentiment": "Market Sentiment",
     "marketSentimentDescription": "See how others feel about the market",
-    "indexes": "Indexes"
+    "indexes": "Indexes",
+    "marketCap": "Market Cap"
   },
   "account": {
     "openInTelegram": "Please open app in Telegram",
@@ -98,9 +100,13 @@
     "settings": "Settings"
   },
 
+  "indexWidget": {
+    "7days": "7 days",
+    "marketCap": "Market Cap"
+  },
+
   "mainPage": {
     "searchPlaceholder": "Search Gifts",
-    "customise": "Customise",
     "gainers": "Gainers",
     "losers": "Losers",
     "floor": "floor",

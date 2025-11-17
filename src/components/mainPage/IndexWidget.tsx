@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import IndexChart from "./IndexChart";
 import Image from "next/image";
 import { Activity, ChartSpline } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Props {
   indexId: string;
@@ -16,6 +17,7 @@ interface Props {
 
 export default function IndexWidget({ indexId, indexName, currency }: Props) {
   const [percentChange, setPercentChange] = useState<number>(0);
+  const translate = useTranslations("indexWidget");
 
   const formatNumber = (value: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -70,8 +72,10 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
           <div className='p-3 flex flex-row justify-between items-center'>
             <div className='flex flex-col'>
               <div className='flex flex-row items-center gap-x-2'>
-                <span className='text-sm'>{indexName}</span>
-                <span className='text-xs text-secondaryText'>7 days</span>
+                <span className='text-sm'>{translate(indexName)}</span>
+                <span className='text-xs text-secondaryText'>
+                  {translate("7days")}
+                </span>
               </div>
               <span className='flex flex-row items-center mt-1 text-xl font-bold'>
                 {currency === "ton" ? (

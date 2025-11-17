@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { useTransition } from "react";
 import { Languages } from "lucide-react";
@@ -14,6 +14,8 @@ export default function LanguageSwitcher() {
 
   const { theme, setTheme, resolvedTheme } = useTheme();
 
+  const translate = useTranslations("settings");
+
   const changeLocale = (newLocale: string) => {
     startTransition(() => {
       router.replace(pathname, { locale: newLocale });
@@ -21,8 +23,10 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className='w-full p-3 gap-y-3 flex flex-row justify-between bg-secondaryTransparent rounded-2xl'>
-      <div className='flex flex-row items-center font-bold'>Language</div>
+    <div className='w-full h-14 box-border p-3 gap-y-3 flex flex-row justify-between bg-secondaryTransparent rounded-2xl'>
+      <div className='flex flex-row items-center font-bold'>
+        {translate("language")}
+      </div>
       <div
         className={`flex flex-row ${
           resolvedTheme === "dark" ? "bg-secondary" : "bg-background"

@@ -27,6 +27,7 @@
     "editWatchlist": "Редактировать список наблюдения",
     "generalSettings": "Общие настройки",
     "colorTheme": "Цветовая тема",
+    "language": "Язык",
     "currency": "Валюта",
     "giftStyle": "Стиль подарков"
   },
@@ -38,7 +39,8 @@
     "fearGreedDescription": "Узнайте, как другие относятся к рынку",
     "marketSentiment": "Настроения рынка",
     "marketSentimentDescription": "Узнайте, как другие относятся к рынку",
-    "indexes": "Индексы"
+    "indexes": "Индексы",
+    "marketCap": "Рыночная капитализация"
   },
   "account": {
     "openInTelegram": "Пожалуйста, откройте приложение в Telegram",
@@ -93,17 +95,22 @@
   "navbar": {
     "home": "Главная",
     "gifts": "Подарки",
-    "tools": "Инструменты",
+    "tools": "Аналитика",
     "profile": "Аккаунт",
     "settings": "Настройки"
+  },
+
+  "indexWidget": {
+    "7days": "7 дней",
+    "marketCap": "Рыночная капитализация"
   },
 
   "mainPage": {
     "searchPlaceholder": "Поиск подарков",
     "customise": "Настроить",
-    "gainers": "Лидеры роста",
-    "losers": "Лидеры падения",
-    "floor": "минимальная цена",
+    "gainers": "Рост",
+    "losers": "Падение",
+    "floor": "Дорогие",
     "saved": "Сохранено",
     "emptyWatchlist": "Ваш список наблюдения пуст"
   },

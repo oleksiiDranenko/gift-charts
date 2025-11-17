@@ -192,7 +192,7 @@ export default function MainPage() {
         <IndexWidget
           currency={currency}
           indexId='68493d064b37eed02b7ae5af'
-          indexName='Market Cap'
+          indexName='marketCap'
         />
       </div>
 
