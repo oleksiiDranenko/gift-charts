@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import IndexChart from "./IndexChart";
 import Image from "next/image";
+import { Activity, ChartSpline } from "lucide-react";
 
 interface Props {
   indexId: string;
@@ -61,7 +62,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
   return (
     <Link
       href={`/tools/index/${indexId}`}
-      className={`flex flex-col box-border h-40 rounded-2xl overflow-hidden ${
+      className={`flex flex-col box-border h-40 rounded-2xl bg-secondaryTransparent overflow-hidden ${
         isLoading && "animate-pulse"
       }`}>
       {!isLoading ? (
@@ -107,11 +108,12 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
             </span>
           </div>
 
-          {/* Only render chart if monthData is ready */}
           {monthData && <IndexChart data={monthData} currency={currency} />}
         </>
       ) : (
-        <div className='h-full w-full flex items-center justify-center text-secondaryText bg-secondaryTransparent animate-pulse' />
+        <div className='h-full w-full flex flex-col justify-center items-center text-secondary animate-pulse'>
+          <ChartSpline size={30} />
+        </div>
       )}
     </Link>
   );
