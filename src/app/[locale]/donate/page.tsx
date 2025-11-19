@@ -23,8 +23,8 @@ export default function Page() {
   };
 
   return (
-    <div className='w-full lg:w-5/6 pt-[0px] pb-24 flex flex-col px-3'>
-      <div className='w-full lg:w-5/6'>
+    <div className='w-full lg:w-11/12 pt-[0px] pb-24 flex flex-col px-3'>
+      <div className='w-full lg:w-11/12'>
         <BackButton />
       </div>
       <div className='flex flex-col mt-3 items-center'>

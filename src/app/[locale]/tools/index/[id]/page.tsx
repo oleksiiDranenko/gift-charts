@@ -61,7 +61,7 @@ export default function Page({ params }: any) {
 
   return (
     <div className='w-full pt-[0px]  pb-24 flex justify-center'>
-      <div className='w-full lg:w-5/6'>
+      <div className='w-full lg:w-11/12'>
         {!loading && index ? (
           <div className='flex flex-col'>
             <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>

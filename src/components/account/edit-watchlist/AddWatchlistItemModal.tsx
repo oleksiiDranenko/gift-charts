@@ -60,7 +60,7 @@ export default function AddWatchlistItemModal({
               leave='transform transition ease-in duration-200'
               leaveFrom='translate-y-0 opacity-100'
               leaveTo='translate-y-full opacity-0'>
-              <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col'>
+              <Dialog.Panel className='w-full lg:w-11/12 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col'>
                 <div className='w-full h-10 flex justify-between items-center'>
                   <h2 className='text-xl font-bold ml-3'>
                     {translate("addGift")}

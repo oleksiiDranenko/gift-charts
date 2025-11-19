@@ -84,228 +84,486 @@ export default function GiftChart({
   };
 
   return (
-    <div className='h-auto w-full pl-3 pr-3'>
-      <div
-        className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${
-          resolvedTheme === "dark"
-            ? ""
-            : "bg-secondaryTransparent rounded-2xl pl-2"
-        }`}>
-        <div className='h-full flex items-center'>
-          <Image
-            alt='gift'
-            src={`/gifts/${gift?.image}.webp`}
-            width={55}
-            height={55}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-2xl ${
-              resolvedTheme === "dark"
-                ? "bg-secondaryTransparent"
-                : "bg-background"
-            } `}
-          />
-          <h1 className='flex flex-col'>
-            <span className='text-xl font-bold'>{gift?.name}</span>
-            <span className='text-secondaryText text-sm flex justify-start'>
-              {gift ? formatNumber(gift?.upgradedSupply) : null}
-            </span>
-          </h1>
-        </div>
-        <div className='w-1/3 h-14 pr-3 flex flex-col items-end justify-center'>
-          <div className='flex flex-row items-center'>
-            {selectedPrice === "ton" || chartType === "candle" ? (
-              <Image
-                alt='TON logo'
-                src='/images/toncoin.webp'
-                width={18}
-                height={18}
-                className='mr-2'
-              />
-            ) : selectedPrice === "usd" ? (
-              <span className='text-xl font-extrabold mr-2'>$</span>
-            ) : selectedPrice === "onSale" ? (
-              <Store size={18} className='mr-2 font-bold' />
-            ) : selectedPrice === "volume" ? (
-              <Image
-                alt='TON logo'
-                src='/images/toncoin.webp'
-                width={18}
-                height={18}
-                className='mr-2'
-              />
-            ) : (
-              <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
-            )}
-            <span className='text-xl font-extrabold'>
-              {currentValue !== null ? currentValue.toFixed(2) : "N/A"}
+    <>
+      <div className='h-auto w-full pl-3 pr-3 lg:hidden'>
+        <div
+          className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${
+            resolvedTheme === "dark"
+              ? ""
+              : "bg-secondaryTransparent rounded-2xl pl-2"
+          }`}>
+          <div className='h-full flex items-center'>
+            <Image
+              alt='gift'
+              src={`/gifts/${gift?.image}.webp`}
+              width={55}
+              height={55}
+              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-2xl ${
+                resolvedTheme === "dark"
+                  ? "bg-secondaryTransparent"
+                  : "bg-background"
+              } `}
+            />
+            <h1 className='flex flex-col'>
+              <span className='text-xl font-bold'>{gift?.name}</span>
+              <span className='text-secondaryText text-sm flex justify-start'>
+                {gift ? formatNumber(gift?.upgradedSupply) : null}
+              </span>
+            </h1>
+          </div>
+          <div className='w-1/3 h-14 pr-3 flex flex-col items-end justify-center'>
+            <div className='flex flex-row items-center'>
+              {selectedPrice === "ton" || chartType === "candle" ? (
+                <Image
+                  alt='TON logo'
+                  src='/images/toncoin.webp'
+                  width={18}
+                  height={18}
+                  className='mr-2'
+                />
+              ) : selectedPrice === "usd" ? (
+                <span className='text-xl font-extrabold mr-2'>$</span>
+              ) : selectedPrice === "onSale" ? (
+                <Store size={18} className='mr-2 font-bold' />
+              ) : selectedPrice === "volume" ? (
+                <Image
+                  alt='TON logo'
+                  src='/images/toncoin.webp'
+                  width={18}
+                  height={18}
+                  className='mr-2'
+                />
+              ) : (
+                <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
+              )}
+              <span className='text-xl font-extrabold'>
+                {currentValue !== null ? currentValue.toFixed(2) : "N/A"}
+              </span>
+            </div>
+            <span
+              className={`text-sm ${
+                percentChange >= 0 ? "text-green-500" : "text-red-500"
+              }`}>
+              {(percentChange > 0 ? "+" : "") + percentChange.toFixed(2) + "%"}
             </span>
           </div>
-          <span
-            className={`text-sm ${
-              percentChange >= 0 ? "text-green-500" : "text-red-500"
-            }`}>
-            {(percentChange > 0 ? "+" : "") + percentChange.toFixed(2) + "%"}
-          </span>
         </div>
-      </div>
 
-      <div className='w-full h-fit mb-3 mt-3 flex flex-col gap-y-3'>
-        <div className='w-full flex flex-row justify-between'>
-          <PriceDropdown
-            selectedPrice={selectedPrice}
-            handleSelectedPrice={setSelectedPrice}
-          />
-          <div className='flex flex-row mr-2 box-border bg-secondaryTransparent rounded-2xl gap-x-1'>
-            <button
-              className={`text-xs h-8 px-3 box-border ${
-                chartType === "line"
-                  ? "rounded-2xl bg-primary font-bold text-white"
-                  : ""
-              }`}
-              onClick={() => {
-                setChartType("line");
-                vibrate();
-              }}>
-              <ChartSpline size={16} />
-            </button>
-            <button
-              className={`text-xs h-8 px-3 box-border ${
-                chartType === "candle"
-                  ? "rounded-2xl bg-primary font-bold text-white"
-                  : selectedPrice !== "ton"
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-              onClick={() => {
-                if (selectedPrice === "ton") {
-                  setChartType("candle");
+        <div className='w-full h-fit mb-3 mt-3 flex flex-col gap-y-3'>
+          <div className='w-full flex flex-row justify-between'>
+            <PriceDropdown
+              selectedPrice={selectedPrice}
+              handleSelectedPrice={setSelectedPrice}
+            />
+            <div className='flex flex-row mr-2 box-border bg-secondaryTransparent rounded-2xl gap-x-1'>
+              <button
+                className={`text-xs h-8 px-3 box-border ${
+                  chartType === "line"
+                    ? "rounded-2xl bg-primary font-bold text-white"
+                    : ""
+                }`}
+                onClick={() => {
+                  setChartType("line");
                   vibrate();
-                }
-              }}>
-              <ChartCandlestick size={16} />
-            </button>
-            <button
-              className={`text-xs h-8 px-3 box-border ${
-                chartType === "bar"
-                  ? "rounded-2xl bg-primary font-bold text-white"
-                  : ""
-              }`}
-              onClick={() => {
-                setChartType("bar");
-                vibrate();
-              }}>
-              <BarChart4 size={16} />
-            </button>
+                }}>
+                <ChartSpline size={16} />
+              </button>
+              <button
+                className={`text-xs h-8 px-3 box-border ${
+                  chartType === "candle"
+                    ? "rounded-2xl bg-primary font-bold text-white"
+                    : selectedPrice !== "ton"
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                onClick={() => {
+                  if (selectedPrice === "ton") {
+                    setChartType("candle");
+                    vibrate();
+                  }
+                }}>
+                <ChartCandlestick size={16} />
+              </button>
+              <button
+                className={`text-xs h-8 px-3 box-border ${
+                  chartType === "bar"
+                    ? "rounded-2xl bg-primary font-bold text-white"
+                    : ""
+                }`}
+                onClick={() => {
+                  setChartType("bar");
+                  vibrate();
+                }}>
+                <BarChart4 size={16} />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {chartType === "line" ? (
-        <LineChart
-          weekData={weekData}
-          lifeData={lifeData}
-          selectedPrice={selectedPrice}
-          percentChange={percentChange}
-          setPercentChange={setPercentChange}
-          onDataUpdate={({ currentValue }) => {
-            setCurrentValue(currentValue);
-          }}
-        />
-      ) : chartType === "candle" && selectedPrice === "ton" ? (
-        <CandleChart
-          data={candleData}
-          weekData={weekData}
-          percentChange={percentChange}
-          setPercentChange={setPercentChange}
-          onDataUpdate={({ currentValue }) => {
-            setCurrentValue(currentValue);
-          }}
-        />
-      ) : (
-        <BarChart
-          weekData={weekData}
-          lifeData={lifeData}
-          selectedPrice={selectedPrice}
-          percentChange={percentChange}
-          setPercentChange={setPercentChange}
-          onDataUpdate={({ currentValue }) => {
-            setCurrentValue(currentValue);
-          }}
-        />
-      )}
+        {chartType === "line" ? (
+          <LineChart
+            weekData={weekData}
+            lifeData={lifeData}
+            selectedPrice={selectedPrice}
+            percentChange={percentChange}
+            setPercentChange={setPercentChange}
+            onDataUpdate={({ currentValue }) => {
+              setCurrentValue(currentValue);
+            }}
+          />
+        ) : chartType === "candle" && selectedPrice === "ton" ? (
+          <CandleChart
+            data={candleData}
+            weekData={weekData}
+            percentChange={percentChange}
+            setPercentChange={setPercentChange}
+            onDataUpdate={({ currentValue }) => {
+              setCurrentValue(currentValue);
+            }}
+          />
+        ) : (
+          <BarChart
+            weekData={weekData}
+            lifeData={lifeData}
+            selectedPrice={selectedPrice}
+            percentChange={percentChange}
+            setPercentChange={setPercentChange}
+            onDataUpdate={({ currentValue }) => {
+              setCurrentValue(currentValue);
+            }}
+          />
+        )}
 
-      <div className='w-full flex flex-row gap-x-2 mt-5'>
-        <MarketsModal
-          trigger={
-            <button
-              className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-2xl text-white'
-              onClick={() => vibrate()}>
-              {translateGeneral("sell")}
-              <SquareArrowOutUpRight size={16} />
-            </button>
-          }
-        />
-        <MarketsModal
-          trigger={
-            <button
-              className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-2xl text-white'
-              onClick={() => vibrate()}>
-              {translateGeneral("buy")}
-              <SquareArrowOutUpRight size={16} />
-            </button>
-          }
-        />
-      </div>
-
-      {gift?.preSale ? null : (
-        <div>
-          <ModelsModal
+        <div className='w-full flex flex-row gap-x-2 mt-5'>
+          <MarketsModal
             trigger={
               <button
-                className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-2xl ${
-                  resolvedTheme === "dark"
-                    ? "bg-secondaryTransparent"
-                    : "bg-secondaryTransparent"
-                }`}
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-2xl text-white'
                 onClick={() => vibrate()}>
-                <Component size={16} />
-                {translateInfo("viewModels")}
+                {translateGeneral("sell")}
+                <SquareArrowOutUpRight size={16} />
               </button>
             }
-            giftName={gift?.name ? gift.name : ""}
-            giftId={gift?._id ? gift._id : ""}
+          />
+          <MarketsModal
+            trigger={
+              <button
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-2xl text-white'
+                onClick={() => vibrate()}>
+                {translateGeneral("buy")}
+                <SquareArrowOutUpRight size={16} />
+              </button>
+            }
           />
         </div>
-      )}
 
-      <div className='mt-5'>
-        <div className='w-full flex flex-row justify-between items-center'>
-          <div className='flex flex-row items-center'>
-            <h2 className='text-lg font-bold'>
-              {translateInfo("yearlyPerformance")}
-            </h2>
-          </div>
+        {gift?.preSale ? null : (
           <div>
-            <button
-              onClick={() => setShowCalendar(!showCalendar)}
-              className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-2xl'>
-              {showCalendar ? (
-                <>
-                  {translateGeneral("hide")}
-                  <ChevronUp size={18} />
-                </>
-              ) : (
-                <>
-                  {translateGeneral("show")}
-                  <ChevronDown size={18} />
-                </>
-              )}
-            </button>
+            <ModelsModal
+              trigger={
+                <button
+                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-2xl ${
+                    resolvedTheme === "dark"
+                      ? "bg-secondaryTransparent"
+                      : "bg-secondaryTransparent"
+                  }`}
+                  onClick={() => vibrate()}>
+                  <Component size={16} />
+                  {translateInfo("viewModels")}
+                </button>
+              }
+              giftName={gift?.name ? gift.name : ""}
+              giftId={gift?._id ? gift._id : ""}
+            />
           </div>
-        </div>
-        <div className={showCalendar ? "visible" : "hidden"}>
-          <CalendarHeatmap lifeData={lifeData} />
+        )}
+
+        <div className='mt-5'>
+          <div className='w-full flex flex-row justify-between items-center'>
+            <div className='flex flex-row items-center'>
+              <h2 className='text-lg font-bold'>
+                {translateInfo("yearlyPerformance")}
+              </h2>
+            </div>
+            <div>
+              <button
+                onClick={() => setShowCalendar(!showCalendar)}
+                className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-2xl'>
+                {showCalendar ? (
+                  <>
+                    {translateGeneral("hide")}
+                    <ChevronUp size={18} />
+                  </>
+                ) : (
+                  <>
+                    {translateGeneral("show")}
+                    <ChevronDown size={18} />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+          <div className={showCalendar ? "visible" : "hidden"}>
+            <CalendarHeatmap lifeData={lifeData} />
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* LARGE SCREEN */}
+      {/* LARGE SCREEN */}
+      {/* LARGE SCREEN */}
+      {/* LARGE SCREEN */}
+      {/* LARGE SCREEN */}
+
+      <div className='hidden lg:flex flex-row box-border'>
+        <div className='w-1/4 flex flex-col justify-between mr-3 pt-3 pr-3 border-r-2 border-secondaryTransparent'>
+          <div>
+            <div
+              className={`w-full h-16 gap-x-3 flex flex-col justify-between items-start ${
+                resolvedTheme === "dark"
+                  ? ""
+                  : "bg-secondaryTransparent rounded-2xl pl-2"
+              }`}>
+              <div className='flex flex-row w-full items-center'>
+                <Image
+                  alt='gift'
+                  src={`/gifts/${gift?.image}.webp`}
+                  width={55}
+                  height={55}
+                  className={`w-[50px] h-[50px] p-[4px] !overflow-visible mr-3 rounded-2xl ${
+                    resolvedTheme === "dark"
+                      ? "bg-secondaryTransparent"
+                      : "bg-background"
+                  } `}
+                />
+                <h1 className='text-xl font-bold'>{gift?.name}</h1>
+              </div>
+            </div>
+
+            <div className='flex flex-col gap-y-1'>
+              <div className='flex flex-row items-center'>
+                {selectedPrice === "ton" || chartType === "candle" ? (
+                  <Image
+                    alt='TON logo'
+                    src='/images/toncoin.webp'
+                    width={18}
+                    height={18}
+                    className='mr-1'
+                  />
+                ) : selectedPrice === "usd" ? (
+                  <span className='text-xl font-extrabold mr-2'>$</span>
+                ) : selectedPrice === "onSale" ? (
+                  <Store size={18} className='mr-2 font-bold' />
+                ) : selectedPrice === "volume" ? (
+                  <Image
+                    alt='TON logo'
+                    src='/images/toncoin.webp'
+                    width={18}
+                    height={18}
+                    className='mr-2'
+                  />
+                ) : (
+                  <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
+                )}
+                <span className='text-3xl font-bold'>
+                  {currentValue !== null ? currentValue.toFixed(2) : "N/A"}
+                </span>
+              </div>
+              <span
+                className={` w-fit p-1 rounded-2xl ${
+                  percentChange >= 0
+                    ? "text-green-500 bg-green-500/10 "
+                    : "text-red-500 bg-red-500/10"
+                }`}>
+                {(percentChange > 0 ? "+" : "") +
+                  percentChange.toFixed(2) +
+                  "%"}
+              </span>
+            </div>
+          </div>
+
+          <div className='w-full flex flex-col gap-y-2 mt-5'>
+            <MarketsModal
+              trigger={
+                <button
+                  className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-2xl text-white'
+                  onClick={() => vibrate()}>
+                  {translateGeneral("sell")}
+                  <SquareArrowOutUpRight size={16} />
+                </button>
+              }
+            />
+            <MarketsModal
+              trigger={
+                <button
+                  className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-2xl text-white'
+                  onClick={() => vibrate()}>
+                  {translateGeneral("buy")}
+                  <SquareArrowOutUpRight size={16} />
+                </button>
+              }
+            />
+          </div>
+        </div>
+
+        <div className='w-3/4'>
+          <div className='w-full h-fit mb-3 mt-5 flex flex-row gap-x-2'>
+            <PriceDropdown
+              selectedPrice={selectedPrice}
+              handleSelectedPrice={setSelectedPrice}
+            />
+            <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-2xl gap-x-1'>
+              <button
+                className={`text-xs h-8 px-3 box-border ${
+                  chartType === "line"
+                    ? "rounded-2xl bg-primary font-bold text-white"
+                    : ""
+                }`}
+                onClick={() => {
+                  setChartType("line");
+                  vibrate();
+                }}>
+                <ChartSpline size={16} />
+              </button>
+              <button
+                className={`text-xs h-8 px-3 box-border ${
+                  chartType === "candle"
+                    ? "rounded-2xl bg-primary font-bold text-white"
+                    : selectedPrice !== "ton"
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                onClick={() => {
+                  if (selectedPrice === "ton") {
+                    setChartType("candle");
+                    vibrate();
+                  }
+                }}>
+                <ChartCandlestick size={16} />
+              </button>
+              <button
+                className={`text-xs h-8 px-3 box-border ${
+                  chartType === "bar"
+                    ? "rounded-2xl bg-primary font-bold text-white"
+                    : ""
+                }`}
+                onClick={() => {
+                  setChartType("bar");
+                  vibrate();
+                }}>
+                <BarChart4 size={16} />
+              </button>
+            </div>
+          </div>
+          {chartType === "line" ? (
+            <LineChart
+              weekData={weekData}
+              lifeData={lifeData}
+              selectedPrice={selectedPrice}
+              percentChange={percentChange}
+              setPercentChange={setPercentChange}
+              onDataUpdate={({ currentValue }) => {
+                setCurrentValue(currentValue);
+              }}
+            />
+          ) : chartType === "candle" && selectedPrice === "ton" ? (
+            <CandleChart
+              data={candleData}
+              weekData={weekData}
+              percentChange={percentChange}
+              setPercentChange={setPercentChange}
+              onDataUpdate={({ currentValue }) => {
+                setCurrentValue(currentValue);
+              }}
+            />
+          ) : (
+            <BarChart
+              weekData={weekData}
+              lifeData={lifeData}
+              selectedPrice={selectedPrice}
+              percentChange={percentChange}
+              setPercentChange={setPercentChange}
+              onDataUpdate={({ currentValue }) => {
+                setCurrentValue(currentValue);
+              }}
+            />
+          )}
+        </div>
+
+        {/* <div className='w-full flex flex-row gap-x-2 mt-5'>
+          <MarketsModal
+            trigger={
+              <button
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-2xl text-white'
+                onClick={() => vibrate()}>
+                {translateGeneral("sell")}
+                <SquareArrowOutUpRight size={16} />
+              </button>
+            }
+          />
+          <MarketsModal
+            trigger={
+              <button
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-2xl text-white'
+                onClick={() => vibrate()}>
+                {translateGeneral("buy")}
+                <SquareArrowOutUpRight size={16} />
+              </button>
+            }
+          />
+        </div>
+
+        {gift?.preSale ? null : (
+          <div>
+            <ModelsModal
+              trigger={
+                <button
+                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-2xl ${
+                    resolvedTheme === "dark"
+                      ? "bg-secondaryTransparent"
+                      : "bg-secondaryTransparent"
+                  }`}
+                  onClick={() => vibrate()}>
+                  <Component size={16} />
+                  {translateInfo("viewModels")}
+                </button>
+              }
+              giftName={gift?.name ? gift.name : ""}
+              giftId={gift?._id ? gift._id : ""}
+            />
+          </div>
+        )} */}
+
+        {/* <div className='mt-5'>
+          <div className='w-full flex flex-row justify-between items-center'>
+            <div className='flex flex-row items-center'>
+              <h2 className='text-lg font-bold'>
+                {translateInfo("yearlyPerformance")}
+              </h2>
+            </div>
+            <div>
+              <button
+                onClick={() => setShowCalendar(!showCalendar)}
+                className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-2xl'>
+                {showCalendar ? (
+                  <>
+                    {translateGeneral("hide")}
+                    <ChevronUp size={18} />
+                  </>
+                ) : (
+                  <>
+                    {translateGeneral("show")}
+                    <ChevronDown size={18} />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+          <div className={showCalendar ? "visible" : "hidden"}>
+            <CalendarHeatmap lifeData={lifeData} />
+          </div>
+        </div> */}
+      </div>
+    </>
   );
 }

@@ -218,7 +218,7 @@ export default function GiftItem({
                   className='mr-1'
                 />
               ) : (
-                <span className='mr-2 text-secondaryText'>$</span>
+                <span className='mr-[2px] text-secondaryText font-bold'>$</span>
               )}
               <span className='text-base font-bold'>
                 {currency === "ton" && displayValue === "price"

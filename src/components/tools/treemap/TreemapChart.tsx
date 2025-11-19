@@ -584,7 +584,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
 
   return (
     <div className='w-full flex flex-col items-center'>
-      <div className='w-full lg:w-5/6 mb-3 px-3 flex gap-2'>
+      <div className='w-full lg:w-11/12 mb-3 px-3 flex gap-2'>
         <button
           className='w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-2xl bg-secondaryTransparent'
           onClick={() => {
@@ -628,7 +628,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
       <DownloadHeatmapModal
         trigger={
           <button
-            className='w-full lg:w-5/6 flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg bg-secondaryTransparent'
+            className='w-full lg:w-11/12 flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg bg-secondaryTransparent'
             onClick={downloadImage}>
             <Download size={16} />
             Download Heatmap as Image
@@ -636,7 +636,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         }
       />
 
-      <div className='w-full lg:w-5/6 min-h-[600px]'>
+      <div className='w-full lg:w-11/12 min-h-[600px]'>
         <canvas ref={canvasRef} />
       </div>
     </div>

@@ -125,7 +125,7 @@ export default function VoteModal({
             leave='transform transition ease-in duration-200'
             leaveFrom='translate-y-0 opacity-100'
             leaveTo='translate-y-full opacity-0'>
-            <Dialog.Panel className='w-full lg:w-5/6 h-2/3 lg:h-5/6 p-3 rounded-t-xl bg-background flex flex-col border-t border-secondaryTransparent'>
+            <Dialog.Panel className='w-full lg:w-11/12 h-2/3 lg:h-5/6 p-3 rounded-t-xl bg-background flex flex-col border-t border-secondaryTransparent'>
               <div className="w-full h-52 lg:h-80 rounded-2xl mb-1 bg-[url('/images/gift-banner.jpg')] bg-center bg-no-repeat bg-cover"></div>
 
               <div>

@@ -87,7 +87,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
                     className='mr-1'
                   />
                 ) : (
-                  <span className='mr-1'>$</span>
+                  <span className='mr-[2px] text-lg'>$</span>
                 )}
 
                 {!isLoading && monthData ? (

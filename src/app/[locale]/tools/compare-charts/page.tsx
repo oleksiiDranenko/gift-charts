@@ -96,7 +96,7 @@ export default function Page() {
 
   return (
     <div className='w-screen pt-[0px]  px-3 pb-24 flex justify-center'>
-      <div className='w-full lg:w-5/6'>
+      <div className='w-full lg:w-11/12'>
         {!loading ? (
           <div className='flex flex-col'>
             <div className='w-full h-10 gap-x-3 flex items-center justify-between'>

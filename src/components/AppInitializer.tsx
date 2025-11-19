@@ -182,10 +182,9 @@ export default function AppInitializer({
   }, [dispatch]);
 
   return (
-    <div
-      className={`h-screen w-screen pb-5 overflow-scroll bg-fixed flex flex-col`}>
+    <div className={``}>
       <div className='w-screen flex justify-center flex-grow'>
-        <div className='hidden lg:block w-72'></div>
+        <div className='hidden lg:block w-64'></div>
         {children}
       </div>
       <NavbarLeft />

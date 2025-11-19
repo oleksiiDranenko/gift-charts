@@ -4,14 +4,6 @@ import { Link } from "@/i18n/navigation"; // Use locale-aware Link
 import { useEffect, useState } from "react";
 import { usePathname } from "@/i18n/navigation"; // Use locale-aware usePathname
 import useVibrate from "@/hooks/useVibrate";
-import {
-  House,
-  User,
-  ChartCandlestick,
-  Settings,
-  Gift,
-  UserRound,
-} from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function NavbarBottom() {

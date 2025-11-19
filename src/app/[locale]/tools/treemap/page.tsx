@@ -116,11 +116,11 @@ export default function Page() {
   return (
     <div className='w-full pt-[0px]  pb-24 flex flex-col items-center overflow-visible'>
       <div className='w-full flex flex-col items-center px-3 gap-y-3 mb-3'>
-        <div className='w-full lg:w-5/6 flex flex-row justify-between items-center gap-x-3'>
+        <div className='w-full lg:w-11/12 flex flex-row justify-between items-center gap-x-3'>
           <BackButton />
         </div>
 
-        <div className='w-full lg:w-5/6 gap-x-3 flex justify-end'>
+        <div className='w-full lg:w-11/12 gap-x-3 flex justify-end'>
           <div className='w-1/2 bg-secondaryTransparent  rounded-2xl'>
             <button
               className={`w-1/2 text-sm h-8 box-border rounded-2xl ${
@@ -170,7 +170,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className='w-full lg:w-5/6 bg-secondaryTransparent rounded-2xl'>
+        <div className='w-full lg:w-11/12 bg-secondaryTransparent rounded-2xl'>
           <div className='w-full flex flex-col'>
             <div className='w-full flex flex-row justify-between gap-x-3'>
               <button
@@ -207,7 +207,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className='w-full lg:w-5/6 bg-secondaryTransparent  rounded-2xl'>
+        <div className='w-full lg:w-11/12 bg-secondaryTransparent  rounded-2xl'>
           <div className='w-full flex flex-col'>
             <div className='w-full flex flex-row justify-between gap-x-3'>
               <button
