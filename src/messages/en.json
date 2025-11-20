@@ -112,7 +112,8 @@
     "losers": "Losers",
     "floor": "floor",
     "saved": "Saved",
-    "emptyWatchlist": "Your Watchlist is Empty"
+    "emptyWatchlist": "Your Watchlist is Empty",
+    "allGifts": "All Gifts"
   },
 
   "giftInfo": {

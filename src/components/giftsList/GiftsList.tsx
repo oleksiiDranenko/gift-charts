@@ -162,7 +162,7 @@ export default function GiftsList({ loading }: PropsInterface) {
         <>
           {/* Tabs */}
           <div className='w-full px-3'>
-            <div className='w-64 relative flex mb-5'>
+            <div className='w-80 relative flex mb-5'>
               <button
                 onClick={() => {
                   setSelectedList("all");
@@ -173,7 +173,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     ? "text-foreground font-bold"
                     : "text-secondaryText"
                 }`}>
-                All Gifts
+                {translate("allGifts")}
               </button>
               <button
                 onClick={() => {
@@ -185,7 +185,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     ? "text-foreground font-bold"
                     : "text-secondaryText"
                 }`}>
-                Saved
+                {translate("saved")}
               </button>
               <span
                 className={`absolute bottom-0 left-0 h-[2px] bg-foreground rounded-full transition-all duration-300 ${

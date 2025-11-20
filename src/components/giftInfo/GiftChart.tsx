@@ -378,26 +378,25 @@ export default function GiftChart({
                   "%"}
               </span>
             </div>
-          </div>
-
-          <div className='w-full flex flex-col gap-y-2 font-normal text-sm'>
-            <div className='w-full flex flex-row justify-between items-center py-1 border-b-2 border-secondary'>
-              <span className='w-1/2 text-secondaryText'>
-                {translateInfo("upgradedSupply")}
-              </span>
-              <span>{gift?.upgradedSupply}</span>
-            </div>
-            <div className='w-full flex flex-row justify-between items-center py-2 border-b-2 border-secondary'>
-              <span className='w-1/2 text-secondaryText'>
-                {translateInfo("supply")}
-              </span>
-              <span>{gift?.supply}</span>
-            </div>
-            <div className='w-full flex flex-row justify-between items-center py-1'>
-              <span className='w-1/2 text-secondaryText'>
-                {translateInfo("initialSupply")}
-              </span>
-              <span>{gift?.initSupply}</span>
+            <div className='w-full mt-5 flex flex-col gap-y-2 font-normal text-sm'>
+              <div className='w-full flex flex-row justify-between items-center py-1 border-b-2 border-secondary'>
+                <span className='w-1/2 text-secondaryText'>
+                  {translateInfo("upgradedSupply")}
+                </span>
+                <span>{gift?.upgradedSupply}</span>
+              </div>
+              <div className='w-full flex flex-row justify-between items-center py-2 border-b-2 border-secondary'>
+                <span className='w-1/2 text-secondaryText'>
+                  {translateInfo("supply")}
+                </span>
+                <span>{gift?.supply}</span>
+              </div>
+              <div className='w-full flex flex-row justify-between items-center py-1'>
+                <span className='w-1/2 text-secondaryText'>
+                  {translateInfo("initialSupply")}
+                </span>
+                <span>{gift?.initSupply}</span>
+              </div>
             </div>
           </div>
 
