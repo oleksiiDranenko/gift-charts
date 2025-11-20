@@ -39,7 +39,7 @@ export default function NavbarLeft() {
   }, [pathname]);
 
   return (
-    <div className='hidden lg:block fixed left-0 top-0 h-screen w-56 z-40 bg-secondaryTransparent rounded-r-lg p-3 space-y-3'>
+    <div className='hidden lg:block fixed left-0 top-0 h-screen w-48 z-40 border-r-2 border-secondaryTransparent p-3 space-y-3'>
       <Link href={"/"} className='flex flex-row gap-x-2 mb-6 mt-3'>
         <Image src={"/images/logo.webp"} alt={""} width={30} height={30} />
         <h1 className='text-lg '>Gift Charts</h1>

@@ -293,12 +293,7 @@ export default function IndexChart({
     interaction: { mode: "index", intersect: false },
     scales: {
       x: {
-        grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.05)",
-        },
+        grid: { display: false },
         ticks: {
           color:
             resolvedTheme === "dark"
@@ -330,115 +325,236 @@ export default function IndexChart({
   };
 
   return (
-    <div className='h-auto w-full pl-3 pr-3'>
-      {/* Header */}
-      <div className='w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center'>
-        <div className='w-3/5 h-full flex items-center'>
-          <h1 className='flex flex-col ml-3'>
-            <span className='text-lg font-bold'>{index.name}</span>
-            <span className='text-secondaryText text-sm flex justify-start'>
-              Index
+    <>
+      <div className='h-auto w-full block pl-3 pr-3 lg:hidden'>
+        <div className='w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center'>
+          <div className='w-3/5 h-full flex items-center'>
+            <h1 className='flex flex-col ml-3'>
+              <span className='text-lg font-bold'>{index.name}</span>
+              <span className='text-secondaryText text-sm flex justify-start'>
+                Index
+              </span>
+            </h1>
+          </div>
+
+          <div className='w-2/5 h-14 pr-3 flex flex-col items-end justify-center'>
+            <div className='flex flex-row items-center'>
+              {index.valueType === "amount" ? (
+                <Gift size={15} className='mr-1' />
+              ) : index.valueType === "percent" ? null : selectedPrice ===
+                "ton" ? (
+                <Image
+                  alt='ton logo'
+                  src='/images/toncoin.webp'
+                  width={14}
+                  height={14}
+                  className='mr-1'
+                />
+              ) : (
+                <span className='text-base font-extrabold mr-1'>$</span>
+              )}
+              <span className='text-base font-extrabold'>
+                {selectedPrice == "ton"
+                  ? formatNumberWithDots(
+                      Number(list[list.length - 1]?.priceTon),
+                      "price"
+                    )
+                  : formatNumberWithDots(
+                      Number(list[list.length - 1]?.priceUsd),
+                      "price"
+                    )}
+                {index.valueType === "percent" && "%"}
+              </span>
+            </div>
+
+            <span
+              className={`text-sm font-bold ${
+                percentChange >= 0 ? "text-green-500" : "text-red-500"
+              }`}>
+              {(percentChange > 0 ? "+" : "") + percentChange + "%"}
             </span>
+          </div>
+        </div>
+
+        {index.valueType === "price" && (
+          <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
+            <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
+              <button
+                className={`text-xs h-8 px-3 ${
+                  selectedPrice == "ton"
+                    ? "rounded-xl bg-primary font-bold text-white"
+                    : ""
+                }`}
+                onClick={() => {
+                  setSelectedPrice("ton");
+                  vibrate();
+                }}>
+                Ton
+              </button>
+              <button
+                className={`text-xs h-8 px-3 ${
+                  selectedPrice == "usd"
+                    ? "rounded-xl bg-primary font-bold text-white"
+                    : ""
+                }`}
+                onClick={() => {
+                  setSelectedPrice("usd");
+                  vibrate();
+                }}>
+                Usd
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div
+          className={
+            resolvedTheme === "dark"
+              ? "relative w-full"
+              : "w-full relative bg-secondaryTransparent rounded-xl"
+          }
+          ref={chartContainerRef}>
+          <Line ref={chartRef} data={data} options={options} />
+        </div>
+
+        <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
+          {["All", "3m", "1m", "1w", "3d", "1d"].map((type) => (
+            <button
+              key={type}
+              className={`w-full px-1 text-sm h-8 ${
+                listType === type
+                  ? "rounded-xl bg-secondary font-bold"
+                  : "text-secondaryText"
+              }`}
+              onClick={() => {
+                setListType(type as any);
+                vibrate();
+              }}>
+              {type}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* LARGE SCREEN */}
+      {/* LARGE SCREEN */}
+      {/* LARGE SCREEN */}
+      {/* LARGE SCREEN */}
+
+      <div className='hidden lg:flex flex-row box-border'>
+        <div className='w-1/4 flex flex-col justify-start mr-3 pt-3 px-3 border-r-2 border-secondaryTransparent'>
+          <h1 className='flex flex-row items-center'>
+            <span>{index.name}</span>
           </h1>
-        </div>
 
-        <div className='w-2/5 h-14 pr-3 flex flex-col items-end justify-center'>
-          <div className='flex flex-row items-center'>
-            {index.valueType === "amount" ? (
-              <Gift size={15} className='mr-1' />
-            ) : index.valueType === "percent" ? null : selectedPrice ===
-              "ton" ? (
-              <Image
-                alt='ton logo'
-                src='/images/toncoin.webp'
-                width={14}
-                height={14}
-                className='mr-1'
-              />
-            ) : (
-              <span className='text-base font-extrabold mr-1'>$</span>
-            )}
-            <span className='text-base font-extrabold'>
-              {selectedPrice == "ton"
-                ? formatNumberWithDots(
-                    Number(list[list.length - 1]?.priceTon),
-                    "price"
-                  )
-                : formatNumberWithDots(
-                    Number(list[list.length - 1]?.priceUsd),
-                    "price"
-                  )}
-              {index.valueType === "percent" && "%"}
+          <div className='flex flex-row items-center gap-x-2 mt-3'>
+            <div className='flex flex-row items-center'>
+              <div className='flex flex-row items-center flex-nowrap'>
+                {index.valueType === "amount" ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-6 mr-1'>
+                    <path d='M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z' />
+                  </svg>
+                ) : index.valueType === "percent" ? null : selectedPrice ===
+                  "ton" ? (
+                  <Image
+                    alt='ton logo'
+                    src='/images/toncoin.webp'
+                    width={24}
+                    height={24}
+                    className='mr-1'
+                  />
+                ) : (
+                  <span className='text-2xl font-bold mr-1'>$</span>
+                )}
+              </div>
+              <span className='text-2xl font-bold'>
+                {selectedPrice == "ton"
+                  ? formatNumberWithDots(
+                      Number(list[list.length - 1]?.priceTon),
+                      "price"
+                    )
+                  : formatNumberWithDots(
+                      Number(list[list.length - 1]?.priceUsd),
+                      "price"
+                    )}
+                {index.valueType === "percent" && "%"}
+              </span>
+            </div>
+
+            <span
+              className={`text-sm font-bold ${
+                percentChange >= 0 ? "text-green-500" : "text-red-500"
+              }`}>
+              {(percentChange > 0 ? "+" : "") + percentChange + "%"}
             </span>
           </div>
-
-          <span
-            className={`text-sm font-bold ${
-              percentChange >= 0 ? "text-green-500" : "text-red-500"
-            }`}>
-            {(percentChange > 0 ? "+" : "") + percentChange + "%"}
-          </span>
         </div>
-      </div>
 
-      {index.valueType === "price" && (
-        <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
-          <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
-            <button
-              className={`text-xs h-8 px-3 ${
-                selectedPrice == "ton"
-                  ? "rounded-xl bg-primary font-bold text-white"
-                  : ""
-              }`}
-              onClick={() => {
-                setSelectedPrice("ton");
-                vibrate();
-              }}>
-              Ton
-            </button>
-            <button
-              className={`text-xs h-8 px-3 ${
-                selectedPrice == "usd"
-                  ? "rounded-xl bg-primary font-bold text-white"
-                  : ""
-              }`}
-              onClick={() => {
-                setSelectedPrice("usd");
-                vibrate();
-              }}>
-              Usd
-            </button>
+        <div className='w-3/4'>
+          {index.valueType === "price" && (
+            <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
+              <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
+                <button
+                  className={`text-xs h-8 px-3 ${
+                    selectedPrice == "ton"
+                      ? "rounded-xl bg-primary font-bold text-white"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedPrice("ton");
+                    vibrate();
+                  }}>
+                  Ton
+                </button>
+                <button
+                  className={`text-xs h-8 px-3 ${
+                    selectedPrice == "usd"
+                      ? "rounded-xl bg-primary font-bold text-white"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedPrice("usd");
+                    vibrate();
+                  }}>
+                  Usd
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div
+            className={
+              resolvedTheme === "dark"
+                ? "relative w-full"
+                : "w-full relative bg-secondaryTransparent rounded-xl"
+            }
+            ref={chartContainerRef}>
+            <Line ref={chartRef} data={data} options={options} />
+          </div>
+
+          <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
+            {["All", "3m", "1m", "1w", "3d", "1d"].map((type) => (
+              <button
+                key={type}
+                className={`w-full px-1 text-sm h-8 ${
+                  listType === type
+                    ? "rounded-xl bg-secondary font-bold"
+                    : "text-secondaryText"
+                }`}
+                onClick={() => {
+                  setListType(type as any);
+                  vibrate();
+                }}>
+                {type}
+              </button>
+            ))}
           </div>
         </div>
-      )}
-
-      <div
-        className={
-          resolvedTheme === "dark"
-            ? "relative w-full"
-            : "w-full relative bg-secondaryTransparent rounded-xl"
-        }
-        ref={chartContainerRef}>
-        <Line ref={chartRef} data={data} options={options} />
       </div>
-
-      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
-        {["All", "3m", "1m", "1w", "3d", "1d"].map((type) => (
-          <button
-            key={type}
-            className={`w-full px-1 text-sm h-8 ${
-              listType === type
-                ? "rounded-xl bg-secondary font-bold"
-                : "text-secondaryText"
-            }`}
-            onClick={() => {
-              setListType(type as any);
-              vibrate();
-            }}>
-            {type}
-          </button>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }

@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
+import IndexBlockSkeleton from "@/components/tools/IndexBlockSkeleton";
 
 export default function Page() {
   const dispatch = useAppDispatch();
@@ -159,10 +160,7 @@ export default function Page() {
         {isLoading && (
           <>
             {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className='w-full h-[68px] p-3 bg-secondaryTransparent rounded-2xl animate-pulse'
-              />
+              <IndexBlockSkeleton />
             ))}
           </>
         )}

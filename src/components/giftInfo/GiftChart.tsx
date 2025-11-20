@@ -316,10 +316,10 @@ export default function GiftChart({
       {/* LARGE SCREEN */}
 
       <div className='hidden lg:flex flex-row box-border'>
-        <div className='w-1/4 flex flex-col justify-between mr-3 pt-3 pr-3 border-r-2 border-secondaryTransparent'>
+        <div className='w-1/4 flex flex-col justify-between mr-3 pt-3 px-3 border-r-2 border-secondaryTransparent'>
           <div>
             <div
-              className={`w-full h-16 gap-x-3 flex flex-col justify-between items-start ${
+              className={`w-full h-fit gap-x-3 flex flex-col justify-between items-start ${
                 resolvedTheme === "dark"
                   ? ""
                   : "bg-secondaryTransparent rounded-2xl pl-2"
@@ -330,28 +330,28 @@ export default function GiftChart({
                   src={`/gifts/${gift?.image}.webp`}
                   width={55}
                   height={55}
-                  className={`w-[50px] h-[50px] p-[4px] !overflow-visible mr-3 rounded-2xl ${
+                  className={`w-[40px] h-[40px] p-[4px] !overflow-visible mr-3 rounded-2xl ${
                     resolvedTheme === "dark"
                       ? "bg-secondaryTransparent"
                       : "bg-background"
                   } `}
                 />
-                <h1 className='text-xl font-bold'>{gift?.name}</h1>
+                <h1 className='text-lg'>{gift?.name}</h1>
               </div>
             </div>
 
-            <div className='flex flex-col gap-y-1'>
+            <div className='flex flex-row items-center gap-x-3 mt-3 flex-wrap'>
               <div className='flex flex-row items-center'>
                 {selectedPrice === "ton" || chartType === "candle" ? (
                   <Image
                     alt='TON logo'
                     src='/images/toncoin.webp'
-                    width={18}
-                    height={18}
-                    className='mr-1'
+                    width={24}
+                    height={24}
+                    className='mr-2'
                   />
                 ) : selectedPrice === "usd" ? (
-                  <span className='text-xl font-extrabold mr-2'>$</span>
+                  <span className='text-2xl  mr-1'>$</span>
                 ) : selectedPrice === "onSale" ? (
                   <Store size={18} className='mr-2 font-bold' />
                 ) : selectedPrice === "volume" ? (
@@ -370,10 +370,8 @@ export default function GiftChart({
                 </span>
               </div>
               <span
-                className={` w-fit p-1 rounded-2xl ${
-                  percentChange >= 0
-                    ? "text-green-500 bg-green-500/10 "
-                    : "text-red-500 bg-red-500/10"
+                className={` w-fit h-fit ${
+                  percentChange >= 0 ? "text-green-500 " : "text-red-500 "
                 }`}>
                 {(percentChange > 0 ? "+" : "") +
                   percentChange.toFixed(2) +
@@ -382,7 +380,28 @@ export default function GiftChart({
             </div>
           </div>
 
-          <div className='w-full flex flex-col gap-y-2 mt-5'>
+          <div className='w-full flex flex-col gap-y-2 font-normal text-sm'>
+            <div className='w-full flex flex-row justify-between items-center py-1 border-b-2 border-secondary'>
+              <span className='w-1/2 text-secondaryText'>
+                {translateInfo("upgradedSupply")}
+              </span>
+              <span>{gift?.upgradedSupply}</span>
+            </div>
+            <div className='w-full flex flex-row justify-between items-center py-2 border-b-2 border-secondary'>
+              <span className='w-1/2 text-secondaryText'>
+                {translateInfo("supply")}
+              </span>
+              <span>{gift?.supply}</span>
+            </div>
+            <div className='w-full flex flex-row justify-between items-center py-1'>
+              <span className='w-1/2 text-secondaryText'>
+                {translateInfo("initialSupply")}
+              </span>
+              <span>{gift?.initSupply}</span>
+            </div>
+          </div>
+
+          <div className='w-full flex flex-col gap-y-2'>
             <MarketsModal
               trigger={
                 <button

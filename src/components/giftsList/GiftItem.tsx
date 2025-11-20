@@ -119,10 +119,10 @@ export default function GiftItem({
     }
     if (number >= 1000 && number < 1000000) {
       const shortNumber = (number / 1000).toFixed(1);
-      return `${shortNumber}${translateNumber("thousand")}`;
+      return `${shortNumber} ${translateNumber("thousand")}`;
     } else if (number >= 1000000) {
       const shortNumber = (number / 1000000).toFixed(1);
-      return `${shortNumber}${translateNumber("million")}`;
+      return `${shortNumber} ${translateNumber("million")}`;
     }
     return number.toString();
   };

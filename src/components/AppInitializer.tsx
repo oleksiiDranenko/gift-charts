@@ -184,7 +184,7 @@ export default function AppInitializer({
   return (
     <div className={``}>
       <div className='w-screen flex justify-center flex-grow'>
-        <div className='hidden lg:block w-64'></div>
+        <div className='hidden lg:block w-48'></div>
         {children}
       </div>
       <NavbarLeft />

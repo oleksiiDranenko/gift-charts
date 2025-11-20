@@ -243,6 +243,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               <ListSkeleton
                 type={giftType}
                 count={giftType === "line" ? 15 : 20}
+                hideHeader={false}
               />
             ) : selectedList === "saved" && user.savedList.length === 0 ? (
               <InfoMessage

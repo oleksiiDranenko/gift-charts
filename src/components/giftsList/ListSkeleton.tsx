@@ -16,13 +16,13 @@ export default function ListSkeleton({
         <div className='w-full flex flex-col px-3'>
           {!hideHeader && <GiftListHeader />}
           {Array.from({ length: count }).map((_, i) => (
-            <GiftItemSkeleton key={i} type={"line"} />
+            <GiftItemSkeleton key={i} type={"line"} index={i} />
           ))}
         </div>
       ) : (
         <div className='w-full grid grid-flow-row grid-cols-4 gap-x-2 px-3'>
           {Array.from({ length: count }).map((_, i) => (
-            <GiftItemSkeleton key={i} type={"block"} />
+            <GiftItemSkeleton key={i} type={"block"} index={i} />
           ))}
         </div>
       )}
