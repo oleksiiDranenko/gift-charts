@@ -1,14 +1,20 @@
-import GiftInterface from "./GiftInterface";
+// Only gift IDs are stored – never full objects
+export type SortOption =
+  | "highFirst"
+  | "lowFirst"
+  | "newest"
+  | "oldest"
+  | "atoz"
+  | "ztoa"
+  | "supplyHigh"
+  | "supplyLow"
+  | "initSupplyHigh"
+  | "initSupplyLow"
+  | "upgradedSupplyHigh"
+  | "upgradedSupplyLow";
 
 export interface FilterListInterface {
-  currency: "ton" | "usd";
-  sort: "lowFirst" | "highFirst";
-  sortBy:
-    | "price"
-    | "marketCap"
-    | "supply"
-    | "initSupply"
-    | "starsPrice"
-    | "percentChange";
-  chosenGifts: GiftInterface[];
+  currency: "ton" | "usd" | "stars";
+  sort: SortOption;
+  chosenGifts: string[];
 }
