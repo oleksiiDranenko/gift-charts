@@ -13,6 +13,7 @@ import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 import useVibrate from "@/hooks/useVibrate";
 import ListSkeleton from "./ListSkeleton";
 import { GiftSorter, SortKey } from "../filterGifts/GiftSorter";
+import { useTranslations } from "next-intl";
 
 interface PropsInterface {
   loading: boolean;
@@ -32,6 +33,8 @@ export default function GiftsList({ loading }: PropsInterface) {
 
   const router = useRouter();
   const vibrate = useVibrate();
+
+  const translate = useTranslations("mainPage");
 
   // Settings from localStorage
   const [settings] = useState(() => {
@@ -127,6 +130,8 @@ export default function GiftsList({ loading }: PropsInterface) {
   // Sticky header sentinel
   // Sticky header sentinel — FIXED
   useEffect(() => {
+    if (!isMounted) return;
+
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
 
@@ -135,15 +140,15 @@ export default function GiftsList({ loading }: PropsInterface) {
         setIsSticky(!entry.isIntersecting);
       },
       {
+        root: null,
         threshold: 0,
-        rootMargin: "0px 0px -1px 0px", // triggers exactly when sentinel leaves top
+        rootMargin: "0px",
       }
     );
 
     observer.observe(sentinel);
-
     return () => observer.disconnect();
-  }, [sentinelRef.current]); // ← This was missing!
+  }, [isMounted]);
 
   const clearSearch = () => setSearchQuery("");
 
@@ -198,7 +203,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             (!user?.savedList || user.savedList.length === 0)
           ) && (
             <div
-              className={`w-full sticky top-0 z-30 bg-background px-3 transition-all duration-300 ${
+              className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-300 ${
                 isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
               }`}>
               <div className='flex gap-1 mb-2'>
@@ -206,10 +211,10 @@ export default function GiftsList({ loading }: PropsInterface) {
                 <div className='relative flex-1'>
                   <input
                     type='text'
-                    placeholder='Search gifts'
+                    placeholder={translate("searchPlaceholder")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent rounded-2xl text-foreground placeholder:text-secondaryText focus:outline-none'
+                    className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
                   />
                   <Search
                     className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText'
@@ -232,7 +237,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       trigger={
                         <button
                           onClick={() => vibrate()}
-                          className='h-11 w-11 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
+                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
                           <svg
                             className='size-4'
                             viewBox='0 0 24 24'
@@ -257,7 +262,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       trigger={
                         <button
                           onClick={() => vibrate()}
-                          className='h-11 w-11 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
+                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
                           <svg
                             className='size-4'
                             viewBox='0 0 24 24'
