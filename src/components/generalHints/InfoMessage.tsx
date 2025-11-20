@@ -19,7 +19,7 @@ export default function InfoMessage({ text, buttonText, onClick }: Props) {
       />
       <h1 className='mt-5 '>{text}</h1>
       <button
-        className='mt-2 text-sm text-primary px-3 h-8 bg-secondaryTransparent rounded-2xl'
+        className='mt-2 text-sm text-primary px-3 h-8 bg-secondaryTransparent rounded-3xl'
         onClick={onClick}>
         {buttonText}
       </button>

@@ -73,7 +73,7 @@ export default function Page() {
               {t("name")}
             </h1>
             <div
-              className={`w-fit flex flex-row items-center gap-x-1 px-3 py-2 rounded-2xl ${
+              className={`w-fit flex flex-row items-center gap-x-1 px-3 py-2 rounded-3xl ${
                 percent !== undefined
                   ? percent >= 0 && percent < 0.2
                     ? "text-red-500 bg-red-500/5"
@@ -132,7 +132,7 @@ export default function Page() {
         </div>
       )}
 
-      <div className='flex flex-row items-center gap-x-3 bg-blue-400 text-primary bg-opacity-15 mt-5 p-5 rounded-2xl'>
+      <div className='flex flex-row items-center gap-x-3 bg-blue-400 text-primary bg-opacity-15 mt-5 p-5 rounded-3xl'>
         <Info size={20} /> Index is currently in testing
       </div>
     </main>

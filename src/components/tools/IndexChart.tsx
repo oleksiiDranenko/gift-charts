@@ -56,7 +56,6 @@ export default function IndexChart({
   >("1d");
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
-  const [gradient, setGradient] = useState<CanvasGradient | null>(null);
 
   const { resolvedTheme } = useTheme();
 
@@ -98,30 +97,6 @@ export default function IndexChart({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
-  // Create gradient when percentChange changes
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart) return;
-
-    const ctx = chart.ctx;
-    const chartArea = chart.chartArea;
-    const gradient = ctx.createLinearGradient(
-      0,
-      chartArea.top,
-      0,
-      chartArea.bottom
-    );
-
-    const topColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0.5)" : "rgba(239, 68, 68, 0.5)";
-    const bottomColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
-
-    gradient.addColorStop(0, topColor);
-    gradient.addColorStop(1, bottomColor);
-    setGradient(gradient);
-  }, [percentChange]);
 
   // ✅ FIX #2: keep latest document always at end of list
   // ✅ update list based on listType and handle "VOL" differently
@@ -261,11 +236,31 @@ export default function IndexChart({
         pointRadius: 0,
         pointHoverRadius: 6,
         fill: true,
-        backgroundColor:
-          gradient ||
-          (percentChange >= 0
-            ? "rgba(34, 197, 94, 0.2)"
-            : "rgba(239, 68, 68, 0.2)"),
+        backgroundColor: (context: any) => {
+          const chart = context.chart;
+          const { ctx, chartArea } = chart;
+
+          if (!chartArea) {
+            // This will prevent gradient errors on first render
+            return null;
+          }
+
+          const gradient = ctx.createLinearGradient(
+            0,
+            chartArea.top,
+            0,
+            chartArea.bottom
+          );
+          const color =
+            percentChange >= 0
+              ? "rgba(34, 197, 94, 0.5)"
+              : "rgba(239, 68, 68, 0.5)";
+
+          gradient.addColorStop(0, color);
+          gradient.addColorStop(1, color.replace("0.5)", "0)"));
+
+          return gradient;
+        },
         pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
       },
     ],
@@ -378,11 +373,11 @@ export default function IndexChart({
 
         {index.valueType === "price" && (
           <div className='w-full mb-2 mt-5 flex flex-row justify-between'>
-            <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
+            <div className='flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
               <button
                 className={`text-xs h-8 px-3 ${
                   selectedPrice == "ton"
-                    ? "rounded-xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : ""
                 }`}
                 onClick={() => {
@@ -394,7 +389,7 @@ export default function IndexChart({
               <button
                 className={`text-xs h-8 px-3 ${
                   selectedPrice == "usd"
-                    ? "rounded-xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : ""
                 }`}
                 onClick={() => {
@@ -417,13 +412,13 @@ export default function IndexChart({
           <Line ref={chartRef} data={data} options={options} />
         </div>
 
-        <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
+        <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl'>
           {["All", "3m", "1m", "1w", "3d", "1d"].map((type) => (
             <button
               key={type}
               className={`w-full px-1 text-sm h-8 ${
                 listType === type
-                  ? "rounded-xl bg-secondary font-bold"
+                  ? "rounded-3xl bg-secondary font-bold"
                   : "text-secondaryText"
               }`}
               onClick={() => {

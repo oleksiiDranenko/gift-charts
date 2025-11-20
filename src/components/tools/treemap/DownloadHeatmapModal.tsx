@@ -50,7 +50,7 @@ export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
               leave='ease-in duration-150'
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'>
-              <Dialog.Panel className='w-full lg:w-11/12 p-3 rounded-2xl bg-secondaryTransparent shadow-xl'>
+              <Dialog.Panel className='w-full lg:w-11/12 p-3 rounded-3xl bg-secondaryTransparent shadow-xl'>
                 <div className='w-full mt-2 flex flex-col items-center'>
                   <h1 className='flex flex-row items-center mb-5 gap-x-1 text-lg font-bold'>
                     <Send size={50} className='text-primary' />
@@ -63,7 +63,7 @@ export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
                       vibrate();
                       setIsOpen(false);
                     }}
-                    className='w-full px-4 py-2 bg-primary rounded-2xl'>
+                    className='w-full px-4 py-2 bg-primary rounded-3xl'>
                     Ok
                   </button>
                 </div>

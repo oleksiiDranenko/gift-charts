@@ -82,7 +82,7 @@ export default function VoteBanner() {
     <>
       {isVoteStatusLoading || hasVoted === null ? null : !hasVoted ? (
         <div className='w-full px-3 mb-4'>
-          <div className='w-full p-3 bg-secondaryTransparent rounded-2xl'>
+          <div className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
             <h1 className='w-full flex text-start text-xl font-bold mb-3'>
               How do you feel about the Gifts market?
             </h1>
@@ -92,7 +92,7 @@ export default function VoteBanner() {
                   selectedVote === "negative"
                     ? "bg-red-500 text-white font-bold"
                     : "text-secondaryText bg-secondary"
-                } rounded-2xl p-1`}
+                } rounded-3xl p-1`}
                 onClick={() => setSelectedVote("negative")}>
                 Negative
               </button>
@@ -101,7 +101,7 @@ export default function VoteBanner() {
                   selectedVote === "neutral"
                     ? "bg-yellow-500 text-white font-bold"
                     : "text-secondaryText bg-secondary"
-                } rounded-2xl p-1`}
+                } rounded-3xl p-1`}
                 onClick={() => setSelectedVote("neutral")}>
                 Neutral
               </button>
@@ -110,14 +110,14 @@ export default function VoteBanner() {
                   selectedVote === "positive"
                     ? "bg-green-500 text-white font-bold"
                     : "text-secondaryText bg-secondary"
-                } rounded-2xl p-1`}
+                } rounded-3xl p-1`}
                 onClick={() => setSelectedVote("positive")}>
                 Positive
               </button>
             </div>
 
             <button
-              className='w-full flex items-center justify-center text-sm text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-2xl'
+              className='w-full flex items-center justify-center text-sm text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-3xl'
               onClick={handleVoteSubmit}
               disabled={selectedVote === null || voteMutation.isLoading}>
               <Check size={16} />

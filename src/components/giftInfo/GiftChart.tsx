@@ -90,7 +90,7 @@ export default function GiftChart({
           className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${
             resolvedTheme === "dark"
               ? ""
-              : "bg-secondaryTransparent rounded-2xl pl-2"
+              : "bg-secondaryTransparent rounded-3xl pl-2"
           }`}>
           <div className='h-full flex items-center'>
             <Image
@@ -98,7 +98,7 @@ export default function GiftChart({
               src={`/gifts/${gift?.image}.webp`}
               width={55}
               height={55}
-              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-2xl ${
+              className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-3xl ${
                 resolvedTheme === "dark"
                   ? "bg-secondaryTransparent"
                   : "bg-background"
@@ -155,11 +155,11 @@ export default function GiftChart({
               selectedPrice={selectedPrice}
               handleSelectedPrice={setSelectedPrice}
             />
-            <div className='flex flex-row mr-2 box-border bg-secondaryTransparent rounded-2xl gap-x-1'>
+            <div className='flex flex-row mr-2 box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   chartType === "line"
-                    ? "rounded-2xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : ""
                 }`}
                 onClick={() => {
@@ -171,7 +171,7 @@ export default function GiftChart({
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   chartType === "candle"
-                    ? "rounded-2xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : selectedPrice !== "ton"
                     ? "opacity-50 cursor-not-allowed"
                     : ""
@@ -187,7 +187,7 @@ export default function GiftChart({
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   chartType === "bar"
-                    ? "rounded-2xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : ""
                 }`}
                 onClick={() => {
@@ -238,7 +238,7 @@ export default function GiftChart({
           <MarketsModal
             trigger={
               <button
-                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-2xl text-white'
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-3xl text-white'
                 onClick={() => vibrate()}>
                 {translateGeneral("sell")}
                 <SquareArrowOutUpRight size={16} />
@@ -248,7 +248,7 @@ export default function GiftChart({
           <MarketsModal
             trigger={
               <button
-                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-2xl text-white'
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-3xl text-white'
                 onClick={() => vibrate()}>
                 {translateGeneral("buy")}
                 <SquareArrowOutUpRight size={16} />
@@ -262,7 +262,7 @@ export default function GiftChart({
             <ModelsModal
               trigger={
                 <button
-                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-2xl ${
+                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-3xl ${
                     resolvedTheme === "dark"
                       ? "bg-secondaryTransparent"
                       : "bg-secondaryTransparent"
@@ -288,7 +288,7 @@ export default function GiftChart({
             <div>
               <button
                 onClick={() => setShowCalendar(!showCalendar)}
-                className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-2xl'>
+                className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-3xl'>
                 {showCalendar ? (
                   <>
                     {translateGeneral("hide")}
@@ -322,7 +322,7 @@ export default function GiftChart({
               className={`w-full h-fit gap-x-3 flex flex-col justify-between items-start ${
                 resolvedTheme === "dark"
                   ? ""
-                  : "bg-secondaryTransparent rounded-2xl pl-2"
+                  : "bg-secondaryTransparent rounded-3xl pl-2"
               }`}>
               <div className='flex flex-row w-full items-center'>
                 <Image
@@ -330,7 +330,7 @@ export default function GiftChart({
                   src={`/gifts/${gift?.image}.webp`}
                   width={55}
                   height={55}
-                  className={`w-[40px] h-[40px] p-[4px] !overflow-visible mr-3 rounded-2xl ${
+                  className={`w-[40px] h-[40px] p-[4px] !overflow-visible mr-3 rounded-3xl ${
                     resolvedTheme === "dark"
                       ? "bg-secondaryTransparent"
                       : "bg-background"
@@ -404,7 +404,7 @@ export default function GiftChart({
             <MarketsModal
               trigger={
                 <button
-                  className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-2xl text-white'
+                  className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-3xl text-white'
                   onClick={() => vibrate()}>
                   {translateGeneral("sell")}
                   <SquareArrowOutUpRight size={16} />
@@ -414,7 +414,7 @@ export default function GiftChart({
             <MarketsModal
               trigger={
                 <button
-                  className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-2xl text-white'
+                  className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-3xl text-white'
                   onClick={() => vibrate()}>
                   {translateGeneral("buy")}
                   <SquareArrowOutUpRight size={16} />
@@ -430,11 +430,11 @@ export default function GiftChart({
               selectedPrice={selectedPrice}
               handleSelectedPrice={setSelectedPrice}
             />
-            <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-2xl gap-x-1'>
+            <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   chartType === "line"
-                    ? "rounded-2xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : ""
                 }`}
                 onClick={() => {
@@ -446,7 +446,7 @@ export default function GiftChart({
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   chartType === "candle"
-                    ? "rounded-2xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : selectedPrice !== "ton"
                     ? "opacity-50 cursor-not-allowed"
                     : ""
@@ -462,7 +462,7 @@ export default function GiftChart({
               <button
                 className={`text-xs h-8 px-3 box-border ${
                   chartType === "bar"
-                    ? "rounded-2xl bg-primary font-bold text-white"
+                    ? "rounded-3xl bg-primary font-bold text-white"
                     : ""
                 }`}
                 onClick={() => {
@@ -512,7 +512,7 @@ export default function GiftChart({
           <MarketsModal
             trigger={
               <button
-                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-2xl text-white'
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-3xl text-white'
                 onClick={() => vibrate()}>
                 {translateGeneral("sell")}
                 <SquareArrowOutUpRight size={16} />
@@ -522,7 +522,7 @@ export default function GiftChart({
           <MarketsModal
             trigger={
               <button
-                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-2xl text-white'
+                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-3xl text-white'
                 onClick={() => vibrate()}>
                 {translateGeneral("buy")}
                 <SquareArrowOutUpRight size={16} />
@@ -536,7 +536,7 @@ export default function GiftChart({
             <ModelsModal
               trigger={
                 <button
-                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-2xl ${
+                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-3xl ${
                     resolvedTheme === "dark"
                       ? "bg-secondaryTransparent"
                       : "bg-secondaryTransparent"
@@ -562,7 +562,7 @@ export default function GiftChart({
             <div>
               <button
                 onClick={() => setShowCalendar(!showCalendar)}
-                className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-2xl'>
+                className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-3xl'>
                 {showCalendar ? (
                   <>
                     {translateGeneral("hide")}

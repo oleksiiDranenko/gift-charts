@@ -19,7 +19,7 @@ export default function FilterGiftItem({
 
   return (
     <div
-      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start rounded-2xl
+      className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start rounded-3xl
         transition-all active:scale-[95%] duration-200 ease-in-out border-b-2 border-secondaryTransparent
         ${selected ? "bg-secondaryTransparent" : "bg-transparent"}
       `}
@@ -62,7 +62,7 @@ export default function FilterGiftItem({
           src={`/gifts/${gift.image}.webp`}
           width={50}
           height={50}
-          className='w-[50px] h-[50px] p-[6px] !overflow-visible mr-2 rounded-2xl bg-secondaryTransparent border border-secondaryTransparent'
+          className='w-[50px] h-[50px] p-[6px] !overflow-visible mr-2 rounded-3xl bg-secondaryTransparent border border-secondaryTransparent'
         />
         <div className='flex flex-col'>
           <span className='text-base font-bold'>{gift.name}</span>

@@ -83,7 +83,7 @@ export default function IndexBlock({
   return (
     <Link
       href={`/tools/index/${id}`}
-      className={`w-full flex flex-row justify-between items-center h-18 p-3 rounded-2xl ${
+      className={`w-full flex flex-row justify-between items-center h-18 p-3 rounded-3xl ${
         resolvedTheme === "dark"
           ? "border-b-2 border-secondaryTransparent"
           : "bg-secondaryTransparent"
@@ -126,7 +126,7 @@ export default function IndexBlock({
         </div>
 
         <span
-          className={`py-[2px] px-1 rounded-2xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+          className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
             diff > 0
               ? "text-green-500 bg-green-500"
               : diff < 0

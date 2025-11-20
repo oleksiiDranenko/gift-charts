@@ -69,7 +69,7 @@ export default function MainPage() {
       <div className='w-full px-3 mb-4'>
         <Link
           href='https://t.me/giftshitpost'
-          className='w-full h-20 p-3 flex flex-row bg-primary rounded-2xl relative overflow-hidden'>
+          className='w-full h-20 p-3 flex flex-row bg-primary rounded-3xl relative overflow-hidden'>
           <div className='flex flex-col justify-evenly'>
             <div className='flex flex-row'>
               <h1 className='flex flex-row gap-x-1 items-center text-white font-bold text-lg'>
@@ -109,9 +109,9 @@ export default function MainPage() {
       <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
-            className={`flex ml-3 items-center justify-center px-3 text-xs h-8 rounded-2xl active:scale-[95%] duration-200 ${
+            className={`flex ml-3 items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
               chosenFilter === "gainers"
-                ? "text-foreground bg-secondary rounded-2xl"
+                ? "text-foreground bg-secondary rounded-3xl"
                 : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => {
@@ -122,9 +122,9 @@ export default function MainPage() {
             <TrendingUp size={14} className='ml-1' />
           </button>
           <button
-            className={`flex items-center justify-center px-3 text-xs h-8 rounded-2xl active:scale-[95%] duration-200 ${
+            className={`flex items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
               chosenFilter === "losers"
-                ? "text-foreground bg-secondary rounded-2xl"
+                ? "text-foreground bg-secondary rounded-3xl"
                 : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => {
@@ -135,7 +135,7 @@ export default function MainPage() {
             <TrendingDown size={14} className='ml-1' />
           </button>
           <button
-            className={`flex items-center justify-center px-3 text-xs h-8 rounded-2xl active:scale-[95%] duration-200 ${
+            className={`flex items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
               chosenFilter === "floor"
                 ? "text-foreground bg-secondary "
                 : "text-secondaryText bg-secondaryTransparent"
@@ -200,7 +200,7 @@ export default function MainPage() {
 
       {/* <Link
         href={"/donate"}
-        className='w-full p-3 bg-secondaryTransparent rounded-2xl'>
+        className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
         Donate
       </Link> */}
     </div>

@@ -214,7 +214,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     placeholder={translate("searchPlaceholder")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
+                    className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
                   />
                   <Search
                     className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText'
@@ -237,7 +237,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       trigger={
                         <button
                           onClick={() => vibrate()}
-                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
+                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
                           <svg
                             className='size-4'
                             viewBox='0 0 24 24'
@@ -262,7 +262,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       trigger={
                         <button
                           onClick={() => vibrate()}
-                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
+                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
                           <svg
                             className='size-4'
                             viewBox='0 0 24 24'

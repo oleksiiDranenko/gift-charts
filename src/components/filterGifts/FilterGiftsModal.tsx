@@ -89,7 +89,7 @@ export default function FilterGiftsModal({ trigger, giftsList }: Props) {
                   <div className='w-1/3'>
                     <button
                       onClick={clearSelection}
-                      className={`flex items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-2xl transition-opacity ${
+                      className={`flex items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-3xl transition-opacity ${
                         chosenGifts.length === 0 ? "opacity-50" : ""
                       }`}>
                       <svg
@@ -147,7 +147,7 @@ export default function FilterGiftsModal({ trigger, giftsList }: Props) {
                       placeholder='Search gifts'
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent rounded-2xl text-foreground placeholder:text-secondaryText focus:outline-none'
+                      className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent rounded-3xl text-foreground placeholder:text-secondaryText focus:outline-none'
                     />
                     <Search
                       className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText pointer-events-none'
