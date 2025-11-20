@@ -33,7 +33,6 @@ export default function MainPage() {
   >("gainers");
   const [isMounted, setIsMounted] = useState(false);
 
-  // ✅ Unified settings object (replaces separate localStorage keys)
   const [settings, setSettings] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("settings");
@@ -60,96 +59,6 @@ export default function MainPage() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (giftsList.length > 0) {
-      const sortedList = [...giftsList].sort((a, b) =>
-        currency === "ton"
-          ? filters.sort === "lowFirst"
-            ? a.priceTon - b.priceTon
-            : b.priceTon - a.priceTon
-          : filters.sort === "lowFirst"
-          ? a.priceUsd - b.priceUsd
-          : b.priceUsd - a.priceUsd
-      );
-      setTopList(sortedList);
-
-      const getChange = (current: number, prev: number): number => {
-        if (!prev || prev === 0) return 0;
-        return ((current - prev) / prev) * 100;
-      };
-
-      // Gainers
-      const sortedGainers = [...giftsList]
-        .filter((gift) => {
-          const prev =
-            currency === "ton" ? gift.tonPrice24hAgo : gift.usdPrice24hAgo;
-
-          return typeof prev === "number" && prev > 0;
-        })
-        .sort((a, b) => {
-          const changeA =
-            currency === "ton"
-              ? getChange(a.priceTon, a.tonPrice24hAgo ?? 1)
-              : getChange(a.priceUsd, a.usdPrice24hAgo ?? 1);
-
-          const changeB =
-            currency === "ton"
-              ? getChange(b.priceTon, b.tonPrice24hAgo ?? 1)
-              : getChange(b.priceUsd, b.usdPrice24hAgo ?? 1);
-
-          return changeB - changeA;
-        });
-
-      setGainersList(sortedGainers);
-
-      // Losers
-      const sortedLosers = [...giftsList]
-        .filter((gift) => {
-          const prev =
-            currency === "ton" ? gift.tonPrice24hAgo : gift.usdPrice24hAgo;
-
-          return typeof prev === "number" && prev > 0;
-        })
-        .sort((a, b) => {
-          const changeA =
-            currency === "ton"
-              ? getChange(a.priceTon, a.tonPrice24hAgo ?? 1)
-              : getChange(a.priceUsd, a.usdPrice24hAgo ?? 1);
-
-          const changeB =
-            currency === "ton"
-              ? getChange(b.priceTon, b.tonPrice24hAgo ?? 1)
-              : getChange(b.priceUsd, b.usdPrice24hAgo ?? 1);
-
-          return changeA - changeB;
-        });
-
-      setLosersList(sortedLosers);
-    }
-  }, [currency, filters, giftsList]);
-
-  useEffect(() => {
-    if (giftsList.length > 0 && user.savedList.length > 0) {
-      let filteredList = giftsList.filter((gift) =>
-        user.savedList.includes(gift._id)
-      );
-
-      filteredList.sort((a, b) =>
-        currency === "ton"
-          ? filters.sort === "lowFirst"
-            ? a.priceTon - b.priceTon
-            : b.priceTon - a.priceTon
-          : filters.sort === "lowFirst"
-          ? a.priceUsd - b.priceUsd
-          : b.priceUsd - a.priceUsd
-      );
-
-      setUserList(filteredList);
-    } else {
-      setUserList([]);
-    }
-  }, [currency, filters, giftsList, user.savedList]);
 
   if (!isMounted) {
     return null;
@@ -268,16 +177,16 @@ export default function MainPage() {
             giftsList={
               chosenFilter === "gainers"
                 ? giftType === "line"
-                  ? gainersList.slice(0, 3)
-                  : gainersList.slice(0, 8)
+                  ? giftsList.slice(0, 3)
+                  : giftsList.slice(0, 8)
                 : chosenFilter === "losers"
                 ? giftType === "line"
-                  ? losersList.slice(0, 3)
-                  : losersList.slice(0, 8)
+                  ? giftsList.slice(0, 3)
+                  : giftsList.slice(0, 8)
                 : chosenFilter === "floor"
                 ? giftType === "line"
-                  ? topList.slice(0, 3)
-                  : topList.slice(0, 8)
+                  ? giftsList.slice(0, 3)
+                  : giftsList.slice(0, 8)
                 : []
             }
             type={giftType}

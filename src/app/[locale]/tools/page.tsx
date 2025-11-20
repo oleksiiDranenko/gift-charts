@@ -160,7 +160,7 @@ export default function Page() {
         {isLoading && (
           <>
             {[...Array(5)].map((_, i) => (
-              <IndexBlockSkeleton />
+              <IndexBlockSkeleton key={i} />
             ))}
           </>
         )}
