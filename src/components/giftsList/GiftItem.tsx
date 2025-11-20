@@ -272,7 +272,7 @@ export default function GiftItem({
                       "from-red-500/5 to-red-500/25"
                 }`
               : resolvedTheme === "dark"
-              ? "bg-none hover:bg-secondaryTransparent border-b border-secondaryTransparent rounded-2xl"
+              ? "bg-none hover:bg-secondaryTransparent ease-in-out duration-200 border-b border-secondaryTransparent rounded-2xl"
               : "bg-secondaryTransparent hover:bg-background border-b border-secondary rounded-2xl"
           }`}
           key={item._id}

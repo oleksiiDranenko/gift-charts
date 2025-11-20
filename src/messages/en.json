@@ -132,6 +132,15 @@
     "viewModels": "View Models"
   },
 
+  "giftHeader": {
+    "gift": "Gift",
+    "price": "Price",
+    "marketCap": "Market Cap",
+    "24h": "24h",
+    "week": "Week",
+    "month": "Month"
+  },
+
   "fearAndGreed": {
     "name": "Fear & Greed",
     "extremeFear": "Extreme fear",

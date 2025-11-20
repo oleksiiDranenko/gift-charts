@@ -125,17 +125,25 @@ export default function GiftsList({ loading }: PropsInterface) {
   }, []);
 
   // Sticky header sentinel
+  // Sticky header sentinel — FIXED
   useEffect(() => {
-    if (!sentinelRef.current) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
 
     const observer = new IntersectionObserver(
-      ([e]) => setIsSticky(!e.isIntersecting),
-      { threshold: [0] }
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -1px 0px", // triggers exactly when sentinel leaves top
+      }
     );
 
-    observer.observe(sentinelRef.current);
+    observer.observe(sentinel);
+
     return () => observer.disconnect();
-  }, []);
+  }, [sentinelRef.current]); // ← This was missing!
 
   const clearSearch = () => setSearchQuery("");
 
@@ -149,7 +157,7 @@ export default function GiftsList({ loading }: PropsInterface) {
         <>
           {/* Tabs */}
           <div className='w-full px-3'>
-            <div className='relative flex mb-5'>
+            <div className='w-64 relative flex mb-5'>
               <button
                 onClick={() => {
                   setSelectedList("all");
@@ -190,7 +198,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             (!user?.savedList || user.savedList.length === 0)
           ) && (
             <div
-              className={`w-full sticky top-0 z-30 bg-background px-3 transition-all ${
+              className={`w-full sticky top-0 z-30 bg-background px-3 transition-all duration-300 ${
                 isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
               }`}>
               <div className='flex gap-1 mb-2'>
@@ -218,24 +226,31 @@ export default function GiftsList({ loading }: PropsInterface) {
 
                 {/* Sort & Filter Buttons */}
                 <div className='flex gap-1'>
-                  <SortGiftsModal
-                    trigger={
-                      <button
-                        onClick={() => vibrate()}
-                        className='h-11 w-11 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
-                        <svg
-                          className='size-4'
-                          viewBox='0 0 24 24'
-                          fill='currentColor'>
-                          <path
-                            fillRule='evenodd'
-                            d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                      </button>
-                    }
-                  />
+                  {/* Sort Button with active dot */}
+                  <div className='relative'>
+                    <SortGiftsModal
+                      trigger={
+                        <button
+                          onClick={() => vibrate()}
+                          className='h-11 w-11 flex items-center justify-center bg-secondaryTransparent rounded-2xl'>
+                          <svg
+                            className='size-4'
+                            viewBox='0 0 24 24'
+                            fill='currentColor'>
+                            <path
+                              fillRule='evenodd'
+                              d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
+                        </button>
+                      }
+                    />
+                    {/* Active dot when sort is not default */}
+                    {filters.sort !== "highFirst" && (
+                      <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
+                    )}
+                  </div>
 
                   <div className='relative'>
                     <FilterGiftsModal
@@ -256,8 +271,6 @@ export default function GiftsList({ loading }: PropsInterface) {
                         </button>
                       }
                       giftsList={giftsList}
-                      list={displayedGifts}
-                      setList={() => {}}
                     />
                     {hasActiveFilter && (
                       <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
@@ -276,6 +289,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               <ListSkeleton
                 type={giftType}
                 count={giftType === "line" ? 15 : 20}
+                hideHeader={false}
               />
             ) : selectedList === "saved" &&
               (!user?.savedList || user.savedList.length === 0) ? (

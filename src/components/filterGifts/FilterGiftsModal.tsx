@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import { Search, X } from "lucide-react";
 import GiftInterface from "@/interfaces/GiftInterface";
@@ -9,80 +9,48 @@ import FilterGiftItem from "./FilterGiftItem";
 import { useTranslations } from "next-intl";
 import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 import InfoMessage from "../generalHints/InfoMessage";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setFilters, toggleGiftInFilter } from "@/redux/slices/filterListSlice";
 
 interface Props {
   trigger: ReactNode;
   giftsList: GiftInterface[];
-  list: GiftInterface[];
-  setList: React.Dispatch<React.SetStateAction<GiftInterface[]>>;
 }
 
-export default function FilterGiftsModal({
-  trigger,
-  giftsList,
-  list,
-  setList,
-}: Props) {
+export default function FilterGiftsModal({ trigger, giftsList }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const dispatch = useAppDispatch();
+  const chosenGifts = useAppSelector((state) => state.filters.chosenGifts);
+  const filters = useAppSelector((state) => state.filters);
+
   const vibrate = useVibrate();
   const translate = useTranslations("general");
 
-  const [sortedGifts, setSortedGifts] = useState<GiftInterface[]>([]);
-  const [selected, setSelected] = useState<GiftInterface[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    const sorted = [...giftsList].sort((a, b) => a.name.localeCompare(b.name));
-    setSortedGifts(sorted);
-  }, [giftsList]);
-
-  useEffect(() => {
-    if (selected.length === 0) {
-      setList(giftsList);
-    } else {
-      setList(selected);
-    }
-  }, [selected, giftsList, setList]);
-
-  useEffect(() => {
-    if (isOpen) {
-      setSelected(list.length === giftsList.length ? [] : list);
-      setSearchTerm("");
-    }
-  }, [isOpen, giftsList, list]);
-
-  const handleSelection = (item: GiftInterface) => {
-    setSelected((prev) =>
-      prev.some((el) => el._id === item._id)
-        ? prev.filter((el) => el._id !== item._id)
-        : [...prev, item]
-    );
-  };
-
   const clearSelection = () => {
-    if (selected.length > 0) {
-      setSelected([]);
-      setList(giftsList);
-      vibrate();
-    }
+    vibrate();
+    dispatch(setFilters({ ...filters, chosenGifts: [] }));
   };
 
-  const clearSearch = () => {
-    setSearchTerm("");
+  const clearSearch = () => setSearchTerm("");
+
+  const handleSelection = (gift: GiftInterface) => {
+    vibrate();
+    dispatch(toggleGiftInFilter(gift._id));
   };
 
-  // 🔍 Filter + sort gifts by search term
-  const filteredGifts = [...sortedGifts]
+  const filteredGifts = [...giftsList]
+    .sort((a, b) => a.name.localeCompare(b.name))
     .filter((gift) =>
       gift.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      const aSelected = selected.some((el) => el._id === a._id);
-      const bSelected = selected.some((el) => el._id === b._id);
-      // ✅ Move selected gifts to top
+      const aSelected = chosenGifts.includes(a._id);
+      const bSelected = chosenGifts.includes(b._id);
       if (aSelected && !bSelected) return -1;
       if (!aSelected && bSelected) return 1;
-      return a.name.localeCompare(b.name);
+      return 0;
     });
 
   return (
@@ -117,14 +85,13 @@ export default function FilterGiftsModal({
               leaveFrom='translate-y-0 opacity-100'
               leaveTo='translate-y-full opacity-0'>
               <Dialog.Panel className='w-full lg:w-11/12 h-5/6 p-3 rounded-t-xl bg-background flex flex-col'>
-                {/* Header */}
                 <div className='w-full h-10 pb-3 flex justify-between items-center'>
                   <div className='w-1/3'>
                     <button
-                      className={`flex flex-row items-center justify-center gap-x-1 ${
-                        selected.length === 0 ? "opacity-50" : ""
-                      } h-8 px-3 bg-secondaryTransparent rounded-2xl`}
-                      onClick={clearSelection}>
+                      onClick={clearSelection}
+                      className={`flex items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-2xl transition-opacity ${
+                        chosenGifts.length === 0 ? "opacity-50" : ""
+                      }`}>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='0 0 24 24'
@@ -140,24 +107,24 @@ export default function FilterGiftsModal({
                     </button>
                   </div>
 
-                  <div className='w-1/3 flex justify-center'>
+                  <div className='w-1/3 text-center'>
                     <span
-                      className={`${
-                        selected.length > 0
+                      className={`text-sm font-medium ${
+                        chosenGifts.length > 0
                           ? "text-primary"
                           : "text-secondaryText"
-                      } text-sm`}>
-                      {selected.length} Selected
+                      }`}>
+                      {chosenGifts.length} Selected
                     </span>
                   </div>
 
-                  <div className='w-1/3 flex flex-row justify-end'>
+                  <div className='w-1/3 flex justify-end'>
                     <button
                       onClick={() => {
                         vibrate();
                         setIsOpen(false);
                       }}
-                      className='w-fit p-2 bg-secondaryTransparent rounded-full'>
+                      className='p-2 bg-secondaryTransparent rounded-full'>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='0 0 24 24'
@@ -173,26 +140,23 @@ export default function FilterGiftsModal({
                   </div>
                 </div>
 
-                {/* Body */}
-                <div className='flex-1 overflow-y-scroll'>
-                  {/* Search Input */}
-                  <div className='relative w-full my-1'>
+                <div className='flex-1 overflow-y-auto'>
+                  <div className='relative w-full my-2'>
                     <input
-                      className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent text-foreground px-3 rounded-2xl focus:outline-none placeholder:text-secondaryText placeholder:text-sm'
+                      type='text'
                       placeholder='Search gifts'
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
+                      className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent rounded-2xl text-foreground placeholder:text-secondaryText focus:outline-none'
                     />
-
                     <Search
-                      className='absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-secondaryText'
+                      className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText pointer-events-none'
                       size={18}
                     />
-
                     {searchTerm && (
                       <button
                         onClick={clearSearch}
-                        className='absolute right-3 top-1/2 transform -translate-y-1/2 text-secondaryText hover:text-foreground transition-colors'>
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-secondaryText hover:text-foreground'>
                         <X size={16} />
                       </button>
                     )}
@@ -200,20 +164,19 @@ export default function FilterGiftsModal({
 
                   <ScrollToTopButton />
 
-                  {filteredGifts.map((gift) => (
-                    <FilterGiftItem
-                      key={gift._id}
-                      gift={gift}
-                      selected={selected.some((el) => el._id === gift._id)}
-                      onClick={handleSelection}
-                    />
-                  ))}
-
-                  {/* Empty State */}
-                  {filteredGifts.length === 0 && (
+                  {filteredGifts.length > 0 ? (
+                    filteredGifts.map((gift) => (
+                      <FilterGiftItem
+                        key={gift._id}
+                        gift={gift}
+                        selected={chosenGifts.includes(gift._id)}
+                        onClick={() => handleSelection(gift)}
+                      />
+                    ))
+                  ) : (
                     <InfoMessage
                       text={`No gifts matching "${searchTerm}"`}
-                      buttonText={"Clear the search"}
+                      buttonText='Clear search'
                       onClick={clearSearch}
                     />
                   )}
