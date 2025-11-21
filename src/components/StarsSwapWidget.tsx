@@ -1,8 +1,10 @@
+import useVibrate from "@/hooks/useVibrate";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function StarsSwapWidget() {
   const [loading, setLoading] = useState(false);
+  const vibrate = useVibrate();
 
   const openWidget = () => {
     setLoading(true);
@@ -54,7 +56,10 @@ export default function StarsSwapWidget() {
       className={`z-0 relative flex flex-row justify-center items-center w-full h-10 bg-primary rounded-3xl ${
         loading && "animate-pulse"
       }`}
-      onClick={openWidget}
+      onClick={() => {
+        openWidget();
+        vibrate();
+      }}
       disabled={loading}>
       {loading ? (
         <LoaderCircle className='text-white animate-spin' />

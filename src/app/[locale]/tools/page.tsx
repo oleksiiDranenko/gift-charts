@@ -66,7 +66,10 @@ export default function Page() {
       <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
         <Link
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'
-          href={"/tools/stars"}>
+          href={"/tools/stars"}
+          onClick={() => {
+            vibrate();
+          }}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
               <svg
@@ -100,7 +103,10 @@ export default function Page() {
       <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
         <Link
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'
-          href={"/tools/treemap"}>
+          href={"/tools/treemap"}
+          onClick={() => {
+            vibrate();
+          }}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
               <svg
@@ -131,7 +137,8 @@ export default function Page() {
 
         {/* <Link
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'
-          href={"/tools/fear-greed"}>
+          href={"/tools/fear-greed"}
+          onClick={() => {vibrate()}}>
           <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
               <Gauge size={28} className='text-primary' />
@@ -152,7 +159,10 @@ export default function Page() {
         {true && (
           <Link
             className='bg-secondaryTransparent rounded-3xl overflow-hidden'
-            href={"/tools/vote"}>
+            href={"/tools/vote"}
+            onClick={() => {
+              vibrate();
+            }}>
             <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
               <div className='flex flex-row items-center gap-x-3'>
                 <svg
