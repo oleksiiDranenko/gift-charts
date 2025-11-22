@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setFilters } from "@/redux/slices/filterListSlice";
 import SectionTransition from "./SelectTransition";
 import { useTranslations } from "next-intl";
+import DoubleSlider from "./DoubleSlider";
 
 interface Props {
   trigger: ReactNode;
@@ -324,6 +325,10 @@ export default function SortGiftsModal({ trigger }: Props) {
                         ))}
                       </div>
                     </SectionTransition>
+                  </div>
+
+                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible p-4 py-3'>
+                    <DoubleSlider />
                   </div>
                 </div>
               </Dialog.Panel>
