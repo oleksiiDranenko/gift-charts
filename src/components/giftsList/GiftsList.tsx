@@ -66,7 +66,7 @@ export default function GiftsList({ loading }: PropsInterface) {
       case "ztoa":
         return { key: "name", order: "desc" };
 
-      // NEW: supply sorting
+      // Supply
       case "supplyHigh":
         return { key: "supply", order: "desc" };
       case "supplyLow":
@@ -79,6 +79,24 @@ export default function GiftsList({ loading }: PropsInterface) {
         return { key: "upgradedSupply", order: "desc" };
       case "upgradedSupplyLow":
         return { key: "upgradedSupply", order: "asc" };
+
+      // NEW: 24h Change (Growth) — best gain first by default
+      case "changeGrowth":
+        return { key: "priceChangeGrowth", order: "desc" }; // +150% → -80%
+      case "changeGrowthAsc":
+        return { key: "priceChangeGrowth", order: "asc" }; // biggest losers first
+
+      // NEW: Biggest Movers (Absolute Change) — biggest swing first
+      case "changeAbsolute":
+        return { key: "priceChangeAbsolute", order: "desc" }; // ±150% first
+      case "changeAbsoluteAsc":
+        return { key: "priceChangeAbsolute", order: "asc" }; // smallest movement first
+
+      // Optional TON versions
+      case "changeGrowthTon":
+        return { key: "priceChangeGrowthTon", order: "desc" };
+      case "changeAbsoluteTon":
+        return { key: "priceChangeAbsoluteTon", order: "desc" };
 
       default:
         return { key: "priceUsd", order: "desc" };

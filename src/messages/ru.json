@@ -15,7 +15,9 @@
     "show": "Показать",
     "hide": "Скрыть",
     "tryItNow": "Попробовать сейчас",
-    "back": "Назад"
+    "back": "Назад",
+    "selected": "Выбрано",
+    "searchPlaceholder": "Поиск подарков"
   },
   "donate": {
     "donate": "Пожертвовать",
@@ -77,7 +79,16 @@
     "usd": "Usd",
     "onSale": "В продаже",
     "volume": "Объём",
-    "salesCount": "Количество продаж"
+    "salesCount": "Количество продаж",
+    "growth": "Рост 24ч",
+    "volatility": "Движение 24ч",
+    "upgradedSupply": "Улучшенное предложение",
+    "releaseDate": "Дата релиза",
+    "alphabet": "По названию",
+    "highFirst": "По убыванию",
+    "lowFirst": "По возрастанию",
+    "order": "Порядок",
+    "reset": "Сбросить"
   },
 
   "timegap": {

@@ -15,7 +15,9 @@
     "show": "Show",
     "hide": "Hide",
     "tryItNow": "Try it now",
-    "back": "Go back"
+    "back": "Go back",
+    "selected": "Selected",
+    "searchPlaceholder": "Search Gifts"
   },
   "donate": {
     "donate": "Donate",
@@ -77,7 +79,16 @@
     "usd": "Usd",
     "onSale": "On sale",
     "volume": "Volume",
-    "salesCount": "Sales count"
+    "salesCount": "Sales count",
+    "growth": "Growth",
+    "volatility": "Volatility",
+    "upgradedSupply": "Upgraded Supply",
+    "releaseDate": "Release Date",
+    "alphabet": "Alphabet",
+    "highFirst": "High first",
+    "lowFirst": "Low first",
+    "order": "Order",
+    "reset": "Reset"
   },
 
   "timegap": {

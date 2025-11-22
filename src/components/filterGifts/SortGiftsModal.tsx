@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setFilters } from "@/redux/slices/filterListSlice";
@@ -12,17 +12,36 @@ interface Props {
   trigger: ReactNode;
 }
 
-const SORT_OPTIONS = [
-  "Alphabet",
-  "Supply",
-  "Init Supply",
-  "Upgraded Supply",
-  "Release Date",
-  "Price (USD)",
-  "Price (TON)",
+const SORT_LABELS = [
+  "price",
+  "growth",
+  "volatility",
+  "supply",
+  "initSupply",
+  "upgradedSupply",
+  "releaseDate",
+  "alphabet",
 ] as const;
 
-type SortLabel = (typeof SORT_OPTIONS)[number];
+const HIGH_FIRST_SORTS = [
+  // Price
+  "highFirst",
+  // Date
+  "newest",
+  // Alphabet
+  "ztoa", // Z → A = по убыванию = High first
+  // Supply
+  "supplyHigh",
+  "initSupplyHigh",
+  "upgradedSupplyHigh",
+  // 24h Change
+  "changeGrowth",
+  "changeGrowthTon",
+  "changeAbsolute",
+  "changeAbsoluteTon",
+] as const;
+
+type SortLabel = (typeof SORT_LABELS)[number];
 
 export default function SortGiftsModal({ trigger }: Props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,91 +49,105 @@ export default function SortGiftsModal({ trigger }: Props) {
 
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.filters);
-  const translate = useTranslations("general");
+  const t = useTranslations("filters");
   const vibrate = useVibrate();
 
-  // Map Redux sort → UI labels
-  const getCurrentSortLabel = (): SortLabel => {
+  // Get user currency safely (client-side only)
+  const userCurrency =
+    typeof window !== "undefined"
+      ? (() => {
+          try {
+            const saved = localStorage.getItem("settings");
+            return saved ? JSON.parse(saved).currency || "ton" : "ton";
+          } catch {
+            return "ton";
+          }
+        })()
+      : "ton";
+
+  const isTon = userCurrency === "ton";
+
+  // Current selected sort label
+  const getCurrentLabel = (): SortLabel => {
+    if (filters.sort.includes("changeGrowth")) return "growth";
+    if (filters.sort.includes("changeAbsolute")) return "volatility";
+
     switch (filters.sort) {
       case "highFirst":
       case "lowFirst":
-        return "Price (USD)";
+        return "price";
       case "supplyHigh":
       case "supplyLow":
-        return "Supply";
+        return "supply";
       case "initSupplyHigh":
       case "initSupplyLow":
-        return "Init Supply";
+        return "initSupply";
       case "upgradedSupplyHigh":
       case "upgradedSupplyLow":
-        return "Upgraded Supply";
+        return "upgradedSupply";
       case "newest":
       case "oldest":
-        return "Release Date";
+        return "releaseDate";
       case "atoz":
       case "ztoa":
-        return "Alphabet";
+        return "alphabet";
       default:
-        return "Price (USD)";
+        return "price";
     }
   };
 
-  const getCurrentOrderLabel = (): "High first" | "Low first" => {
-    const highEndings = [
-      "highFirst",
-      "newest",
-      "ztoa",
-      "supplyHigh",
-      "initSupplyHigh",
-      "upgradedSupplyHigh",
-    ];
-    return highEndings.includes(filters.sort) ? "High first" : "Low first";
-  };
+  const currentLabel = getCurrentLabel();
+  const isHighFirst = HIGH_FIRST_SORTS.includes(filters.sort as any);
 
-  const selectedSort = getCurrentSortLabel();
-  const selectedOrder = getCurrentOrderLabel();
+  const orderText = isHighFirst ? t("highFirst") : t("lowFirst");
 
-  // Map UI label → base sort key
-  const labelToKey: Record<SortLabel, string> = {
-    "Price (USD)": "highFirst",
-    "Price (TON)": "highFirst",
-    Supply: "supplyHigh",
-    "Init Supply": "initSupplyHigh",
-    "Upgraded Supply": "upgradedSupplyHigh",
-    "Release Date": "newest",
-    Alphabet: "atoz",
+  // Map label + order → final sort value
+  const getSortValue = (label: SortLabel, highFirst: boolean): any => {
+    switch (label) {
+      case "price":
+        return highFirst ? "highFirst" : "lowFirst";
+      case "growth":
+        return highFirst
+          ? isTon
+            ? "changeGrowthTon"
+            : "changeGrowth"
+          : isTon
+          ? "changeGrowthTonAsc"
+          : "changeGrowthAsc";
+      case "volatility":
+        return highFirst
+          ? isTon
+            ? "changeAbsoluteTon"
+            : "changeAbsolute"
+          : isTon
+          ? "changeAbsoluteTonAsc"
+          : "changeAbsoluteAsc";
+      case "supply":
+        return highFirst ? "supplyHigh" : "supplyLow";
+      case "initSupply":
+        return highFirst ? "initSupplyHigh" : "initSupplyLow";
+      case "upgradedSupply":
+        return highFirst ? "upgradedSupplyHigh" : "upgradedSupplyLow";
+      case "releaseDate":
+        return highFirst ? "newest" : "oldest";
+      case "alphabet":
+        return highFirst ? "ztoa" : "atoz";
+      default:
+        return "highFirst";
+    }
   };
 
   const handleSortSelect = (label: SortLabel) => {
     vibrate();
-    const baseKey = labelToKey[label];
-    const isHigh = selectedOrder === "High first";
-
-    let finalSort: any = baseKey;
-
-    if (!isHigh) {
-      finalSort = baseKey
-        .replace("High", "Low")
-        .replace("newest", "oldest")
-        .replace("atoz", "ztoa");
-    }
-
-    dispatch(setFilters({ ...filters, sort: finalSort }));
+    const newSort = getSortValue(label, isHighFirst);
+    dispatch(setFilters({ ...filters, sort: newSort }));
+    setOpenSection(null);
   };
 
-  const handleOrderSelect = (order: "High first" | "Low first") => {
+  const handleOrderToggle = () => {
     vibrate();
-    const baseKey = labelToKey[selectedSort];
-
-    let finalSort: any = baseKey;
-    if (order === "Low first") {
-      finalSort = baseKey
-        .replace("High", "Low")
-        .replace("newest", "oldest")
-        .replace("atoz", "ztoa");
-    }
-
-    dispatch(setFilters({ ...filters, sort: finalSort }));
+    const newSort = getSortValue(currentLabel, !isHighFirst);
+    dispatch(setFilters({ ...filters, sort: newSort }));
   };
 
   const resetAll = () => {
@@ -135,13 +168,7 @@ export default function SortGiftsModal({ trigger }: Props) {
       </span>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as='div'
-          className='relative z-50'
-          onClose={() => {
-            setIsOpen(false);
-            setOpenSection(null);
-          }}>
+        <Dialog as='div' className='relative z-50' onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-200'
@@ -183,7 +210,7 @@ export default function SortGiftsModal({ trigger }: Props) {
                         clipRule='evenodd'
                       />
                     </svg>
-                    {translate("reset")}
+                    {t("reset")}
                   </button>
 
                   <button
@@ -223,9 +250,11 @@ export default function SortGiftsModal({ trigger }: Props) {
                         </svg>
 
                         <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>Sort By</span>
+                          <span className='text-lg font-bold'>
+                            {t("sortBy")}
+                          </span>
                           <span className='text-sm text-secondaryText'>
-                            {selectedSort}
+                            {t(currentLabel)}
                           </span>
                         </div>
                       </div>
@@ -235,12 +264,12 @@ export default function SortGiftsModal({ trigger }: Props) {
                     <SectionTransition open={openSection === "sort"}>
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {SORT_OPTIONS.map((option) => (
+                        {SORT_LABELS.map((key) => (
                           <OptionButton
-                            key={option}
-                            label={option}
-                            selected={selectedSort === option}
-                            onClick={() => handleSortSelect(option)}
+                            key={key}
+                            label={t(key)}
+                            selected={currentLabel === key}
+                            onClick={() => handleSortSelect(key)}
                           />
                         ))}
                       </div>
@@ -271,9 +300,11 @@ export default function SortGiftsModal({ trigger }: Props) {
                         </svg>
 
                         <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>Order</span>
+                          <span className='text-lg font-bold'>
+                            {t("order")}
+                          </span>
                           <span className='text-sm text-secondaryText'>
-                            {selectedOrder}
+                            {orderText}
                           </span>
                         </div>
                       </div>
@@ -283,12 +314,12 @@ export default function SortGiftsModal({ trigger }: Props) {
                     <SectionTransition open={openSection === "order"}>
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {["High first", "Low first"].map((order) => (
+                        {[t("highFirst"), t("lowFirst")].map((order) => (
                           <OptionButton
                             key={order}
                             label={order}
-                            selected={selectedOrder === order}
-                            onClick={() => handleOrderSelect(order as any)}
+                            selected={orderText === order}
+                            onClick={handleOrderToggle}
                           />
                         ))}
                       </div>
@@ -304,7 +335,7 @@ export default function SortGiftsModal({ trigger }: Props) {
   );
 }
 
-/* ————— Reusable components (unchanged) ————— */
+/* Reusable components — 100% identical to your original */
 function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg

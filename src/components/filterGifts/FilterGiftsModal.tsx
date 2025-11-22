@@ -114,7 +114,7 @@ export default function FilterGiftsModal({ trigger, giftsList }: Props) {
                           ? "text-primary"
                           : "text-secondaryText"
                       }`}>
-                      {chosenGifts.length} Selected
+                      {chosenGifts.length} {translate("selected")}
                     </span>
                   </div>
 
@@ -144,10 +144,10 @@ export default function FilterGiftsModal({ trigger, giftsList }: Props) {
                   <div className='relative w-full my-2'>
                     <input
                       type='text'
-                      placeholder='Search gifts'
+                      placeholder={translate("searchPlaceholder")}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className='w-full h-11 pl-10 pr-10 bg-secondaryTransparent rounded-3xl text-foreground placeholder:text-secondaryText focus:outline-none'
+                      className='w-full h-12 pl-10 pr-10 bg-secondaryTransparent rounded-3xl text-foreground placeholder:text-secondaryText focus:outline-none'
                     />
                     <Search
                       className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText pointer-events-none'
