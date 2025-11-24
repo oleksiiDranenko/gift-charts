@@ -1,16 +1,15 @@
+// components/tools/treemap/TreemapChart.tsx
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import type GiftInterface from "@/interfaces/GiftInterface";
-import type {
-  TreemapDataPoint,
-  TreemapScriptableContext,
-} from "chartjs-chart-treemap";
-import { Download, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
-import { ChartDataset } from "chart.js";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
-import DownloadHeatmapModal from "./DownloadHeatmapModal";
 
 interface GiftData {
   name: string;
@@ -19,54 +18,48 @@ interface GiftData {
   imageName: string;
   price: number;
   marketCap?: number;
-  [key: string]: any;
 }
 
-interface CustomTreemapDataset {
-  data: TreemapDataPoint[];
-  tree: GiftData[];
-  key: string;
-  imageMap?: Map<string, HTMLImageElement>;
-  backgroundColor: (ctx: TreemapScriptableContext) => string;
-  spacing?: number;
-  borderWidth?: number;
-  borderColor?: string;
-  hoverBackgroundColor?: (ctx: TreemapScriptableContext) => string;
-  hoverBorderColor?: string;
+type HeatmapType = "default" | "round";
+
+export interface TreemapChartRef {
+  downloadImage: () => Promise<void>;
 }
 
-const preloadImagesAsync = (
-  data: GiftData[]
-): Promise<Map<string, HTMLImageElement>> => {
+interface TreemapChartProps {
+  data: GiftInterface[];
+  chartType: "change" | "marketCap";
+  timeGap: "24h" | "1w" | "1m";
+  currency: "ton" | "usd";
+  type: HeatmapType;
+}
+
+const preloadImages = (data: GiftData[]) => {
   const map = new Map<string, HTMLImageElement>();
-
-  return Promise.all(
-    data.map(({ imageName }) => {
-      return new Promise<void>((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve();
-        img.onerror = () => resolve(); // still resolve even if load fails
-        img.src = `/gifts/${imageName}.webp`;
-        map.set(imageName, img);
-      });
-    })
-  ).then(() => map);
+  data.forEach((item) => {
+    const img = new Image();
+    img.src = `/gifts/${item.imageName}.webp`;
+    map.set(item.imageName, img);
+  });
+  return map;
 };
 
-const updateInteractivity = (chart: any) => {
-  const zoomLevel = chart.getZoomLevel?.() ?? 1;
-  chart.options.plugins.zoom.pan.enabled = zoomLevel > 1;
-  chart.options.events =
-    zoomLevel > 1
-      ? ["mousemove", "click", "touchstart", "touchmove", "touchend"]
-      : [];
-
-  const canvas = chart.canvas as HTMLCanvasElement;
-  if (canvas) {
-    canvas.style.cursor = zoomLevel > 1 ? "pointer" : "default";
-  }
-
-  chart.update("none");
+const preloadImagesAsync = async (data: GiftData[]) => {
+  const map = new Map<string, HTMLImageElement>();
+  await Promise.all(
+    data.map(
+      (item) =>
+        new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = img.onerror = () => {
+            map.set(item.imageName, img);
+            resolve();
+          };
+          img.src = `/gifts/${item.imageName}.webp`;
+        })
+    )
+  );
+  return map;
 };
 
 const transformGiftData = (
@@ -77,29 +70,24 @@ const transformGiftData = (
 ): GiftData[] => {
   return gifts.map((gift) => {
     const now = currency === "ton" ? gift.priceTon ?? 0 : gift.priceUsd ?? 0;
-    let then: number;
-    switch (timeGap) {
-      case "24h":
-        then =
-          currency === "ton"
-            ? gift.tonPrice24hAgo ?? now
-            : gift.usdPrice24hAgo ?? now;
-        break;
-      case "1w":
-        then =
-          currency === "ton"
-            ? gift.tonPriceWeekAgo ?? now
-            : gift.usdPriceWeekAgo ?? now;
-        break;
-      case "1m":
-        then =
-          currency === "ton"
-            ? gift.tonPriceMonthAgo ?? now
-            : gift.usdPriceMonthAgo ?? now;
-        break;
-      default:
-        then = now;
-    }
+    let then = now;
+
+    if (timeGap === "24h")
+      then =
+        currency === "ton"
+          ? gift.tonPrice24hAgo ?? now
+          : gift.usdPrice24hAgo ?? now;
+    else if (timeGap === "1w")
+      then =
+        currency === "ton"
+          ? gift.tonPriceWeekAgo ?? now
+          : gift.usdPriceWeekAgo ?? now;
+    else if (timeGap === "1m")
+      then =
+        currency === "ton"
+          ? gift.tonPriceMonthAgo ?? now
+          : gift.usdPriceMonthAgo ?? now;
+
     const percentChange = then === 0 ? 0 : ((now - then) / then) * 100;
     let size: number;
     let marketCap: number | undefined;
@@ -122,23 +110,14 @@ const transformGiftData = (
   });
 };
 
-const preloadImages = (data: GiftData[]): Map<string, HTMLImageElement> => {
-  const map = new Map();
-  data.forEach(({ imageName }) => {
-    const img = new Image();
-    img.src = `/gifts/${imageName}.webp`;
-    map.set(imageName, img);
-  });
-  return map;
-};
-
 const imagePlugin = (
   chartType: "change" | "marketCap",
   currency: "ton" | "usd",
   watermarkFontSize: number = 15, // Default watermark font size
   textScale: number = 1, // Default text scale
   imageScale: number = 1, // Default image scale
-  borderWidth: number = 0 // Absolute pixel border width
+  borderWidth: number = 0, // Absolute pixel border width
+  type: HeatmapType
 ) => ({
   id: "treemapImages",
   afterDatasetDraw(chart: any) {
@@ -180,9 +159,9 @@ const imagePlugin = (
       ctx.lineWidth = borderWidth / scale;
 
       ctx.beginPath();
-      const cornerRadius = Math.min(width, height) * 0.09;
-      const maxRadius = 40; // was 0
-      ctx.roundRect(x, y, width, height, Math.min(cornerRadius, maxRadius));
+      const cornerRadius =
+        type === "round" ? Math.min(width, height) * 0.15 : 0;
+      ctx.roundRect(x, y, width, height, cornerRadius);
       ctx.fill();
       if (borderWidth > 0) ctx.stroke();
       ctx.closePath();
@@ -383,145 +362,95 @@ const imagePlugin = (
   },
 });
 
-interface TreemapChartProps {
-  data: GiftInterface[];
-  chartType: "change" | "marketCap";
-  timeGap: "24h" | "1w" | "1m";
-  currency: "ton" | "usd";
-}
+const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
+  ({ data, chartType, timeGap, currency, type }, ref) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const chartRef = useRef<any>(null);
+    const vibrate = useVibrate();
 
-const TreemapChart: React.FC<TreemapChartProps> = ({
-  data,
-  chartType,
-  timeGap,
-  currency,
-}) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const chartRef = useRef<any>(null);
-  const vibrate = useVibrate();
-  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+    const downloadImage = async () => {
+      vibrate();
+      if (data.length === 0) return;
 
-  const downloadImage = async () => {
-    vibrate();
-    if (!chartRef.current) return;
+      const isTelegram = !!window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+      const width = 1920;
+      const height = 1080;
 
-    const telegram = window.Telegram?.WebApp;
-    const isTelegramWebApp = !!telegram?.initDataUnsafe?.user?.id;
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
-    const exportWidth = 1920;
-    const exportHeight = 1080;
+      const { default: ChartJS } = await import("chart.js/auto");
+      const { TreemapController, TreemapElement } = await import(
+        "chartjs-chart-treemap"
+      );
+      ChartJS.register(TreemapController, TreemapElement);
 
-    const offscreenCanvas = document.createElement("canvas");
-    offscreenCanvas.width = exportWidth;
-    offscreenCanvas.height = exportHeight;
+      const transformed = transformGiftData(data, chartType, timeGap, currency);
+      const imageMap = await preloadImagesAsync(transformed);
 
-    const ctx = offscreenCanvas.getContext("2d");
-    if (!ctx) return;
+      const tempChart = new ChartJS(canvas, {
+        type: "treemap",
+        data: {
+          datasets: [
+            {
+              tree: transformed,
+              key: "size",
+              imageMap,
+              backgroundColor: "transparent",
+            } as any,
+          ],
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        },
+        plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 1, type)],
+      });
 
-    // Dynamic imports
-    const chartModule = await import("chart.js/auto");
-    const treemapModule = await import("chartjs-chart-treemap");
-    const zoomModule = await import("chartjs-plugin-zoom");
+      const url = canvas.toDataURL("image/jpeg", 1.0);
+      tempChart.destroy();
 
-    const Chart = chartModule.default;
-    Chart.register(
-      treemapModule.TreemapController,
-      treemapModule.TreemapElement,
-      zoomModule.default
-    );
-
-    const transformed = transformGiftData(data, chartType, timeGap, currency);
-    const imageMap = await preloadImagesAsync(transformed);
-
-    const tempChart = new Chart(ctx, {
-      type: "treemap",
-      data: {
-        datasets: [
-          {
-            data: [],
-            tree: transformed,
-            key: "size",
-            imageMap,
-            backgroundColor: "transparent",
-          } as unknown as ChartDataset<"treemap", TreemapDataPoint[]>,
-        ],
-      },
-      options: {
-        responsive: false,
-        maintainAspectRatio: false,
-        animation: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      },
-      plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 1)],
-    });
-
-    setTimeout(async () => {
-      try {
-        const imageDataUrl = offscreenCanvas.toDataURL("image/jpeg", 1.0);
-
-        // ✅ Non-Telegram → download directly
-        if (!isTelegramWebApp) {
-          const link = document.createElement("a");
-          link.download = `heatmap-${Date.now()}.jpeg`;
-          link.href = imageDataUrl;
-          link.click();
-          tempChart.destroy();
-          return;
-        }
-
-        const chatId = telegram?.initDataUnsafe?.user?.id;
-        if (!chatId) {
-          console.error("No chat ID found");
-          tempChart.destroy();
-          return;
-        }
-
-        const blob = await (await fetch(imageDataUrl)).blob();
-        const formData = new FormData();
-        formData.append("file", blob, `heatmap-${Date.now()}.jpeg`);
-        formData.append("chatId", chatId.toString());
-        formData.append(
-          "content",
-          "Here is a 1920x1080 image of a Heatmap chart!"
-        );
-
-        // Send to backend
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-
-        // ✅ Do nothing after send — modal stays open until user closes it
-        tempChart.destroy();
-      } catch (error) {
-        console.error("Error sending image:", error);
-        tempChart.destroy();
+      if (!isTelegram) {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `treemap-${Date.now()}.jpeg`;
+        a.click();
+        return;
       }
-    }, 0);
-  };
-  useEffect(() => {
-    let Chart: any,
-      TreemapController: any,
-      TreemapElement: any,
-      chartjsPluginZoom: any;
 
-    const initializeChart = async () => {
-      if (!window) return;
-      try {
-        const chartModule = await import("chart.js/auto");
-        const treemapModule = await import("chartjs-chart-treemap");
-        const zoomModule = await import("chartjs-plugin-zoom");
+      const blob = await (await fetch(url)).blob();
+      const form = new FormData();
+      form.append("file", blob, `treemap-${Date.now()}.jpeg`);
+      form.append(
+        "chatId",
+        window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
+      );
+      form.append("content", "Here is your treemap!");
 
-        Chart = chartModule.default;
-        TreemapController = treemapModule.TreemapController;
-        TreemapElement = treemapModule.TreemapElement;
-        chartjsPluginZoom = zoomModule.default;
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
+        form
+      );
+    };
 
-        Chart.register(TreemapController, TreemapElement, chartjsPluginZoom);
+    useImperativeHandle(ref, () => ({
+      downloadImage,
+    }));
 
-        const ctx = canvasRef.current?.getContext("2d");
-        if (!ctx || !data?.length) return;
+    useEffect(() => {
+      if (!canvasRef.current || data.length === 0) return;
+
+      (async () => {
+        const { default: ChartJS } = await import("chart.js/auto");
+        const { TreemapController, TreemapElement } = await import(
+          "chartjs-chart-treemap"
+        );
+        ChartJS.register(TreemapController, TreemapElement);
 
         chartRef.current?.destroy();
 
@@ -533,20 +462,20 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         );
         const imageMap = preloadImages(transformed);
 
-        const config: any = {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        chartRef.current = new ChartJS(canvas, {
           type: "treemap",
           data: {
             datasets: [
               {
-                data: [],
-                backgroundColor: "transparent",
-                borderColor: "transparent",
-                borderWidth: 0,
-                spacing: 2, // was 0.5
                 tree: transformed,
                 key: "size",
                 imageMap,
-              },
+                backgroundColor: "transparent",
+                spacing: type === "default" ? 0.05 : 2,
+              } as any,
             ],
           },
           options: {
@@ -555,105 +484,25 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
             plugins: {
               legend: { display: false },
               tooltip: { enabled: false },
-              zoom: {
-                zoom: {
-                  wheel: { enabled: false },
-                  pinch: { enabled: false },
-                  mode: "xy",
-                },
-                pan: {
-                  enabled: false,
-                  mode: "xy",
-                  onPan: ({ chart }: any) => updateInteractivity(chart),
-                  beforePan: ({ chart }: any) =>
-                    (chart.getZoomLevel?.() ?? 1) > 1,
-                },
-              },
             },
-            events: [],
           },
-          plugins: [imagePlugin(chartType, currency)],
-        };
+          plugins: [imagePlugin(chartType, currency, 15, 1, 1.2, 1, type)],
+        });
+      })();
 
-        chartRef.current = new Chart(ctx, config);
-        updateInteractivity(chartRef.current);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+      return () => chartRef.current?.destroy();
+    }, [data, chartType, timeGap, currency, type]);
 
-    initializeChart();
-    return () => {
-      chartRef.current?.destroy();
-    };
-  }, [data, chartType, timeGap, currency]);
-
-  return (
-    <div className='w-full flex flex-col items-center'>
-      <div className='w-full flex flex-row justify-start lg:w-11/12 mb-3 px-3 gap-x-2'>
-        <DownloadHeatmapModal
-          trigger={
-            <button
-              className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
-             flex items-center justify-center gap-2 text-white text-sm font-bold'
-              onClick={downloadImage}>
-              {/* This moving shine bar creates the "alive" flowing effect */}
-              <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
-                <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12' />
-              </span>
-
-              <Download size={17} className='animate-pulse ' />
-              <span className='relative z-10'>Download</span>
-            </button>
-          }
-        />
-        <div className='w-fit flex flex-row'>
-          <button
-            className='w-fit px-4 flex flex-row items-center justify-center gap-x-1 mr-1 text-sm h-8 rounded-2xl bg-secondaryTransparent'
-            onClick={() => {
-              chartRef.current?.resetZoom();
-              chartRef.current?.update("none");
-              updateInteractivity(chartRef.current);
-            }}>
-            <RotateCcw size={16} />
-            Reset
-          </button>
-          <div className='w-fit flex flex-row gap-x-1'>
-            <button
-              className='w-fit px-4 flex items-center justify-center h-8 rounded-2xl bg-secondaryTransparent'
-              onClick={() => {
-                const zoom = chartRef.current.getZoomLevel?.() ?? 1;
-                const newZoom = Math.max(1, zoom - 0.5);
-                if (newZoom === 1) {
-                  chartRef.current?.resetZoom();
-                } else {
-                  chartRef.current.zoom(newZoom / zoom);
-                }
-                chartRef.current?.update("none");
-                updateInteractivity(chartRef.current);
-              }}>
-              <ZoomOut size={16} />
-            </button>
-            <button
-              className='w-fit px-4 flex items-center justify-center h-8 rounded-2xl bg-secondaryTransparent'
-              onClick={() => {
-                const zoom = chartRef.current.getZoomLevel?.() ?? 1;
-                const newZoom = Math.min(10, zoom + 0.3);
-                chartRef.current.zoom(newZoom / zoom);
-                chartRef.current?.update("none");
-                updateInteractivity(chartRef.current);
-              }}>
-              <ZoomIn size={16} />
-            </button>
-          </div>
+    return (
+      <div className='w-full lg:w-11/12 min-h-[600px] px-3'>
+        <div className=' min-h-[600px] bg-secondaryTransparent rounded-3xl'>
+          <canvas ref={canvasRef} />
         </div>
       </div>
+    );
+  }
+);
 
-      <div className='w-full p-3 rounded-3xl lg:w-11/12 min-h-[600px] bg-secondaryTransparent'>
-        <canvas ref={canvasRef} />
-      </div>
-    </div>
-  );
-};
+TreemapChart.displayName = "TreemapChart";
 
 export default TreemapChart;

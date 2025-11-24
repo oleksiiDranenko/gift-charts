@@ -1,29 +1,33 @@
 "use client";
 
-import TreemapChart from "@/components/tools/treemap/TreemapChart";
+import TreemapChart, {
+  TreemapChartRef,
+} from "@/components/tools/treemap/TreemapChart";
 import useVibrate from "@/hooks/useVibrate";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import axios from "axios";
-import { ChevronLeft } from "lucide-react";
-import { Link } from "@/i18n/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
+import TreemapControlModal from "@/components/tools/treemap/EditTreemapModal";
+import { Download } from "lucide-react";
 
 export default function Page() {
-  const vibrate = useVibrate();
-
   const giftsList = useAppSelector((state) => state.giftsList);
   const [list, setList] = useState<GiftInterface[]>([]);
   const [listType, setListType] = useState<"change" | "marketCap">("change");
   const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m">("24h");
   const [currency, setCurrency] = useState<"ton" | "usd">("ton");
 
-  const [amount, setAmount] = useState<number>(25);
+  const [amount, setAmount] = useState<number>(50);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(true);
+
+  const vibrate = useVibrate();
+  const totalGifts = giftsList.length;
+  const chartRef = useRef<TreemapChartRef>(null);
 
   useEffect(() => {
     (async () => {
@@ -120,140 +124,49 @@ export default function Page() {
           <BackButton />
         </div>
 
-        <div className='w-full lg:w-11/12 gap-x-3 flex justify-end'>
-          <div className='w-1/2 bg-secondaryTransparent  rounded-3xl'>
-            <button
-              className={`w-1/2 text-sm h-8 box-border rounded-3xl ${
-                listType === "change" ? "bg-primary font-bold text-white" : null
-              }`}
-              onClick={() => {
-                setListType("change");
-                vibrate();
-              }}>
-              Change
-            </button>
-            <button
-              className={`w-1/2 text-sm h-8 box-border rounded-3xl ${
-                listType === "marketCap"
-                  ? "bg-primary font-bold text-white"
-                  : null
-              }`}
-              onClick={() => {
-                setListType("marketCap");
-                vibrate();
-              }}>
-              Market Cap
-            </button>
+        <div className='w-full lg:w-11/12 gap-x-3 flex flex-row items-center justify-start'>
+          <div>
+            <TreemapControlModal
+              trigger={
+                <button className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm text-white bg-secondaryTransparent rounded-3xl'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-6'>
+                    <path d='M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z' />
+                  </svg>
+                  Edit Heatmap
+                </button>
+              }
+              listType={listType}
+              timeGap={timeGap}
+              currency={currency}
+              amount={amount}
+              totalGifts={totalGifts}
+              onListTypeChange={setListType}
+              onTimeGapChange={setTimeGap}
+              onCurrencyChange={setCurrency}
+              onAmountChange={setAmount}
+            />
           </div>
 
-          <div className='w-1/2 bg-secondaryTransparent rounded-3xl'>
-            <button
-              className={`w-1/2 text-sm h-8 box-border rounded-3xl ${
-                currency === "ton" ? "bg-primary font-bold text-white" : null
-              }`}
-              onClick={() => {
-                setCurrency("ton");
-                vibrate();
-              }}>
-              TON
-            </button>
-            <button
-              className={`w-1/2 text-sm h-8 box-border rounded-3xl ${
-                currency === "usd" ? "bg-primary font-bold text-white" : null
-              }`}
-              onClick={() => {
-                setCurrency("usd");
-                vibrate();
-              }}>
-              USD
-            </button>
-          </div>
-        </div>
+          <button
+            className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
+             flex items-center justify-center gap-x-2 text-white text-sm font-bold'
+            onClick={() => {
+              chartRef.current?.downloadImage();
+              vibrate();
+            }}>
+            {/* This moving shine bar creates the "alive" flowing effect */}
+            <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
+              <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12' />
+            </span>
 
-        <div className='w-full lg:w-11/12 bg-secondaryTransparent rounded-3xl'>
-          <div className='w-full flex flex-col'>
-            <div className='w-full flex flex-row justify-between gap-x-3'>
-              <button
-                className={`w-full text-sm h-8 rounded-3xl ${
-                  timeGap === "1m" ? "bg-primary font-bold text-white" : null
-                }`}
-                onClick={() => {
-                  setTimeGap("1m");
-                  vibrate();
-                }}>
-                1m
-              </button>
-              <button
-                className={`w-full text-sm h-8 rounded-3xl ${
-                  timeGap === "1w" ? "bg-primary font-bold text-white" : null
-                }`}
-                onClick={() => {
-                  setTimeGap("1w");
-                  vibrate();
-                }}>
-                1w
-              </button>
-              <button
-                className={`w-full text-sm h-8 rounded-3xl ${
-                  timeGap === "24h" ? "bg-primary font-bold text-white" : null
-                }`}
-                onClick={() => {
-                  setTimeGap("24h");
-                  vibrate();
-                }}>
-                24h
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className='w-full lg:w-11/12 bg-secondaryTransparent  rounded-3xl'>
-          <div className='w-full flex flex-col'>
-            <div className='w-full flex flex-row justify-between gap-x-3'>
-              <button
-                className={`w-full text-sm h-8 rounded-3xl ${
-                  amount === giftsList.length
-                    ? "bg-primary font-bold text-white"
-                    : null
-                }`}
-                onClick={() => {
-                  setAmount(giftsList.length);
-                  vibrate();
-                }}>
-                All
-              </button>
-              <button
-                className={`w-full text-sm h-8 rounded-3xl ${
-                  amount === 50 ? "bg-primary font-bold text-white" : null
-                }`}
-                onClick={() => {
-                  setAmount(50);
-                  vibrate();
-                }}>
-                Top 50
-              </button>
-              <button
-                className={`w-full text-sm h-8 rounded-3xl ${
-                  amount === 35 ? "bg-primary font-bold text-white" : null
-                }`}
-                onClick={() => {
-                  setAmount(35);
-                  vibrate();
-                }}>
-                Top 35
-              </button>
-              <button
-                className={`w-full text-sm h-8 rounded-3xl ${
-                  amount === 25 ? "bg-primary font-bold text-white" : null
-                }`}
-                onClick={() => {
-                  setAmount(25);
-                  vibrate();
-                }}>
-                Top 25
-              </button>
-            </div>
-          </div>
+            <span className='relative z-10 flex flex-row items-center gap-x-1'>
+              <Download size={16} className='animate-pulse ' /> Download
+            </span>
+          </button>
         </div>
       </div>
       {loading ? (
@@ -266,10 +179,12 @@ export default function Page() {
         />
       ) : (
         <TreemapChart
+          ref={chartRef}
           data={list.slice(0, amount)}
           chartType={listType}
           timeGap={timeGap}
           currency={currency}
+          type='round'
         />
       )}
     </div>
