@@ -180,7 +180,9 @@ const imagePlugin = (
       ctx.lineWidth = borderWidth / scale;
 
       ctx.beginPath();
-      ctx.roundRect(x, y, width, height, 0);
+      const cornerRadius = Math.min(width, height) * 0.09;
+      const maxRadius = 40; // was 0
+      ctx.roundRect(x, y, width, height, Math.min(cornerRadius, maxRadius));
       ctx.fill();
       if (borderWidth > 0) ctx.stroke();
       ctx.closePath();
@@ -537,6 +539,10 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
             datasets: [
               {
                 data: [],
+                backgroundColor: "transparent",
+                borderColor: "transparent",
+                borderWidth: 0,
+                spacing: 2, // was 0.5
                 tree: transformed,
                 key: "size",
                 imageMap,
@@ -596,7 +602,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
                 <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12' />
               </span>
 
-              <Download size={17} />
+              <Download size={17} className='animate-pulse ' />
               <span className='relative z-10'>Download</span>
             </button>
           }
@@ -643,7 +649,7 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
         </div>
       </div>
 
-      <div className='w-full lg:w-11/12 min-h-[600px]'>
+      <div className='w-full p-3 rounded-3xl lg:w-11/12 min-h-[600px] bg-secondaryTransparent'>
         <canvas ref={canvasRef} />
       </div>
     </div>
