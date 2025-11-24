@@ -584,57 +584,64 @@ const TreemapChart: React.FC<TreemapChartProps> = ({
 
   return (
     <div className='w-full flex flex-col items-center'>
-      <div className='w-full lg:w-11/12 mb-3 px-3 flex gap-2'>
-        <button
-          className='w-full flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-3xl bg-secondaryTransparent'
-          onClick={() => {
-            chartRef.current?.resetZoom();
-            chartRef.current?.update("none");
-            updateInteractivity(chartRef.current);
-          }}>
-          <RotateCcw size={16} />
-          Reset Zoom
-        </button>
-        <div className='w-full flex flex-row gap-x-2'>
+      <div className='w-full flex flex-row justify-start lg:w-11/12 mb-3 px-3 gap-x-2'>
+        <DownloadHeatmapModal
+          trigger={
+            <button
+              className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
+             flex items-center justify-center gap-2 text-white text-sm font-bold'
+              onClick={downloadImage}>
+              {/* This moving shine bar creates the "alive" flowing effect */}
+              <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
+                <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12' />
+              </span>
+
+              <Download size={17} />
+              <span className='relative z-10'>Download</span>
+            </button>
+          }
+        />
+        <div className='w-fit flex flex-row'>
           <button
-            className='w-full flex items-center justify-center h-8 rounded-3xl bg-secondaryTransparent'
+            className='w-fit px-4 flex flex-row items-center justify-center gap-x-1 mr-1 text-sm h-8 rounded-2xl bg-secondaryTransparent'
             onClick={() => {
-              const zoom = chartRef.current.getZoomLevel?.() ?? 1;
-              const newZoom = Math.max(1, zoom - 0.5);
-              if (newZoom === 1) {
-                chartRef.current?.resetZoom();
-              } else {
+              chartRef.current?.resetZoom();
+              chartRef.current?.update("none");
+              updateInteractivity(chartRef.current);
+            }}>
+            <RotateCcw size={16} />
+            Reset
+          </button>
+          <div className='w-fit flex flex-row gap-x-1'>
+            <button
+              className='w-fit px-4 flex items-center justify-center h-8 rounded-2xl bg-secondaryTransparent'
+              onClick={() => {
+                const zoom = chartRef.current.getZoomLevel?.() ?? 1;
+                const newZoom = Math.max(1, zoom - 0.5);
+                if (newZoom === 1) {
+                  chartRef.current?.resetZoom();
+                } else {
+                  chartRef.current.zoom(newZoom / zoom);
+                }
+                chartRef.current?.update("none");
+                updateInteractivity(chartRef.current);
+              }}>
+              <ZoomOut size={16} />
+            </button>
+            <button
+              className='w-fit px-4 flex items-center justify-center h-8 rounded-2xl bg-secondaryTransparent'
+              onClick={() => {
+                const zoom = chartRef.current.getZoomLevel?.() ?? 1;
+                const newZoom = Math.min(10, zoom + 0.3);
                 chartRef.current.zoom(newZoom / zoom);
-              }
-              chartRef.current?.update("none");
-              updateInteractivity(chartRef.current);
-            }}>
-            <ZoomOut size={16} />
-          </button>
-          <button
-            className='w-full flex items-center justify-center h-8 rounded-3xl bg-secondaryTransparent'
-            onClick={() => {
-              const zoom = chartRef.current.getZoomLevel?.() ?? 1;
-              const newZoom = Math.min(10, zoom + 0.3);
-              chartRef.current.zoom(newZoom / zoom);
-              chartRef.current?.update("none");
-              updateInteractivity(chartRef.current);
-            }}>
-            <ZoomIn size={16} />
-          </button>
+                chartRef.current?.update("none");
+                updateInteractivity(chartRef.current);
+              }}>
+              <ZoomIn size={16} />
+            </button>
+          </div>
         </div>
       </div>
-
-      <DownloadHeatmapModal
-        trigger={
-          <button
-            className='w-full lg:w-11/12 flex flex-row items-center justify-center gap-x-1 text-sm h-8 rounded-t-lg bg-secondaryTransparent'
-            onClick={downloadImage}>
-            <Download size={16} />
-            Download Heatmap as Image
-          </button>
-        }
-      />
 
       <div className='w-full lg:w-11/12 min-h-[600px]'>
         <canvas ref={canvasRef} />
