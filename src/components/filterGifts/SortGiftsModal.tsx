@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setFilters } from "@/redux/slices/filterListSlice";
 import SectionTransition from "./SelectTransition";
 import { useTranslations } from "next-intl";
-import DoubleSlider from "./DoubleSlider";
+// import DoubleSlider from "./DoubleSlider";
 import GiftsList from "../giftsList/GiftsList";
 import { ChevronIcon, OptionButton } from "./ModalReusable";
 
@@ -332,7 +332,7 @@ export default function SortGiftsModal({ trigger }: Props) {
                     </SectionTransition>
                   </div>
 
-                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+                  {/* <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
                     <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
@@ -355,7 +355,7 @@ export default function SortGiftsModal({ trigger }: Props) {
                     <div className='px-5 py-3'>
                       <DoubleSlider gifts={giftsList} />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
