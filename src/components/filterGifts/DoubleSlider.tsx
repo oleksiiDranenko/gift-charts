@@ -1,65 +1,116 @@
+// components/DoubleSlider.tsx
 import * as Slider from "@radix-ui/react-slider";
 import React from "react";
+import { Bar } from "react-chartjs-2";
+import useVibrate from "@/hooks/useVibrate";
+import GiftInterface from "@/interfaces/GiftInterface";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
-import useVibrate from "@/hooks/useVibrate";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement);
 
 const BUCKETS = 25;
-const BUCKET_SIZE = 4;
 
-export default function DoubleSliderWithChart() {
-  const [values, setValues] = React.useState([0, 100]);
+interface DoubleSliderProps {
+  gifts: GiftInterface[];
+}
+
+export default function DoubleSlider({ gifts }: DoubleSliderProps) {
   const vibrate = useVibrate();
 
-  // Replace with real data in production
-  const rawData = React.useMemo(() => {
-    return Array.from({ length: 1000 }, () => Math.floor(Math.random() * 101));
-  }, []);
+  const validPrices = React.useMemo(() => {
+    return gifts
+      .map((g) => g.priceTon)
+      .filter((p): p is number => typeof p === "number" && !isNaN(p) && p >= 0)
+      .sort((a, b) => a - b);
+  }, [gifts]);
 
+  if (validPrices.length === 0) {
+    return (
+      <div className='w-full text-center py-8 text-secondaryText'>
+        No price data available
+      </div>
+    );
+  }
+
+  const maxPrice = validPrices[validPrices.length - 1]; // e.g. 5000
+  const CHEAP_THRESHOLD = 60; // 0–60 TON = "cheap"
+  const CHEAP_PORTION = 0.85; // 85% of slider for cheap gifts
+
+  // Non-linear normalization: stretch cheap, compress expensive
+  const normalize = (price: number): number => {
+    if (price <= CHEAP_THRESHOLD) {
+      return (price / CHEAP_THRESHOLD) * (CHEAP_PORTION * 100);
+    }
+    const progress = (price - CHEAP_THRESHOLD) / (maxPrice - CHEAP_THRESHOLD);
+    const compressed = Math.sqrt(progress) * (1 - CHEAP_PORTION) * 100;
+    return CHEAP_PORTION * 100 + compressed;
+  };
+
+  const denormalize = (norm: number): number => {
+    if (norm <= CHEAP_PORTION * 100) {
+      return (norm / (CHEAP_PORTION * 100)) * CHEAP_THRESHOLD;
+    }
+    const progress = (norm - CHEAP_PORTION * 100) / ((1 - CHEAP_PORTION) * 100);
+    const expanded = progress * progress; // inverse of sqrt
+    return CHEAP_THRESHOLD + expanded * (maxPrice - CHEAP_THRESHOLD);
+  };
+
+  // Default: show most common range (0 to ~100 TON)
+  const defaultMaxNorm = normalize(Math.min(100, maxPrice));
+  const [normalizedValues, setNormalizedValues] = React.useState<
+    [number, number]
+  >([0, defaultMaxNorm]);
+
+  const [minValue, maxValue] = React.useMemo(() => {
+    return [
+      Number(denormalize(normalizedValues[0]).toFixed(3)),
+      Number(denormalize(normalizedValues[1]).toFixed(3)),
+    ] as const;
+  }, [normalizedValues]);
+
+  // Histogram buckets
   const buckets = React.useMemo(() => {
     const counts = Array(BUCKETS).fill(0);
-    rawData.forEach((val) => {
-      const idx = Math.min(Math.floor(val / BUCKET_SIZE), BUCKETS - 1);
+    validPrices.forEach((price) => {
+      const norm = normalize(price);
+      const idx = Math.min(Math.floor((norm / 100) * BUCKETS), BUCKETS - 1);
       counts[idx]++;
     });
     return counts;
-  }, [rawData]);
+  }, [validPrices]);
 
-  // Vibration: only when the set of highlighted bars changes
+  // Vibration on bucket change
   const prevKeyRef = React.useRef("");
-
   React.useEffect(() => {
-    const key = Array.from({ length: BUCKETS }, (_, i) => {
-      const bucketMin = i * BUCKET_SIZE;
-      const bucketMax = bucketMin + BUCKET_SIZE;
-      const [min, max] = values;
-      return bucketMax > min && bucketMin < max ? "1" : "0";
-    }).join("");
+    const key = buckets
+      .map((_, i) => {
+        const start = (i / BUCKETS) * 100;
+        const end = ((i + 1) / BUCKETS) * 100;
+        const [nMin, nMax] = normalizedValues;
+        return end > nMin && start < nMax ? "1" : "0";
+      })
+      .join("");
 
     if (key !== prevKeyRef.current) {
       vibrate();
       prevKeyRef.current = key;
     }
-  }, [values, vibrate]);
+  }, [normalizedValues, buckets, vibrate]);
 
-  // Bar colors – pure function of current range
-  const backgroundColors = React.useMemo(() => {
-    return buckets.map((_, i) => {
-      const bucketMin = i * BUCKET_SIZE;
-      const bucketMax = bucketMin + BUCKET_SIZE;
-      const [min, max] = values;
-      return bucketMax > min && bucketMin < max
-        ? "rgb(59, 130, 246)"
-        : "rgba(156, 163, 175, 0.25)";
-    });
-  }, [buckets, values]);
+  // Bar colors
+  const backgroundColors = buckets.map((_, i) => {
+    const start = (i / BUCKETS) * 100;
+    const end = ((i + 1) / BUCKETS) * 100;
+    const [nMin, nMax] = normalizedValues;
+    return end > nMin && start < nMax
+      ? "rgb(59, 130, 246)"
+      : "rgba(156, 163, 175, 0.25)";
+  });
 
   const chartData = {
     labels: Array(BUCKETS).fill(""),
@@ -67,13 +118,11 @@ export default function DoubleSliderWithChart() {
       {
         data: buckets,
         backgroundColor: backgroundColors,
+        hoverBackgroundColor: backgroundColors,
         borderWidth: 0,
         borderRadius: 4,
         barPercentage: 0.92,
         categoryPercentage: 0.95,
-        // These prevent any hover/click visual feedback
-        hoverBackgroundColor: backgroundColors,
-        hoverBorderColor: backgroundColors,
       },
     ],
   };
@@ -82,46 +131,44 @@ export default function DoubleSliderWithChart() {
     responsive: true,
     maintainAspectRatio: false,
     animation: { duration: 80 },
-    events: [], // This disables ALL mouse/touch events (click, hover, etc.)
+    events: [],
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },
     },
     scales: {
-      x: { display: false, grid: { display: false } },
-      y: { display: false, grid: { display: false } },
+      x: { display: false },
+      y: { display: false },
     },
   };
 
   const handleChange = (newValues: number[]) => {
     let [a, b] = newValues.sort((x, y) => x - y);
-    const minGap = 1;
+    const minGap = 0.8;
     if (b - a < minGap) {
-      if (a !== values[0]) a = b - minGap;
+      if (a !== normalizedValues[0]) a = b - minGap;
       else b = a + minGap;
     }
-    setValues([a, b]);
+    setNormalizedValues([a, b]);
   };
 
-  const selectedCount = rawData.filter(
-    (v) => v >= values[0] && v <= values[1]
+  const selectedCount = validPrices.filter(
+    (p) => p >= minValue && p <= maxValue
   ).length;
 
   return (
     <div className='w-full'>
-      {/* Pure visual histogram – no interaction */}
       <div className='h-32 mb-7'>
         <Bar data={chartData} options={chartOptions} />
       </div>
 
-      {/* Slider */}
       <div className='relative'>
         <Slider.Root
-          value={values}
+          value={normalizedValues}
           onValueChange={handleChange}
           min={0}
           max={100}
-          step={1}
+          step={0.1}
           className='relative flex items-center select-none touch-none'>
           <Slider.Track className='bg-secondary relative grow h-[2px] rounded'>
             <Slider.Range className='absolute h-full bg-primary rounded' />
@@ -131,15 +178,20 @@ export default function DoubleSliderWithChart() {
         </Slider.Root>
       </div>
 
-      {/* Text */}
       <div className='mt-3 text-center'>
         <div className='text-2xl font-light'>
-          <span className='font-bold'>{values[0]}</span>
+          <span className='font-bold'>{minValue}</span>
           <span className='mx-2 text-secondaryText'>–</span>
-          <span className='font-bold'>{values[1]}</span>
+          <span className='font-bold'>{maxValue}</span>
+          <span className='text-sm text-secondaryText ml-1'>TON</span>
         </div>
         <div className='text-sm text-secondaryText mt-2'>
           {selectedCount} items selected
+          {maxValue > CHEAP_THRESHOLD && (
+            <span className='block text-xs mt-1 opacity-70'>
+              (expensive items compressed)
+            </span>
+          )}
         </div>
       </div>
     </div>

@@ -65,7 +65,7 @@ export default function IndexChart({ data, currency }: IndexChartProps) {
 
     const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
     const topColor =
-      percentChange >= 0 ? "rgba(34,197,94,0.6)" : "rgba(239,68,68,0.6)";
+      percentChange >= 0 ? "rgba(34,197,94,1)" : "rgba(239,68,68,1)";
     const bottomColor =
       percentChange >= 0 ? "rgba(34,197,94,0)" : "rgba(239,68,68,0)";
     g.addColorStop(0, topColor);

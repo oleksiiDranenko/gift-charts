@@ -237,13 +237,9 @@ export default function IndexChart({
         pointHoverRadius: 6,
         fill: true,
         backgroundColor: (context: any) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
+          const { ctx, chartArea } = context.chart;
 
-          if (!chartArea) {
-            // This will prevent gradient errors on first render
-            return null;
-          }
+          if (!chartArea) return null;
 
           const gradient = ctx.createLinearGradient(
             0,
@@ -251,13 +247,13 @@ export default function IndexChart({
             0,
             chartArea.bottom
           );
-          const color =
-            percentChange >= 0
-              ? "rgba(34, 197, 94, 0.5)"
-              : "rgba(239, 68, 68, 0.5)";
 
-          gradient.addColorStop(0, color);
-          gradient.addColorStop(1, color.replace("0.5)", "0)"));
+          const isUp = percentChange >= 0;
+          const base = isUp ? "34, 197, 94" : "239, 68, 68"; // RGB only
+
+          // fade from 1 → 0
+          gradient.addColorStop(0, `rgba(${base}, 1)`); // fully opaque
+          gradient.addColorStop(1, `rgba(${base}, 0)`); // fully transparent
 
           return gradient;
         },

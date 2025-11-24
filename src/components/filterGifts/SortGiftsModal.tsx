@@ -8,6 +8,7 @@ import { setFilters } from "@/redux/slices/filterListSlice";
 import SectionTransition from "./SelectTransition";
 import { useTranslations } from "next-intl";
 import DoubleSlider from "./DoubleSlider";
+import GiftsList from "../giftsList/GiftsList";
 
 interface Props {
   trigger: ReactNode;
@@ -52,6 +53,7 @@ export default function SortGiftsModal({ trigger }: Props) {
 
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.filters);
+  const giftsList = useAppSelector((state) => state.giftsList);
   const t = useTranslations("filters");
   const vibrate = useVibrate();
 
@@ -330,14 +332,7 @@ export default function SortGiftsModal({ trigger }: Props) {
                   </div>
 
                   <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
-                    <button
-                      onClick={() => {
-                        vibrate();
-                        setOpenSection(
-                          openSection === "priceRange" ? null : "priceRange"
-                        );
-                      }}
-                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+                    <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -354,13 +349,11 @@ export default function SortGiftsModal({ trigger }: Props) {
                           </span>
                         </div>
                       </div>
-                      <ChevronIcon open={openSection === "order"} />
-                    </button>
-                    <SectionTransition open={openSection === "priceRange"}>
-                      <div className='px-5 py-3'>
-                        <DoubleSlider />
-                      </div>
-                    </SectionTransition>
+                    </div>
+
+                    <div className='px-5 py-3'>
+                      <DoubleSlider gifts={giftsList} />
+                    </div>
                   </div>
                 </div>
               </Dialog.Panel>

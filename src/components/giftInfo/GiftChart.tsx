@@ -315,7 +315,7 @@ export default function GiftChart({
       {/* LARGE SCREEN */}
       {/* LARGE SCREEN */}
 
-      <div className='hidden lg:flex flex-row box-border'>
+      {/* <div className='hidden lg:flex flex-row box-border'>
         <div className='w-1/4 flex flex-col justify-between mr-3 pt-3 px-3 border-r-2 border-secondaryTransparent'>
           <div>
             <div
@@ -506,82 +506,11 @@ export default function GiftChart({
               }}
             />
           )}
-        </div>
+        </div> 
 
-        {/* <div className='w-full flex flex-row gap-x-2 mt-5'>
-          <MarketsModal
-            trigger={
-              <button
-                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-red-600 rounded-3xl text-white'
-                onClick={() => vibrate()}>
-                {translateGeneral("sell")}
-                <SquareArrowOutUpRight size={16} />
-              </button>
-            }
-          />
-          <MarketsModal
-            trigger={
-              <button
-                className='w-full flex flex-row items-center justify-center gap-x-2 h-10 bg-green-600 rounded-3xl text-white'
-                onClick={() => vibrate()}>
-                {translateGeneral("buy")}
-                <SquareArrowOutUpRight size={16} />
-              </button>
-            }
-          />
-        </div>
-
-        {gift?.preSale ? null : (
-          <div>
-            <ModelsModal
-              trigger={
-                <button
-                  className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-3xl ${
-                    resolvedTheme === "dark"
-                      ? "bg-secondaryTransparent"
-                      : "bg-secondaryTransparent"
-                  }`}
-                  onClick={() => vibrate()}>
-                  <Component size={16} />
-                  {translateInfo("viewModels")}
-                </button>
-              }
-              giftName={gift?.name ? gift.name : ""}
-              giftId={gift?._id ? gift._id : ""}
-            />
-          </div>
-        )} */}
-
-        {/* <div className='mt-5'>
-          <div className='w-full flex flex-row justify-between items-center'>
-            <div className='flex flex-row items-center'>
-              <h2 className='text-lg font-bold'>
-                {translateInfo("yearlyPerformance")}
-              </h2>
-            </div>
-            <div>
-              <button
-                onClick={() => setShowCalendar(!showCalendar)}
-                className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-3xl'>
-                {showCalendar ? (
-                  <>
-                    {translateGeneral("hide")}
-                    <ChevronUp size={18} />
-                  </>
-                ) : (
-                  <>
-                    {translateGeneral("show")}
-                    <ChevronDown size={18} />
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-          <div className={showCalendar ? "visible" : "hidden"}>
-            <CalendarHeatmap lifeData={lifeData} />
-          </div>
-        </div> */}
+        
       </div>
+      */}
     </>
   );
 }
