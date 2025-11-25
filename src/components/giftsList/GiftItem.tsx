@@ -211,14 +211,20 @@ export default function GiftItem({
             <div className='flex flex-row items-center'>
               {currency === "ton" ? (
                 <Image
-                  alt='ton logo'
+                  alt='toncoin'
                   src='/images/toncoin.webp'
                   width={15}
                   height={15}
                   className='mr-1'
                 />
               ) : (
-                <span className='mr-[2px] text-secondaryText font-bold'>$</span>
+                <Image
+                  alt='usdt'
+                  src='/images/usdt.svg'
+                  width={15}
+                  height={15}
+                  className='mr-1'
+                />
               )}
               <span className='text-base font-bold'>
                 {currency === "ton" && displayValue === "price"
@@ -341,14 +347,20 @@ export default function GiftItem({
             <div className='w-full flex flex-row justify-start items-center'>
               {currency === "ton" ? (
                 <Image
-                  alt='ton logo'
+                  alt='ton'
                   src='/images/toncoin.webp'
                   width={15}
                   height={15}
                   className='mr-1'
                 />
               ) : (
-                <span className='mr-1 text-sm'>$</span>
+                <Image
+                  alt='usdt'
+                  src='/images/usdt.svg'
+                  width={15}
+                  height={15}
+                  className='mr-1'
+                />
               )}
               <span className='text-sm'>
                 {currency === "ton" ? item.priceTon : item.priceUsd.toFixed(2)}
@@ -358,14 +370,20 @@ export default function GiftItem({
             <div className='w-full flex flex-row justify-start items-center'>
               {currency === "ton" ? (
                 <Image
-                  alt='ton logo'
+                  alt='ton'
                   src='/images/toncoin.webp'
                   width={15}
                   height={15}
                   className='mr-1'
                 />
               ) : (
-                <span className='mr-1 text-sm'>$</span>
+                <Image
+                  alt='usdt'
+                  src='/images/usdt.svg'
+                  width={15}
+                  height={15}
+                  className='mr-1'
+                />
               )}
               <span className='text-sm'>
                 {currency === "ton"

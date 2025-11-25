@@ -183,11 +183,11 @@ export default function Page() {
       ) : (
         <TreemapChart
           ref={chartRef}
-          data={list.slice(0, amount)}
+          data={list}
           chartType={listType}
           timeGap={timeGap}
           currency={currency}
-          type='round'
+          type='default'
         />
       )}
     </div>

@@ -94,7 +94,10 @@
     "reset": "Reset",
     "viewBy": "View by",
     "timePeriod": "Time Period",
-    "currency": "Currency"
+    "currency": "Currency",
+    "displayAmount": "Amount displayed",
+    "all": "All",
+    "displayAll": "Display All"
   },
 
   "timegap": {

@@ -277,7 +277,8 @@ export default function TreemapControlModal({
 
                   {/* 4. Amount (Top N) */}
 
-                  {/* <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+                  {/* 4. Amount (Top N) - Slider Version */}
+                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
                     <button
                       onClick={() => {
                         vibrate();
@@ -292,12 +293,17 @@ export default function TreemapControlModal({
                           viewBox='0 0 24 24'
                           fill='currentColor'
                           className='size-7 text-primary'>
-                          <path d='M3.375 3C2.339 3 1.5 3.84 1.5 4.875v14.25c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875V4.875C22.5 3.839 21.66 3 20.625 3H3.375ZM18 4.5h-12v3h12v-3Zm0 4.5h-12v9h12v-9Z' />
+                          <path d='M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z' />
                         </svg>
+
                         <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>Show</span>
+                          <span className='text-lg font-bold'>
+                            {translate("displayAmount")}
+                          </span>
                           <span className='text-sm text-secondaryText'>
-                            {amount === totalGifts ? "All" : `Top ${amount}`}
+                            {amount === totalGifts
+                              ? translate("all")
+                              : `${translate("top")} ${amount}`}
                           </span>
                         </div>
                       </div>
@@ -305,23 +311,60 @@ export default function TreemapControlModal({
                     </button>
 
                     <SectionTransition open={openSection === "amount"}>
-                      <div className='flex flex-col gap-1 px-4 pb-3'>
-                        <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {[totalGifts, 50, 35, 25].map((num) => (
-                          <OptionButton
-                            key={num}
-                            label={num === totalGifts ? "All" : `Top ${num}`}
-                            selected={amount === num}
-                            onClick={() => {
+                      <div className='px-6 pb-5 pt-3'>
+                        {/* Slider Container */}
+                        <div className='space-y-3'>
+                          {/* Current Value Display */}
+                          <div className='flex justify-center items-center'>
+                            <span className='text-xl font-bold'>
+                              {amount === totalGifts
+                                ? translate("all")
+                                : amount}
+                            </span>
+                          </div>
+
+                          {/* Radix Slider */}
+                          <Slider.Root
+                            className='relative flex items-center select-none touch-none w-full h-10'
+                            value={[amount]}
+                            onValueChange={([value]) => {
                               vibrate();
-                              onAmountChange(num);
-                              setOpenSection(null);
+                              onAmountChange(value);
                             }}
-                          />
-                        ))}
+                            max={totalGifts}
+                            min={10}
+                            step={5}
+                            aria-label='Top N gifts'>
+                            <Slider.Track className='bg-secondary relative grow rounded-full h-1'>
+                              <Slider.Range className='absolute bg-primary rounded-full h-full' />
+                            </Slider.Track>
+                            <Slider.Thumb className='block w-6 h-6 bg-primary rounded-full ' />
+                          </Slider.Root>
+
+                          {/* Min / Max Labels */}
+                          <div className='flex justify-between text-xs text-secondaryText px-1'>
+                            <span>10</span>
+                            <span>
+                              {totalGifts <= 100 ? totalGifts : "100+"}
+                            </span>
+                          </div>
+
+                          {/* Optional: All Button */}
+                          {amount !== totalGifts && (
+                            <button
+                              onClick={() => {
+                                vibrate();
+                                onAmountChange(totalGifts);
+                                setOpenSection(null);
+                              }}
+                              className='w-full py-3 mt-4 bg-primary/10 hover:bg-primary/20 rounded-2xl text-primary font-semibold transition-colors'>
+                              {translate("displayAll")} ({totalGifts})
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </SectionTransition>
-                  </div> */}
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

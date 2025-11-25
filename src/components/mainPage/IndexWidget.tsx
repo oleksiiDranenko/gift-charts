@@ -80,14 +80,20 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
               <span className='flex flex-row items-center mt-1 text-xl font-bold'>
                 {currency === "ton" ? (
                   <Image
-                    alt='ton logo'
+                    alt='ton'
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
                     className='mr-1'
                   />
                 ) : (
-                  <span className='mr-[2px] text-lg'>$</span>
+                  <Image
+                    alt='usdt'
+                    src='/images/usdt.svg'
+                    width={15}
+                    height={15}
+                    className='mr-1'
+                  />
                 )}
 
                 {!isLoading && monthData ? (
