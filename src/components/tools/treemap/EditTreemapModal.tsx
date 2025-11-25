@@ -2,12 +2,14 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
+import * as Slider from "@radix-ui/react-slider";
 import useVibrate from "@/hooks/useVibrate";
 import {
   ChevronIcon,
   OptionButton,
 } from "@/components/filterGifts/ModalReusable";
 import SectionTransition from "@/components/filterGifts/SelectTransition";
+import { useTranslations } from "next-intl";
 
 interface Props {
   trigger: ReactNode;
@@ -43,6 +45,8 @@ export default function TreemapControlModal({
   >(null);
 
   const vibrate = useVibrate();
+
+  const translate = useTranslations("filters");
 
   const closeModal = () => {
     vibrate();
@@ -128,11 +132,11 @@ export default function TreemapControlModal({
                         </svg>
 
                         <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>View by</span>
+                          <span className='text-lg font-bold'>
+                            {translate("viewBy")}
+                          </span>
                           <span className='text-sm text-secondaryText'>
-                            {listType === "change"
-                              ? "Price Change"
-                              : "Market Cap"}
+                            {translate(listType)}
                           </span>
                         </div>
                       </div>
@@ -186,13 +190,11 @@ export default function TreemapControlModal({
                         </svg>
 
                         <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>Time period</span>
+                          <span className='text-lg font-bold'>
+                            {translate("timePeriod")}
+                          </span>
                           <span className='text-sm text-secondaryText'>
-                            {timeGap === "24h"
-                              ? "24 hours"
-                              : timeGap === "1w"
-                              ? "1 week"
-                              : "1 month"}
+                            {translate(timeGap)}
                           </span>
                         </div>
                       </div>
@@ -205,13 +207,7 @@ export default function TreemapControlModal({
                         {(["24h", "1w", "1m"] as const).map((gap) => (
                           <OptionButton
                             key={gap}
-                            label={
-                              gap === "24h"
-                                ? "24 hours"
-                                : gap === "1w"
-                                ? "1 week"
-                                : "1 month"
-                            }
+                            label={translate(gap)}
                             selected={timeGap === gap}
                             onClick={() => {
                               vibrate();
@@ -249,9 +245,11 @@ export default function TreemapControlModal({
                         </svg>
 
                         <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>Currency</span>
+                          <span className='text-lg font-bold'>
+                            {translate("currency")}
+                          </span>
                           <span className='text-sm text-secondaryText'>
-                            {currency.toUpperCase()}
+                            {translate(currency)}
                           </span>
                         </div>
                       </div>
@@ -261,14 +259,14 @@ export default function TreemapControlModal({
                     <SectionTransition open={openSection === "currency"}>
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {(["ton", "usd"] as const).map((cur) => (
+                        {(["ton", "usd"] as const).map((item) => (
                           <OptionButton
-                            key={cur}
-                            label={cur.toUpperCase()}
-                            selected={currency === cur}
+                            key={item}
+                            label={translate(item)}
+                            selected={currency === item}
                             onClick={() => {
                               vibrate();
-                              onCurrencyChange(cur);
+                              onCurrencyChange(item);
                               setOpenSection(null);
                             }}
                           />
@@ -278,7 +276,8 @@ export default function TreemapControlModal({
                   </div>
 
                   {/* 4. Amount (Top N) */}
-                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+
+                  {/* <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
                     <button
                       onClick={() => {
                         vibrate();
@@ -322,7 +321,7 @@ export default function TreemapControlModal({
                         ))}
                       </div>
                     </SectionTransition>
-                  </div>
+                  </div> */}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

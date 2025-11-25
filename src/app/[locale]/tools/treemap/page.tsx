@@ -13,6 +13,7 @@ import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 import TreemapControlModal from "@/components/tools/treemap/EditTreemapModal";
 import { Download } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function Page() {
   const giftsList = useAppSelector((state) => state.giftsList);
@@ -24,6 +25,8 @@ export default function Page() {
   const [amount, setAmount] = useState<number>(50);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(true);
+
+  const translate = useTranslations("heatmap");
 
   const vibrate = useVibrate();
   const totalGifts = giftsList.length;
@@ -124,7 +127,7 @@ export default function Page() {
           <BackButton />
         </div>
 
-        <div className='w-full lg:w-11/12 gap-x-3 flex flex-row items-center justify-start'>
+        <div className='w-full lg:w-11/12 gap-x-2 flex flex-row items-center justify-start'>
           <div>
             <TreemapControlModal
               trigger={
@@ -136,7 +139,7 @@ export default function Page() {
                     className='size-6'>
                     <path d='M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z' />
                   </svg>
-                  Edit Heatmap
+                  {translate("editHeatmap")}
                 </button>
               }
               listType={listType}
@@ -160,11 +163,11 @@ export default function Page() {
             }}>
             {/* This moving shine bar creates the "alive" flowing effect */}
             <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
-              <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12' />
+              <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12' />
             </span>
 
             <span className='relative z-10 flex flex-row items-center gap-x-1'>
-              <Download size={16} className='animate-pulse ' /> Download
+              <Download size={16} className='' /> {translate("download")}
             </span>
           </button>
         </div>

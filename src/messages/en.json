@@ -64,7 +64,7 @@
     "sortBy": "Sort By",
     "price": "Price",
     "marketCap": "Market Cap",
-    "change": "Change",
+    "change": "Price Change",
     "supply": "Supply",
     "initSupply": "Init. Supply",
     "starsPrice": "Stars Price",
@@ -77,6 +77,9 @@
     "top": "Top",
     "ton": "Ton",
     "usd": "Usd",
+    "24h": "24 hours",
+    "1w": "Week",
+    "1m": "Month",
     "onSale": "On sale",
     "volume": "Volume",
     "salesCount": "Sales count",
@@ -88,7 +91,10 @@
     "highFirst": "High first",
     "lowFirst": "Low first",
     "order": "Order",
-    "reset": "Reset"
+    "reset": "Reset",
+    "viewBy": "View by",
+    "timePeriod": "Time Period",
+    "currency": "Currency"
   },
 
   "timegap": {
@@ -151,6 +157,11 @@
     "24h": "24h",
     "week": "Week",
     "month": "Month"
+  },
+
+  "heatmap": {
+    "editHeatmap": "Edit Heatmap",
+    "download": "Download"
   },
 
   "fearAndGreed": {
