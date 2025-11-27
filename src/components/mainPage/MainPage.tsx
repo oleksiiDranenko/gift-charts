@@ -13,20 +13,17 @@ import { useTranslations } from "next-intl";
 import IndexWidget from "./IndexWidget";
 import ListSkeleton from "../giftsList/ListSkeleton";
 import VoteBanner from "../tools/vote/VoteBanner";
+import { GiftSorter } from "../filterGifts/GiftSorter";
 
 export default function MainPage() {
   const vibrate = useVibrate();
 
   const giftsList = useAppSelector((state) => state.giftsList);
-  const filters = useAppSelector((state) => state.filters);
   const user = useAppSelector((state) => state.user);
 
   const translateMain = useTranslations("mainPage");
   const translateAdd = useTranslations("add");
 
-  const [gainersList, setGainersList] = useState<GiftInterface[]>([]);
-  const [losersList, setLosersList] = useState<GiftInterface[]>([]);
-  const [topList, setTopList] = useState<GiftInterface[]>([]);
   const [userList, setUserList] = useState<GiftInterface[]>([]);
   const [chosenFilter, setChosenFilter] = useState<
     "gainers" | "losers" | "floor" | "saved"
@@ -48,6 +45,21 @@ export default function MainPage() {
   });
 
   const { currency, giftType, giftBackground } = settings;
+
+  const sortedGainers = new GiftSorter(giftsList).sortBy(
+    currency === "ton" ? "priceChangeGrowthTon" : "priceChangeGrowth",
+    "desc"
+  );
+
+  const sortedLosers = new GiftSorter(giftsList).sortBy(
+    currency === "ton" ? "priceChangeGrowthTon" : "priceChangeGrowth",
+    "asc"
+  );
+
+  const sortedFloor = new GiftSorter(giftsList).sortBy(
+    currency === "ton" ? "priceTon" : "priceUsd",
+    "desc"
+  );
 
   // ✅ Sync settings to localStorage
   useEffect(() => {
@@ -177,16 +189,16 @@ export default function MainPage() {
             giftsList={
               chosenFilter === "gainers"
                 ? giftType === "line"
-                  ? giftsList.slice(0, 3)
-                  : giftsList.slice(0, 8)
+                  ? sortedGainers.slice(0, 3)
+                  : sortedGainers.slice(0, 8)
                 : chosenFilter === "losers"
                 ? giftType === "line"
-                  ? giftsList.slice(0, 3)
-                  : giftsList.slice(0, 8)
+                  ? sortedLosers.slice(0, 3)
+                  : sortedLosers.slice(0, 8)
                 : chosenFilter === "floor"
                 ? giftType === "line"
-                  ? giftsList.slice(0, 3)
-                  : giftsList.slice(0, 8)
+                  ? sortedFloor.slice(0, 3)
+                  : sortedFloor.slice(0, 8)
                 : []
             }
             type={giftType}

@@ -312,8 +312,6 @@ const imagePlugin = (
   },
 });
 
-// ... rest of the component (TreemapChart) remains completely unchanged ...
-
 const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
   ({ data, chartType, timeGap, currency, type }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);

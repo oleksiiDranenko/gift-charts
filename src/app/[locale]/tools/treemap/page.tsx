@@ -14,6 +14,7 @@ import BackButton from "@/utils/ui/backButton";
 import TreemapControlModal from "@/components/tools/treemap/EditTreemapModal";
 import { Download } from "lucide-react";
 import { useTranslations } from "next-intl";
+import DownloadHeatmapModal from "@/components/tools/treemap/DownloadHeatmapModal";
 
 export default function Page() {
   const giftsList = useAppSelector((state) => state.giftsList);
@@ -22,7 +23,7 @@ export default function Page() {
   const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m">("24h");
   const [currency, setCurrency] = useState<"ton" | "usd">("ton");
 
-  const [amount, setAmount] = useState<number>(50);
+  const [amount, setAmount] = useState<number>(100);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -49,6 +50,12 @@ export default function Page() {
       }
     })();
   }, [dispatch, giftsList]);
+
+  useEffect(() => {
+    if (giftsList.length > 0 && amount === 100) {
+      setAmount(giftsList.length);
+    }
+  }, [giftsList]);
 
   useEffect(() => {
     let rawList = [...giftsList];
@@ -154,22 +161,26 @@ export default function Page() {
             />
           </div>
 
-          <button
-            className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
+          <DownloadHeatmapModal
+            trigger={
+              <button
+                className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
              flex items-center justify-center gap-x-2 text-white text-sm font-bold'
-            onClick={() => {
-              chartRef.current?.downloadImage();
-              vibrate();
-            }}>
-            {/* This moving shine bar creates the "alive" flowing effect */}
-            <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
-              <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12' />
-            </span>
+                onClick={() => {
+                  chartRef.current?.downloadImage();
+                  vibrate();
+                }}>
+                {/* This moving shine bar creates the "alive" flowing effect */}
+                <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
+                  <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12' />
+                </span>
 
-            <span className='relative z-10 flex flex-row items-center gap-x-1'>
-              <Download size={16} className='' /> {translate("download")}
-            </span>
-          </button>
+                <span className='relative z-10 flex flex-row items-center gap-x-1'>
+                  <Download size={16} className='' /> {translate("download")}
+                </span>
+              </button>
+            }
+          />
         </div>
       </div>
       {loading ? (
@@ -183,7 +194,7 @@ export default function Page() {
       ) : (
         <TreemapChart
           ref={chartRef}
-          data={list}
+          data={list.slice(0, amount)}
           chartType={listType}
           timeGap={timeGap}
           currency={currency}

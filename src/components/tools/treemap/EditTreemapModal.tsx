@@ -59,6 +59,30 @@ export default function TreemapControlModal({
     setIsOpen(true);
   };
 
+  const resetFilters = () => {
+    vibrate();
+
+    if (hasChanges) {
+      onListTypeChange("change");
+      onTimeGapChange("24h");
+      onCurrencyChange("ton");
+      onAmountChange(totalGifts);
+    }
+  };
+
+  const DEFAULTS = {
+    listType: "change",
+    timeGap: "24h",
+    currency: "ton",
+    amount: totalGifts,
+  };
+
+  const hasChanges =
+    listType !== "change" ||
+    timeGap !== "24h" ||
+    currency !== "ton" ||
+    amount !== totalGifts;
+
   return (
     <>
       <span onClick={openModal} className='inline-block w-full'>
@@ -90,7 +114,26 @@ export default function TreemapControlModal({
               leaveTo='translate-y-full opacity-0'>
               <Dialog.Panel className='w-full lg:w-11/12 h-5/6 p-3 rounded-t-3xl bg-background flex flex-col'>
                 {/* HEADER */}
-                <div className='w-full h-10 pb-3 flex justify-end items-center'>
+                <div className='w-full h-10 pb-3 flex justify-between items-center'>
+                  <button
+                    onClick={resetFilters}
+                    className={`flex items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-3xl transition-opacity ${
+                      !hasChanges ? "opacity-50" : ""
+                    }`}>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='currentColor'
+                      className='size-5'>
+                      <path
+                        fillRule='evenodd'
+                        d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                    {translate("reset")}
+                  </button>
+
                   <button
                     onClick={closeModal}
                     className='w-fit p-2 bg-secondaryTransparent rounded-full'>
