@@ -150,7 +150,16 @@
     "percentUpdgraded": "Percent Upgraded",
     "amountBurnt": "Amount Burnt",
     "percentBurnt": "Percent Burnt",
-    "viewModels": "View Models"
+    "viewModels": "View Models",
+    "marketCap": "Market Cap"
+  },
+
+  "priceOptions": {
+    "ton": "TON",
+    "usd": "USDT",
+    "onSale": "On sale",
+    "volume": "Volume",
+    "salesCount": "Sales count"
   },
 
   "giftHeader": {

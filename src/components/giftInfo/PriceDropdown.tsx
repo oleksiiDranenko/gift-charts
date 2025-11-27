@@ -22,7 +22,7 @@ export default function PriceDropdown({
   selectedPrice,
   handleSelectedPrice,
 }: PriceDropdownProps) {
-  const translate = useTranslations("");
+  const translate = useTranslations("priceOptions");
   return (
     <div className='relative min-w-36 h-8'>
       <Listbox value={selectedPrice} onChange={handleSelectedPrice}>

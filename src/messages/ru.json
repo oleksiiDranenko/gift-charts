@@ -151,7 +151,16 @@
     "percentUpdgraded": "Процент улучшенных",
     "amountBurnt": "Количество сожжённых",
     "percentBurnt": "Процент сожжённых",
-    "viewModels": "Просмотреть модели"
+    "viewModels": "Просмотреть модели",
+    "marketCap": "Рыночная капитализация"
+  },
+
+  "priceOptions": {
+    "ton": "TON",
+    "usd": "USDT",
+    "onSale": "На продаже",
+    "volume": "Объём",
+    "salesCount": "Количество продаж"
   },
 
   "giftHeader": {
