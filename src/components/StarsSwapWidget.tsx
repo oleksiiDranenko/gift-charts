@@ -95,7 +95,7 @@ export default function StarsSwapWidget() {
       onClick={handleClick}
       disabled={isLoading}
       className={`w-full py-2 rounded-3xl text-white flex justify-center ${
-        isLoading ? "bg-secondaryTransparent cursor-not-allowed" : "bg-primary"
+        isLoading ? "bg-secondary cursor-not-allowed" : "bg-primary"
       }`}>
       {isLoading ? (
         <LoaderCircle className='size-6 animate-spin' />
