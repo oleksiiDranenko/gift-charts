@@ -39,7 +39,7 @@ export default function StarsSwapWidget() {
 
       script.onload = () => {
         window.StarsSwapWidget?.init({
-          partnerUid: "partner_id",
+          partnerUid: process.env.NEXT_PUBLIC_STARS_UID || "",
         });
 
         setIsLoaded(true);
