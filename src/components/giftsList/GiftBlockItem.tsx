@@ -94,6 +94,13 @@ export default function GiftBlockItem({
     return number.toString();
   };
 
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  };
+
   const countPercentChange = (last24: number, current: number) => {
     return parseFloat((((current - last24) / last24) * 100).toFixed(2));
   };
@@ -142,22 +149,28 @@ export default function GiftBlockItem({
           <div className='flex flex-row items-center'>
             {currency === "ton" ? (
               <Image
-                alt='ton logo'
+                alt='ton'
                 src='/images/toncoin.webp'
                 width={15}
                 height={15}
                 className='mr-1'
               />
             ) : (
-              <span className='mr-1'>$</span>
+              <Image
+                alt='usdt'
+                src='/images/usdt.svg'
+                width={15}
+                height={15}
+                className='mr-1'
+              />
             )}
             <span className='text-sm font-bold'>
               {currency === "ton" && displayValue === "price"
-                ? item.priceTon
+                ? formatPrice(item.priceTon)
                 : currency === "ton" && displayValue === "marketCap"
                 ? formatNumber(item.priceTon * item.upgradedSupply)
                 : currency === "usd" && displayValue === "price"
-                ? item.priceUsd.toFixed(2)
+                ? formatPrice(item.priceUsd)
                 : currency === "usd" && displayValue === "marketCap"
                 ? formatNumber(item.priceUsd * item.upgradedSupply)
                 : null}

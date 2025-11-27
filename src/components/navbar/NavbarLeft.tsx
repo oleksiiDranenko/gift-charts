@@ -4,16 +4,6 @@ import { Link } from "@/i18n/navigation"; // Use locale-aware Link
 import { useEffect, useState } from "react";
 import { usePathname } from "@/i18n/navigation"; // Use locale-aware usePathname
 import useVibrate from "@/hooks/useVibrate";
-import {
-  House,
-  User,
-  ChartCandlestick,
-  Settings,
-  Gift,
-  UserRound,
-  ChevronsRight,
-  ChevronsLeft,
-} from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -52,17 +42,24 @@ export default function NavbarLeft() {
     }
   }, [pathname]);
 
+  const sidebarWidth = isOpen ? "w-48" : "w-16";
+  const sidebarOuterClasses = `${sidebarWidth} pl-3 pr-3 border-r-2 border-secondaryTransparent`;
+
   return (
     <>
-      <div className={`hidden lg:block ${isOpen ? "w-48" : "w-16"}`}></div>
+      <div
+        className={`hidden lg:block flex-shrink-0 ${sidebarOuterClasses} border-r-transparent`}
+      />
+
+      {/* Fixed sidebar */}
       <div
         className={`hidden fixed lg:flex lg:flex-col lg:justify-between ${
           isOpen ? "" : "items-center"
-        } left-0 top-0 h-screen ${
-          isOpen ? "w-48" : "w-16"
-        } z-40 border-r-2 border-secondaryTransparent p-3`}>
+        } left-0 top-0 h-screen ${sidebarWidth} z-40 p-3 border-r-2 border-secondaryTransparent`}>
         <div className='space-y-3 flex flex-col items-center'>
-          <Link href={"/"} className=' flex flex-row gap-x-2 mb-6 mt-3'>
+          <Link
+            href={"/"}
+            className='w-full flex flex-row justify-start gap-x-2 mb-6 mt-3'>
             <Image src={"/images/logo.webp"} alt={""} width={30} height={30} />
             {isOpen && <h1 className='text-lg '>Gift Charts</h1>}
           </Link>

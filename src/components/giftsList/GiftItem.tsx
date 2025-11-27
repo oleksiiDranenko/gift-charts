@@ -113,6 +113,13 @@ export default function GiftItem({
     return number.toString();
   };
 
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  };
+
   const formatNumberWithWord = (number: number | undefined | null) => {
     if (number == null) {
       return "N/A"; // Or another fallback value like "0" or ""
@@ -228,11 +235,11 @@ export default function GiftItem({
               )}
               <span className='text-base font-bold'>
                 {currency === "ton" && displayValue === "price"
-                  ? item.priceTon
+                  ? formatPrice(item.priceTon)
                   : currency === "ton" && displayValue === "marketCap"
                   ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
                   : currency === "usd" && displayValue === "price"
-                  ? item.priceUsd.toFixed(2)
+                  ? formatPrice(item.priceUsd)
                   : currency === "usd" && displayValue === "marketCap"
                   ? formatNumberWithWord(item.priceUsd * item.upgradedSupply)
                   : null}

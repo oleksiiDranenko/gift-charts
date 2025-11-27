@@ -20,10 +20,12 @@ export default function ListHandler({
   currency,
 }: PropsInterface) {
   return (
-    <div className='px-3 w-full'>
+    <div className='w-full'>
       <div
         className={
-          type === "block" ? "grid grid-flow-row grid-cols-4 gap-x-2" : ""
+          type === "block"
+            ? "grid grid-flow-row grid-cols-4 gap-x-2 px-3"
+            : "px-2"
         }>
         {type === "line" ? <GiftListHeader /> : null}
         {giftsList.map((item: GiftInterface, i) =>

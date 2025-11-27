@@ -4,17 +4,10 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import axios from "axios";
 import { Link } from "@/i18n/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import IndexBlock from "@/components/tools/IndexBlock";
 import useVibrate from "@/hooks/useVibrate";
-import {
-  ChevronRight,
-  Gauge,
-  Grid2x2,
-  LayoutDashboard,
-  Smile,
-} from "lucide-react";
-import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
 import IndexBlockSkeleton from "@/components/tools/IndexBlockSkeleton";
@@ -23,8 +16,21 @@ export default function Page() {
   const dispatch = useAppDispatch();
   const giftsList = useAppSelector((state) => state.giftsList);
   const vibrate = useVibrate();
-  const user = useAppSelector((state) => state.user);
   const translate = useTranslations("tools");
+
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("settings");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          console.warn("Failed to parse settings from localStorage");
+        }
+      }
+    }
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
 
   // ✅ Fetch gifts (still via Redux)
   useEffect(() => {
@@ -229,6 +235,9 @@ export default function Page() {
                 valueType={index.valueType}
                 tonPrice={index.tonPrice}
                 tonPrice24hAgo={index.tonPrice24hAgo}
+                usdPrice={index.usdPrice}
+                usdPrice24hAgo={index.usdPrice24hAgo}
+                currency={settings.currency}
               />
             ))}
       </div>

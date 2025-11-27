@@ -38,7 +38,7 @@ export default function GiftSearchBar() {
     : [];
 
   return (
-    <div className='relative px-3 w-full mb-3 active:scale-[98%] duration-200'>
+    <div className='relative px-3 w-full mb-3'>
       <Combobox
         value={selected}
         onChange={(gift: GiftInterface | null) => {

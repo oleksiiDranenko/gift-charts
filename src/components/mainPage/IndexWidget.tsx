@@ -90,8 +90,8 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
                   <Image
                     alt='usdt'
                     src='/images/usdt.svg'
-                    width={15}
-                    height={15}
+                    width={18}
+                    height={18}
                     className='mr-1'
                   />
                 )}
