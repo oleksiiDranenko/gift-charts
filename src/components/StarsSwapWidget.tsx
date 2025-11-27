@@ -1,7 +1,8 @@
 "use client";
 
+import useVibrate from "@/hooks/useVibrate";
 import { LoaderCircle } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 // Add global typings for the widget
 declare global {
@@ -17,61 +18,58 @@ declare global {
 export default function StarsSwapWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const vibrate = useVibrate();
 
   const loadWidget = useCallback((callback?: () => void) => {
-    // Load CSS
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href =
+    // 1. Load CSS first
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href =
       "https://swap2stars.app/src/v1/widget/css/" +
       Date.now() +
       "/stars-swap.css";
-    document.head.appendChild(link);
 
-    // Load JS
-    const script = document.createElement("script");
-    script.src =
-      "https://swap2stars.app/src/v1/widget/js/" +
-      Date.now() +
-      "/stars-swap-widget.umd.js";
+    css.onload = () => {
+      // 2. CSS is ready → load JS
+      const script = document.createElement("script");
+      script.src =
+        "https://swap2stars.app/src/v1/widget/js/" +
+        Date.now() +
+        "/stars-swap-widget.umd.js";
 
-    script.onload = () => {
-      initWidget();
-      setIsLoaded(true);
-      callback?.();
+      script.onload = () => {
+        window.StarsSwapWidget?.init({
+          partnerUid: "partner_id",
+        });
+
+        setIsLoaded(true);
+        callback?.();
+      };
+
+      script.onerror = () => {
+        console.error("Stars Swap JS failed to load");
+        setIsLoading(false);
+      };
+
+      document.head.appendChild(script);
     };
 
-    script.onerror = () => {
-      console.error("Stars Swap widget load error");
+    css.onerror = () => {
+      console.error("Stars Swap CSS failed to load");
       setIsLoading(false);
     };
 
-    document.head.appendChild(script);
+    document.head.appendChild(css);
   }, []);
 
-  const initWidget = () => {
-    if (window.StarsSwapWidget) {
-      window.StarsSwapWidget.init({
-        partnerUid: "partner_id", // replace with real ID
-      });
-    }
-  };
-
   const openWidget = () => {
-    if (!window.StarsSwapWidget?.open) {
-      console.error("Stars Swap widget not loaded");
-      return;
-    }
-
-    window.StarsSwapWidget.open({
+    window.StarsSwapWidget?.open({
       tonConnect: window.TonConnectUI,
     });
 
-    // Force top-level z-index
+    // Force z-index
     setTimeout(() => {
-      const widget = document.querySelector(
-        "stars-swap-widget"
-      ) as HTMLElement | null;
+      const widget = document.querySelector("stars-swap-widget") as HTMLElement;
       widget?.style.setProperty("z-index", "999", "important");
     }, 50);
 
@@ -82,19 +80,20 @@ export default function StarsSwapWidget() {
     setIsLoading(true);
 
     if (!isLoaded) {
-      // Load script then open widget
       loadWidget(() => openWidget());
     } else {
-      // Already loaded → open immediately
       openWidget();
     }
   };
 
   return (
     <button
-      onClick={handleClick}
+      onClick={() => {
+        handleClick();
+        vibrate();
+      }}
       disabled={isLoading}
-      className={`w-full py-2 rounded-3xl text-white flex justify-center ${
+      className={`w-full h-10 rounded-3xl text-white flex justify-center items-center ${
         isLoading ? "bg-secondary cursor-not-allowed" : "bg-primary"
       }`}>
       {isLoading ? (
