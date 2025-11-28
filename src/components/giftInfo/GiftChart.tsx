@@ -341,7 +341,12 @@ export default function GiftChart({
         // WIDE SCREEN
 
         <div className='flex flex-row box-border'>
-          <div className='w-1/4 flex flex-col justify-between mr-3 pt-3 px-3 border-r-2 border-secondaryTransparent'>
+          <div
+            className={`w-1/4 flex flex-col justify-between mr-3 ${
+              resolvedTheme === "dark"
+                ? "border-r-2 border-secondaryTransparent pt-3 px-3"
+                : "bg-secondaryTransparent rounded-3xl p-3"
+            } `}>
             <div>
               <div className='h-fit flex items-center mb-5'>
                 <Image
@@ -410,7 +415,7 @@ export default function GiftChart({
                 </span>
               </div>
               <div className='w-full mt-5 flex flex-col gap-y-2 font-normal text-sm'>
-                <div className='w-full flex flex-col justify-between items-start py-1 gap-y-1 border-b-2 border-secondary'>
+                <div className='w-full flex flex-col justify-between items-start py-1 gap-y-1 border-b-2 border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("marketCap")}
                   </span>
@@ -439,13 +444,13 @@ export default function GiftChart({
                     )}
                   </span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start py-1 gap-y-1 border-b-2 border-secondary'>
+                <div className='w-full flex flex-col justify-between items-start py-1 gap-y-1 border-b-2 border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("upgradedSupply")}
                   </span>
                   <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start py-2 gap-y-1 border-b-2 border-secondary'>
+                <div className='w-full flex flex-col justify-between items-start py-2 gap-y-1 border-b-2 border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("supply")}
                   </span>
@@ -485,7 +490,7 @@ export default function GiftChart({
           </div>
 
           <div className='w-3/4'>
-            <div className='w-full h-fit mb-3 mt-5 flex flex-row gap-x-2'>
+            <div className='w-full h-fit mb-3 flex flex-row gap-x-2'>
               <PriceDropdown
                 selectedPrice={selectedPrice}
                 handleSelectedPrice={setSelectedPrice}

@@ -33,11 +33,11 @@ export default function PageTransition({ children }: Props) {
         appear
         show={true}
         enter='transition-all ease-out duration-300'
-        enterFrom='opacity-0 translate-y-6'
+        enterFrom='opacity-0 translate-y-0'
         enterTo='opacity-100 translate-y-0'
         leave='transition-all ease-in duration-300'
         leaveFrom='opacity-100 translate-y-0'
-        leaveTo='opacity-0 translate-y-6'>
+        leaveTo='opacity-0 translate-y-0'>
         <div className='w-full flex flex-row justify-center'>{children}</div>
       </Transition>
     </div>

@@ -6,11 +6,14 @@ import { usePathname } from "@/i18n/navigation"; // Use locale-aware usePathname
 import useVibrate from "@/hooks/useVibrate";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 export default function NavbarLeft() {
   const pathname = usePathname(); // Returns pathname without locale (e.g., /tools)
   const vibrate = useVibrate();
   const t = useTranslations("navbar");
+
+  const { resolvedTheme } = useTheme();
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -43,19 +46,23 @@ export default function NavbarLeft() {
   }, [pathname]);
 
   const sidebarWidth = isOpen ? "w-48" : "w-16";
-  const sidebarOuterClasses = `${sidebarWidth} pl-3 pr-3 border-r-2 border-secondaryTransparent`;
+  const sidebarOuterClasses = `${sidebarWidth} pl-3 pr-3`;
 
   return (
     <>
       <div
-        className={`hidden lg:block flex-shrink-0 ${sidebarOuterClasses} border-r-transparent`}
+        className={`hidden lg:block flex-shrink-0 ${sidebarOuterClasses} `}
       />
 
       {/* Fixed sidebar */}
       <div
         className={`hidden fixed bg-background lg:flex lg:flex-col lg:justify-between transition-all duration-300 ease-in-out ${
           isOpen ? "" : "items-center"
-        } left-0 top-0 h-screen ${sidebarWidth} z-40 p-3 border-r-2 border-secondaryTransparent`}>
+        } left-0 top-0 h-screen ${sidebarWidth} z-40 p-3 ${
+          resolvedTheme === "dark"
+            ? "border-r-2 border-secondaryTransparent"
+            : "bg-secondaryTransparent"
+        }`}>
         <div className='space-y-3 flex flex-col items-center'>
           <Link
             href='/'
