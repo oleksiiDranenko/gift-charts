@@ -11,7 +11,6 @@ interface ModalBaseProps {
   onOpen?: () => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  panelClassName?: string;
 }
 
 export default function ModalBase({
@@ -21,7 +20,6 @@ export default function ModalBase({
   onOpen,
   open: controlledOpen,
   onOpenChange,
-  panelClassName = "w-full lg:w-[98%] h-5/6 p-3 rounded-t-3xl bg-background",
 }: ModalBaseProps) {
   const vibrate = useVibrate();
 
@@ -81,7 +79,8 @@ export default function ModalBase({
               leave='transform transition ease-in duration-200'
               leaveFrom='translate-y-0 opacity-100'
               leaveTo='translate-y-full opacity-0'>
-              <Dialog.Panel className={`flex flex-col ${panelClassName}`}>
+              <Dialog.Panel
+                className={`flex flex-col w-full lg:w-[98%] h-5/6 p-3 rounded-t-3xl bg-background`}>
                 {children}
               </Dialog.Panel>
             </Transition.Child>

@@ -30,8 +30,7 @@ export default function AddAssetModal({
       open={isOpen}
       onOpenChange={onOpenChange}
       onOpen={onOpen}
-      onClose={onClose}
-      panelClassName='w-full lg:w-[98%] h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl'>
+      onClose={onClose}>
       {/* Modal Header with Title + Close Button */}
       <div className='w-full h-10 flex justify-between items-center mb-4'>
         <h2 className='text-xl font-bold ml-3'>{t("addGift")}</h2>

@@ -30,8 +30,7 @@ export default function AddWatchlistItemModal({
       open={isOpen}
       onOpen={onOpen}
       onClose={onClose}
-      onOpenChange={onOpenChange}
-      panelClassName='w-full lg:w-[98%] h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col'>
+      onOpenChange={onOpenChange}>
       {/* Header */}
       <div className='w-full h-10 flex justify-between items-center mb-4'>
         <h2 className='text-xl font-bold ml-3'>
