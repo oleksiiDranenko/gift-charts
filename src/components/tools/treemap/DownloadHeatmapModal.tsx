@@ -55,7 +55,7 @@ export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
               leave='transform transition ease-in duration-200'
               leaveFrom='translate-y-0 opacity-100'
               leaveTo='translate-y-full opacity-0'>
-              <Dialog.Panel className='w-full lg:w-11/12 p-4 h-1/2 pb-8 rounded-t-3xl bg-background flex flex-col'>
+              <Dialog.Panel className='w-full lg:w-[98%] p-4 h-1/2 pb-8 rounded-t-3xl bg-background flex flex-col'>
                 {/* CONTENT */}
                 <div className='flex flex-col items-center justify-center text-center px-4 pb-4'>
                   <svg

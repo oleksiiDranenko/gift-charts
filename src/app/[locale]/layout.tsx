@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Wix_Madefor_Display } from "next/font/google";
 import ReduxProvider from "@/redux/provider";
 import { ThemeProvider } from "next-themes";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   ],
 };
 
-const inter = Inter({ subsets: ["latin", "cyrillic"] });
+const inter = Wix_Madefor_Display({ subsets: ["latin", "cyrillic"] });
 
 export default async function RootLayout({
   children,

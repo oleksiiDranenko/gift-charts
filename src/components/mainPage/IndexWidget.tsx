@@ -84,7 +84,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
-                    className='mr-1'
+                    className='mr-[6px]'
                   />
                 ) : (
                   <Image
@@ -92,7 +92,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
                     src='/images/usdt.svg'
                     width={18}
                     height={18}
-                    className='mr-1'
+                    className='mr-[6px]'
                   />
                 )}
 

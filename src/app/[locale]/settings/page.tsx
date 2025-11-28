@@ -76,7 +76,7 @@ export default function Page() {
   };
 
   return (
-    <div className='w-full lg:w-11/12 pt-0 pb-24 px-3 space-y-3'>
+    <div className='w-full lg:w-[98%] pt-0 pb-24 px-3 space-y-3'>
       <h1 className='text-xl font-bold'>{translate("accountSettings")}</h1>
       {user.username && (
         <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>

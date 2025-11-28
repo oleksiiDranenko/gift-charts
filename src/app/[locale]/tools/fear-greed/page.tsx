@@ -36,7 +36,7 @@ export default function Page() {
   const t = useTranslations("fearAndGreed");
 
   return (
-    <main className='w-full lg:w-11/12 pt-[0px]  px-3'>
+    <main className='w-full lg:w-[98%] pt-[0px]  px-3'>
       <div className='w-full h-10 gap-x-3 flex items-center justify-between'>
         <BackButton />
       </div>

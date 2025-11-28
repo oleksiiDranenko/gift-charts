@@ -51,7 +51,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
               leave='ease-in duration-150'
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'>
-              <Dialog.Panel className='w-full lg:w-11/12 p-3 rounded-3xl bg-secondaryTransparent'>
+              <Dialog.Panel className='w-full lg:w-[98%] p-3 rounded-3xl bg-secondaryTransparent'>
                 <div className='w-full mt-2'>
                   <h2 className='mb-3 text-lg font-bold'>Off-Chain:</h2>
                   <div className='w-full flex flex-row gap-x-4'>

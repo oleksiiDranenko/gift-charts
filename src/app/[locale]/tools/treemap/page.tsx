@@ -130,11 +130,11 @@ export default function Page() {
   return (
     <div className='w-full pt-[0px]  pb-24 flex flex-col items-center overflow-visible'>
       <div className='w-full flex flex-col items-center px-3 gap-y-3 mb-3'>
-        <div className='w-full lg:w-11/12 flex flex-row justify-between items-center gap-x-3'>
+        <div className='w-full lg:w-[98%] flex flex-row justify-between items-center gap-x-3'>
           <BackButton />
         </div>
 
-        <div className='w-full lg:w-11/12 gap-x-2 flex flex-row items-center justify-start'>
+        <div className='w-full lg:w-[98%] gap-x-2 flex flex-row items-center justify-start'>
           <div>
             <TreemapControlModal
               trigger={

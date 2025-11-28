@@ -65,7 +65,7 @@ export default function Page() {
   });
 
   return (
-    <main className='w-full lg:w-11/12 pt-[0px] pb-28 px-3'>
+    <main className='w-full lg:w-[98%] pt-[0px] pb-28 px-3'>
       <h1 className='w-full text-xl font-bold mb-5 ml-1 flex flex-row gap-x-2'>
         Services
       </h1>

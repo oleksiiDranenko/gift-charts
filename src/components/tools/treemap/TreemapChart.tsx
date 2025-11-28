@@ -444,7 +444,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
     }, [data, chartType, timeGap, currency, type]);
 
     return (
-      <div className='w-full lg:w-11/12 min-h-[600px] px-3'>
+      <div className='w-full lg:w-[98%] min-h-[600px] px-3'>
         <div className=' min-h-[600px] bg-secondaryTransparent rounded-3xl'>
           <canvas ref={canvasRef} />
         </div>

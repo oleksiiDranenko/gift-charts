@@ -53,15 +53,29 @@ export default function NavbarLeft() {
 
       {/* Fixed sidebar */}
       <div
-        className={`hidden fixed lg:flex lg:flex-col lg:justify-between ${
+        className={`hidden fixed bg-background lg:flex lg:flex-col lg:justify-between transition-all duration-300 ease-in-out ${
           isOpen ? "" : "items-center"
         } left-0 top-0 h-screen ${sidebarWidth} z-40 p-3 border-r-2 border-secondaryTransparent`}>
         <div className='space-y-3 flex flex-col items-center'>
           <Link
-            href={"/"}
-            className='w-full flex flex-row justify-start gap-x-2 mb-6 mt-3'>
-            <Image src={"/images/logo.webp"} alt={""} width={30} height={30} />
-            {isOpen && <h1 className='text-lg '>Gift Charts</h1>}
+            href='/'
+            className={`w-full flex flex-row ${
+              isOpen ? "justify-start" : "justify-center"
+            } gap-x-2 mb-6 mt-3 transition-all duration-300 ease-in-out`}>
+            <Image
+              src='/images/logo.webp'
+              alt='Gift Charts'
+              width={30}
+              height={30}
+              className='flex-shrink-0'
+            />
+
+            <h1
+              className={`text-lg whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out ${
+                isOpen ? "w-auto opacity-100 " : "w-0 opacity-0 ml-0"
+              }`}>
+              Gift Charts
+            </h1>
           </Link>
           <Link
             className={`flex flex-row gap-x-2 items-center w-full justify-start p-3 rounded-3xl box-border hover:bg-secondary ${
