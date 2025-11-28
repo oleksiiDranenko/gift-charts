@@ -7,9 +7,8 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setFilters } from "@/redux/slices/filterListSlice";
 import SectionTransition from "./SelectTransition";
 import { useTranslations } from "next-intl";
-// import DoubleSlider from "./DoubleSlider";
-import GiftsList from "../giftsList/GiftsList";
 import { ChevronIcon, OptionButton } from "./ModalReusable";
+import ModalBase from "@/utils/ui/ModalBase";
 
 interface Props {
   trigger: ReactNode;
@@ -54,7 +53,6 @@ export default function SortGiftsModal({ trigger }: Props) {
 
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.filters);
-  const giftsList = useAppSelector((state) => state.giftsList);
   const t = useTranslations("filters");
   const vibrate = useVibrate();
 
@@ -169,170 +167,136 @@ export default function SortGiftsModal({ trigger }: Props) {
 
   return (
     <>
-      <span onClick={() => setIsOpen(true)} className='inline-block w-full'>
-        {trigger}
-      </span>
+      <ModalBase trigger={trigger}>
+        {/* HEADER */}
+        <div className='w-full h-10 pb-3 flex justify-between items-center'>
+          <button
+            onClick={resetAll}
+            className={`flex flex-row items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-3xl transition-opacity ${
+              filters.sort === "highFirst" ? "opacity-50" : "opacity-100"
+            }`}>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-5'>
+              <path
+                fillRule='evenodd'
+                d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z'
+                clipRule='evenodd'
+              />
+            </svg>
+            {t("reset")}
+          </button>
 
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-50' onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-200'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-150'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'>
-            <div className='fixed inset-0 bg-black/40 backdrop-blur-sm' />
-          </Transition.Child>
+          <button
+            onClick={closeModal}
+            className='w-fit p-2 bg-secondaryTransparent rounded-full'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-5'>
+              <path
+                fillRule='evenodd'
+                d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </div>
 
-          <div className='fixed inset-0 flex items-end justify-center'>
-            <Transition.Child
-              as={Fragment}
-              enter='transform transition ease-out duration-300'
-              enterFrom='translate-y-full opacity-0'
-              enterTo='translate-y-0 opacity-100'
-              leave='transform transition ease-in duration-200'
-              leaveFrom='translate-y-0 opacity-100'
-              leaveTo='translate-y-full opacity-0'>
-              <Dialog.Panel className='w-full lg:w-[98%] h-5/6 p-3 rounded-t-xl bg-background flex flex-col'>
-                {/* HEADER */}
-                <div className='w-full h-10 pb-3 flex justify-between items-center'>
-                  <button
-                    onClick={resetAll}
-                    className={`flex flex-row items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-3xl transition-opacity ${
-                      filters.sort === "highFirst"
-                        ? "opacity-50"
-                        : "opacity-100"
-                    }`}>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      viewBox='0 0 24 24'
-                      fill='currentColor'
-                      className='size-5'>
-                      <path
-                        fillRule='evenodd'
-                        d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
-                    {t("reset")}
-                  </button>
+        {/* BODY */}
+        <div className='flex-1 overflow-y-auto flex flex-col gap-3 pt-2'>
+          {/* Sort By Section */}
+          <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+            <button
+              onClick={() => {
+                vibrate();
+                setOpenSection(openSection === "sort" ? null : "sort");
+              }}
+              className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+              <div className='flex flex-row items-center gap-x-3'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-7 text-primary'>
+                  <path d='M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z' />
+                </svg>
 
-                  <button
-                    onClick={closeModal}
-                    className='w-fit p-2 bg-secondaryTransparent rounded-full'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      viewBox='0 0 24 24'
-                      fill='currentColor'
-                      className='size-5'>
-                      <path
-                        fillRule='evenodd'
-                        d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
-                  </button>
+                <div className='flex flex-col items-start'>
+                  <span className='text-lg font-bold'>{t("sortBy")}</span>
+                  <span className='text-sm text-secondaryText'>
+                    {t(currentLabel)}
+                  </span>
                 </div>
+              </div>
+              <ChevronIcon open={openSection === "sort"} />
+            </button>
 
-                {/* BODY */}
-                <div className='flex-1 overflow-y-auto flex flex-col gap-3 pt-2'>
-                  {/* Sort By Section */}
-                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
-                    <button
-                      onClick={() => {
-                        vibrate();
-                        setOpenSection(openSection === "sort" ? null : "sort");
-                      }}
-                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
-                      <div className='flex flex-row items-center gap-x-3'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 24 24'
-                          fill='currentColor'
-                          className='size-7 text-primary'>
-                          <path d='M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z' />
-                        </svg>
+            <SectionTransition open={openSection === "sort"}>
+              <div className='flex flex-col gap-1 px-4 pb-3'>
+                <div className='h-[2px] w-full bg-secondary mb-1' />
+                {SORT_LABELS.map((key) => (
+                  <OptionButton
+                    key={key}
+                    label={t(key)}
+                    selected={currentLabel === key}
+                    onClick={() => handleSortSelect(key)}
+                  />
+                ))}
+              </div>
+            </SectionTransition>
+          </div>
 
-                        <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>
-                            {t("sortBy")}
-                          </span>
-                          <span className='text-sm text-secondaryText'>
-                            {t(currentLabel)}
-                          </span>
-                        </div>
-                      </div>
-                      <ChevronIcon open={openSection === "sort"} />
-                    </button>
+          {/* Order Section */}
+          <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+            <button
+              onClick={() => {
+                vibrate();
+                setOpenSection(openSection === "order" ? null : "order");
+              }}
+              className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+              <div className='flex flex-row items-center gap-x-3'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-7 text-primary'>
+                  <path
+                    fillRule='evenodd'
+                    d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
 
-                    <SectionTransition open={openSection === "sort"}>
-                      <div className='flex flex-col gap-1 px-4 pb-3'>
-                        <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {SORT_LABELS.map((key) => (
-                          <OptionButton
-                            key={key}
-                            label={t(key)}
-                            selected={currentLabel === key}
-                            onClick={() => handleSortSelect(key)}
-                          />
-                        ))}
-                      </div>
-                    </SectionTransition>
-                  </div>
+                <div className='flex flex-col items-start'>
+                  <span className='text-lg font-bold'>{t("order")}</span>
+                  <span className='text-sm text-secondaryText'>
+                    {orderText}
+                  </span>
+                </div>
+              </div>
+              <ChevronIcon open={openSection === "order"} />
+            </button>
 
-                  {/* Order Section */}
-                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
-                    <button
-                      onClick={() => {
-                        vibrate();
-                        setOpenSection(
-                          openSection === "order" ? null : "order"
-                        );
-                      }}
-                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
-                      <div className='flex flex-row items-center gap-x-3'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 24 24'
-                          fill='currentColor'
-                          className='size-7 text-primary'>
-                          <path
-                            fillRule='evenodd'
-                            d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
+            <SectionTransition open={openSection === "order"}>
+              <div className='flex flex-col gap-1 px-4 pb-3'>
+                <div className='h-[2px] w-full bg-secondary mb-1' />
+                {[t("highFirst"), t("lowFirst")].map((order) => (
+                  <OptionButton
+                    key={order}
+                    label={order}
+                    selected={orderText === order}
+                    onClick={handleOrderToggle}
+                  />
+                ))}
+              </div>
+            </SectionTransition>
+          </div>
 
-                        <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>
-                            {t("order")}
-                          </span>
-                          <span className='text-sm text-secondaryText'>
-                            {orderText}
-                          </span>
-                        </div>
-                      </div>
-                      <ChevronIcon open={openSection === "order"} />
-                    </button>
-
-                    <SectionTransition open={openSection === "order"}>
-                      <div className='flex flex-col gap-1 px-4 pb-3'>
-                        <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {[t("highFirst"), t("lowFirst")].map((order) => (
-                          <OptionButton
-                            key={order}
-                            label={order}
-                            selected={orderText === order}
-                            onClick={handleOrderToggle}
-                          />
-                        ))}
-                      </div>
-                    </SectionTransition>
-                  </div>
-
-                  {/* <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+          {/* <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
                     <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
@@ -356,12 +320,8 @@ export default function SortGiftsModal({ trigger }: Props) {
                       <DoubleSlider gifts={giftsList} />
                     </div>
                   </div> */}
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </Dialog>
-      </Transition>
+        </div>
+      </ModalBase>
     </>
   );
 }
