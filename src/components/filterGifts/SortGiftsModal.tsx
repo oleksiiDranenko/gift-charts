@@ -167,7 +167,7 @@ export default function SortGiftsModal({ trigger }: Props) {
 
   return (
     <>
-      <ModalBase trigger={trigger}>
+      <ModalBase trigger={trigger} open={isOpen} onOpenChange={setIsOpen}>
         {/* HEADER */}
         <div className='w-full h-10 pb-3 flex justify-between items-center'>
           <button
