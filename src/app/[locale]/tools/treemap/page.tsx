@@ -138,7 +138,7 @@ export default function Page() {
           <div>
             <TreemapControlModal
               trigger={
-                <button className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm text-white bg-secondaryTransparent rounded-3xl'>
+                <button className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm bg-secondaryTransparent rounded-3xl'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'

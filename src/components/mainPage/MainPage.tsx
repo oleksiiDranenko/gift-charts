@@ -123,7 +123,7 @@ export default function MainPage() {
           <button
             className={`flex ml-3 items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
               chosenFilter === "gainers"
-                ? "text-foreground bg-secondary rounded-3xl"
+                ? "text-foreground font-bold bg-secondary rounded-3xl"
                 : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => {
@@ -136,7 +136,7 @@ export default function MainPage() {
           <button
             className={`flex items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
               chosenFilter === "losers"
-                ? "text-foreground bg-secondary rounded-3xl"
+                ? "text-foreground font-bold bg-secondary rounded-3xl"
                 : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => {
@@ -149,7 +149,7 @@ export default function MainPage() {
           <button
             className={`flex items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
               chosenFilter === "floor"
-                ? "text-foreground bg-secondary "
+                ? "text-foreground font-bold bg-secondary rounded-3xl"
                 : "text-secondaryText bg-secondaryTransparent"
             }`}
             onClick={() => {

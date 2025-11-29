@@ -13,7 +13,7 @@ export default function ListSkeleton({
   return (
     <>
       {type === "line" ? (
-        <div className='w-full flex flex-col px-3'>
+        <div className='w-full flex flex-col px-2'>
           {!hideHeader && <GiftListHeader />}
           {Array.from({ length: count }).map((_, i) => (
             <GiftItemSkeleton key={i} type={"line"} index={i} />

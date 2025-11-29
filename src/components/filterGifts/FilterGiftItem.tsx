@@ -2,6 +2,7 @@
 
 import useVibrate from "@/hooks/useVibrate";
 import GiftInterface from "@/interfaces/GiftInterface";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 
 interface PropsInterface {
@@ -16,12 +17,15 @@ export default function FilterGiftItem({
   onClick,
 }: PropsInterface) {
   const vibrate = useVibrate();
+  const { resolvedTheme } = useTheme();
 
   return (
     <div
       className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start rounded-3xl
-        transition-all active:scale-[95%] duration-200 ease-in-out border-b-2 border-secondaryTransparent
-        ${selected ? "bg-secondaryTransparent" : "bg-transparent"}
+        transition-all active:scale-[95%] duration-200 ease-in-out 
+        ${selected ? "bg-secondaryTransparent" : "bg-transparent"} ${
+        resolvedTheme === "dark" ? "border-b-2 border-secondaryTransparent" : ""
+      }
       `}
       key={gift._id}
       onClick={() => {

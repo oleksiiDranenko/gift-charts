@@ -151,7 +151,7 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "border-secondaryTransparent border-b-2"
+            ? "shadow-sm shadow-secondary"
             : "bg-secondaryTransparent"
         }`}
         key={item._id}

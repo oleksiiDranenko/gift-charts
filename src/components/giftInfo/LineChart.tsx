@@ -16,6 +16,7 @@ import { useTheme } from "next-themes";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
+import useVibrate from "@/hooks/useVibrate";
 
 ChartJS.register(
   LineElement,
@@ -55,6 +56,7 @@ export default function LineChart({
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
   const { resolvedTheme } = useTheme();
+  const vibrate = useVibrate();
 
   const translateTime = useTranslations("timegap");
 
@@ -422,6 +424,14 @@ export default function LineChart({
           const ctx = chart.ctx;
 
           if (!tooltip || !tooltip.opacity) {
+            // Tooltip hidden → reset last index
+            if ((chart as any).lastActiveIndex !== null) {
+              (chart as any).lastActiveIndex = null;
+            }
+            return;
+          }
+
+          if (!tooltip || !tooltip.opacity) {
             return;
           }
 
@@ -445,6 +455,21 @@ export default function LineChart({
 
           ctx.stroke();
           ctx.restore();
+
+          const currentIndex = tooltip.dataPoints?.[0]?.dataIndex;
+
+          if (currentIndex !== undefined) {
+            const lastIndex = (chart as any).lastActiveIndex;
+
+            // Vibrate only when moving to a NEW point
+            if (lastIndex !== null && lastIndex !== currentIndex) {
+              vibrate();
+            }
+
+            (chart as any).lastActiveIndex = currentIndex;
+          } else {
+            (chart as any).lastActiveIndex = null;
+          }
         },
       },
     },
