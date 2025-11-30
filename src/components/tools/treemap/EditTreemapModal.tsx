@@ -63,22 +63,15 @@ export default function TreemapControlModal({
     vibrate();
 
     if (hasChanges) {
-      onListTypeChange("change");
+      onListTypeChange("marketCap");
       onTimeGapChange("24h");
       onCurrencyChange("ton");
       onAmountChange(totalGifts);
     }
   };
 
-  const DEFAULTS = {
-    listType: "change",
-    timeGap: "24h",
-    currency: "ton",
-    amount: totalGifts,
-  };
-
   const hasChanges =
-    listType !== "change" ||
+    listType !== "marketCap" ||
     timeGap !== "24h" ||
     currency !== "ton" ||
     amount !== totalGifts;

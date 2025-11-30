@@ -19,9 +19,10 @@ import DownloadHeatmapModal from "@/components/tools/treemap/DownloadHeatmapModa
 export default function Page() {
   const giftsList = useAppSelector((state) => state.giftsList);
   const [list, setList] = useState<GiftInterface[]>([]);
-  const [listType, setListType] = useState<"change" | "marketCap">("change");
+  const [listType, setListType] = useState<"change" | "marketCap">("marketCap");
   const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m">("24h");
   const [currency, setCurrency] = useState<"ton" | "usd">("ton");
+  const [dynamicColor, setDynamicColor] = useState<boolean>(true);
 
   const [amount, setAmount] = useState<number>(100);
   const dispatch = useAppDispatch();
@@ -199,6 +200,7 @@ export default function Page() {
           timeGap={timeGap}
           currency={currency}
           type='default'
+          dynamicColor={dynamicColor}
         />
       )}
     </div>
