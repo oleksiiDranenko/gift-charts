@@ -300,7 +300,7 @@ export default function GiftChart({
             </div>
           )}
 
-          <div className='mt-5'>
+          {/* <div className='mt-5'>
             <div className='w-full flex flex-row justify-between items-center'>
               <div className='flex flex-row items-center'>
                 <h2 className='text-lg font-bold'>
@@ -328,7 +328,7 @@ export default function GiftChart({
             <div className={showCalendar ? "visible" : "hidden"}>
               <CalendarHeatmap lifeData={lifeData} />
             </div>
-          </div>
+          </div> */}
         </div>
       ) : (
         // WIDE SCREEN

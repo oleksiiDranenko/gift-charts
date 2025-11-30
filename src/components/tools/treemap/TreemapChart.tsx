@@ -32,7 +32,6 @@ interface TreemapChartProps {
   timeGap: "24h" | "1w" | "1m";
   currency: "ton" | "usd";
   type: HeatmapType;
-  dynamicColor: boolean;
 }
 
 const preloadImages = (data: GiftData[]) => {
@@ -118,81 +117,50 @@ const imagePlugin = (
   textScale: number = 1,
   imageScale: number = 1,
   borderWidth: number = 0,
-  type: HeatmapType,
-  dynamicColor: boolean = true // ← keep the prop, but now it means "fade by intensity"
+  type: HeatmapType
 ) => ({
   id: "treemapImages",
   afterDatasetDraw(chart: any) {
-    const { ctx } = chart;
-    const dataset = chart.data.datasets[0] as any;
+    const { ctx, data } = chart;
+    const dataset = data.datasets[0] as any;
     const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
     const scale = chart.getZoomLevel ? chart.getZoomLevel() : 1;
 
-    // Cache icons
-    if (!imageMap.get("toncoin")) {
-      const img = new Image();
-      img.src = "/images/toncoin.webp";
-      imageMap.set("toncoin", img);
+    // ensure toncoin & usdt images
+    let toncoinImg = imageMap.get("toncoin");
+    if (!toncoinImg) {
+      toncoinImg = new Image();
+      toncoinImg.src = "/images/toncoin.webp";
+      imageMap.set("toncoin", toncoinImg);
     }
-    if (!imageMap.get("usdt")) {
-      const img = new Image();
-      img.src = "/images/usdt.svg";
-      imageMap.set("usdt", img);
+    let usdtImg = imageMap.get("usdt");
+    if (!usdtImg) {
+      usdtImg = new Image();
+      usdtImg.src = "/images/usdt.svg";
+      imageMap.set("usdt", usdtImg);
     }
-    const toncoinImg = imageMap.get("toncoin")!;
-    const usdtImg = imageMap.get("usdt")!;
-
-    // Find extremes only if dynamicColor is enabled
-    let maxGain = 1;
-    let maxLoss = 1;
-    if (dynamicColor && dataset.tree.length > 0) {
-      dataset.tree.forEach((item: GiftData) => {
-        if (item.percentChange > maxGain) maxGain = item.percentChange;
-        if (item.percentChange < -maxLoss) maxLoss = -item.percentChange;
-      });
-      maxGain = Math.max(maxGain, 1);
-      maxLoss = Math.max(maxLoss, 1);
-    }
-
-    // Color + opacity based on how extreme the change is
-    const getColorWithOpacity = (percent: number): string => {
-      if (!dynamicColor) {
-        // Original solid behavior
-        const color =
-          percent > 0 ? "#018f35" : percent < 0 ? "#dc2626" : "#8F9779";
-        return color;
-      }
-
-      const absPercent = Math.abs(percent);
-      const maxExtreme = percent > 0 ? maxGain : maxLoss;
-      const intensity = maxExtreme > 0 ? absPercent / maxExtreme : 0;
-      const opacity = Math.max(0.5, intensity * 1); // from ~15% to 90%+ opacity
-
-      if (percent > 0) {
-        return `rgba(1, 143, 53, ${opacity})`; // exact #018f35 → rgba(1,143,53,α)
-      } else if (percent < 0) {
-        return `rgba(220, 38, 38, ${opacity})`; // exact #dc2626 → rgba(220,38,38,α)
-      } else {
-        return `rgba(143, 151, 121, ${opacity})`; // #8F9779 with fade
-      }
-    };
 
     ctx.save();
     ctx.scale(scale, scale);
 
     dataset.tree.forEach((item: GiftData, index: number) => {
-      const meta = chart.getDatasetMeta(0).data[index];
+      const meta = chart.getDatasetMeta(0).data[index] as any;
       if (!meta) return;
 
-      const x = meta.x / scale;
-      const y = meta.y / scale;
-      const width = meta.width / scale;
-      const height = meta.height / scale;
+      const x = meta.x / scale,
+        y = meta.y / scale;
+      const width = meta.width / scale,
+        height = meta.height / scale;
       if (width <= 0 || height <= 0) return;
 
-      // This is the magic line
-      ctx.fillStyle = getColorWithOpacity(item.percentChange);
+      const baseColor =
+        item.percentChange > 0
+          ? "#018f35"
+          : item.percentChange < 0
+          ? "#dc2626"
+          : "#8F9779";
 
+      ctx.fillStyle = baseColor;
       ctx.strokeStyle = "#1e293b";
       ctx.lineWidth = borderWidth / scale;
 
@@ -204,15 +172,14 @@ const imagePlugin = (
       if (borderWidth > 0) ctx.stroke();
       ctx.closePath();
 
-      // ── Rest of your original rendering (100% unchanged) ──
       const img = imageMap.get(item.imageName);
       if (!img?.complete || img.naturalWidth === 0) return;
 
       const minSize = Math.min(width, height);
       const baseSize = Math.min(Math.max(minSize / 4, 5), 1000) * imageScale;
       const imgAspect = img.width / img.height;
-      let drawWidth = baseSize;
-      let drawHeight = baseSize / imgAspect;
+      let drawWidth = baseSize,
+        drawHeight = baseSize / imgAspect;
       if (drawHeight > baseSize) {
         drawHeight = baseSize;
         drawWidth = baseSize * imgAspect;
@@ -233,11 +200,12 @@ const imagePlugin = (
         drawWidth,
         drawHeight
       );
-
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
+      ctx.strokeStyle = "transparent";
+      ctx.lineWidth = 0;
 
-      // Name
+      // Draw name (always first)
       ctx.font = `bold ${fontSize}px sans-serif`;
       ctx.fillText(
         item.name,
@@ -245,44 +213,82 @@ const imagePlugin = (
         startY + drawHeight + fontSize + lineSpacing
       );
 
-      // Price + icon
-      const priceY = startY + drawHeight + fontSize * 2 + lineSpacing * 2;
+      // ——— MIDDLE LINE: PRICE (with TON or USDT icon) ———
       ctx.font = `${fontSize}px sans-serif`;
       const priceText = `${item.price.toFixed(2)}`;
       const priceTextWidth = ctx.measureText(priceText).width;
       const iconSize = fontSize * 1.0;
+      const iconSpacing = fontSize * -0.1;
 
       if (
         currency === "ton" &&
-        toncoinImg.complete &&
+        toncoinImg?.complete &&
         toncoinImg.naturalWidth > 0
       ) {
-        ctx.drawImage(
-          toncoinImg,
-          centerX - priceTextWidth / 2 - iconSize - 3,
-          priceY - iconSize * 0.8,
-          iconSize,
-          iconSize
-        );
-        ctx.fillText(priceText, centerX + iconSize / 2, priceY);
+        try {
+          ctx.drawImage(
+            toncoinImg,
+            centerX - priceTextWidth / 2 - iconSize - iconSpacing,
+            startY +
+              drawHeight +
+              fontSize * 2 +
+              lineSpacing * 2 -
+              iconSize * 0.8,
+            iconSize,
+            iconSize
+          );
+          ctx.fillText(
+            priceText,
+            centerX + iconSize / 2 + iconSpacing,
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+          );
+        } catch (e) {
+          console.error("Error drawing toncoin image for price:", e);
+          ctx.fillText(
+            `TON ${priceText}`,
+            centerX,
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+          );
+        }
       } else if (
         currency === "usd" &&
-        usdtImg.complete &&
+        usdtImg?.complete &&
         usdtImg.naturalWidth > 0
       ) {
-        ctx.drawImage(
-          usdtImg,
-          centerX - priceTextWidth / 2 - iconSize - 3,
-          priceY - iconSize * 0.8,
-          iconSize,
-          iconSize
-        );
-        ctx.fillText(priceText, centerX + iconSize / 2, priceY);
+        try {
+          ctx.drawImage(
+            usdtImg,
+            centerX - priceTextWidth / 2 - iconSize - iconSpacing,
+            startY +
+              drawHeight +
+              fontSize * 2 +
+              lineSpacing * 2 -
+              iconSize * 0.8,
+            iconSize,
+            iconSize
+          );
+          ctx.fillText(
+            priceText,
+            centerX + iconSize / 2 + iconSpacing,
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+          );
+        } catch (e) {
+          console.error("Error drawing USDT image:", e);
+          ctx.fillText(
+            `USDT ${priceText}`,
+            centerX,
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+          );
+        }
       } else {
-        ctx.fillText(priceText, centerX, priceY);
+        ctx.fillText(
+          priceText,
+          centerX,
+          startY + drawHeight + fontSize * 2 + lineSpacing * 2
+        );
       }
 
-      // % Change
+      // ——— BOTTOM LINE: % CHANGE ———
       ctx.font = `${priceFontSize}px sans-serif`;
       const changeText = `${item.percentChange >= 0 ? "+" : ""}${
         item.percentChange
@@ -293,7 +299,7 @@ const imagePlugin = (
         startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
       );
 
-      // Watermark
+      // Watermark on first item
       if (index === 0) {
         ctx.font = `${watermarkFontSize}px sans-serif`;
         ctx.fillStyle = "rgba(255,255,255,0.6)";
@@ -305,6 +311,7 @@ const imagePlugin = (
     ctx.restore();
   },
 });
+
 const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
   ({ data, chartType, timeGap, currency, type }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -438,7 +445,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
 
     return (
       <div className='w-full lg:w-[98%] min-h-[600px] px-3'>
-        <div className=' min-h-[600px]'>
+        <div className=' min-h-[600px] bg-secondaryTransparent rounded-3xl'>
           <canvas ref={canvasRef} />
         </div>
       </div>
