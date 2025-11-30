@@ -208,7 +208,7 @@ export default function MainPage() {
         )}
       </div>
 
-      {/* <VoteBanner /> */}
+      <VoteBanner />
 
       {/* <Link
         href={"/donate"}

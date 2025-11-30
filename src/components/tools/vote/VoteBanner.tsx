@@ -80,10 +80,11 @@ export default function VoteBanner() {
 
   return (
     <>
-      {isVoteStatusLoading || hasVoted === null ? null : !hasVoted ? (
-        <div className='w-full px-3 mb-4'>
+      {/* isVoteStatusLoading || hasVoted === null ? null : !hasVoted */}
+      {true ? (
+        <div className='w-full px-3 my-3'>
           <div className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
-            <h1 className='w-full flex text-start text-xl font-bold mb-3'>
+            <h1 className='w-full flex text-start text-xl font-bold mb-5 px-1'>
               How do you feel about the Gifts market?
             </h1>
             <div className='w-full gap-x-2 flex flex-row mb-3'>

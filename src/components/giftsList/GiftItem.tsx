@@ -141,7 +141,7 @@ export default function GiftItem({
   return (
     <>
       <Link
-        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-3xl ${
+        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0
@@ -152,7 +152,7 @@ export default function GiftItem({
               }`
             : resolvedTheme === "dark"
             ? "border-b-2 border-secondaryTransparent"
-            : "bg-secondaryTransparent"
+            : "bg-secondaryTransparent rounded-3xl"
         }`}
         key={item._id}
         href={`/gift/${item._id}`}
