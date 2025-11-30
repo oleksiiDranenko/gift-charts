@@ -177,6 +177,17 @@
     "download": "Скачать"
   },
 
+  "vote": {
+    "marketSentiment": "Рыночные настроения",
+    "howDoYouFeel": "Как вы относитесь к рынку?",
+    "veryNegative": "Очень негативно",
+    "negative": "Негативно",
+    "neutral": "Нейтрально",
+    "positive": "Позитивно",
+    "veryPositive": "Очень позитивно",
+    "totalVotes": "Всего голосов:"
+  },
+
   "fearAndGreed": {
     "name": "Страх и жадность",
     "extremeFear": "Крайний страх",

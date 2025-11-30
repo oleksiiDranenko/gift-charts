@@ -208,7 +208,9 @@ export default function MainPage() {
         )}
       </div>
 
-      <VoteBanner />
+      <div className='w-full px-3'>
+        <VoteBanner />
+      </div>
 
       {/* <Link
         href={"/donate"}

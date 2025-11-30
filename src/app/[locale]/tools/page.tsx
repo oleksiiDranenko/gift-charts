@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
 import IndexBlock from "@/components/tools/IndexBlock";
 import useVibrate from "@/hooks/useVibrate";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Gauge } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
 import IndexBlockSkeleton from "@/components/tools/IndexBlockSkeleton";
@@ -65,7 +65,7 @@ export default function Page() {
   });
 
   return (
-    <main className='w-full lg:w-[98%] pt-[0px] pb-28 px-3'>
+    <main className='w-full lg:w-[98%] pt-[0px] pb-28 lg:pb-0 px-3'>
       <h1 className='w-full text-xl font-bold mb-5 ml-1 flex flex-row gap-x-2'>
         Services
       </h1>
@@ -141,28 +141,42 @@ export default function Page() {
           </div>
         </Link>
 
-        {/* <Link
+        <div
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'
-          href={"/tools/fear-greed"}
-          onClick={() => {vibrate()}}>
-          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+          onClick={() => {
+            vibrate();
+          }}>
+          <div className='w-full p-3 flex flex-row justify-between items-center text-secondaryText backdrop-blur-lg'>
             <div className='flex flex-row items-center gap-x-3'>
-              <Gauge size={28} className='text-primary' />
+              <Gauge size={28} className='text-secondary' />
               <div className='flex flex-col'>
                 <span className='font-bold text-lg'>
                   {translate("fearGreed")}
                 </span>
-                <span className='text-sm text-secondaryText'>
+                <span className='text-sm'>
                   {translate("fearGreedDescription")}
                 </span>
               </div>
             </div>
-
-            <ChevronRight size={20} className='text-primary' />
+            {/* <ChevronRight size={20} className='' /> */}
+            <span className='pr-1 gap-x-1 flex flex-row items-center text-primary'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Soon
+            </span>
           </div>
-        </Link> */}
+        </div>
 
-        {true && (
+        {/* {true && (
           <Link
             className='bg-secondaryTransparent rounded-3xl overflow-hidden'
             href={"/tools/vote"}
@@ -196,7 +210,7 @@ export default function Page() {
               <ChevronRight size={20} className='text-primary' />
             </div>
           </Link>
-        )}
+        )} */}
       </div>
 
       {/* Indexes */}

@@ -176,6 +176,17 @@
     "download": "Download"
   },
 
+  "vote": {
+    "marketSentiment": "Market Sentiment",
+    "howDoYouFeel": "How do you feel about the market?",
+    "veryNegative": "veryNegative",
+    "negative": "Negative",
+    "neutral": "Neutral",
+    "positive": "Positive",
+    "veryPositive": "Very Positive",
+    "totalVotes": "Total votes:"
+  },
+
   "fearAndGreed": {
     "name": "Fear & Greed",
     "extremeFear": "Extreme fear",
