@@ -13,7 +13,8 @@
     "sell": "Sell",
     "show": "Show",
     "hide": "Hide",
-    "tryItNow": "Try it now"
+    "tryItNow": "Try it now",
+    "back": "Go back"
   },
   "account": {
     "openInTelegram": "Please open app in Telegram",

@@ -54,6 +54,43 @@ export default function Page() {
   return (
     <main className='w-full lg:w-5/6 pt-[0px] pb-24 px-3'>
       <h1 className='w-full text-xl font-bold mb-3 ml-1 flex flex-row gap-x-2'>
+        Services
+      </h1>
+      <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
+        <Link
+          className='bg-secondaryTransparent rounded-2xl overflow-hidden'
+          href={"/tools/stars"}
+          onClick={() => {
+            vibrate();
+          }}>
+          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+            <div className='flex flex-row items-center gap-x-3'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-7 text-yellow-400'>
+                <path
+                  fillRule='evenodd'
+                  d='M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+
+              <div className='flex flex-col'>
+                <span className='font-bold text-lg'>Buy Stars</span>
+                <span className='text-sm text-secondaryText'>
+                  Swap crypto to telegram stars
+                </span>
+              </div>
+            </div>
+
+            <ChevronRight size={20} className='text-primary' />
+          </div>
+        </Link>
+      </div>
+
+      <h1 className='w-full text-xl font-bold mb-3 mt-5 ml-1 flex flex-row gap-x-2'>
         Analytics Tools
       </h1>
 
@@ -91,7 +128,7 @@ export default function Page() {
 
       {/* Market Sentiment */}
       {user.token && (
-        <div className='w-full h-16 p-3 mb-5 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
+        <div className='w-full h-16 p-3 flex flex-row justify-between items-center py-3 bg-secondaryTransparent rounded-xl'>
           <h1 className='font-bold flex flex-row items-center gap-x-2'>
             <Smile size={26} className='text-primary' />
             Market Sentiment
@@ -107,7 +144,7 @@ export default function Page() {
       )}
 
       {/* Indexes */}
-      <h1 className='w-full text-xl font-bold mb-3 mt-1 ml-1 flex flex-row gap-x-2'>
+      <h1 className='w-full text-xl font-bold mb-3 mt-5 ml-1 flex flex-row gap-x-2'>
         Indexes
       </h1>
 
