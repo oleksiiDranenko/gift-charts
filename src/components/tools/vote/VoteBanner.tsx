@@ -48,10 +48,12 @@ export default function VoteBanner() {
   );
 
   useEffect(() => {
-    if (voteStatus.userVote === null) {
-      setHasVoted(false);
-    } else {
-      setHasVoted(true);
+    if (voteStatus) {
+      if (voteStatus.userVote === null) {
+        setHasVoted(false);
+      } else {
+        setHasVoted(true);
+      }
     }
   }, [voteStatus]);
 
