@@ -7,157 +7,117 @@ import Image from "next/image";
 import Link from "next/link";
 import useVibrate from "@/hooks/useVibrate";
 import { useTranslations } from "next-intl";
+import ModalBase from "@/utils/ui/ModalBase";
 
 interface MarketsModalProps {
   trigger: ReactNode; // Button or any clickable element
 }
+
+const offchain = [
+  {
+    name: "Portals",
+    img: "https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/ni7vlvzll03912e/avatar_9xf5gwd17v.jpg",
+    link: "https://t.me/portals/market?startapp=s6ekgi",
+  },
+  {
+    name: "Tonnel",
+    img: "https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/2cyjbta6sjfetin/avatar_wiaiqqnm_nt_TUsxtMdabW.jpg",
+    link: "https://t.me/tonnel_network_bot/gifts?startapp=ref_754292445",
+  },
+  {
+    name: "MRKT",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_s5uUrxWH-KgIH_koXtCcZ8-E31bSl1QB3w&s",
+    link: "https://t.me/mrkt/app?startapp=754292445",
+  },
+];
+
+const onchain = [
+  {
+    name: "Fragment",
+    img: "https://storage.getblock.io/web/web/images/marketplace/Fragment/photo_2024-07-23_22-06-50.jpg",
+    link: "https://fragment.com/gifts",
+  },
+  {
+    name: "GetGems",
+    img: "https://avatars.githubusercontent.com/u/109078587?s=200&v=4",
+    link: "https://getgems.io/gifts-collection",
+  },
+];
 
 export default function MarketsModal({ trigger }: MarketsModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const vibrate = useVibrate();
   const translateGeneral = useTranslations("general");
 
+  const closeModal = () => {
+    vibrate();
+    setIsOpen(false);
+  };
+
   return (
     <>
-      {/* Clone the trigger element and attach onClick */}
-      <span onClick={() => setIsOpen(true)} className='inline-block w-full'>
-        {trigger}
-      </span>
-
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as='div'
-          className='relative z-50'
-          onClose={() => setIsOpen(false)}>
-          {/* Backdrop */}
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-200'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-150'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'>
-            <div className='fixed inset-0 bg-black/40 backdrop-blur-sm' />
-          </Transition.Child>
-
-          {/* Modal content */}
-          <div className='fixed inset-0 flex items-center justify-center p-4'>
-            <Transition.Child
-              as={Fragment}
-              enter='ease-out duration-200'
-              enterFrom='opacity-0 scale-95'
-              enterTo='opacity-100 scale-100'
-              leave='ease-in duration-150'
-              leaveFrom='opacity-100 scale-100'
-              leaveTo='opacity-0 scale-95'>
-              <Dialog.Panel className='w-full lg:w-[98%] p-3 rounded-3xl bg-secondaryTransparent'>
-                <div className='w-full mt-2'>
-                  <h2 className='mb-3 text-lg font-bold'>Off-Chain:</h2>
-                  <div className='w-full flex flex-row gap-x-4'>
-                    <Link
-                      className='flex flex-col items-center text-sm gap-y-1'
-                      href={"https://t.me/portals/market?startapp=s6ekgi"}
-                      onClick={() => vibrate()}>
-                      <Image
-                        src={
-                          "https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/ni7vlvzll03912e/avatar_9xf5gwd17v.jpg"
-                        }
-                        alt={""}
-                        width={70}
-                        height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
-                      />
-                      <span>Portals</span>
-                    </Link>
-                    <Link
-                      className='flex flex-col items-center text-sm gap-y-1'
-                      href={
-                        "https://t.me/tonnel_network_bot/gifts?startapp=ref_754292445"
-                      }
-                      onClick={() => vibrate()}>
-                      <Image
-                        src={
-                          "https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/2cyjbta6sjfetin/avatar_wiaiqqnm_nt_TUsxtMdabW.jpg"
-                        }
-                        alt={""}
-                        width={70}
-                        height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
-                      />
-                      <span>Tonnel</span>
-                    </Link>
-                    <Link
-                      className='flex flex-col items-center text-sm gap-y-1'
-                      href={"https://t.me/mrkt/app?startapp=754292445"}
-                      onClick={() => vibrate()}>
-                      <Image
-                        src={
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_s5uUrxWH-KgIH_koXtCcZ8-E31bSl1QB3w&s"
-                        }
-                        alt={""}
-                        width={70}
-                        height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
-                      />
-                      <span>MRKT</span>
-                    </Link>
-                  </div>
-                </div>
-
-                <div className='w-full mt-6'>
-                  <h2 className='mb-3 text-lg font-bold'>On-Chain:</h2>
-                  <div className='w-full flex flex-row gap-x-4'>
-                    <Link
-                      className='flex flex-col items-center text-sm gap-y-1'
-                      href={"https://fragment.com/gifts"}
-                      onClick={() => vibrate()}
-                      target='_blank'>
-                      <Image
-                        src={
-                          "https://storage.getblock.io/web/web/images/marketplace/Fragment/photo_2024-07-23_22-06-50.jpg"
-                        }
-                        alt={""}
-                        width={70}
-                        height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
-                      />
-                      <span>Fragment</span>
-                    </Link>
-                    <Link
-                      className='flex flex-col items-center text-sm gap-y-1'
-                      href={"https://getgems.io/gifts-collection"}
-                      target='_blank'
-                      onClick={() => vibrate()}>
-                      <Image
-                        src={
-                          "https://avatars.githubusercontent.com/u/109078587?s=200&v=4"
-                        }
-                        alt={""}
-                        width={70}
-                        height={70}
-                        className='rounded-3xl shadow-sm shadow-secondary'
-                      />
-                      <span>GetGems</span>
-                    </Link>
-                  </div>
-                </div>
-
-                <div className='w-full mt-6 flex'>
-                  <button
-                    onClick={() => {
-                      vibrate();
-                      setIsOpen(false);
-                    }}
-                    className='w-full px-4 py-2 bg-primary rounded-3xl'>
-                    {translateGeneral("close")}
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
+      <ModalBase trigger={trigger} open={isOpen} onOpenChange={setIsOpen}>
+        <div className='w-full h-10 pb-3 flex justify-end items-center'>
+          <button
+            onClick={closeModal}
+            className='w-fit p-2 bg-secondaryTransparent rounded-full'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-5'>
+              <path
+                fillRule='evenodd'
+                d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </div>
+        <div className='w-full px-3'>
+          <h2 className='mb-3 text-lg font-bold'>Off-Chain:</h2>
+          <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
+            {offchain.map((market) => (
+              <Link
+                href={market.link}
+                onClick={() => vibrate()}
+                target='_blank'
+                className=' p-3 rounded-3xl bg-secondaryTransparent flex flex-col items-center'>
+                <Image
+                  src={market.img}
+                  alt={""}
+                  width={70}
+                  height={70}
+                  className='rounded-3xl mb-2'
+                />
+                <span className='font-bold'>{market.name}</span>
+              </Link>
+            ))}
           </div>
-        </Dialog>
-      </Transition>
+        </div>
+
+        <div className='w-full mt-6 px-3'>
+          <h2 className='mb-3 text-lg font-bold'>On-Chain:</h2>
+          <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
+            {onchain.map((market) => (
+              <Link
+                href={market.link}
+                onClick={() => vibrate()}
+                target='_blank'
+                className=' p-3 rounded-3xl bg-secondaryTransparent flex flex-col items-center'>
+                <Image
+                  src={market.img}
+                  alt={""}
+                  width={70}
+                  height={70}
+                  className='rounded-3xl mb-2'
+                />
+                <span className='font-bold'>{market.name}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </ModalBase>
     </>
   );
 }

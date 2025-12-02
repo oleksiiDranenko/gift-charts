@@ -55,7 +55,9 @@
     "avgPrice": "Средняя цена",
     "amount": "Количество",
     "watchlist": "Список наблюдения",
-    "emptyWatchlist": "Ваш список наблюдения пуст"
+    "emptyWatchlist": "Ваш список наблюдения пуст",
+    "save": "Save",
+    "removeGift": "Remove Gift"
   },
   "filters": {
     "hideFilters": "Скрыть фильтры",

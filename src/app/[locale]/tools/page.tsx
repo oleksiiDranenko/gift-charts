@@ -76,7 +76,11 @@ export default function Page() {
           onClick={() => {
             vibrate();
           }}>
-          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+          <div
+            className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'
+            onClick={() => {
+              vibrate();
+            }}>
             <div className='flex flex-row items-center gap-x-3'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'

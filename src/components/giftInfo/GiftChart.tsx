@@ -62,6 +62,7 @@ export default function GiftChart({
   const [candleData, setCandleData] = useState<GiftLifeDataInterface[]>([]);
   const [chartType, setChartType] = useState<"line" | "candle" | "bar">("line");
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [percentChange, setPercentChange] = useState<number>(0);
   const [currentValue, setCurrentValue] = useState<number | null>(null);
   const { resolvedTheme } = useTheme();

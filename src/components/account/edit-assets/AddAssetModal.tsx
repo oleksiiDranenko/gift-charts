@@ -31,18 +31,26 @@ export default function AddAssetModal({
       onOpenChange={onOpenChange}
       onOpen={onOpen}
       onClose={onClose}>
-      {/* Modal Header with Title + Close Button */}
-      <div className='w-full h-10 flex justify-between items-center mb-4'>
-        <h2 className='text-xl font-bold ml-3'>{t("addGift")}</h2>
+      <div className='w-full h-10 pb-3 flex justify-end items-center'>
         <button
-          onClick={() => onClose?.()} // ModalBase already handles close + vibrate
-          className='w-fit p-2 bg-secondaryTransparent border border-secondary rounded-full transition-colors hover:bg-secondary/20'>
-          <X size={18} />
+          onClick={() => onClose?.()}
+          className='w-fit p-2 bg-secondaryTransparent rounded-full'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            className='size-5'>
+            <path
+              fillRule='evenodd'
+              d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
+              clipRule='evenodd'
+            />
+          </svg>
         </button>
       </div>
 
       {/* Scrollable Content */}
-      <div className='overflow-y-auto flex-1 -mx-3 px-3'>{children}</div>
+      <div className='overflow-y-auto'>{children}</div>
     </ModalBase>
   );
 }

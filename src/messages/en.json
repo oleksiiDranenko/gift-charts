@@ -55,7 +55,9 @@
     "avgPrice": "Avg price",
     "amount": "Amount",
     "watchlist": "Watchlist",
-    "emptyWatchlist": "Your Watchlist is Empty"
+    "emptyWatchlist": "Your Watchlist is Empty",
+    "save": "Save",
+    "removeGift": "Remove Gift"
   },
   "filters": {
     "hideFilters": "Hide Filters",

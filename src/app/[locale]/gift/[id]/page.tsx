@@ -69,11 +69,11 @@ export default function Page({ params }: any) {
   return (
     <div className='w-full lg:w-[98%] pt-[0px]  pb-24 flex justify-center'>
       <div className='w-full'>
+        <div className='px-3'>
+          <BackButton />
+        </div>
         {loading ? (
           <div className='flex flex-col'>
-            <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>
-              <BackButton />
-            </div>
             <div className='w-full h-20 flex justify-center items-center'>
               <ReactLoading
                 type='spin'
@@ -86,10 +86,6 @@ export default function Page({ params }: any) {
           </div>
         ) : gift ? (
           <div className='flex flex-col'>
-            <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>
-              <BackButton />
-              <div className='w-1/2 h-10 pr-3 flex items-center justify-end text-sm '></div>
-            </div>
             <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
             {/* <GiftStats gift={gift} /> */}
           </div>

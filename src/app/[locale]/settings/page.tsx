@@ -83,7 +83,7 @@ export default function Page() {
           <Link
             href='/settings/edit-assets'
             className='w-full h-14 px-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
-            onClick={() => vibrate}>
+            onClick={() => vibrate()}>
             <span className='flex flex-row items-center gap-3'>
               <Gift size={20} className='text-primary' />
               {translate("editAssets")}
@@ -93,7 +93,7 @@ export default function Page() {
           <Link
             href='/settings/edit-watchlist'
             className='w-full h-14 px-3 flex flex-row justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
-            onClick={() => vibrate}>
+            onClick={() => vibrate()}>
             <span className='flex flex-row items-center gap-3'>
               <Star size={20} className='text-primary' />
               {translate("editWatchlist")}
