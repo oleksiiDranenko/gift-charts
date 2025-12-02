@@ -14,7 +14,6 @@ import { useAppSelector } from "@/redux/hooks";
 
 export default function VoteBanner() {
   const queryClient = useQueryClient();
-  const [hasVoted, setHasVoted] = useState<boolean | null>(null);
   const [selectedVote, setSelectedVote] = useState<
     "negative" | "neutral" | "positive" | null
   >(null);
@@ -47,16 +46,6 @@ export default function VoteBanner() {
     }
   );
 
-  useEffect(() => {
-    if (voteStatus) {
-      if (voteStatus.userVote === null) {
-        setHasVoted(false);
-      } else {
-        setHasVoted(true);
-      }
-    }
-  }, [voteStatus]);
-
   // TanStack Query mutation for submitting vote
   const voteMutation = useMutation({
     mutationFn: async () => {
@@ -68,7 +57,6 @@ export default function VoteBanner() {
       return response.data;
     },
     onSuccess: () => {
-      setHasVoted(true);
       // Refetch vote status to update poll data
       queryClient.invalidateQueries(["voteStatus", "marketSentiment"]);
     },
@@ -122,10 +110,15 @@ export default function VoteBanner() {
   const percentages = getVotePercentages();
 
   const isAuthenticated = user.username === "_guest" ? false : true;
+  const hasUserVoted =
+    voteStatus?.userVote !== null && voteStatus?.userVote !== undefined;
+  const showResults = isVoteStatusLoading
+    ? false
+    : hasUserVoted || !isAuthenticated;
 
   return (
     <div className='w-full lg:1/2'>
-      {isVoteStatusLoading ? null : hasVoted || !isAuthenticated ? (
+      {isVoteStatusLoading ? null : showResults ? (
         <div className='w-full flex flex-col box-border p-3 rounded-3xl bg-secondaryTransparent overflow-hidden'>
           <div className='w-full flex mb-3'>
             <Link
