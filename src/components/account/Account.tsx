@@ -138,7 +138,7 @@ export default function Account() {
 
   return (
     <div className='w-full flex flex-col justify-center relative'>
-      {loading ? (
+      {loading || chartLoading ? (
         <div className='w-full flex justify-center'>
           <ReactLoading
             type='spin'
@@ -175,15 +175,10 @@ export default function Account() {
                       className='mr-2'
                     />
                   )}
-                  {chartLoading ? (
-                    <h1 className='text-3xl font-bold text-secondaryText animate-pulse'>
-                      ...
-                    </h1>
-                  ) : (
-                    <h1 className='text-4xl font-bold'>
-                      {portfolioValue.toFixed(2)}
-                    </h1>
-                  )}
+
+                  <h1 className='text-4xl font-bold'>
+                    {portfolioValue.toFixed(2)}
+                  </h1>
                 </div>
                 <div className='flex flex-row items-center gap-x-2 mt-2 bg-secondaryTransparent px-3 py-1 rounded-3xl'>
                   <span className='text-sm text-secondaryText'>
