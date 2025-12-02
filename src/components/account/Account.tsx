@@ -137,7 +137,7 @@ export default function Account() {
   }, [giftsList, currency, user.assets]);
 
   return (
-    <div className='w-full flex flex-col justify-center px-3 relative'>
+    <div className='w-full flex flex-col justify-center relative'>
       {loading ? (
         <div className='w-full flex justify-center'>
           <ReactLoading
@@ -154,90 +154,122 @@ export default function Account() {
         </div>
       ) : assetsArray.length > 0 ? (
         <>
-          <div className='w-full flex flex-row justify-start items-center relative'>
-            <div className='flex flex-col gap-x-3'>
-              <div className='flex flex-row items-center'>
-                {currency === "ton" ? (
-                  <Image
-                    alt='ton logo'
-                    src='/images/toncoin.webp'
-                    width={25}
-                    height={25}
-                    className='mr-2'
-                  />
-                ) : (
-                  <span className='text-3xl mr-1'>$</span>
-                )}
-                {chartLoading ? (
-                  <h1 className='text-3xl font-bold text-secondaryText animate-pulse'>
-                    ...
-                  </h1>
-                ) : (
-                  <h1 className='text-3xl font-bold'>
-                    {portfolioValue.toFixed(2)}
-                  </h1>
-                )}
-              </div>
-              <div className='flex flex-row items-center gap-x-2 mt-1 ml-1'>
-                <span className='text-sm text-secondaryText'>
-                  Last 24 hours
-                </span>
-                <span
-                  className={`flex flex-row items-center text-sm font-bold ${
-                    countPercentChange(portfolioValuePrev, portfolioValue) >= 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}>
-                  {countPercentChange(portfolioValuePrev, portfolioValue) >= 0
-                    ? "+"
-                    : ""}
-                  {countPercentChange(
-                    portfolioValuePrev,
-                    portfolioValue
-                  ).toFixed(2)}
-                  %
-                </span>
+          <div className=''>
+            <div className='w-full flex flex-row justify-center items-center relative px-3'>
+              <div className='flex flex-col items-center justify-center'>
+                <div className='flex flex-row items-center'>
+                  {currency === "ton" ? (
+                    <Image
+                      alt='ton'
+                      src='/images/toncoin.webp'
+                      width={25}
+                      height={25}
+                      className='mr-2'
+                    />
+                  ) : (
+                    <Image
+                      alt='usdt'
+                      src='/images/usdt.svg'
+                      width={25}
+                      height={25}
+                      className='mr-2'
+                    />
+                  )}
+                  {chartLoading ? (
+                    <h1 className='text-3xl font-bold text-secondaryText animate-pulse'>
+                      ...
+                    </h1>
+                  ) : (
+                    <h1 className='text-4xl font-bold'>
+                      {portfolioValue.toFixed(2)}
+                    </h1>
+                  )}
+                </div>
+                <div className='flex flex-row items-center gap-x-2 mt-2 bg-secondaryTransparent px-3 py-1 rounded-3xl'>
+                  <span className='text-sm text-secondaryText'>
+                    Last 24 hours
+                  </span>
+                  <span
+                    className={`flex flex-row items-center text-sm font-bold ${
+                      countPercentChange(portfolioValuePrev, portfolioValue) >=
+                      0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}>
+                    {countPercentChange(portfolioValuePrev, portfolioValue) >= 0
+                      ? "+"
+                      : ""}
+                    {countPercentChange(
+                      portfolioValuePrev,
+                      portfolioValue
+                    ).toFixed(2)}
+                    %
+                  </span>
+                </div>
               </div>
             </div>
+
+            {/* Cached Portfolio Chart */}
+            <PortfolioChart data={chartData} currency={currency} />
           </div>
 
-          {/* Cached Portfolio Chart */}
-          <PortfolioChart data={chartData} currency={currency} />
-
           {/* Assets List */}
-          <div className='w-full h-auto mt-3'>
-            <div className='w-full flex justify-between items-end mb-5'>
-              <h2 className='flex flex-row items-center text-lg font-bold'>
-                Portfolio
-              </h2>
-              <div className='flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
+          <div className='w-full h-auto mt-3 px-2'>
+            <div className='w-full mb-5 flex flex-row justify-between items-center'>
+              <Link
+                className='w-fit flex flex-row items-center text-sm h-8 px-3  box-border bg-secondaryTransparent rounded-3xl gap-x-2'
+                href={"/settings/edit-assets"}
+                onClick={() => vibrate()}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 16 16'
+                  fill='currentColor'
+                  className='size-4 text-primary'>
+                  <path
+                    fillRule='evenodd'
+                    d='M6.455 1.45A.5.5 0 0 1 6.952 1h2.096a.5.5 0 0 1 .497.45l.186 1.858a4.996 4.996 0 0 1 1.466.848l1.703-.769a.5.5 0 0 1 .639.206l1.047 1.814a.5.5 0 0 1-.14.656l-1.517 1.09a5.026 5.026 0 0 1 0 1.694l1.516 1.09a.5.5 0 0 1 .141.656l-1.047 1.814a.5.5 0 0 1-.639.206l-1.703-.768c-.433.36-.928.649-1.466.847l-.186 1.858a.5.5 0 0 1-.497.45H6.952a.5.5 0 0 1-.497-.45l-.186-1.858a4.993 4.993 0 0 1-1.466-.848l-1.703.769a.5.5 0 0 1-.639-.206l-1.047-1.814a.5.5 0 0 1 .14-.656l1.517-1.09a5.033 5.033 0 0 1 0-1.694l-1.516-1.09a.5.5 0 0 1-.141-.656L2.46 3.593a.5.5 0 0 1 .639-.206l1.703.769c.433-.36.928-.65 1.466-.848l.186-1.858Zm-.177 7.567-.022-.037a2 2 0 0 1 3.466-1.997l.022.037a2 2 0 0 1-3.466 1.997Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+                Edit portfolio
+              </Link>
+              <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
                 <button
-                  className={`text-sm h-8 px-5 box-border ${
+                  className={`text-sm h-8 px-3 box-border ${
                     currency === "ton"
-                      ? "rounded-3xl bg-primary font-bold text-white"
+                      ? "rounded-3xl bg-secondary font-bold"
                       : ""
                   }`}
                   onClick={() => {
                     setCurrency("ton");
                     vibrate();
                   }}>
-                  Ton
+                  <Image
+                    src='/images/toncoin.webp'
+                    alt='ton'
+                    width={18}
+                    height={18}
+                  />
                 </button>
                 <button
-                  className={`text-sm h-8 px-5 box-border ${
+                  className={`text-sm h-8 px-3 box-border ${
                     currency === "usd"
-                      ? "rounded-3xl bg-primary font-bold text-white"
+                      ? "rounded-3xl bg-secondary font-bold"
                       : ""
                   }`}
                   onClick={() => {
                     setCurrency("usd");
                     vibrate();
                   }}>
-                  Usd
+                  <Image
+                    src='/images/usdt.svg'
+                    alt='usdt'
+                    width={18}
+                    height={18}
+                  />
                 </button>
               </div>
             </div>
-
             {assetsArray.map((asset) => (
               <Asset
                 key={asset._id}

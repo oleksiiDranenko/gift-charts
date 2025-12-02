@@ -51,13 +51,18 @@ export default function PortfolioChart({
   // Filter numeric values
   const numericValues = values.filter((v): v is number => v !== null);
 
-  // 🧮 Calculate percent change (first vs last)
   const percentChange =
     numericValues.length > 1
       ? ((numericValues[numericValues.length - 1] - numericValues[0]) /
           numericValues[0]) *
         100
       : 0;
+
+  const minValue = Math.min(...numericValues);
+  const maxValue = Math.max(...numericValues);
+  const padding = (maxValue - minValue) * 0.5; // 5% padding
+  const yMin = minValue - padding;
+  const yMax = maxValue + padding;
 
   // 🎨 Create gradient when theme, currency, or data changes
   useEffect(() => {
@@ -211,21 +216,17 @@ export default function PortfolioChart({
     },
     scales: {
       x: {
-        display: false, // completely remove x-axis visuals and space
+        display: false,
       },
       y: {
-        display: false, // completely remove y-axis visuals and space
+        display: false,
+        min: yMin,
+        max: yMax,
       },
     },
   };
   return (
-    <div
-      className={
-        resolvedTheme === "dark"
-          ? "relative"
-          : "relative bg-secondaryTransparent rounded-3xl p-4"
-      }
-      ref={chartContainerRef}>
+    <div className={"relative"} ref={chartContainerRef}>
       <Line
         ref={chartRef as any}
         data={chartData}
