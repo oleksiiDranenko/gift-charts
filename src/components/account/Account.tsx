@@ -43,24 +43,18 @@ export default function Account() {
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValuePrev, setPortfolioValuePrev] = useState<number>(0);
 
-  // 🟢 1. TanStack Query to fetch and cache chart data
-  const {
-    data: chartData = [],
-    isLoading: chartLoading,
-    isError: chartError,
-  } = useQuery<GiftWeekDataInterface[]>({
+  const { data: chartData = [], isLoading: chartLoading } = useQuery<
+    GiftWeekDataInterface[]
+  >({
     queryKey: ["userChart", user.telegramId],
     queryFn: async () => {
-      if (user.assets.length > 0) {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
-        );
-        return data;
-      } else {
-        return [];
-      }
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
+      );
+      return data;
     },
-    enabled: !!user.telegramId, // Only run when user is known
+    enabled:
+      !!user.telegramId && giftsList.length > 0 && user.assets.length > 0,
     refetchOnWindowFocus: false,
   });
 
@@ -138,7 +132,7 @@ export default function Account() {
 
   return (
     <div className='w-full flex flex-col justify-center relative'>
-      {loading || chartLoading ? (
+      {loading ? (
         <div className='w-full flex justify-center'>
           <ReactLoading
             type='spin'
