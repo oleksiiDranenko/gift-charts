@@ -31,16 +31,29 @@ export default function VoteBanner() {
   };
 
   // Check if user has already voted
-  const { data: voteStatus, isLoading: isVoteStatusLoading } = useQuery({
-    queryKey: ["voteStatus", "marketSentiment"],
-    queryFn: async () => {
-      const res = await axios.get(
+  const { data: voteStatus, isLoading: isVoteStatusLoading } = useQuery(
+    ["voteStatus", "marketSentiment"],
+    async () => {
+      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API}/vote/marketSentiment`
       );
-      return res.data;
+      return response.data;
     },
-    retry: false,
-  });
+    {
+      onError: (error: any) => {
+        console.error("Error checking vote status:", error);
+      },
+      retry: false, // Don't retry on failure
+    }
+  );
+
+  useEffect(() => {
+    if (voteStatus.userVote === null) {
+      setHasVoted(false);
+    } else {
+      setHasVoted(true);
+    }
+  }, [voteStatus]);
 
   // TanStack Query mutation for submitting vote
   const voteMutation = useMutation({
@@ -106,20 +119,11 @@ export default function VoteBanner() {
 
   const percentages = getVotePercentages();
 
-  const isAuthenticated = user.username === "_guest";
-  const hasUserVoted = voteStatus?.userVote != null;
-  const showVotingForm =
-    !isVoteStatusLoading && isAuthenticated && !hasUserVoted;
-  const showResults =
-    !isVoteStatusLoading && (hasUserVoted || !isAuthenticated);
+  const isAuthenticated = user.username === "_guest" ? false : true;
 
   return (
     <div className='w-full lg:1/2'>
-      {isVoteStatusLoading ? (
-        <div className='w-full p-8 flex justify-center'>
-          <div className='animate-pulse bg-secondaryTransparent rounded-3xl w-full h-48' />
-        </div>
-      ) : showResults ? (
+      {isVoteStatusLoading ? null : hasVoted || !isAuthenticated ? (
         <div className='w-full flex flex-col box-border p-3 rounded-3xl bg-secondaryTransparent overflow-hidden'>
           <div className='w-full flex mb-3'>
             <Link
@@ -293,7 +297,7 @@ export default function VoteBanner() {
             </div>
           </div>
         </div>
-      ) : showVotingForm ? (
+      ) : (
         <div className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
           <h1 className='w-full flex justify-center text-lg mb-5 px-1'>
             {translate("howDoYouFeel")}
@@ -381,7 +385,7 @@ export default function VoteBanner() {
             {voteMutation.isLoading ? "Submitting..." : "Vote"}
           </button>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
