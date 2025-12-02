@@ -42,10 +42,15 @@ export default function Vote() {
     }
   );
 
-  // Update hasVoted based on vote status
   useEffect(() => {
     if (!isVoteStatusLoading && voteStatus) {
-      setHasVoted(voteStatus.userVote !== false);
+      if (!voteStatus.isAuthenticated) {
+        // Guests cannot vote → show results immediately
+        setHasVoted(true);
+      } else {
+        // Authenticated users: has voted only if userVote is NOT null
+        setHasVoted(voteStatus.userVote !== null);
+      }
     }
   }, [isVoteStatusLoading, voteStatus]);
 
