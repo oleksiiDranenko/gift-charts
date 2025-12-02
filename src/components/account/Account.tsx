@@ -204,7 +204,6 @@ export default function Account() {
               </div>
             </div>
 
-            {/* Cached Portfolio Chart */}
             <PortfolioChart data={chartData} currency={currency} />
           </div>
 

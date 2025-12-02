@@ -10,10 +10,10 @@ import GaugeChart from "react-gauge-chart";
 import { Link } from "@/i18n/navigation";
 import { Gauge } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useAppSelector } from "@/redux/hooks";
 
 export default function VoteBanner() {
   const queryClient = useQueryClient();
+  const [hasVoted, setHasVoted] = useState<boolean | null>(null);
   const [selectedVote, setSelectedVote] = useState<
     "negative" | "neutral" | "positive" | null
   >(null);
@@ -21,7 +21,6 @@ export default function VoteBanner() {
   const voteBoxRef = useRef<HTMLDivElement | null>(null);
   const { resolvedTheme } = useTheme();
   const translate = useTranslations("vote");
-  const user = useAppSelector((state) => state.user);
 
   const voteToScore = {
     negative: 0,
@@ -50,24 +49,54 @@ export default function VoteBanner() {
   const voteMutation = useMutation({
     mutationFn: async () => {
       if (!selectedVote) throw new Error("No vote selected");
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API}/vote`, {
+
+      const payload = {
         score: voteToScore[selectedVote],
-        poll: "marketSentiment",
-      });
+        poll: "marketSentiment", // make sure this matches exactly what backend expects
+      };
+
+      console.log("Sending vote:", payload); // DEBUG
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API}/vote`,
+        payload,
+        {
+          withCredentials: true, // Important if using cookies/auth
+        }
+      );
+
       return response.data;
     },
     onSuccess: () => {
-      // Refetch vote status to update poll data
-      queryClient.invalidateQueries(["voteStatus", "marketSentiment"]);
+      setHasVoted(true);
+      setSelectedVote(null);
+      queryClient.invalidateQueries({
+        queryKey: ["voteStatus", "marketSentiment"],
+      });
     },
     onError: (error: any) => {
-      console.error("Error submitting vote:", error);
-      if (error.response?.status === 401) {
+      console.error("Vote submission failed:", error);
+
+      if (error.response) {
+        // Server responded with error
+        console.error("Response data:", error.response.data);
+        console.error("Status:", error.response.status);
+
+        if (error.response.status === 401) {
+          // Handle unauthenticated (e.g. redirect to login)
+          alert("You must be logged in to vote.");
+        } else {
+          alert(
+            error.response.data?.message ||
+              "Failed to submit vote. Please try again."
+          );
+        }
+      } else if (error.request) {
+        // No response (CORS, network, wrong URL)
+        console.error("No response received:", error.request);
+        alert("Network error or server unreachable. Check if API is running.");
       } else {
-        alert(
-          error.response?.data?.message ||
-            "Failed to submit vote. Please try again."
-        );
+        alert("An unexpected error occurred.");
       }
     },
   });
@@ -109,16 +138,12 @@ export default function VoteBanner() {
 
   const percentages = getVotePercentages();
 
-  const isAuthenticated = user.username === "_guest" ? false : true;
-  const hasUserVoted =
-    voteStatus?.userVote !== null && voteStatus?.userVote !== undefined;
-  const showResults = isVoteStatusLoading
-    ? false
-    : hasUserVoted || !isAuthenticated;
+  const isAuthenticated = voteStatus?.isAuthenticated ?? false;
+  const hasUserVoted = voteStatus?.userVote != null;
 
   return (
     <div className='w-full lg:1/2'>
-      {isVoteStatusLoading ? null : showResults ? (
+      {isVoteStatusLoading ? null : hasUserVoted || !isAuthenticated ? (
         <div className='w-full flex flex-col box-border p-3 rounded-3xl bg-secondaryTransparent overflow-hidden'>
           <div className='w-full flex mb-3'>
             <Link
