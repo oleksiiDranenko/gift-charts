@@ -260,14 +260,13 @@ export default function EditWatchlist() {
               <ScrollToTopButton />
               {filteredGiftList.length > 0 ? (
                 filteredGiftList.map((gift) => (
-                  <div onClick={() => setSearchTerm("")}>
+                  <div onClick={() => setSearchTerm("")} key={gift._id}>
                     <AddListItem
                       _id={gift._id}
                       name={gift.name}
                       image={gift.image}
                       addGift={addGift}
                       onClose={() => setIsModalOpen(false)}
-                      key={gift._id}
                     />
                   </div>
                 ))

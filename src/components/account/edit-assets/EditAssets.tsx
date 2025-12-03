@@ -388,14 +388,13 @@ export default function EditAssets() {
               <ScrollToTopButton />
               {filteredGiftList.length > 0 ? (
                 filteredGiftList.map((gift) => (
-                  <div onClick={() => setSearchTerm("")}>
+                  <div onClick={() => setSearchTerm("")} key={gift._id}>
                     <AddAssetItem
                       _id={gift._id}
                       name={gift.name}
                       image={gift.image}
                       addGift={addGift}
                       onClose={() => setIsModalOpen(false)}
-                      key={gift._id}
                     />
                   </div>
                 ))
