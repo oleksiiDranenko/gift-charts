@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Asset from "./Asset";
 import ReactLoading from "react-loading";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -43,27 +43,6 @@ export default function Account() {
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValuePrev, setPortfolioValuePrev] = useState<number>(0);
 
-  // 🟢 1. TanStack Query to fetch and cache chart data
-  const {
-    data: chartData = [],
-    isLoading: chartLoading,
-    isError: chartError,
-  } = useQuery<GiftWeekDataInterface[]>({
-    queryKey: ["userChart", user.telegramId],
-    queryFn: async () => {
-      if (user.assets.length > 0) {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
-        );
-        return data;
-      } else {
-        return [];
-      }
-    },
-    enabled: !!user.telegramId, // Only run when user is known
-    refetchOnWindowFocus: false,
-  });
-
   // 🟣 2. Fetch gifts if not in Redux store
   useEffect(() => {
     const fetchGifts = async () => {
@@ -84,21 +63,38 @@ export default function Account() {
     fetchGifts();
   }, [dispatch, giftsList]);
 
-  // 🟢 3. Calculate portfolio change based on cached chart data
+  const giftsMap = useMemo(() => {
+    const map = new Map<string, GiftInterface>();
+
+    for (const gift of giftsList) {
+      map.set(gift._id, gift);
+    }
+
+    return map;
+  }, [giftsList]);
+
   useEffect(() => {
-    if (chartData.length > 1) {
-      const first = chartData[0];
-      const last = chartData[chartData.length - 1];
+    if (!user.assets?.length || giftsList.length === 0) return;
+
+    let current = 0;
+    let previous = 0;
+
+    for (const { giftId, amount } of user.assets) {
+      const gift = giftsMap.get(giftId);
+      if (!gift) continue;
 
       if (currency === "ton") {
-        setPortfolioValue(last.priceTon);
-        setPortfolioValuePrev(first.priceTon);
+        current += gift.priceTon * amount;
+        previous += (gift.tonPrice24hAgo ?? gift.priceTon) * amount;
       } else {
-        setPortfolioValue(last.priceUsd);
-        setPortfolioValuePrev(first.priceUsd);
+        current += gift.priceUsd * amount;
+        previous += (gift.usdPrice24hAgo ?? gift.priceUsd) * amount;
       }
     }
-  }, [chartData, currency]);
+
+    setPortfolioValue(current);
+    setPortfolioValuePrev(previous);
+  }, [user.assets, giftsMap, currency]);
 
   // 🟣 4. Build assets list
   useEffect(() => {
@@ -154,8 +150,8 @@ export default function Account() {
         </div>
       ) : assetsArray.length > 0 ? (
         <>
-          <div className='w-full flex flex-row justify-start items-center relative'>
-            <div className='flex flex-col gap-x-3'>
+          <div className='w-full flex flex-row justify-center pb-3 items-center relative'>
+            <div className='flex flex-col justify-center items-center gap-x-3'>
               <div className='flex flex-row items-center'>
                 {currency === "ton" ? (
                   <Image
@@ -168,15 +164,10 @@ export default function Account() {
                 ) : (
                   <span className='text-3xl mr-1'>$</span>
                 )}
-                {chartLoading ? (
-                  <h1 className='text-3xl font-bold text-secondaryText animate-pulse'>
-                    ...
-                  </h1>
-                ) : (
-                  <h1 className='text-3xl font-bold'>
-                    {portfolioValue.toFixed(2)}
-                  </h1>
-                )}
+
+                <h1 className='text-3xl font-bold'>
+                  {portfolioValue.toFixed(2)}
+                </h1>
               </div>
               <div className='flex flex-row items-center gap-x-2 mt-1 ml-1'>
                 <span className='text-sm text-secondaryText'>
@@ -200,9 +191,6 @@ export default function Account() {
               </div>
             </div>
           </div>
-
-          {/* Cached Portfolio Chart */}
-          <PortfolioChart data={chartData} currency={currency} />
 
           {/* Assets List */}
           <div className='w-full h-auto mt-3'>
