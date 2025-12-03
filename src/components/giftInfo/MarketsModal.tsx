@@ -79,6 +79,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
           <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
             {offchain.map((market) => (
               <Link
+                key={market.name}
                 href={market.link}
                 onClick={() => vibrate()}
                 target='_blank'
@@ -101,6 +102,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
           <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
             {onchain.map((market) => (
               <Link
+                key={market.name}
                 href={market.link}
                 onClick={() => vibrate()}
                 target='_blank'
