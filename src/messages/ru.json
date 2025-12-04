@@ -170,9 +170,10 @@
     "initialSupply": "Изначальный тираж",
     "supply": "Тираж",
     "upgradedSupply": "Количество улучшенных",
-    "percentUpdgraded": "Процент улучшенных",
     "amountBurnt": "Количество сожжённых",
-    "percentBurnt": "Процент сожжённых",
+    "upgraded": "Улучшено",
+    "burnt": "Сожжено",
+    "notUpgraded": "Не улучшено",
     "viewModels": "Просмотреть модели",
     "marketCap": "Рыночная капитализация"
   },

@@ -169,9 +169,10 @@
     "initialSupply": "Inital Supply",
     "supply": "Supply",
     "upgradedSupply": "Upgraded Supply",
-    "percentUpdgraded": "Percent Upgraded",
     "amountBurnt": "Amount Burnt",
-    "percentBurnt": "Percent Burnt",
+    "upgraded": "Upgraded",
+    "burnt": "Burnt",
+    "notUpgraded": "Not upgraded",
     "viewModels": "View Models",
     "marketCap": "Market Cap"
   },

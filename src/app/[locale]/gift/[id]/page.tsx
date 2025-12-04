@@ -9,6 +9,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
+import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
 
 async function fetchGift(id: string) {
   const { data } = await axios.get(
@@ -87,6 +88,14 @@ export default function Page({ params }: any) {
           <div className='flex flex-col'>
             <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
             {/* <GiftStats gift={gift} /> */}
+
+            <div className='w-full px-3 mt-5'>
+              <GiftSupplyPie
+                initSupply={gift.initSupply}
+                supply={gift.supply}
+                upgradedSupply={gift.upgradedSupply}
+              />
+            </div>
           </div>
         ) : (
           <div className='text-center text-red-500'>
