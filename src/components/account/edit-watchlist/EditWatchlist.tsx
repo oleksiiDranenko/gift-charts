@@ -115,59 +115,60 @@ export default function EditWatchlist() {
     setAddGiftList(list);
   }, [editedUser, giftsList]);
 
-  const removeGift = (id: string) => {
-    if (editedUser) {
-      const filteredList = editedUser.savedList.filter((item) => item !== id);
-      setEditedUser({ ...editedUser, savedList: filteredList });
-
-      const removedGift = giftsList.find((gift) => gift._id === id);
-      if (removedGift) {
-        setAddGiftList((prevList) =>
-          [...prevList, removedGift].sort((a, b) =>
-            a.name.localeCompare(b.name)
-          )
-        );
-      }
-    }
-  };
-
-  const addGift = (id: string) => {
-    if (editedUser) {
-      const newGift = id;
-      setEditedUser({
-        ...editedUser,
-        savedList: [...editedUser.savedList, newGift],
-      });
-      setAddGiftList((prevList) => prevList.filter((gift) => gift._id !== id));
-    }
-  };
-
-  const saveChanges = async () => {
+  const autoSave = async (updatedUser: UserInterface) => {
     try {
-      if (editedUser && user.telegramId) {
-        const updatedUser = {
-          username: editedUser.username,
-          savedList: editedUser.savedList,
-          assets: editedUser.assets,
-          ton: editedUser.ton,
-          usd: editedUser.usd,
-          token: user.token,
-        };
+      const payload = {
+        telegramId: updatedUser.telegramId,
+        username: updatedUser.username,
+        savedList: updatedUser.savedList,
+        // Keep other fields (assets, ton, usd) unchanged
+        assets: updatedUser.assets || [],
+        ton: updatedUser.ton ?? 0,
+        usd: updatedUser.usd ?? 0,
+      };
 
-        const updateRes = await axios.patch(
-          `${process.env.NEXT_PUBLIC_API}/users/update-account/${user.telegramId}`,
-          updatedUser,
-          { headers: { "Content-Type": "application/json" } }
-        );
+      const res = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API}/users/update-account/${updatedUser.telegramId}`,
+        payload
+      );
 
-        dispatch(setUser(updateRes.data.user));
-      } else {
-        setError("Cannot save changes: No user data or Telegram ID available.");
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-      setError("Failed to save changes. Please try again.");
+      dispatch(setUser(res.data.user));
+    } catch (err) {
+      console.error("Auto-save failed:", err);
+      // Optional: show toast notification here
     }
+  };
+
+  const removeGift = async (id: string) => {
+    if (!editedUser) return;
+
+    const newSavedList = editedUser.savedList.filter((item) => item !== id);
+    const updatedUser = { ...editedUser, savedList: newSavedList };
+
+    setEditedUser(updatedUser);
+
+    const removedGift = giftsList.find((gift) => gift._id === id);
+    if (removedGift) {
+      setAddGiftList((prev) =>
+        [...prev, removedGift].sort((a, b) => a.name.localeCompare(b.name))
+      );
+    }
+
+    await autoSave(updatedUser);
+  };
+
+  // Add gift with instant save
+  const addGift = async (id: string) => {
+    if (!editedUser) return;
+
+    const updatedSavedList = [...editedUser.savedList, id];
+    const updatedUser = { ...editedUser, savedList: updatedSavedList };
+
+    setEditedUser(updatedUser);
+    setAddGiftList((prev) => prev.filter((gift) => gift._id !== id));
+    setIsModalOpen(false); // Close modal after adding
+
+    await autoSave(updatedUser);
   };
 
   const filteredGiftList = addGiftList
@@ -195,22 +196,18 @@ export default function EditWatchlist() {
           <BackButton middleText={translate("watchlist")} />
 
           <div className='w-full mt-7 pr-2 gap-x-3'>
-            {editedUser ? (
-              editedUser.savedList.length === 0 ? (
-                <div className='pt-3 pb-5 text-secondaryText'>
-                  {translate("emptyWatchlist")}
-                </div>
-              ) : (
-                editedUser.savedList.map((gift) => (
-                  <EditWatchlistItem
-                    giftId={gift}
-                    giftsList={giftsList}
-                    removeGift={removeGift}
-                    key={gift}
-                  />
-                ))
-              )
-            ) : null}
+            {editedUser
+              ? editedUser.savedList.length === 0
+                ? null
+                : editedUser.savedList.map((gift) => (
+                    <EditWatchlistItem
+                      giftId={gift}
+                      giftsList={giftsList}
+                      removeGift={removeGift}
+                      key={gift}
+                    />
+                  ))
+              : null}
           </div>
 
           <AddWatchlistItemModal

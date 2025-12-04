@@ -183,7 +183,7 @@ export default function TreemapControlModal({
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
                         <OptionButton
-                          label='Price Change'
+                          label={translate("change")}
                           selected={listType === "change"}
                           onClick={() => {
                             vibrate();
@@ -192,7 +192,7 @@ export default function TreemapControlModal({
                           }}
                         />
                         <OptionButton
-                          label='Market Cap'
+                          label={translate("marketCap")}
                           selected={listType === "marketCap"}
                           onClick={() => {
                             vibrate();

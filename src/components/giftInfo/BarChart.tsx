@@ -14,6 +14,7 @@ import { useTheme } from "next-themes";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
+import useVibrate from "@/hooks/useVibrate";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -43,6 +44,7 @@ export default function BarChart({
     "24h" | "3d" | "1w" | "1m" | "3m" | "all"
   >("24h");
   const { resolvedTheme } = useTheme();
+  const vibrate = useVibrate();
 
   const translateTime = useTranslations("timegap");
 
@@ -433,6 +435,7 @@ export default function BarChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("3m");
+            vibrate();
           }}>
           3{translateTime("month")}
         </button>
@@ -444,6 +447,7 @@ export default function BarChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("1m");
+            vibrate();
           }}>
           1{translateTime("month")}
         </button>
@@ -455,6 +459,7 @@ export default function BarChart({
           }`}
           onClick={() => {
             setListType("1w");
+            vibrate();
           }}>
           1{translateTime("week")}
         </button>
@@ -466,6 +471,7 @@ export default function BarChart({
           }`}
           onClick={() => {
             setListType("3d");
+            vibrate();
           }}>
           3{translateTime("day")}
         </button>
@@ -477,6 +483,7 @@ export default function BarChart({
           }`}
           onClick={() => {
             setListType("24h");
+            vibrate();
           }}>
           24{translateTime("hour")}
         </button>

@@ -30,6 +30,19 @@ interface AssetDisplayInterface {
 }
 
 export default function Account() {
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("settings");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          console.warn("Failed to parse settings from localStorage");
+        }
+      }
+    }
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
   const vibrate = useVibrate();
   const translate = useTranslations("account");
 
@@ -37,7 +50,7 @@ export default function Account() {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const [currency, setCurrency] = useState<"ton" | "usd">("ton");
+  const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
   const [loading, setLoading] = useState<boolean>(false);
   const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([]);
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
@@ -167,7 +180,7 @@ export default function Account() {
         <>
           <div className=''>
             <div className='w-full flex flex-row justify-center items-center relative px-3'>
-              <div className='flex flex-col items-center justify-center'>
+              <div className='w-full h-44 flex flex-col items-center justify-center'>
                 <div className='flex flex-row items-center'>
                   {currency === "ton" ? (
                     <Image
@@ -187,13 +200,13 @@ export default function Account() {
                     />
                   )}
 
-                  <h1 className='text-4xl font-bold'>
+                  <h1 className='text-4xl font-bold '>
                     {portfolioValue.toFixed(2)}
                   </h1>
                 </div>
                 <div className='flex flex-row items-center gap-x-2 mt-2 bg-secondaryTransparent px-3 py-1 rounded-3xl'>
                   <span className='text-sm text-secondaryText'>
-                    Last 24 hours
+                    {translate("last24h")}
                   </span>
                   <span
                     className={`flex flex-row items-center text-sm font-bold ${
@@ -234,7 +247,7 @@ export default function Account() {
                     clipRule='evenodd'
                   />
                 </svg>
-                Edit portfolio
+                {translate("editPortfolio")}
               </Link>
               <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
                 <button
@@ -288,12 +301,32 @@ export default function Account() {
           </div>
         </>
       ) : (
-        <div className='w-full h-1/2 flex flex-col justify-center items-center'>
-          <Link
-            href={"/settings/edit-assets"}
-            className='px-3 py-2 text-sm text-white bg-primary rounded-3xl'>
-            Add Gifts to portfolio
-          </Link>
+        <div className='w-full lg:w-1/2 px-3 flex flex-col justify-center items-center'>
+          <div className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
+            <div className='w-full flex flex-col items-center mb-5'>
+              <h1 className='flex flex-row gap-x-2 items-center text-xl font-bold mb-3'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 16 16'
+                  fill='currentColor'
+                  className='size-6 text-primary'>
+                  <path
+                    fillRule='evenodd'
+                    d='M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0ZM9 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6.75 8a.75.75 0 0 0 0 1.5h.75v1.75a.75.75 0 0 0 1.5 0v-2.5A.75.75 0 0 0 8.25 8h-1.5Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+                {translate("noAssets")}
+              </h1>
+              <p className='px-3'>{translate("addGiftsInstruction")}</p>
+            </div>
+            <Link
+              href={"/settings/edit-assets"}
+              className='w-full h-12 font-bold flex items-center justify-center text-sm text-white bg-primary rounded-3xl'
+              onClick={() => vibrate()}>
+              {translate("addGiftsToPortfolio")}
+            </Link>
+          </div>
         </div>
       )}
     </div>

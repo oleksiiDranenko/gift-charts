@@ -17,7 +17,8 @@
     "tryItNow": "Попробовать сейчас",
     "back": "Назад",
     "selected": "Выбрано",
-    "searchPlaceholder": "Поиск подарков"
+    "searchPlaceholder": "Поиск подарков",
+    "soon": "Скоро"
   },
   "donate": {
     "donate": "Пожертвовать",
@@ -35,6 +36,9 @@
     "giftStyle": "Стиль подарков"
   },
   "tools": {
+    "services": "Сервисы",
+    "buyStars": "Купить звезды",
+    "buyStarsDescription": "Обмен криптовалюты на Telegram Stars",
     "analyticsTools": "Инструменты аналитики",
     "heatmap": "Тепловая карта",
     "heatmapDescription": "Просмотр состояния рынка на тепловой карте",
@@ -46,18 +50,25 @@
     "marketCap": "Рыночная капитализация"
   },
   "account": {
+    "last24h": "Последние 24 часа",
+    "editPortfolio": "Редакт. портфель",
+    "addGiftsToPortfolio": "Добавить подарки в портфель",
+    "addGiftsInstruction": "Выберите подарки, которыми владеете, чтобы отслеживать стоимость вашего портфеля",
     "openInTelegram": "Пожалуйста, откройте приложение в Telegram",
     "assets": "Активы",
     "noAssets": "Активов пока нет",
     "noGifts": "Подарков нет",
     "cash": "Наличные",
     "addGift": "Добавить подарок",
+    "importFromProfile": "Импорт из профиля",
     "avgPrice": "Средняя цена",
     "amount": "Количество",
     "watchlist": "Список наблюдения",
     "emptyWatchlist": "Ваш список наблюдения пуст",
     "save": "Save",
-    "removeGift": "Remove Gift"
+    "removeGift": "Remove Gift",
+    "gift": "подарок",
+    "gifts": "подарков"
   },
   "filters": {
     "hideFilters": "Скрыть фильтры",
@@ -100,6 +111,15 @@
     "displayAmount": "Количество отображаемых подарков",
     "all": "Все",
     "displayAll": "Отображать все"
+  },
+
+  "indexTimegap": {
+    "all": "Все",
+    "3m": "3м",
+    "1m": "1м",
+    "1w": "1н",
+    "3d": "3д",
+    "1d": "24ч"
   },
 
   "timegap": {
@@ -197,5 +217,10 @@
     "neutral": "Нейтрально",
     "greed": "Жадность",
     "extremeGreed": "Крайняя жадность"
+  },
+
+  "stars": {
+    "text1": "Stars Swap был сделан нашими партнерами",
+    "text2": "Вы можете обменять любую монету из блокчейна TON на Telegram Stars без прохождения KYC."
   }
 }

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTheme } from "next-themes";
 import useVibrate from "@/hooks/useVibrate";
+import { useTranslations } from "next-intl";
 
 interface PropsInterface {
   _id: string;
@@ -32,6 +33,7 @@ export default function Asset({
 }: PropsInterface) {
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
+  const translate = useTranslations("account");
   return (
     <Link
       className={`w-full h-16 mb-2 pl-2 pr-3 flex flex-row items-center rounded-3xl justify-between ${
@@ -67,11 +69,10 @@ export default function Asset({
                     )}%)`}
               </span>
             </span>
-            <span className='text-sm text-primary'>
-              <span>
-                {amount} {amount > 1 ? "gifts" : "gift"}
-              </span>
-            </span>
+            <div className='w-fit flex flex-tow items-center text-sm text-primary gap-x-1'>
+              <span>{amount}</span>
+              <span>{amount > 1 ? translate("gifts") : translate("gift")}</span>
+            </div>
           </div>
         </div>
 

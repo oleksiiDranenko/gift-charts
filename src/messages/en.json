@@ -17,7 +17,8 @@
     "tryItNow": "Try it now",
     "back": "Go back",
     "selected": "Selected",
-    "searchPlaceholder": "Search Gifts"
+    "searchPlaceholder": "Search Gifts",
+    "soon": "Soon"
   },
   "donate": {
     "donate": "Donate",
@@ -35,6 +36,9 @@
     "giftStyle": "Gift Style"
   },
   "tools": {
+    "services": "Services",
+    "buyStars": "Buy Stars",
+    "buyStarsDescription": " Swap crypto to Telegram Stars",
     "analyticsTools": "Analytics Tools",
     "heatmap": "Heatmap",
     "heatmapDescription": " View market state at heatmap chart",
@@ -46,18 +50,25 @@
     "marketCap": "Market Cap"
   },
   "account": {
+    "last24h": "Last 24 hours",
+    "editPortfolio": "Edit portfolio",
+    "addGiftsToPortfolio": "Add Gifts to portfolio",
+    "addGiftsInstruction": "Choose the gifts you own to track your portfolio value",
     "openInTelegram": "Please open app in Telegram",
     "assets": "Assets",
     "noAssets": "No assets yet",
     "noGifts": "No gifts available",
     "cash": "Cash",
     "addGift": "Add Gift",
+    "importFromProfile": "Import from profile",
     "avgPrice": "Avg price",
     "amount": "Amount",
     "watchlist": "Watchlist",
     "emptyWatchlist": "Your Watchlist is Empty",
     "save": "Save",
-    "removeGift": "Remove Gift"
+    "removeGift": "Remove Gift",
+    "gift": "Gift",
+    "gifts": "Gifts"
   },
   "filters": {
     "hideFilters": "Hide Filters",
@@ -100,6 +111,15 @@
     "displayAmount": "Amount displayed",
     "all": "All",
     "displayAll": "Display All"
+  },
+
+  "indexTimegap": {
+    "all": "All",
+    "3m": "3m",
+    "1m": "1m",
+    "1w": "1w",
+    "3d": "3d",
+    "1d": "24h"
   },
 
   "timegap": {
@@ -196,5 +216,10 @@
     "neutral": "Neutral",
     "greed": "Greed",
     "extremeGreed": "Extreme greed"
+  },
+
+  "stars": {
+    "text1": "Stars Swap was made by our partners",
+    "text2": "You can swap any coin from TON blockchain to Telegram Stars without KYC"
   }
 }

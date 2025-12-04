@@ -92,7 +92,11 @@ export default function EditAssetItem({
       onOpenChange={setIsOpen}
       trigger={
         <div
-          className='w-full h-16 mb-3 flex flex-row border-b-2 border-secondaryTransparent rounded-3xl px-2 transition-all active:scale-[95%] duration-200 ease-in-out '
+          className={`w-full h-16 mb-3 flex flex-row rounded-3xl px-2 transition-all active:scale-[95%] duration-200 ease-in-out ${
+            resolvedTheme === "dark"
+              ? "border-b-2 border-secondaryTransparent"
+              : "bg-secondaryTransparent"
+          } `}
           onClick={() => setIsOpen(true)}>
           <div className='w-full flex flex-row items-center justify-between'>
             <div className='w-full flex flex-row items-center justify-between'>
@@ -115,7 +119,8 @@ export default function EditAssetItem({
             </div>
 
             <div className='w-fit flex flex-row flex-nowrap justify-end items-center'>
-              <span className='text-nowrap px-3 py-1 rounded-3xl bg-secondaryTransparent flex items-center justify-center mr-3 text-primary'>
+              <span
+                className={`text-nowrap px-3 py-1 rounded-3xl flex items-center justify-center mr-3 font-bold text-primary dark:bg-secondaryTransparent bg-background`}>
                 {amount}
               </span>
             </div>

@@ -17,11 +17,24 @@ import { useTranslations } from "next-intl";
 import DownloadHeatmapModal from "@/components/tools/treemap/DownloadHeatmapModal";
 
 export default function Page() {
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("settings");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          console.warn("Failed to parse settings from localStorage");
+        }
+      }
+    }
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
   const giftsList = useAppSelector((state) => state.giftsList);
   const [list, setList] = useState<GiftInterface[]>([]);
   const [listType, setListType] = useState<"change" | "marketCap">("marketCap");
   const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m">("24h");
-  const [currency, setCurrency] = useState<"ton" | "usd">("ton");
+  const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
 
   const [amount, setAmount] = useState<number>(100);
   const dispatch = useAppDispatch();

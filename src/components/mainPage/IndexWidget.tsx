@@ -31,7 +31,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["monthData"],
+    queryKey: ["indexMonthData"],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API}/indexMonthData/68493d064b37eed02b7ae5af`

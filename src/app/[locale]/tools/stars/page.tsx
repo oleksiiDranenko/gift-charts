@@ -2,9 +2,11 @@
 
 import StarsSwapWidget from "@/components/StarsSwapWidget";
 import BackButton from "@/utils/ui/backButton";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 export default function Page() {
+  const translate = useTranslations("stars");
   return (
     <div className='w-full pt-[0px]  pb-24 flex justify-center'>
       <div className='w-full lg:w-[98%] px-3'>
@@ -28,12 +30,12 @@ export default function Page() {
               Stars Swap
             </h1>
             <p className='mt-3 mb-5 w-full text-center text-secondaryText'>
-              Stars Swap was made by our partners{" "}
+              {translate("text1")}{" "}
               <a className='text-primary' href='https://t.me/giftassetapi'>
                 @giftassetapi
               </a>
-              . <br /> You can swap any coin from TON blockchain to Telegram
-              Stars without KYC
+              . <br />
+              {translate("text2")}
             </p>
 
             <StarsSwapWidget />

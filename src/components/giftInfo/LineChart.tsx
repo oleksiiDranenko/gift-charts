@@ -542,6 +542,7 @@ export default function LineChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("all");
+            vibrate();
           }}>
           {translateTime("all")}
         </button>
@@ -553,6 +554,7 @@ export default function LineChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("3m");
+            vibrate();
           }}>
           3{translateTime("month")}
         </button>
@@ -564,6 +566,7 @@ export default function LineChart({
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("1m");
+            vibrate();
           }}>
           1{translateTime("month")}
         </button>
@@ -575,6 +578,7 @@ export default function LineChart({
           }`}
           onClick={() => {
             setListType("1w");
+            vibrate();
           }}>
           1{translateTime("week")}
         </button>
@@ -586,6 +590,7 @@ export default function LineChart({
           }`}
           onClick={() => {
             setListType("3d");
+            vibrate();
           }}>
           3{translateTime("day")}
         </button>
@@ -597,6 +602,7 @@ export default function LineChart({
           }`}
           onClick={() => {
             setListType("24h");
+            vibrate();
           }}>
           24{translateTime("hour")}
         </button>

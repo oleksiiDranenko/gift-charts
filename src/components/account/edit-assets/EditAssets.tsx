@@ -322,11 +322,7 @@ export default function EditAssets() {
           </div>
 
           <div className='w-full mt-7'>
-            {editedUser && editedUser.assets.length === 0 && (
-              <div className='pt-3 pb-5 text-secondaryText'>
-                Your Assets list is empty
-              </div>
-            )}
+            {editedUser && editedUser.assets.length === 0 && null}
             {editedUser?.assets.map((asset) => (
               <EditAssetItem
                 giftId={asset.giftId}
@@ -407,6 +403,39 @@ export default function EditAssets() {
               )}
             </div>
           </AddAssetModal>
+
+          <button
+            onClick={() => vibrate()}
+            className='mt-2 w-full flex flex-row items-center justify-center text-secondaryText gap-x-1 h-16 bg-secondaryTransparent rounded-3xl relative'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-6'>
+              <path
+                fillRule='evenodd'
+                d='M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z'
+                clipRule='evenodd'
+              />
+            </svg>
+
+            {translate2("importFromProfile")}
+
+            <span className='pr-1 gap-x-1 flex flex-row items-center text-secondaryText text-sm absolute top-2 right-2'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-3'>
+                <path
+                  fillRule='evenodd'
+                  d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              {translateGeneral("soon")}
+            </span>
+          </button>
         </>
       )}
     </div>

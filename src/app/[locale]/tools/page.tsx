@@ -17,6 +17,7 @@ export default function Page() {
   const giftsList = useAppSelector((state) => state.giftsList);
   const vibrate = useVibrate();
   const translate = useTranslations("tools");
+  const translateGeneral = useTranslations("general");
 
   const [settings, setSettings] = useState(() => {
     if (typeof window !== "undefined") {
@@ -67,7 +68,7 @@ export default function Page() {
   return (
     <main className='w-full lg:w-[98%] pt-[0px] pb-28 lg:pb-0 px-3'>
       <h1 className='w-full text-xl font-bold mb-5 ml-1 flex flex-row gap-x-2'>
-        Services
+        {translate("services")}
       </h1>
       <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
         <Link
@@ -95,9 +96,11 @@ export default function Page() {
               </svg>
 
               <div className='flex flex-col'>
-                <span className='font-bold text-lg'>Buy Stars</span>
+                <span className='font-bold text-lg'>
+                  {translate("buyStars")}
+                </span>
                 <span className='text-sm text-secondaryText'>
-                  Swap crypto to telegram stars
+                  {translate("buyStarsDescription")}
                 </span>
               </div>
             </div>
@@ -145,6 +148,40 @@ export default function Page() {
           </div>
         </Link>
 
+        {/* <Link
+          className='bg-secondaryTransparent rounded-3xl overflow-hidden'
+          href={"/tools/vote"}
+          onClick={() => {
+            vibrate();
+          }}>
+          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+            <div className='flex flex-row items-center gap-x-3'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-7 text-primary'>
+                <path
+                  fillRule='evenodd'
+                  d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm4.314.634c.108-.215.395-.634.936-.634.54 0 .828.419.936.634.13.26.189.568.189.866 0 .298-.059.605-.189.866-.108.215-.395.634-.936.634-.54 0-.828-.419-.936-.634a1.96 1.96 0 0 1-.189-.866c0-.298.059-.605.189-.866Zm2.023 6.828a.75.75 0 1 0-1.06-1.06 3.75 3.75 0 0 1-5.304 0 .75.75 0 0 0-1.06 1.06 5.25 5.25 0 0 0 7.424 0Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+
+              <div className='flex flex-col'>
+                <span className='font-bold text-lg'>
+                  {translate("marketSentiment")}
+                </span>
+                <span className='text-sm text-secondaryText'>
+                  {translate("marketSentimentDescription")}
+                </span>
+              </div>
+            </div>
+
+            <ChevronRight size={20} className='text-primary' />
+          </div>
+        </Link> */}
+
         <div
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'
           onClick={() => {
@@ -175,46 +212,10 @@ export default function Page() {
                   clipRule='evenodd'
                 />
               </svg>
-              Soon
+              {translateGeneral("soon")}
             </span>
           </div>
         </div>
-
-        {/* {true && (
-          <Link
-            className='bg-secondaryTransparent rounded-3xl overflow-hidden'
-            href={"/tools/vote"}
-            onClick={() => {
-              vibrate();
-            }}>
-            <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
-              <div className='flex flex-row items-center gap-x-3'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className='size-7 text-primary'>
-                  <path
-                    fillRule='evenodd'
-                    d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm4.314.634c.108-.215.395-.634.936-.634.54 0 .828.419.936.634.13.26.189.568.189.866 0 .298-.059.605-.189.866-.108.215-.395.634-.936.634-.54 0-.828-.419-.936-.634a1.96 1.96 0 0 1-.189-.866c0-.298.059-.605.189-.866Zm2.023 6.828a.75.75 0 1 0-1.06-1.06 3.75 3.75 0 0 1-5.304 0 .75.75 0 0 0-1.06 1.06 5.25 5.25 0 0 0 7.424 0Z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-
-                <div className='flex flex-col'>
-                  <span className='font-bold text-lg'>
-                    {translate("marketSentiment")}
-                  </span>
-                  <span className='text-sm text-secondaryText'>
-                    {translate("marketSentimentDescription")}
-                  </span>
-                </div>
-              </div>
-
-              <ChevronRight size={20} className='text-primary' />
-            </div>
-          </Link>
-        )} */}
       </div>
 
       {/* Indexes */}

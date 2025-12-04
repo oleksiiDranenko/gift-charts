@@ -33,7 +33,12 @@ export default function EditWatchlistItem({
   }, []);
 
   return (
-    <div className='w-full h-16 mb-3 flex flex-row justify-between items-center border-b-2 border-secondaryTransparent rounded-3xl pr-3 transition-all active:scale-[95%] duration-200 ease-in-out '>
+    <div
+      className={`w-full h-16 mb-3 flex flex-row justify-between items-center rounded-3xl pr-3 transition-all active:scale-[95%] duration-200 ease-in-out ${
+        resolvedTheme === "dark"
+          ? "border-b-2 border-secondaryTransparent"
+          : "bg-secondaryTransparent"
+      }`}>
       <div className='flex flex-row items-center'>
         <Image
           alt='gift image'
