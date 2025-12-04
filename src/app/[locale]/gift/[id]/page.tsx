@@ -11,6 +11,7 @@ import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
 import GiftInitPriceSection from "@/components/giftInfo/GiftInitPriceSection";
+import { GiftSkeleton } from "@/components/giftInfo/GiftSkeleton";
 
 async function fetchGift(id: string) {
   const { data } = await axios.get(
@@ -75,7 +76,7 @@ export default function Page({ params }: any) {
         </div>
         {loading ? (
           <div className='flex flex-col'>
-            <div className='w-full h-20 flex justify-center items-center'>
+            <div className='w-full hidden lg:flex h-20 justify-center items-center'>
               <ReactLoading
                 type='spin'
                 color='var(--primary)'
@@ -83,6 +84,9 @@ export default function Page({ params }: any) {
                 width={30}
                 className='mt-5'
               />
+            </div>
+            <div className='block lg:hidden'>
+              <GiftSkeleton />
             </div>
           </div>
         ) : gift ? (
