@@ -77,30 +77,33 @@ export default function Page() {
 
   return (
     <div className='w-full lg:w-[98%] pt-0 pb-24 px-3 space-y-3'>
-      <h1 className='text-xl font-bold'>{translate("accountSettings")}</h1>
-      {user.username && (
-        <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>
-          <Link
-            href='/settings/edit-assets'
-            className='w-full h-14 px-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
-            onClick={() => vibrate()}>
-            <span className='flex flex-row items-center gap-3'>
-              <Gift size={20} className='text-primary' />
-              {translate("editAssets")}
-            </span>
-            <ChevronRight size={20} className='text-primary' />
-          </Link>
-          <Link
-            href='/settings/edit-watchlist'
-            className='w-full h-14 px-3 flex flex-row justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
-            onClick={() => vibrate()}>
-            <span className='flex flex-row items-center gap-3'>
-              <Star size={20} className='text-primary' />
-              {translate("editWatchlist")}
-            </span>
-            <ChevronRight size={20} className='text-primary' />
-          </Link>
-        </div>
+      {user.username === "_guest" ? null : (
+        <>
+          <h1 className='text-xl font-bold'>{translate("accountSettings")}</h1>
+
+          <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>
+            <Link
+              href='/settings/edit-assets'
+              className='w-full h-14 px-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
+              onClick={() => vibrate()}>
+              <span className='flex flex-row items-center gap-3'>
+                <Gift size={20} className='text-primary' />
+                {translate("editAssets")}
+              </span>
+              <ChevronRight size={20} className='text-primary' />
+            </Link>
+            <Link
+              href='/settings/edit-watchlist'
+              className='w-full h-14 px-3 flex flex-row justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
+              onClick={() => vibrate()}>
+              <span className='flex flex-row items-center gap-3'>
+                <Star size={20} className='text-primary' />
+                {translate("editWatchlist")}
+              </span>
+              <ChevronRight size={20} className='text-primary' />
+            </Link>
+          </div>
+        </>
       )}
 
       <h1 className='text-xl font-bold pt-3'>{translate("generalSettings")}</h1>

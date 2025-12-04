@@ -414,7 +414,12 @@ export default function BarChart({
           : "relative bg-secondaryTransparent rounded-3xl"
       }
       ref={chartContainerRef}>
-      <Bar ref={chartRef as any} data={data} options={options} />
+      <Bar
+        ref={chartRef as any}
+        data={data}
+        options={options}
+        height={window.innerWidth < 1080 ? 200 : 150}
+      />
       <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${

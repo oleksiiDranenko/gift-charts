@@ -479,7 +479,12 @@ export default function IndexChart({
                 : "w-full relative bg-secondaryTransparent rounded-xl"
             }
             ref={chartContainerRef}>
-            <Line ref={chartRef} data={data} options={options} />
+            <Line
+              ref={chartRef}
+              data={data}
+              options={options}
+              height={window.innerWidth < 1080 ? 200 : 150}
+            />
             <div className='w-full mt-1 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl'>
               {["all", "3m", "1m", "1w", "3d", "1d"].map((type) => (
                 <button
