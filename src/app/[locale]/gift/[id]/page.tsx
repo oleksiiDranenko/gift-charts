@@ -7,7 +7,6 @@ import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { AlarmClock } from "lucide-react";
 import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 
