@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Asset from "./Asset";
 import ReactLoading from "react-loading";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -43,20 +43,38 @@ export default function Account() {
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValuePrev, setPortfolioValuePrev] = useState<number>(0);
 
-  const { data: chartData = [], isLoading: chartLoading } = useQuery<
-    GiftWeekDataInterface[]
-  >({
-    queryKey: ["userChart", user.telegramId],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
-      );
-      return data;
-    },
-    enabled:
-      !!user.telegramId && giftsList.length > 0 && user.assets.length > 0,
-    refetchOnWindowFocus: false,
-  });
+  const giftsMap = useMemo(() => {
+    const map = new Map<string, GiftInterface>();
+
+    for (const gift of giftsList) {
+      map.set(gift._id, gift);
+    }
+
+    return map;
+  }, [giftsList]);
+
+  useEffect(() => {
+    if (!user.assets?.length || giftsList.length === 0) return;
+
+    let current = 0;
+    let previous = 0;
+
+    for (const { giftId, amount } of user.assets) {
+      const gift = giftsMap.get(giftId);
+      if (!gift) continue;
+
+      if (currency === "ton") {
+        current += gift.priceTon * amount;
+        previous += (gift.tonPrice24hAgo ?? gift.priceTon) * amount;
+      } else {
+        current += gift.priceUsd * amount;
+        previous += (gift.usdPrice24hAgo ?? gift.priceUsd) * amount;
+      }
+    }
+
+    setPortfolioValue(current);
+    setPortfolioValuePrev(previous);
+  }, [user.assets, giftsMap, currency]);
 
   // 🟣 2. Fetch gifts if not in Redux store
   useEffect(() => {
@@ -77,22 +95,6 @@ export default function Account() {
     };
     fetchGifts();
   }, [dispatch, giftsList]);
-
-  // 🟢 3. Calculate portfolio change based on cached chart data
-  useEffect(() => {
-    if (chartData.length > 1) {
-      const first = chartData[0];
-      const last = chartData[chartData.length - 1];
-
-      if (currency === "ton") {
-        setPortfolioValue(last.priceTon);
-        setPortfolioValuePrev(first.priceTon);
-      } else {
-        setPortfolioValue(last.priceUsd);
-        setPortfolioValuePrev(first.priceUsd);
-      }
-    }
-  }, [chartData, currency]);
 
   // 🟣 4. Build assets list
   useEffect(() => {
@@ -143,8 +145,23 @@ export default function Account() {
           />
         </div>
       ) : user.username === "_guest" ? (
-        <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-3xl'>
-          {translate("openInTelegram")}
+        <div className='w-full h-52 px-3 flex items-center justify-center'>
+          <Link
+            className='w-full lg:w-1/2 p-3 gap-y-2 flex flex-col items-center justify-center bg-secondaryTransparent rounded-3xl'
+            href={""}>
+            <span className='text-secondaryText'>
+              {translate("openInTelegram")}
+            </span>
+            <span className='flex flex-row items-center text-primary gap-x-1 text-lg'>
+              <Image
+                src={"/images/telegram-svgrepo-com.svg"}
+                alt={""}
+                width={20}
+                height={20}
+              />{" "}
+              Gift Charts
+            </span>
+          </Link>
         </div>
       ) : assetsArray.length > 0 ? (
         <>
@@ -170,15 +187,9 @@ export default function Account() {
                     />
                   )}
 
-                  {chartLoading ? (
-                    <h1 className='text-3xl font-bold text-secondaryText animate-pulse'>
-                      ...
-                    </h1>
-                  ) : (
-                    <h1 className='text-4xl font-bold'>
-                      {portfolioValue.toFixed(2)}
-                    </h1>
-                  )}
+                  <h1 className='text-4xl font-bold'>
+                    {portfolioValue.toFixed(2)}
+                  </h1>
                 </div>
                 <div className='flex flex-row items-center gap-x-2 mt-2 bg-secondaryTransparent px-3 py-1 rounded-3xl'>
                   <span className='text-sm text-secondaryText'>
@@ -203,8 +214,6 @@ export default function Account() {
                 </div>
               </div>
             </div>
-
-            <PortfolioChart data={chartData} currency={currency} />
           </div>
 
           {/* Assets List */}

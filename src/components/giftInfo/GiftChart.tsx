@@ -301,6 +301,56 @@ export default function GiftChart({
             </div>
           )}
 
+          <div className='w-full mt-5 flex flex-col gap-y-2 font-normal bg-secondaryTransparent p-3 rounded-3xl'>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-secondary'>
+              <span className='w-full text-secondaryText'>
+                {translateInfo("marketCap")}
+              </span>
+              <span className='flex flex-row items-center'>
+                {selectedPrice === "usd" ? (
+                  <Image
+                    alt='usdt'
+                    src='/images/usdt.svg'
+                    width={14}
+                    height={14}
+                    className='mr-1'
+                  />
+                ) : (
+                  <Image
+                    alt='ton'
+                    src='/images/toncoin.webp'
+                    width={14}
+                    height={14}
+                    className='mr-1'
+                  />
+                )}
+                {formatPrice(
+                  ((selectedPrice === "usd"
+                    ? gift?.priceUsd
+                    : gift?.priceTon) || 0) * (gift?.upgradedSupply || 0)
+                )}
+              </span>
+            </div>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-secondary'>
+              <span className='w-full text-secondaryText'>
+                {translateInfo("upgradedSupply")}
+              </span>
+              <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
+            </div>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-secondary'>
+              <span className='w-full text-secondaryText'>
+                {translateInfo("supply")}
+              </span>
+              <span>{formatAmount(gift?.supply || 0)}</span>
+            </div>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1'>
+              <span className='w-full text-secondaryText'>
+                {translateInfo("initialSupply")}
+              </span>
+              <span>{formatAmount(gift?.initSupply || 0)}</span>
+            </div>
+          </div>
+
           {/* <div className='mt-5'>
             <div className='w-full flex flex-row justify-between items-center'>
               <div className='flex flex-row items-center'>

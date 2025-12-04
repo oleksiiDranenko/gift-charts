@@ -119,6 +119,14 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
             ))}
           </div>
         </div>
+
+        <div className='w-full fixed left-0 bottom-14 px-3'>
+          <button
+            onClick={closeModal}
+            className='w-full h-12 bg-primary text-white font-bold rounded-3xl'>
+            Close
+          </button>
+        </div>
       </ModalBase>
     </>
   );
