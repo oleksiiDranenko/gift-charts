@@ -391,7 +391,7 @@ export default function GiftChart({
         // WIDE SCREEN
         // WIDE SCREEN
 
-        <div className='flex flex-row box-border'>
+        <div className='flex flex-row box-border mt-5'>
           <div
             className={`w-1/4 flex flex-col justify-between mr-3 ${
               resolvedTheme === "dark"
@@ -465,8 +465,8 @@ export default function GiftChart({
                     "%"}
                 </span>
               </div>
-              <div className='w-full mt-5 flex flex-col gap-y-2 font-normal text-sm'>
-                <div className='w-full flex flex-col justify-between items-start py-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+              <div className='w-full mt-5 flex flex-col gap-y-2'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("marketCap")}
                   </span>
@@ -495,19 +495,19 @@ export default function GiftChart({
                     )}
                   </span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start py-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("upgradedSupply")}
                   </span>
                   <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start py-2 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("supply")}
                   </span>
                   <span>{formatAmount(gift?.supply || 0)}</span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start py-1 gap-y-1'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("initialSupply")}
                   </span>
