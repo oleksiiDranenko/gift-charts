@@ -49,7 +49,7 @@ export default function GiftSupplyPie({
   };
 
   return (
-    <div className='w-full  flex flex-row gap-x-3 rounded-3xl p-3 bg-secondaryTransparent'>
+    <div className='w-full lg:w-1/2 flex flex-row gap-x-3 rounded-3xl p-3 bg-secondaryTransparent'>
       <div className='w-full'>
         <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
           <span className='w-full text-secondaryText'>

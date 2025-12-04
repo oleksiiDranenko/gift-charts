@@ -311,16 +311,16 @@ export default function GiftChart({
                   <Image
                     alt='usdt'
                     src='/images/usdt.svg'
-                    width={14}
-                    height={14}
+                    width={16}
+                    height={16}
                     className='mr-1'
                   />
                 ) : (
                   <Image
                     alt='ton'
                     src='/images/toncoin.webp'
-                    width={14}
-                    height={14}
+                    width={16}
+                    height={16}
                     className='mr-1'
                   />
                 )}

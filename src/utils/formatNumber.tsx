@@ -4,7 +4,7 @@ export const formatAmount = (num: number): string => {
 
 export const formatPrice = (value: number) => {
   return new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(value);
 };
