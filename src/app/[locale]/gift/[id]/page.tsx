@@ -76,7 +76,7 @@ export default function Page({ params }: any) {
         </div>
         {loading ? (
           <div className='flex flex-col'>
-            <div className='w-full hidden lg:flex h-20 justify-center items-center'>
+            <div className='w-full flex h-20 justify-center items-center'>
               <ReactLoading
                 type='spin'
                 color='var(--primary)'
@@ -85,9 +85,9 @@ export default function Page({ params }: any) {
                 className='mt-5'
               />
             </div>
-            <div className='block lg:hidden'>
+            {/* <div className='block lg:hidden'>
               <GiftSkeleton />
-            </div>
+            </div> */}
           </div>
         ) : gift ? (
           <div className='flex flex-col'>

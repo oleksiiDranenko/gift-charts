@@ -37,7 +37,7 @@ export const GiftSkeleton = () => {
 
       {/* Chart */}
       <div className='relative'>
-        <div className='w-full h-[270px] bg-secondaryTransparent rounded-3xl' />
+        <div className='w-full h-[200px] bg-secondaryTransparent rounded-3xl' />
 
         <span className='absolute bottom-[76px] left-5 w-24 h-4 bg-secondaryTransparent rounded-md' />
       </div>
