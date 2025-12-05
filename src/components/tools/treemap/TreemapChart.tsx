@@ -192,50 +192,17 @@ const imagePlugin = (
       const startY = y + (height - totalContentHeight) / 2;
       const centerX = x + width / 2;
 
-      // Draw gift image in a white circle with padding
-      const imgCenterX = x + width / 2;
-      const imgCenterY = startY + drawHeight / 2;
-
-      // Circle radius stays the same
-      const circleRadius = (Math.min(drawWidth, drawHeight) / 2) * 0.92;
-
-      // ADD: image should be smaller than the circle area
-      const imagePaddingFactor = 0.88; // lower = more padding
-      const imageWidth = drawWidth * scale * imagePaddingFactor;
-      const imageHeight = drawHeight * scale * imagePaddingFactor;
-
-      // 1. White circle background
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(imgCenterX, imgCenterY, circleRadius, 0, Math.PI * 2);
-      ctx.fillStyle = "#E0D9D9";
-      ctx.fill();
-
-      // 2. Clip to circle so image stays round
-      ctx.clip();
-
-      // 3. Draw the padded image (smaller than circle)
       ctx.drawImage(
         img,
-        imgCenterX - imageWidth / 2,
-        imgCenterY - imageHeight / 2,
-        imageWidth,
-        imageHeight
+        x + (width - drawWidth) / 2,
+        startY,
+        drawWidth,
+        drawHeight
       );
-
-      ctx.restore();
-
-      //  ctx.drawImage(
-      //   img,
-      //   x + (width - drawWidth) / 2,
-      //   startY,
-      //   drawWidth,
-      //   drawHeight
-      // );
-      // ctx.fillStyle = "white";
-      // ctx.textAlign = "center";
-      // ctx.strokeStyle = "transparent";
-      // ctx.lineWidth = 0;
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.strokeStyle = "transparent";
+      ctx.lineWidth = 0;
 
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
