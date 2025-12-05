@@ -13,42 +13,68 @@ import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import useVibrate from "@/hooks/useVibrate";
 import CalendarHeatmap from "@/components/tools/calendar-heatmap/CalendarHeatmap";
 import { IndexMonthDataInterface } from "@/interfaces/IndexMonthDataInterface";
+import BackButton from "@/utils/ui/backButton";
+import { useQuery } from "react-query";
+
+async function fetchIndex(id: string): Promise<IndexInterface> {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API}/indexes/get-one/${id}`
+  );
+  return data;
+}
+
+async function fetchIndexData(id: string): Promise<IndexDataInterface[]> {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API}/indexData/get-all/${id}`
+  );
+  return data;
+}
+
+async function fetchIndexMonthData(
+  id: string
+): Promise<IndexMonthDataInterface[]> {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API}/indexMonthData/${id}`
+  );
+  return data;
+}
 
 export default function Page({ params }: any) {
-  const [index, setIndex] = useState<IndexInterface>();
-  const [data, setData] = useState<IndexDataInterface[]>([]);
-  const [monthData, setMonthData] = useState<IndexMonthDataInterface[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
   const router = useRouter();
 
   const vibrate = useVibrate();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
+  const {
+    data: index,
+    isLoading: loadingIndex,
+    error: errorIndex,
+  } = useQuery({
+    queryKey: ["index", params.id],
+    queryFn: () => fetchIndex(params.id),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
-        const indexRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}/indexes/get-one/${params.id}`
-        );
-        const dataRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}/indexData/get-all/${params.id}`
-        );
-        const monthDataRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}/indexMonthData/${params.id}`
-        );
-        setIndex(indexRes.data);
-        setData(dataRes.data);
-        setMonthData(monthDataRes.data);
+  const {
+    data: indexData = [],
+    isLoading: loadingData,
+    error: errorData,
+  } = useQuery({
+    queryKey: ["indexData", params.id],
+    queryFn: () => fetchIndexData(params.id),
+    staleTime: 1000 * 60 * 5,
+  });
 
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [params.id]);
+  const {
+    data: monthData = [],
+    isLoading: loadingMonthData,
+    error: errorMonthData,
+  } = useQuery({
+    queryKey: ["indexMonthData", params.id],
+    queryFn: () => fetchIndexMonthData(params.id),
+    staleTime: 1000 * 60 * 60, // 1 hour (less frequent updates)
+  });
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -58,26 +84,22 @@ export default function Page({ params }: any) {
     }
   };
 
+  const isLoading = loadingIndex || loadingData || loadingMonthData;
+
   return (
     <div className='w-full pt-[0px]  pb-24 flex justify-center'>
-      <div className='w-full lg:w-5/6'>
-        {!loading && index ? (
+      <div className='w-full lg:w-[98%]'>
+        {!isLoading && index ? (
           <div className='flex flex-col'>
             <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>
-              <Link
-                href={"/tools"}
-                className='w-fit flex flex-row items-center text-lg font-bold'
-                onClick={() => vibrate()}>
-                <ChevronLeft />
-                {"Go Back"}
-              </Link>
+              <BackButton />
             </div>
             <IndexChart
               index={index}
-              indexData={data}
+              indexData={indexData}
               indexMonthData={monthData}
             />
-            <div className='mt-5 px-3'>
+            {/* <div className='mt-5 px-3'>
               <div className='w-full flex flex-row justify-between items-center'>
                 <div className='flex flex-row items-center'>
                   <h2 className='text-lg font-bold'>Yearly Performance</h2>
@@ -85,7 +107,7 @@ export default function Page({ params }: any) {
                 <div>
                   <button
                     onClick={() => setShowCalendar(!showCalendar)}
-                    className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-xl'>
+                    className='flex flex-row items-center py-2 px-3 gap-1 text-sm bg-secondaryTransparent rounded-3xl'>
                     {showCalendar ? (
                       <>
                         Hide
@@ -101,9 +123,9 @@ export default function Page({ params }: any) {
                 </div>
               </div>
               <div className={showCalendar ? "visible" : "hidden"}>
-                <CalendarHeatmap lifeData={data} />
+                <CalendarHeatmap lifeData={indexData} />
               </div>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div className='w-full flex justify-center'>

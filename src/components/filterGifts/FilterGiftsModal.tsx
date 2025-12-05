@@ -1,60 +1,60 @@
-// components/MarketsModal.tsx
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
-import { BrushCleaning, Trash, X } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { Search, X } from "lucide-react";
 import GiftInterface from "@/interfaces/GiftInterface";
-import { setGiftsList } from "@/redux/slices/giftsListSlice";
-import { setFilters } from "@/redux/slices/filterListSlice";
 import FilterGiftItem from "./FilterGiftItem";
 import { useTranslations } from "next-intl";
+import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
+import InfoMessage from "../generalHints/InfoMessage";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setFilters, toggleGiftInFilter } from "@/redux/slices/filterListSlice";
 
 interface Props {
   trigger: ReactNode;
+  giftsList: GiftInterface[];
 }
 
-export default function FilterGiftsModal({ trigger }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const vibrate = useVibrate();
+export default function FilterGiftsModal({ trigger, giftsList }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const dispatch = useAppDispatch();
-  const giftsList = useAppSelector((state) => state.giftsList);
+  const chosenGifts = useAppSelector((state) => state.filters.chosenGifts);
   const filters = useAppSelector((state) => state.filters);
-  const list = useAppSelector((state) => state.filters.chosenGifts);
+
+  const vibrate = useVibrate();
   const translate = useTranslations("general");
 
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const sortedGifts = [...giftsList].sort(
-      (a: GiftInterface, b: GiftInterface) => a.name.localeCompare(b.name)
-    );
-
-    if (JSON.stringify(sortedGifts) !== JSON.stringify(giftsList)) {
-      dispatch(setGiftsList(sortedGifts));
-    }
-    setLoading(false);
-  }, [dispatch, giftsList]);
-
-  const handleSelection = (item: GiftInterface) => {
-    if (list.includes(item)) {
-      dispatch(
-        setFilters({
-          ...filters,
-          chosenGifts: list.filter((el) => item._id !== el._id),
-        })
-      );
-    } else {
-      dispatch(setFilters({ ...filters, chosenGifts: [...list, item] }));
-    }
+  const clearSelection = () => {
+    vibrate();
+    dispatch(setFilters({ ...filters, chosenGifts: [] }));
   };
+
+  const clearSearch = () => setSearchTerm("");
+
+  const handleSelection = (gift: GiftInterface) => {
+    vibrate();
+    dispatch(toggleGiftInFilter(gift._id));
+  };
+
+  const filteredGifts = [...giftsList]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .filter((gift) =>
+      gift.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      const aSelected = chosenGifts.includes(a._id);
+      const bSelected = chosenGifts.includes(b._id);
+      if (aSelected && !bSelected) return -1;
+      if (!aSelected && bSelected) return 1;
+      return 0;
+    });
 
   return (
     <>
-      {/* Clone the trigger element and attach onClick */}
       <span onClick={() => setIsOpen(true)} className='inline-block w-full'>
         {trigger}
       </span>
@@ -64,7 +64,6 @@ export default function FilterGiftsModal({ trigger }: Props) {
           as='div'
           className='relative z-50'
           onClose={() => setIsOpen(false)}>
-          {/* Backdrop */}
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-200'
@@ -85,39 +84,104 @@ export default function FilterGiftsModal({ trigger }: Props) {
               leave='transform transition ease-in duration-200'
               leaveFrom='translate-y-0 opacity-100'
               leaveTo='translate-y-full opacity-0'>
-              <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col'>
-                <div className='w-full h-10 flex justify-between items-center'>
-                  <div className='flex flex-row'>
+              <Dialog.Panel className='w-full lg:w-[98%] h-5/6 p-3 rounded-t-xl bg-background flex flex-col'>
+                <div className='w-full h-10 pb-3 flex justify-between items-center'>
+                  <div className='w-1/3'>
                     <button
-                      className='flex flex-row items-center justify-center gap-x-1 text-primary h-8 px-3 bg-secondaryTransparent rounded-xl'
-                      onClick={() =>
-                        dispatch(setFilters({ ...filters, chosenGifts: [] }))
-                      }>
-                      <BrushCleaning size={14} /> {translate("clear")}
+                      onClick={clearSelection}
+                      className={`flex items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-3xl transition-opacity ${
+                        chosenGifts.length === 0 ? "opacity-50" : ""
+                      }`}>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        viewBox='0 0 24 24'
+                        fill='currentColor'
+                        className='size-5'>
+                        <path
+                          fillRule='evenodd'
+                          d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                      {translate("clear")}
                     </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      vibrate();
-                      setIsOpen(false);
-                    }}
-                    className='w-fit p-2 bg-secondaryTransparent border border-secondary rounded-full'>
-                    <X size={18} />
-                  </button>
+
+                  <div className='w-1/3 text-center'>
+                    <span
+                      className={`text-sm font-medium ${
+                        chosenGifts.length > 0
+                          ? "text-primary"
+                          : "text-secondaryText"
+                      }`}>
+                      {chosenGifts.length} {translate("selected")}
+                    </span>
+                  </div>
+
+                  <div className='w-1/3 flex justify-end'>
+                    <button
+                      onClick={() => {
+                        vibrate();
+                        setIsOpen(false);
+                      }}
+                      className='p-2 bg-secondaryTransparent rounded-full'>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        viewBox='0 0 24 24'
+                        fill='currentColor'
+                        className='size-5'>
+                        <path
+                          fillRule='evenodd'
+                          d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
 
-                <div className='flex-1 overflow-y-scroll'>
-                  {giftsList.map((gift) => {
-                    return (
+                <div className='flex-1 overflow-y-auto'>
+                  <div className='relative w-full my-2'>
+                    <input
+                      type='text'
+                      placeholder={translate("searchPlaceholder")}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className='w-full h-12 pl-10 pr-10 bg-secondaryTransparent rounded-3xl text-foreground placeholder:text-secondaryText focus:outline-none'
+                    />
+                    <Search
+                      className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText pointer-events-none'
+                      size={18}
+                    />
+                    {searchTerm && (
+                      <button
+                        onClick={clearSearch}
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-secondaryText hover:text-foreground'>
+                        <X size={16} />
+                      </button>
+                    )}
+                  </div>
+
+                  <ScrollToTopButton />
+
+                  {filteredGifts.length > 0 ? (
+                    filteredGifts.map((gift) => (
                       <FilterGiftItem
-                        gift={gift}
-                        selected={list.includes(gift) ? true : false}
-                        onClick={handleSelection}
                         key={gift._id}
+                        gift={gift}
+                        selected={chosenGifts.includes(gift._id)}
+                        onClick={() => handleSelection(gift)}
                       />
-                    );
-                  })}
-                  <div className='h-10'></div>
+                    ))
+                  ) : (
+                    <InfoMessage
+                      text={`No gifts matching "${searchTerm}"`}
+                      buttonText='Clear search'
+                      onClick={clearSearch}
+                    />
+                  )}
+
+                  <div className='h-10' />
                 </div>
               </Dialog.Panel>
             </Transition.Child>

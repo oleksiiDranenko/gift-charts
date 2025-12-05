@@ -4,125 +4,231 @@
     "description": "@giftshitpost - Мысли и инсайды"
   },
   "general": {
-    "save": "Save",
-    "clear": "Clear",
-    "close": "Close",
+    "save": "Сохранить",
+    "clear": "Очистить",
+    "close": "Закрыть",
+    "reset": "Сбросить",
     "toncoin": "Toncoin",
-    "usDollar": "US Dollar",
-    "buy": "Buy",
-    "sell": "Sell",
-    "show": "Show",
-    "hide": "Hide",
-    "tryItNow": "Try it now"
+    "usDollar": "Доллар США",
+    "buy": "Купить",
+    "sell": "Продать",
+    "show": "Показать",
+    "hide": "Скрыть",
+    "tryItNow": "Попробовать сейчас",
+    "back": "Назад",
+    "selected": "Выбрано",
+    "searchPlaceholder": "Поиск подарков",
+    "soon": "Скоро"
+  },
+  "donate": {
+    "donate": "Донаты идут на покрытие расходов на хостинг",
+    "tonWallet": "Адрес TON-кошелька"
+  },
+  "settings": {
+    "accountSettings": "Настройки аккаунта",
+    "editAssets": "Редактировать активы",
+    "editWatchlist": "Редактировать сохраненные",
+    "generalSettings": "Общие настройки",
+    "colorTheme": "Цветовая тема",
+    "language": "Язык",
+    "currency": "Валюта",
+    "giftStyle": "Стиль подарков"
+  },
+  "tools": {
+    "services": "Сервисы",
+    "buyStars": "Купить звезды",
+    "buyStarsDescription": "Обмен криптовалюты на Telegram Stars",
+    "analyticsTools": "Инструменты аналитики",
+    "heatmap": "Тепловая карта",
+    "heatmapDescription": "Состояние всего рынка в одном изображении",
+    "fearGreed": "Страх и жадность",
+    "fearGreedDescription": "Узнайте, как другие относятся к рынку",
+    "marketSentiment": "Настроения рынка",
+    "marketSentimentDescription": "Узнайте, как другие относятся к рынку",
+    "indexes": "Индексы",
+    "marketCap": "Рыночная капитализация"
   },
   "account": {
-    "openInTelegram": "Please open app in Telegram",
-    "assets": "Assets",
-    "noAssets": "No assets yet",
-    "noGifts": "No gifts available",
-    "cash": "Cash",
-    "addGift": "Add Gift",
-    "avgPrice": "Avg price",
-    "amount": "Amount",
-    "watchlist": "Watchlist",
-    "emptyWatchlist": "Your Watchlist is Empty"
+    "last24h": "Последние 24 часа",
+    "editPortfolio": "Редакт. портфель",
+    "addGiftsToPortfolio": "Добавить подарки в портфель",
+    "addGiftsInstruction": "Выберите подарки, которыми владеете, чтобы отслеживать стоимость вашего портфеля",
+    "openInTelegram": "Пожалуйста, откройте приложение в Telegram",
+    "assets": "Активы",
+    "noAssets": "Активов пока нет",
+    "noGifts": "Подарков нет",
+    "cash": "Наличные",
+    "addGift": "Добавить подарок",
+    "importFromProfile": "Импорт из профиля",
+    "avgPrice": "Средняя цена",
+    "amount": "Количество",
+    "watchlist": "Сохраненные",
+    "emptyWatchlist": "Ваш список сохраненных пуст",
+    "save": "Save",
+    "removeGift": "Remove Gift",
+    "gift": "подарок",
+    "gifts": "подарков"
   },
   "filters": {
-    "hideFilters": "Hide Filters",
-    "showFilters": "Show Filters",
-    "filterGifts": "Filter Gifts",
-    "sortBy": "Sort By",
-    "price": "Price",
-    "marketCap": "Market Cap",
-    "change": "Change",
-    "supply": "Supply",
-    "initSupply": "Init. Supply",
-    "starsPrice": "Stars Price",
-    "value": "Value",
-    "low": "Low",
-    "high": "High",
-    "clearFilters": "Clear Filters",
-    "name": "Name",
-    "24hChange": "24h change",
-    "top": "Top",
+    "hideFilters": "Скрыть фильтры",
+    "showFilters": "Показать фильтры",
+    "filterGifts": "Фильтр подарков",
+    "sortBy": "Сортировать по",
+    "price": "Цена",
+    "marketCap": "Рыночная капитализация",
+    "change": "Изменение цены",
+    "supply": "Тираж",
+    "initSupply": "Изначальный тираж",
+    "starsPrice": "Цена в звёздах",
+    "value": "Стоимость",
+    "low": "Низкий",
+    "high": "Высокий",
+    "clearFilters": "Очистить фильтры",
+    "name": "Название",
+    "24hChange": "Изменение за 24 ч",
+    "top": "Топ",
     "ton": "Ton",
     "usd": "Usd",
-    "onSale": "On sale",
-    "volume": "Volume",
-    "salesCount": "Sales count"
+    "24h": "24 часа",
+    "1w": "Неделя",
+    "1m": "Месяц",
+    "onSale": "На продаже",
+    "volume": "Объём",
+    "salesCount": "Количество продаж",
+    "growth": "Рост 24ч",
+    "volatility": "Движение 24ч",
+    "upgradedSupply": "Количество улучшенных",
+    "releaseDate": "Дата релиза",
+    "alphabet": "По названию",
+    "highFirst": "По убыванию",
+    "lowFirst": "По возрастанию",
+    "order": "Порядок",
+    "reset": "Сбросить",
+    "viewBy": "Отображать",
+    "timePeriod": "Временной отрезок",
+    "currency": "Валюта",
+    "displayAmount": "Количество подарков",
+    "all": "Все",
+    "displayAll": "Отображать все"
+  },
+
+  "indexTimegap": {
+    "all": "Все",
+    "3m": "3м",
+    "1m": "1м",
+    "1w": "1н",
+    "3d": "3д",
+    "1d": "24ч"
   },
 
   "timegap": {
-    "hour": "h",
-    "day": "d",
-    "week": "w",
-    "month": "m",
-    "all": "All"
+    "hour": "ч",
+    "day": "д",
+    "week": "н",
+    "month": "мес",
+    "all": "Все"
   },
 
   "number": {
-    "thousand": "K",
-    "million": "M"
+    "thousand": "тыс.",
+    "million": "млн."
   },
 
   "navbar": {
-    "home": "Home",
-    "tools": "Tools",
-    "profile": "Account",
-    "settings": "Settings"
+    "home": "Главная",
+    "gifts": "Подарки",
+    "tools": "Сервисы",
+    "profile": "Аккаунт",
+    "settings": "Настройки"
+  },
+
+  "indexWidget": {
+    "7days": "7 дней",
+    "marketCap": "Рыночная капитализация"
   },
 
   "mainPage": {
-    "searchPlaceholder": "Search gifts...",
-    "customise": "Customise",
-    "gainers": "Gainers",
-    "losers": "Losers",
-    "floor": "floor",
-    "saved": "Saved",
-    "emptyWatchlist": "Your Watchlist is Empty"
+    "searchPlaceholder": "Поиск подарков",
+    "customise": "Настроить",
+    "gainers": "Рост",
+    "losers": "Падение",
+    "floor": "Дорогие",
+    "saved": "Сохраненные",
+    "emptyWatchlist": "Ваш список сохраненных пуст",
+    "allGifts": "Все подарки",
+    "supportApp": "Поддержать приложение",
+    "thankYou": "Спасибо!"
   },
 
   "giftInfo": {
-    "yearlyPerformance": "Yearly Performance",
-    "releaseDate": "Release Date",
-    "starsPrice": "Stars Price",
-    "upgradeStarsPrice": "Upgrade Stars Price",
-    "totalStarsPrice": "Total Stars Price",
-    "totalStarsPriceInUSD": "Total Stars Price in USD",
-    "totalStarsPriceInTON": "Total Stars Price in TON",
-    "initialSupply": "Inital Supply",
-    "supply": "Supply",
-    "upgradedSupply": "Upgraded Supply",
-    "percentUpdgraded": "Percent Upgraded",
-    "amountBurnt": "Amount Burnt",
-    "percentBurnt": "Percent Burnt",
-    "viewModels": "View Models"
+    "yearlyPerformance": "Годовая производительность",
+    "releaseDate": "Дата выпуска",
+    "starsPrice": "Цена в звёздах",
+    "upgradeStarsPrice": "Цена улучшения в звёздах",
+    "totalStarsPrice": "Общая цена в звёздах",
+    "totalStarsPriceInUSD": "Общая цена в звёздах в USD",
+    "totalStarsPriceInTON": "Общая цена в звёздах в TON",
+    "initStarsPrice": "Начальная цена Stars",
+    "initUsdtPrice": "Начальная цена USDT",
+    "initStarsMarketcap": "Начальная рыночная кап. в Stars",
+    "initUsdtMarketcap": "Начальная рыночная кап. в USDT",
+    "initialSupply": "Изначальный тираж",
+    "supply": "Тираж",
+    "upgradedSupply": "Количество улучшенных",
+    "amountBurnt": "Количество сожжённых",
+    "upgraded": "Улучшено",
+    "burnt": "Сожжено",
+    "notUpgraded": "Не улучшено",
+    "viewModels": "Просмотреть модели",
+    "marketCap": "Рыночная капитализация"
   },
 
-  "tools": {
-    "heatmap": {
-      "name": "Heatmap",
-      "resetZoom": "Reset Zoom",
-      "download": "Download Heatmap as an Image"
-    },
-    "marketCap": "Market Cap"
+  "priceOptions": {
+    "ton": "TON",
+    "usd": "USDT",
+    "onSale": "На продаже",
+    "volume": "Объём",
+    "salesCount": "Количество продаж"
   },
 
-  "settings": {
-    "colorTheme": {
-      "name": "Color Theme",
-      "light": "Light",
-      "dark": "Dark",
-      "system": "System"
-    }
+  "giftHeader": {
+    "gift": "Подарок",
+    "price": "Цена",
+    "marketCap": "Рын. капитализация",
+    "24h": "24ч",
+    "week": "Неделя",
+    "month": "Месяц"
+  },
+
+  "heatmap": {
+    "editHeatmap": "Настроить",
+    "download": "Скачать",
+    "downloadHeatmapText": "Изображение будет отправлено вам в ближайшее время",
+    "close": "Закрыть"
+  },
+
+  "vote": {
+    "marketSentiment": "Рыночные настроения",
+    "howDoYouFeel": "Как вы относитесь к рынку?",
+    "veryNegative": "Очень негативно",
+    "negative": "Негативно",
+    "neutral": "Нейтрально",
+    "positive": "Позитивно",
+    "veryPositive": "Очень позитивно",
+    "totalVotes": "Всего голосов:"
   },
 
   "fearAndGreed": {
-    "name": "Fear & Greed",
-    "extremeFear": "Extreme fear",
-    "fear": "Fear",
-    "neutral": "Neutral",
-    "greed": "Greed",
-    "extremeGreed": "Extreme greed"
+    "name": "Страх и жадность",
+    "extremeFear": "Крайний страх",
+    "fear": "Страх",
+    "neutral": "Нейтрально",
+    "greed": "Жадность",
+    "extremeGreed": "Крайняя жадность"
+  },
+
+  "stars": {
+    "text1": "Stars Swap был сделан нашими партнерами",
+    "text2": "Вы можете обменять любую монету из блокчейна TON на Telegram Stars без прохождения KYC."
   }
 }

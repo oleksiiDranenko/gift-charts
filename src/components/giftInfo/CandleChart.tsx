@@ -248,10 +248,7 @@ export default function CandleChart({
           display: false,
         },
         grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.05)",
+          display: false,
         },
       },
       y: {
@@ -273,10 +270,11 @@ export default function CandleChart({
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 10,
+          padding: 3,
+          maxTicksLimit: 7,
         },
-        suggestedMax: maxPrice * 1.1,
-        suggestedMin: minPrice * 0.9,
+        suggestedMax: maxPrice * 1.05,
+        suggestedMin: minPrice * 0.95,
       },
     },
   };
@@ -291,12 +289,13 @@ export default function CandleChart({
         className={
           resolvedTheme === "dark" ? "" : "bg-secondaryTransparent rounded-lg"
         }
+        height={window.innerWidth < 1080 ? 200 : 150}
       />
-      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl'>
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -308,7 +307,7 @@ export default function CandleChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "3m"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -320,7 +319,7 @@ export default function CandleChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "2m"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -332,7 +331,7 @@ export default function CandleChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1m"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -344,7 +343,7 @@ export default function CandleChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "2w"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {

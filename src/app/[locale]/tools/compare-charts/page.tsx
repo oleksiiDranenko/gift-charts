@@ -96,16 +96,16 @@ export default function Page() {
 
   return (
     <div className='w-screen pt-[0px]  px-3 pb-24 flex justify-center'>
-      <div className='w-full lg:w-5/6'>
+      <div className='w-full lg:w-[98%]'>
         {!loading ? (
           <div className='flex flex-col'>
             <div className='w-full h-10 gap-x-3 flex items-center justify-between'>
               <button
                 onClick={goBack}
-                className='w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-xl'>
+                className='w-1/2 h-10 flex items-center justify-center bg-slate-800 rounded-3xl'>
                 {"<- Back"}
               </button>
-              <div className='w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 rounded-xl'>
+              <div className='w-1/2 h-10 flex items-center justify-center text-sm text-slate-400 bg-slate-800 rounded-3xl'>
                 @gift_charts_bot
               </div>
             </div>

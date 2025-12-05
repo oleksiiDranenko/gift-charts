@@ -2,381 +2,339 @@
 
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppSelector } from "@/redux/hooks";
-import { useAppDispatch } from "@/redux/hooks";
-import { setDefaultFilters, setFilters } from "@/redux/slices/filterListSlice";
-import { useEffect, useState } from "react";
-import GiftItem from "./GiftItem";
-import useVibrate from "@/hooks/useVibrate";
-import { BrushCleaning, Eye, EyeClosed, Funnel } from "lucide-react";
-import BackButton from "@/utils/ui/backButton";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Search, X } from "lucide-react";
 import FilterGiftsModal from "../filterGifts/FilterGiftsModal";
+import SortGiftsModal from "../filterGifts/SortGiftsModal";
+import InfoMessage from "../generalHints/InfoMessage";
+import { useRouter } from "@/i18n/navigation";
+import ListHandler from "../mainPage/ListHandler";
+import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
+import useVibrate from "@/hooks/useVibrate";
+import ListSkeleton from "./ListSkeleton";
+import { GiftSorter, SortKey } from "../filterGifts/GiftSorter";
 import { useTranslations } from "next-intl";
-import GiftListHeader from "./GiftListHeader";
 
 interface PropsInterface {
   loading: boolean;
 }
 
 export default function GiftsList({ loading }: PropsInterface) {
-  const vibrate = useVibrate();
-
-  const t = useTranslations("filters");
-  const d = useTranslations("timegap");
-
   const giftsList = useAppSelector((state) => state.giftsList);
   const filters = useAppSelector((state) => state.filters);
-  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
 
-  const [list, setList] = useState<GiftInterface[]>([]);
-  const [showFilters, setShowFilters] = useState<boolean>(true);
-  const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m" | "all">("24h");
+  const [isMounted, setIsMounted] = useState(false);
+  const [selectedList, setSelectedList] = useState<"all" | "saved">("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [value, setValue] = useState<string>("");
+  const [isSticky, setIsSticky] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!loading) {
-      setList([...giftsList]);
+  const router = useRouter();
+  const vibrate = useVibrate();
+
+  const translate = useTranslations("mainPage");
+
+  // Settings from localStorage
+  const [settings] = useState(() => {
+    if (typeof window === "undefined")
+      return { currency: "ton", giftType: "line", giftBackground: "none" };
+    const saved = localStorage.getItem("settings");
+    if (saved)
+      try {
+        return JSON.parse(saved);
+      } catch {}
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
+
+  const { currency, giftType, giftBackground } = settings;
+
+  // Map UI sort option → actual sort key + order
+  const getSortConfig = (): { key: SortKey; order: "asc" | "desc" } => {
+    switch (filters.sort) {
+      case "highFirst":
+        return { key: "priceUsd", order: "desc" };
+      case "lowFirst":
+        return { key: "priceUsd", order: "asc" };
+      case "newest":
+        return { key: "releaseDate", order: "desc" };
+      case "oldest":
+        return { key: "releaseDate", order: "asc" };
+      case "atoz":
+        return { key: "name", order: "asc" };
+      case "ztoa":
+        return { key: "name", order: "desc" };
+
+      // Supply
+      case "supplyHigh":
+        return { key: "supply", order: "desc" };
+      case "supplyLow":
+        return { key: "supply", order: "asc" };
+      case "initSupplyHigh":
+        return { key: "initSupply", order: "desc" };
+      case "initSupplyLow":
+        return { key: "initSupply", order: "asc" };
+      case "upgradedSupplyHigh":
+        return { key: "upgradedSupply", order: "desc" };
+      case "upgradedSupplyLow":
+        return { key: "upgradedSupply", order: "asc" };
+
+      // NEW: 24h Change (Growth) — best gain first by default
+      case "changeGrowth":
+        return { key: "priceChangeGrowth", order: "desc" }; // +150% → -80%
+      case "changeGrowthAsc":
+        return { key: "priceChangeGrowth", order: "asc" }; // biggest losers first
+
+      // NEW: Biggest Movers (Absolute Change) — biggest swing first
+      case "changeAbsolute":
+        return { key: "priceChangeAbsolute", order: "desc" }; // ±150% first
+      case "changeAbsoluteAsc":
+        return { key: "priceChangeAbsolute", order: "asc" }; // smallest movement first
+
+      // Optional TON versions
+      case "changeGrowthTon":
+        return { key: "priceChangeGrowthTon", order: "desc" };
+      case "changeAbsoluteTon":
+        return { key: "priceChangeAbsoluteTon", order: "desc" };
+
+      default:
+        return { key: "priceUsd", order: "desc" };
     }
-  }, [loading, giftsList]);
+  };
 
+  // Compute the final list ONCE per change — no stale state!
+  const displayedGifts = useMemo(() => {
+    if (!giftsList.length) return [];
+
+    let result = [...giftsList];
+
+    // 1. Saved tab
+    if (selectedList === "saved" && user?.savedList?.length) {
+      result = result.filter((g) => user.savedList.includes(g._id));
+    }
+
+    // 2. Search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((g) => g.name?.toLowerCase().includes(q));
+    }
+
+    // 3. Filter modal – chosen gifts (from Redux)
+    if (filters.chosenGifts.length > 0) {
+      result = result.filter((g) => filters.chosenGifts.includes(g._id));
+    }
+
+    // 4. Sorting
+    const { key, order } = getSortConfig();
+    const sorter = new GiftSorter(result);
+    result = sorter.sortBy(key, order);
+
+    return result;
+  }, [
+    giftsList,
+    selectedList,
+    searchQuery,
+    user?.savedList,
+    filters.sort,
+    filters.chosenGifts,
+  ]);
+
+  // Mount effect
   useEffect(() => {
-    if (!loading) {
-      let filteredList = [...giftsList];
+    setIsMounted(true);
+  }, []);
 
-      if (filters.chosenGifts.length !== 0) {
-        filteredList = filters.chosenGifts;
+  // Sticky header sentinel
+  // Sticky header sentinel — FIXED
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0,
+        rootMargin: "0px",
       }
-
-      let sortedList = [...filteredList];
-
-      switch (filters.sortBy) {
-        case "price":
-          sortedList.sort((a, b) =>
-            filters.currency === "ton"
-              ? filters.sort === "lowFirst"
-                ? a.priceTon - b.priceTon
-                : b.priceTon - a.priceTon
-              : filters.sort === "lowFirst"
-              ? a.priceUsd - b.priceUsd
-              : b.priceUsd - a.priceUsd
-          );
-          break;
-        case "marketCap":
-          sortedList.sort((a, b) =>
-            filters.currency === "ton"
-              ? filters.sort === "lowFirst"
-                ? a.priceTon * a.upgradedSupply - b.priceTon * b.upgradedSupply
-                : b.priceTon * b.upgradedSupply - a.priceTon * a.upgradedSupply
-              : filters.sort === "lowFirst"
-              ? a.priceUsd * a.upgradedSupply - b.priceUsd * b.upgradedSupply
-              : b.priceUsd * b.upgradedSupply - a.priceUsd * a.upgradedSupply
-          );
-          break;
-        case "supply":
-          sortedList.sort((a, b) =>
-            filters.sort === "lowFirst"
-              ? a.upgradedSupply - b.upgradedSupply
-              : b.upgradedSupply - a.upgradedSupply
-          );
-          break;
-        case "initSupply":
-          sortedList.sort((a, b) =>
-            filters.sort === "lowFirst"
-              ? a.initSupply - b.initSupply
-              : b.initSupply - a.initSupply
-          );
-          break;
-        case "starsPrice":
-          sortedList.sort((a, b) =>
-            filters.sort === "lowFirst"
-              ? a.starsPrice - b.starsPrice
-              : b.starsPrice - a.starsPrice
-          );
-          break;
-        case "percentChange":
-          sortedList.sort((a, b) => {
-            const aChange =
-              filters.currency === "ton"
-                ? a.tonPrice24hAgo
-                  ? Math.abs(
-                      ((a.priceTon - a.tonPrice24hAgo) / a.tonPrice24hAgo) * 100
-                    )
-                  : 0
-                : a.usdPrice24hAgo
-                ? Math.abs(
-                    ((a.priceUsd - a.usdPrice24hAgo) / a.usdPrice24hAgo) * 100
-                  )
-                : 0;
-            const bChange =
-              filters.currency === "ton"
-                ? b.tonPrice24hAgo
-                  ? Math.abs(
-                      ((b.priceTon - b.tonPrice24hAgo) / b.tonPrice24hAgo) * 100
-                    )
-                  : 0
-                : b.usdPrice24hAgo
-                ? Math.abs(
-                    ((b.priceUsd - b.usdPrice24hAgo) / b.usdPrice24hAgo) * 100
-                  )
-                : 0;
-
-            return filters.sort === "lowFirst"
-              ? aChange - bChange
-              : bChange - aChange;
-          });
-          break;
-      }
-
-      setList(sortedList);
-    }
-  }, [filters, loading, giftsList]);
-
-  useEffect(() => {
-    if (value.trim() === "") {
-      return;
-    }
-
-    const filteredList = giftsList.filter((gift) => {
-      return (
-        gift.name
-          .toLowerCase()
-          .slice(0, value.length)
-          .replace(/[^a-zA-Z0-9]/g, "") ===
-          value
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-zA-Z0-9]/g, "") ||
-        gift.name
-          .toLowerCase()
-          .replace(/[^a-zA-Z0-9]/g, "")
-          .includes(
-            value
-              .toLowerCase()
-              .trim()
-              .replace(/[^a-zA-Z0-9]/g, "")
-          )
-      );
-    });
-
-    dispatch(
-      setFilters({
-        ...filters,
-        chosenGifts: filteredList,
-      })
     );
-  }, [value]);
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [isMounted]);
+
+  const clearSearch = () => setSearchQuery("");
+
+  if (!isMounted) return null;
+
+  const hasActiveFilter = displayedGifts.length < giftsList.length;
 
   return (
-    <div className='w-full h-auto flex flex-col items-center px-3'>
-      {list !== undefined ? (
+    <div className='w-full flex flex-col items-center'>
+      {giftsList ? (
         <>
-          <div className='w-full flex flex-row justify-between items-center mb-3 gap-x-3'>
-            <BackButton />
-            <button
-              className='w-1/2 h-8 bg-secondaryTransparent rounded-xl'
-              onClick={() => {
-                setShowFilters(!showFilters);
-                vibrate();
-              }}>
-              {showFilters ? (
-                <span className='flex flex-row items-center justify-center gap-x-1'>
-                  <EyeClosed size={16} />
-                  {t("hideFilters")}
-                </span>
-              ) : (
-                <span className='flex flex-row items-center justify-center gap-x-1'>
-                  <Eye size={16} />
-                  {t("showFilters")}
-                </span>
-              )}
-            </button>
-          </div>
-
-          {showFilters ? (
-            <div className='w-full h-auto pt-3'>
-              <div className='w-full flex flex-row justify-between items-center mb-3 gap-x-3'>
-                <div className='w-1/2 gap-2 flex justify-between bg-secondaryTransparent rounded-xl'>
-                  <button
-                    className={`w-1/2 text-sm h-8 box-border rounded-xl ${
-                      filters.currency == "ton"
-                        ? "bg-primary font-bold text-white"
-                        : null
-                    }`}
-                    onClick={() => {
-                      dispatch(setFilters({ ...filters, currency: "ton" }));
-                      vibrate();
-                    }}>
-                    TON
-                  </button>
-                  <button
-                    className={`w-1/2 text-sm h-8 box-border rounded-xl ${
-                      filters.currency == "usd"
-                        ? "bg-primary font-bold text-white"
-                        : null
-                    }`}
-                    onClick={() => {
-                      dispatch(setFilters({ ...filters, currency: "usd" }));
-                      vibrate();
-                    }}>
-                    USD
-                  </button>
-                </div>
-
-                <div className='w-1/2'>
-                  <FilterGiftsModal
-                    trigger={
-                      <button
-                        className='w-full h-8 flex justify-center items-center box-border bg-secondaryTransparent rounded-xl gap-x-1'
-                        onClick={() => vibrate()}>
-                        <Funnel size={16} /> {t("filterGifts")}
-                      </button>
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className='w-full flex flex-row justify-end items-center mb-3 gap-x-3'>
-                <div className='w-1/2 flex justify-between items-center'>
-                  <span className='text-secondaryText mr-2 text-sm whitespace-nowrap'>
-                    {t("sortBy")}:
-                  </span>
-                  <select
-                    value={filters.sortBy}
-                    onChange={(e: any) => {
-                      dispatch(
-                        setFilters({ ...filters, sortBy: e.target.value })
-                      );
-                      vibrate();
-                    }}
-                    className='w-full px-3 h-8 rounded-xl bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500'>
-                    <option value={"price"}>{t("price")}</option>
-                    <option value={"marketCap"}>{t("marketCap")}</option>
-                    <option value={"percentChange"}>{t("change")}</option>
-                    <option value={"supply"}>{t("supply")}</option>
-                    {/* <option value={"initSupply"}>{t("initSupply")}</option>
-                    <option value={"starsPrice"}>{t("starsPrice")}</option> */}
-                  </select>
-                </div>
-
-                <div className='w-1/2 flex justify-between items-center'>
-                  <span className='text-secondaryText mr-2 text-sm'>
-                    {t("value")}:
-                  </span>
-                  <select
-                    value={filters.displayValue}
-                    onChange={(e: any) => {
-                      dispatch(
-                        setFilters({ ...filters, displayValue: e.target.value })
-                      );
-                      vibrate();
-                    }}
-                    className='w-full px-3 h-8 rounded-xl bg-secondaryTransparent text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500'>
-                    <option value={"price"}>{t("price")}</option>
-                    <option value={"marketCap"}>{t("marketCap")}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className='w-full flex flex-row justify-end items-center mb-3 gap-x-3'>
-                <div className='w-1/2 gap-2 flex justify-end bg-secondaryTransparent rounded-xl'>
-                  <button
-                    className={`w-1/2 text-sm h-8 box-border rounded-xl ${
-                      filters.sort == "lowFirst"
-                        ? "bg-primary font-bold text-white"
-                        : null
-                    }`}
-                    onClick={() => {
-                      dispatch(setFilters({ ...filters, sort: "lowFirst" }));
-                      vibrate();
-                    }}>
-                    {t("low")}
-                  </button>
-                  <button
-                    className={`w-1/2 text-sm h-8 box-border rounded-xl ${
-                      filters.sort == "highFirst"
-                        ? "bg-primary font-bold text-white"
-                        : null
-                    }`}
-                    onClick={() => {
-                      dispatch(setFilters({ ...filters, sort: "highFirst" }));
-                      vibrate();
-                    }}>
-                    {t("high")}
-                  </button>
-                </div>
-
-                <div className='w-1/2 flex justify-between items-center'>
-                  <button
-                    className='w-full flex flex-row items-center justify-center gap-x-1 h-8 bg-secondaryTransparent rounded-xl'
-                    onClick={() => {
-                      dispatch(setDefaultFilters());
-                      vibrate();
-                    }}>
-                    <BrushCleaning size={16} /> {t("clearFilters")}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          <div className='w-full lg:hidden bg-secondaryTransparent rounded-xl mb-3'>
-            <div className='w-full flex flex-col'>
-              <div className='w-full flex flex-row justify-between gap-x-3'>
-                <button
-                  className={`w-full text-sm h-8 ${
-                    timeGap === "1m"
-                      ? "rounded-xl bg-primary font-bold text-white"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setTimeGap("1m");
-                    vibrate();
-                  }}>
-                  1{d("month")}
-                </button>
-                <button
-                  className={`w-full text-sm h-8 ${
-                    timeGap === "1w"
-                      ? "rounded-xl bg-primary font-bold text-white"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setTimeGap("1w");
-                    vibrate();
-                  }}>
-                  1{d("week")}
-                </button>
-                <button
-                  className={`w-full text-sm h-8 ${
-                    timeGap === "24h"
-                      ? "rounded-xl bg-primary font-bold text-white"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setTimeGap("24h");
-                    vibrate();
-                  }}>
-                  24{d("hour")}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <GiftListHeader />
-
-          <div className='w-full'>
-            {list.map((item: GiftInterface, i) => (
-              <GiftItem
-                item={item}
-                currency={filters.currency}
-                sortBy={filters.sortBy}
-                displayValue={filters.displayValue}
-                key={item._id}
-                timeGap={timeGap}
-                background='none'
-                number={i}
+          {/* Tabs */}
+          <div className='w-full px-3'>
+            <div className='w-80 relative flex mb-5'>
+              <button
+                onClick={() => {
+                  setSelectedList("all");
+                  vibrate();
+                }}
+                className={`w-1/2 pb-3 text-center transition ${
+                  selectedList === "all"
+                    ? "text-foreground font-bold"
+                    : "text-secondaryText"
+                }`}>
+                {translate("allGifts")}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedList("saved");
+                  vibrate();
+                }}
+                className={`w-1/2 pb-3 text-center transition ${
+                  selectedList === "saved"
+                    ? "text-foreground font-bold"
+                    : "text-secondaryText"
+                }`}>
+                {translate("saved")}
+              </button>
+              <span
+                className={`absolute bottom-0 left-0 h-[2px] bg-foreground rounded-full transition-all duration-300 ${
+                  selectedList === "all" ? "w-1/2" : "translate-x-full w-1/2"
+                }`}
               />
-            ))}
+            </div>
+          </div>
+
+          <div ref={sentinelRef} />
+
+          {/* Search + Sort/Filter bar */}
+          {!(
+            selectedList === "saved" &&
+            (!user?.savedList || user.savedList.length === 0)
+          ) && (
+            <div
+              className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-300 ${
+                isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
+              }`}>
+              <div className='flex gap-1 mb-2'>
+                {/* Search */}
+                <div className='relative flex-1'>
+                  <input
+                    type='text'
+                    placeholder={translate("searchPlaceholder")}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
+                  />
+                  <Search
+                    className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText'
+                    size={18}
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={clearSearch}
+                      className='absolute right-3 top-1/2 -translate-y-1/2 text-secondaryText hover:text-foreground'>
+                      <X size={16} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Sort & Filter Buttons */}
+                <div className='flex gap-1'>
+                  {/* Sort Button with active dot */}
+                  <div className='relative'>
+                    <SortGiftsModal
+                      trigger={
+                        <button
+                          onClick={() => vibrate()}
+                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
+                          <svg
+                            className='size-4'
+                            viewBox='0 0 24 24'
+                            fill='currentColor'>
+                            <path
+                              fillRule='evenodd'
+                              d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
+                        </button>
+                      }
+                    />
+                    {/* Active dot when sort is not default */}
+                    {filters.sort !== "highFirst" && (
+                      <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
+                    )}
+                  </div>
+
+                  <div className='relative'>
+                    <FilterGiftsModal
+                      trigger={
+                        <button
+                          onClick={() => vibrate()}
+                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
+                          <svg
+                            className='size-4'
+                            viewBox='0 0 24 24'
+                            fill='currentColor'>
+                            <path
+                              fillRule='evenodd'
+                              d='M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z'
+                              clipRule='evenodd'
+                            />
+                          </svg>
+                        </button>
+                      }
+                      giftsList={giftsList}
+                    />
+                    {hasActiveFilter && (
+                      <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* List Content */}
+          <div className='w-full pt-2'>
+            <ScrollToTopButton />
+
+            {giftsList.length === 0 && selectedList === "all" ? (
+              <ListSkeleton
+                type={giftType}
+                count={giftType === "line" ? 15 : 20}
+                hideHeader={false}
+              />
+            ) : selectedList === "saved" &&
+              (!user?.savedList || user.savedList.length === 0) ? (
+              <InfoMessage
+                text="You don't have any gifts saved"
+                buttonText='Add gifts to saved'
+                onClick={() => router.push("/settings/edit-watchlist")}
+              />
+            ) : displayedGifts.length > 0 ? (
+              <ListHandler
+                giftsList={displayedGifts}
+                type={giftType}
+                background={giftBackground}
+                currency={currency}
+              />
+            ) : (
+              <InfoMessage
+                text={`No gifts matching "${searchQuery}"`}
+                buttonText='Clear search'
+                onClick={clearSearch}
+              />
+            )}
           </div>
         </>
       ) : null}

@@ -4,11 +4,11 @@
 
 :root {
   --primary: #3b82f6;
-  --secondary: #d9e8ff;
+  --secondary: #cbdfff;
   --secondary-transparent: #ffffff;
   --secondary-text: #5c6673;
   --secondary-light: #ffffff;
-  --background: #f2f9ff;
+  --background: #f3f3f3;
   --foreground: #000000;
 }
 
@@ -22,14 +22,33 @@
   --foreground: #000000;
 } */
 
-html.dark {
+/* html.dark {
+  --primary: #3b82f6;
+  --secondary: #1e2a45;
+  --secondary-transparent: #172136;
+  --secondary-text: #9ca3af;
+  --background: #111827;
+  --foreground: #ffffff;
+} */
+
+/* html.dark {
+  --primary: #3b82f6;
+  --secondary: #1e2834;
+  --secondary-transparent: #151b24;
+  --secondary-light: #171e2870;
+  --secondary-text: #9ca3af;
+  --background: #11161e;
+  --foreground: #ffffff;
+} */
+
+/* html.dark {
   --primary: #3b82f6;
   --secondary: #374151;
   --secondary-transparent: #1f2937;
   --secondary-text: #9ca3af;
   --background: #111827;
   --foreground: #ffffff;
-}
+} */
 
 /* html.dark {
   --primary: #3b82f6;
@@ -41,14 +60,15 @@ html.dark {
   --foreground: #ffffff;
 } */
 
-/* html.dark {
+html.dark {
   --primary: #3b82f6;
   --secondary: #2c3039;
   --secondary-transparent: #1c1f24;
+  --secondary-light: #27272a33;
   --secondary-text: #9ca3af;
   --background: #0f1216;
   --foreground: #ffffff;
-} */
+}
 
 body {
   color: var(--foreground);
@@ -75,4 +95,37 @@ body {
   opacity: 0;
   transform: translateX(-20px);
   transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Infinite flowing shine effect - works on ANY bg-primary color */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shine {
+  animation: shine 1.5s ease-in-out infinite;
 }

@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Wix_Madefor_Display } from "next/font/google";
 import ReduxProvider from "@/redux/provider";
 import { ThemeProvider } from "next-themes";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -34,9 +34,19 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/logo.webp",
   },
+  metadataBase: new URL("https://giftcharts.com"),
+  alternates: {
+    canonical: "https://giftcharts.com",
+  },
+  keywords: [
+    "telegram gifts analytics",
+    "telegram nft analytics",
+    "telegram collectibles tracker",
+    "gift charts",
+  ],
 };
 
-const inter = Inter({ subsets: ["latin", "cyrillic"] });
+const inter = Wix_Madefor_Display({ subsets: ["latin", "cyrillic"] });
 
 export default async function RootLayout({
   children,
@@ -67,7 +77,8 @@ export default async function RootLayout({
       </Script>
 
       <html lang={locale}>
-        <body className={inter.className}>
+        <body
+          className={`${inter.className} min-h-screen overflow-auto transition-all duration-300 ease-in-out`}>
           <NextIntlClientProvider messages={messages}>
             <ReduxProvider>
               <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>

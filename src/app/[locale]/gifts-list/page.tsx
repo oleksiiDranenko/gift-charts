@@ -30,7 +30,7 @@ export default function Page() {
   }, [dispatch, giftsList]);
 
   return (
-    <div className='w-full lg:w-5/6 pt-[0px]  pb-24'>
+    <div className='w-full lg:w-[98%] pt-[0px] pb-24'>
       <GiftsList loading={loading} />
     </div>
   );

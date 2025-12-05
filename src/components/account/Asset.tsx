@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTheme } from "next-themes";
 import useVibrate from "@/hooks/useVibrate";
+import { useTranslations } from "next-intl";
 
 interface PropsInterface {
   _id: string;
@@ -32,9 +33,14 @@ export default function Asset({
 }: PropsInterface) {
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
+  const translate = useTranslations("account");
   return (
     <Link
-      className='w-full h-16 pr-3 pl-2 mb-2 rounded-xl flex flex-row items-center bg-secondaryTransparent justify-between'
+      className={`w-full h-16 mb-2 pl-2 pr-3 flex flex-row items-center rounded-3xl justify-between ${
+        resolvedTheme === "dark"
+          ? "border-b-2 border-secondaryTransparent"
+          : "bg-secondaryTransparent"
+      }`}
       href={`/gift/${_id}`}
       onClick={() => vibrate()}>
       <div className='w-full flex flex-row items-center justify-between'>
@@ -45,21 +51,28 @@ export default function Asset({
             width={50}
             height={50}
             className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
-              resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
+              resolvedTheme === "dark"
+                ? "bg-secondaryTransparent"
+                : "bg-background"
             }`}
           />
           <div className='flex flex-col'>
-            <span className='text-base font-bold'>{name}</span>
-            <span className='text-sm text-primary'>
-              <span>
-                {amount} {amount > 1 ? "gifts" : "gift"}
+            <span className='text-base font-bold'>
+              {name}{" "}
+              <span className='ml-1 text-sm font-normal text-secondaryText'>
+                {currency === "ton"
+                  ? ` (${Math.round(
+                      ((priceTon * amount) / assetsPrice) * 100
+                    )}%)`
+                  : ` (${Math.round(
+                      ((priceUsd * amount) / assetsPrice) * 100
+                    )}%)`}
               </span>
-              {currency === "ton"
-                ? ` (${Math.round(((priceTon * amount) / assetsPrice) * 100)}%)`
-                : ` (${Math.round(
-                    ((priceUsd * amount) / assetsPrice) * 100
-                  )}%)`}
             </span>
+            <div className='w-fit flex flex-tow items-center text-sm text-primary gap-x-1'>
+              <span>{amount}</span>
+              <span>{amount > 1 ? translate("gifts") : translate("gift")}</span>
+            </div>
           </div>
         </div>
 
@@ -68,14 +81,20 @@ export default function Asset({
             <div className='flex flex-row items-center'>
               {currency === "ton" ? (
                 <Image
-                  alt='ton logo'
+                  alt='ton'
                   src='/images/toncoin.webp'
                   width={15}
                   height={15}
                   className='mr-1'
                 />
               ) : (
-                <span className='mr-1'>$</span>
+                <Image
+                  alt='usdt'
+                  src='/images/usdt.svg'
+                  width={15}
+                  height={15}
+                  className='mr-1'
+                />
               )}
               <span className='text-base font-bold'>
                 {currency === "ton" ? priceTon : priceUsd}
@@ -83,7 +102,7 @@ export default function Asset({
             </div>
 
             <span
-              className={`py-[2px] px-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+              className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
                 percentChange >= 0
                   ? "text-green-500 bg-green-500"
                   : percentChange < 0

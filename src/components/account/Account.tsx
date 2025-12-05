@@ -15,6 +15,7 @@ import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
 import { Link } from "@/i18n/navigation";
+import OpenInTelegram from "./OpenInTelegram";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -30,6 +31,19 @@ interface AssetDisplayInterface {
 }
 
 export default function Account() {
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("settings");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          console.warn("Failed to parse settings from localStorage");
+        }
+      }
+    }
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
   const vibrate = useVibrate();
   const translate = useTranslations("account");
 
@@ -37,31 +51,11 @@ export default function Account() {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const [currency, setCurrency] = useState<"ton" | "usd">("ton");
+  const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
   const [loading, setLoading] = useState<boolean>(false);
   const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([]);
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValuePrev, setPortfolioValuePrev] = useState<number>(0);
-
-  // 🟣 2. Fetch gifts if not in Redux store
-  useEffect(() => {
-    const fetchGifts = async () => {
-      try {
-        setLoading(true);
-        if (giftsList.length === 0) {
-          const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`
-          );
-          dispatch(setGiftsList(giftsRes.data));
-        }
-      } catch (error) {
-        console.error("Error fetching gifts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchGifts();
-  }, [dispatch, giftsList]);
 
   const giftsMap = useMemo(() => {
     const map = new Map<string, GiftInterface>();
@@ -95,6 +89,26 @@ export default function Account() {
     setPortfolioValue(current);
     setPortfolioValuePrev(previous);
   }, [user.assets, giftsMap, currency]);
+
+  // 🟣 2. Fetch gifts if not in Redux store
+  useEffect(() => {
+    const fetchGifts = async () => {
+      try {
+        setLoading(true);
+        if (giftsList.length === 0) {
+          const giftsRes = await axios.get(
+            `${process.env.NEXT_PUBLIC_API}/gifts`
+          );
+          dispatch(setGiftsList(giftsRes.data));
+        }
+      } catch (error) {
+        console.error("Error fetching gifts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGifts();
+  }, [dispatch, giftsList]);
 
   // 🟣 4. Build assets list
   useEffect(() => {
@@ -133,7 +147,7 @@ export default function Account() {
   }, [giftsList, currency, user.assets]);
 
   return (
-    <div className='w-full flex flex-col justify-center px-3 relative'>
+    <div className='w-full flex flex-col justify-center relative'>
       {loading ? (
         <div className='w-full flex justify-center'>
           <ReactLoading
@@ -145,87 +159,117 @@ export default function Account() {
           />
         </div>
       ) : user.username === "_guest" ? (
-        <div className='w-full p-3 flex justify-center font-bold text-foreground bg-secondaryTransparent rounded-xl'>
-          {translate("openInTelegram")}
-        </div>
+        <OpenInTelegram />
       ) : assetsArray.length > 0 ? (
         <>
-          <div className='w-full flex flex-row justify-center pb-3 items-center relative'>
-            <div className='flex flex-col justify-center items-center gap-x-3'>
-              <div className='flex flex-row items-center'>
-                {currency === "ton" ? (
-                  <Image
-                    alt='ton logo'
-                    src='/images/toncoin.webp'
-                    width={25}
-                    height={25}
-                    className='mr-2'
-                  />
-                ) : (
-                  <span className='text-3xl mr-1'>$</span>
-                )}
+          <div className=''>
+            <div className='w-full flex flex-row justify-center items-center relative px-3'>
+              <div className='w-full h-44 flex flex-col items-center justify-center'>
+                <div className='flex flex-row items-center'>
+                  {currency === "ton" ? (
+                    <Image
+                      alt='ton'
+                      src='/images/toncoin.webp'
+                      width={25}
+                      height={25}
+                      className='mr-2'
+                    />
+                  ) : (
+                    <Image
+                      alt='usdt'
+                      src='/images/usdt.svg'
+                      width={25}
+                      height={25}
+                      className='mr-2'
+                    />
+                  )}
 
-                <h1 className='text-3xl font-bold'>
-                  {portfolioValue.toFixed(2)}
-                </h1>
-              </div>
-              <div className='flex flex-row items-center gap-x-2 mt-1 ml-1'>
-                <span className='text-sm text-secondaryText'>
-                  Last 24 hours
-                </span>
-                <span
-                  className={`flex flex-row items-center text-sm font-bold ${
-                    countPercentChange(portfolioValuePrev, portfolioValue) >= 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}>
-                  {countPercentChange(portfolioValuePrev, portfolioValue) >= 0
-                    ? "+"
-                    : ""}
-                  {countPercentChange(
-                    portfolioValuePrev,
-                    portfolioValue
-                  ).toFixed(2)}
-                  %
-                </span>
+                  <h1 className='text-4xl font-bold '>
+                    {portfolioValue.toFixed(2)}
+                  </h1>
+                </div>
+                <div className='flex flex-row items-center gap-x-2 mt-2 bg-secondaryTransparent px-3 py-1 rounded-3xl'>
+                  <span className='text-sm text-secondaryText'>
+                    {translate("last24h")}
+                  </span>
+                  <span
+                    className={`flex flex-row items-center text-sm font-bold ${
+                      countPercentChange(portfolioValuePrev, portfolioValue) >=
+                      0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}>
+                    {countPercentChange(portfolioValuePrev, portfolioValue) >= 0
+                      ? "+"
+                      : ""}
+                    {countPercentChange(
+                      portfolioValuePrev,
+                      portfolioValue
+                    ).toFixed(2)}
+                    %
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Assets List */}
-          <div className='w-full h-auto mt-3'>
-            <div className='w-full flex justify-between items-end mb-5'>
-              <h2 className='flex flex-row items-center text-lg font-bold'>
-                Portfolio
-              </h2>
-              <div className='flex flex-row box-border bg-secondaryTransparent rounded-xl gap-x-1'>
+          <div className='w-full h-auto mt-3 px-2'>
+            <div className='w-full mb-5 flex flex-row justify-between items-center'>
+              <Link
+                className='w-fit flex flex-row items-center text-sm h-8 px-3  box-border bg-secondaryTransparent rounded-3xl gap-x-2'
+                href={"/settings/edit-assets"}
+                onClick={() => vibrate()}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 16 16'
+                  fill='currentColor'
+                  className='size-4 text-primary'>
+                  <path
+                    fillRule='evenodd'
+                    d='M6.455 1.45A.5.5 0 0 1 6.952 1h2.096a.5.5 0 0 1 .497.45l.186 1.858a4.996 4.996 0 0 1 1.466.848l1.703-.769a.5.5 0 0 1 .639.206l1.047 1.814a.5.5 0 0 1-.14.656l-1.517 1.09a5.026 5.026 0 0 1 0 1.694l1.516 1.09a.5.5 0 0 1 .141.656l-1.047 1.814a.5.5 0 0 1-.639.206l-1.703-.768c-.433.36-.928.649-1.466.847l-.186 1.858a.5.5 0 0 1-.497.45H6.952a.5.5 0 0 1-.497-.45l-.186-1.858a4.993 4.993 0 0 1-1.466-.848l-1.703.769a.5.5 0 0 1-.639-.206l-1.047-1.814a.5.5 0 0 1 .14-.656l1.517-1.09a5.033 5.033 0 0 1 0-1.694l-1.516-1.09a.5.5 0 0 1-.141-.656L2.46 3.593a.5.5 0 0 1 .639-.206l1.703.769c.433-.36.928-.65 1.466-.848l.186-1.858Zm-.177 7.567-.022-.037a2 2 0 0 1 3.466-1.997l.022.037a2 2 0 0 1-3.466 1.997Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+                {translate("editPortfolio")}
+              </Link>
+              <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
                 <button
-                  className={`text-sm h-8 px-5 box-border ${
+                  className={`text-sm h-8 px-3 box-border ${
                     currency === "ton"
-                      ? "rounded-xl bg-primary font-bold text-white"
+                      ? "rounded-3xl bg-secondary font-bold"
                       : ""
                   }`}
                   onClick={() => {
                     setCurrency("ton");
                     vibrate();
                   }}>
-                  Ton
+                  <Image
+                    src='/images/toncoin.webp'
+                    alt='ton'
+                    width={18}
+                    height={18}
+                  />
                 </button>
                 <button
-                  className={`text-sm h-8 px-5 box-border ${
+                  className={`text-sm h-8 px-3 box-border ${
                     currency === "usd"
-                      ? "rounded-xl bg-primary font-bold text-white"
+                      ? "rounded-3xl bg-secondary font-bold"
                       : ""
                   }`}
                   onClick={() => {
                     setCurrency("usd");
                     vibrate();
                   }}>
-                  Usd
+                  <Image
+                    src='/images/usdt.svg'
+                    alt='usdt'
+                    width={18}
+                    height={18}
+                  />
                 </button>
               </div>
             </div>
-
             {assetsArray.map((asset) => (
               <Asset
                 key={asset._id}
@@ -241,12 +285,32 @@ export default function Account() {
           </div>
         </>
       ) : (
-        <div className='w-full h-1/2 flex flex-col justify-center items-center'>
-          <Link
-            href={"/settings/edit-assets"}
-            className='px-3 py-2 text-sm text-white bg-primary rounded-xl'>
-            Add Gifts to portfolio
-          </Link>
+        <div className='w-full lg:w-1/2 px-3 flex flex-col justify-center items-center'>
+          <div className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
+            <div className='w-full flex flex-col items-center mb-5'>
+              <h1 className='flex flex-row gap-x-2 items-center text-xl font-bold mb-3'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 16 16'
+                  fill='currentColor'
+                  className='size-6 text-primary'>
+                  <path
+                    fillRule='evenodd'
+                    d='M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0ZM9 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6.75 8a.75.75 0 0 0 0 1.5h.75v1.75a.75.75 0 0 0 1.5 0v-2.5A.75.75 0 0 0 8.25 8h-1.5Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+                {translate("noAssets")}
+              </h1>
+              <p className='px-3'>{translate("addGiftsInstruction")}</p>
+            </div>
+            <Link
+              href={"/settings/edit-assets"}
+              className='w-full h-12 font-bold flex items-center justify-center text-sm text-white bg-primary rounded-3xl'
+              onClick={() => vibrate()}>
+              {translate("addGiftsToPortfolio")}
+            </Link>
+          </div>
         </div>
       )}
     </div>

@@ -7,8 +7,14 @@ import Image from "next/image";
 import { useAppSelector } from "@/redux/hooks";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import {
+  ArrowRight,
+  ChartSpline,
+  Search,
+  SquareArrowOutUpRight,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
+import useVibrate from "@/hooks/useVibrate";
 
 export default function GiftSearchBar() {
   const giftsList = useAppSelector((state) => state.giftsList);
@@ -16,6 +22,7 @@ export default function GiftSearchBar() {
   const [selected, setSelected] = useState<GiftInterface | null>(null);
   const router = useRouter();
   const translateMain = useTranslations("mainPage");
+  const vibrate = useVibrate();
 
   const fuse = useMemo(
     () =>
@@ -31,7 +38,7 @@ export default function GiftSearchBar() {
     : [];
 
   return (
-    <div className='relative px-3 w-full mb-4'>
+    <div className='relative px-3 w-full mb-3'>
       <Combobox
         value={selected}
         onChange={(gift: GiftInterface | null) => {
@@ -42,34 +49,36 @@ export default function GiftSearchBar() {
         }}>
         <div className='relative'>
           <Combobox.Input
-            className='w-full h-11 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-xl focus:outline-none placeholder:text-sm placeholder:text-secondaryText'
+            className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm'
             onChange={(e) => setQuery(e.target.value)}
             displayValue={(gift: GiftInterface) => gift?.name || ""}
             placeholder={translateMain("searchPlaceholder")}
+            onFocus={() => vibrate()}
           />
           <Search
             className='absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-secondaryText'
             size={18}
           />
           {filteredGifts.length > 0 && (
-            <Combobox.Options className='absolute mt-1 w-full max-h-96 overflow-auto rounded-xl z-10'>
+            <Combobox.Options className='absolute mt-1 w-full max-h-96 overflow-auto rounded-3xl z-10'>
               {filteredGifts.map((gift) => (
                 <Combobox.Option
                   key={gift._id}
                   value={gift}
                   className={({ active }) =>
-                    `flex items-center gap-2 px-4 py-2 cursor-pointer ${
-                      active ? "bg-secondary" : "bg-secondaryTransparent"
-                    }`
+                    `flex flex-row items-center justify-between p-4 cursor-pointer bg-secondaryTransparent`
                   }>
-                  <Image
-                    src={`/gifts/${gift.image}.webp`}
-                    alt={gift.name}
-                    width={32}
-                    height={32}
-                    className='rounded-md'
-                  />
-                  <span>{gift.name}</span>
+                  <div className='flex flex-row items-center gap-2'>
+                    <Image
+                      src={`/gifts/${gift.image}.webp`}
+                      alt={gift.name}
+                      width={32}
+                      height={32}
+                      className='rounded-md'
+                    />
+                    <span className='font-bold text-sm'>{gift.name}</span>
+                  </div>
+                  <ChartSpline size={18} className='text-primary' />
                 </Combobox.Option>
               ))}
             </Combobox.Options>

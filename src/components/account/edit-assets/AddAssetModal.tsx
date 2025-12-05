@@ -1,85 +1,56 @@
 "use client";
 
-import useVibrate from "@/hooks/useVibrate";
-import { Dialog, Transition } from "@headlessui/react";
+import ModalBase from "@/utils/ui/ModalBase";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Fragment, ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
-interface Props {
+interface AddAssetModalProps {
+  trigger: ReactNode;
   children: ReactNode;
-  isOpen?: boolean; // controlled state
-  onClose?: () => void; // callback to close
+  isOpen?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export default function AddAssetModal({
+  trigger,
   children,
-  isOpen: controlledIsOpen,
+  isOpen,
   onClose,
-}: Props) {
-  const [internalOpen, setInternalOpen] = useState(false);
-  const vibrate = useVibrate();
-
-  const isControlled = controlledIsOpen !== undefined;
-  const isOpen = isControlled ? controlledIsOpen : internalOpen;
-  const translate = useTranslations("account");
-
-  const handleOpen = () => {
-    if (isControlled) onClose?.(); // if controlled, parent should set true
-    else setInternalOpen(true);
-  };
-
-  const handleClose = () => {
-    if (isControlled) onClose?.();
-    else setInternalOpen(false);
-  };
+  onOpen,
+  onOpenChange,
+}: AddAssetModalProps) {
+  const t = useTranslations("account");
 
   return (
-    <>
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-50' onClose={handleClose}>
-          {/* Backdrop */}
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-200'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-150'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'>
-            <div className='fixed inset-0 bg-black/40 backdrop-blur-sm' />
-          </Transition.Child>
+    <ModalBase
+      trigger={trigger}
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      onOpen={onOpen}
+      onClose={onClose}>
+      <div className='w-full h-10 pb-3 flex justify-end items-center'>
+        <button
+          onClick={() => onClose?.()}
+          className='w-fit p-2 bg-secondaryTransparent rounded-full'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            className='size-5'>
+            <path
+              fillRule='evenodd'
+              d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
+              clipRule='evenodd'
+            />
+          </svg>
+        </button>
+      </div>
 
-          <div className='fixed inset-0 flex items-end justify-center'>
-            <Transition.Child
-              as={Fragment}
-              enter='transform transition ease-out duration-300'
-              enterFrom='translate-y-full opacity-0'
-              enterTo='translate-y-0 opacity-100'
-              leave='transform transition ease-in duration-200'
-              leaveFrom='translate-y-0 opacity-100'
-              leaveTo='translate-y-full opacity-0'>
-              <Dialog.Panel className='w-full lg:w-5/6 h-5/6 p-3 rounded-t-xl bg-background border border-secondary shadow-xl flex flex-col'>
-                <div className='w-full h-10 flex justify-between items-center'>
-                  <h2 className='text-xl font-bold ml-3'>
-                    {translate("addGift")}
-                  </h2>
-                  <button
-                    onClick={() => {
-                      vibrate();
-                      handleClose();
-                    }}
-                    className='w-fit p-2 bg-secondaryTransparent border border-secondary rounded-full'>
-                    <X size={18} />
-                  </button>
-                </div>
-
-                <div className='overflow-y-auto flex-1'>{children}</div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </Dialog>
-      </Transition>
-    </>
+      {/* Scrollable Content */}
+      <div className='overflow-y-auto'>{children}</div>
+    </ModalBase>
   );
 }

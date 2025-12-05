@@ -16,6 +16,7 @@ import { useTheme } from "next-themes";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
+import useVibrate from "@/hooks/useVibrate";
 
 ChartJS.register(
   LineElement,
@@ -55,6 +56,7 @@ export default function LineChart({
   const [low, setLow] = useState<number>();
   const [high, setHigh] = useState<number>();
   const { resolvedTheme } = useTheme();
+  const vibrate = useVibrate();
 
   const translateTime = useTranslations("timegap");
 
@@ -119,7 +121,7 @@ export default function LineChart({
     );
 
     const topColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0.5)" : "rgba(239, 68, 68, 0.5)";
+      percentChange >= 0 ? "rgba(34, 197, 94, 1)" : "rgba(239, 68, 68, 1)";
     const bottomColor =
       percentChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
 
@@ -422,6 +424,14 @@ export default function LineChart({
           const ctx = chart.ctx;
 
           if (!tooltip || !tooltip.opacity) {
+            // Tooltip hidden → reset last index
+            if ((chart as any).lastActiveIndex !== null) {
+              (chart as any).lastActiveIndex = null;
+            }
+            return;
+          }
+
+          if (!tooltip || !tooltip.opacity) {
             return;
           }
 
@@ -445,6 +455,21 @@ export default function LineChart({
 
           ctx.stroke();
           ctx.restore();
+
+          const currentIndex = tooltip.dataPoints?.[0]?.dataIndex;
+
+          if (currentIndex !== undefined) {
+            const lastIndex = (chart as any).lastActiveIndex;
+
+            // Vibrate only when moving to a NEW point
+            if (lastIndex !== null && lastIndex !== currentIndex) {
+              vibrate();
+            }
+
+            (chart as any).lastActiveIndex = currentIndex;
+          } else {
+            (chart as any).lastActiveIndex = null;
+          }
         },
       },
     },
@@ -455,10 +480,7 @@ export default function LineChart({
     scales: {
       x: {
         grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.05)",
+          display: false,
         },
         ticks: {
           color:
@@ -486,16 +508,17 @@ export default function LineChart({
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 10,
+          padding: 3,
+          maxTicksLimit: 7,
         },
         position: "right",
         suggestedMax:
           numericValues.length > 0
-            ? Math.max(...numericValues) * 1.1
+            ? Math.max(...numericValues) * 1.05
             : undefined,
         suggestedMin:
           numericValues.length > 0
-            ? Math.min(...numericValues) * 0.9
+            ? Math.min(...numericValues) * 0.95
             : undefined,
       },
     },
@@ -506,74 +529,85 @@ export default function LineChart({
       className={
         resolvedTheme === "dark"
           ? "relative"
-          : "relative bg-secondaryTransparent rounded-xl"
+          : "relative bg-secondaryTransparent rounded-3xl"
       }
       ref={chartContainerRef}>
-      <Line ref={chartRef as any} data={data} options={options} />
-      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons'>
+      <Line
+        ref={chartRef as any}
+        data={data}
+        options={options}
+        height={window.innerWidth < 1080 ? 200 : 150}
+      />
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("all");
+            vibrate();
           }}>
           {translateTime("all")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "3m"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("3m");
+            vibrate();
           }}>
           3{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1m"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("1m");
+            vibrate();
           }}>
           1{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1w"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             setListType("1w");
+            vibrate();
           }}>
           1{translateTime("week")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "3d"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             setListType("3d");
+            vibrate();
           }}>
           3{translateTime("day")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "24h"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             setListType("24h");
+            vibrate();
           }}>
           24{translateTime("hour")}
         </button>

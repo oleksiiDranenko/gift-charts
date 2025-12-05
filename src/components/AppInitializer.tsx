@@ -183,12 +183,11 @@ export default function AppInitializer({
 
   return (
     <div
-      className={`h-screen w-screen pb-5 overflow-scroll bg-fixed flex flex-col`}>
+      className={`h-screen w-screen pb-5 overflow-scroll scrollbar-hide bg-fixed flex flex-col`}>
       <div className='w-screen flex justify-center flex-grow'>
-        <div className='hidden lg:block w-72'></div>
-        {children}
+        <NavbarLeft /> {children}
       </div>
-      <NavbarLeft />
+
       <NavbarBottom />
     </div>
   );

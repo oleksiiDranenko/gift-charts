@@ -7,25 +7,67 @@
     "save": "Save",
     "clear": "Clear",
     "close": "Close",
+    "reset": "Reset",
     "toncoin": "Toncoin",
     "usDollar": "US Dollar",
     "buy": "Buy",
     "sell": "Sell",
     "show": "Show",
     "hide": "Hide",
-    "tryItNow": "Try it now"
+    "tryItNow": "Try it now",
+    "back": "Go back",
+    "selected": "Selected",
+    "searchPlaceholder": "Search Gifts",
+    "soon": "Soon"
+  },
+  "donate": {
+    "donate": "Donations go to cover the hosting cost",
+    "tonWallet": "TON Wallet Address"
+  },
+  "settings": {
+    "accountSettings": "Account settings",
+    "editAssets": "Edit Assets",
+    "editWatchlist": "Edit Watchlist",
+    "generalSettings": "General settings",
+    "language": "Language",
+    "colorTheme": "Color Theme",
+    "currency": "Currency",
+    "giftStyle": "Gift Style"
+  },
+  "tools": {
+    "services": "Services",
+    "buyStars": "Buy Stars",
+    "buyStarsDescription": " Swap crypto to Telegram Stars",
+    "analyticsTools": "Analytics Tools",
+    "heatmap": "Heatmap",
+    "heatmapDescription": " View market state at heatmap chart",
+    "fearGreed": "Fear & Greed",
+    "fearGreedDescription": "See how others feel about the market",
+    "marketSentiment": "Market Sentiment",
+    "marketSentimentDescription": "See how others feel about the market",
+    "indexes": "Indexes",
+    "marketCap": "Market Cap"
   },
   "account": {
+    "last24h": "Last 24 hours",
+    "editPortfolio": "Edit portfolio",
+    "addGiftsToPortfolio": "Add Gifts to portfolio",
+    "addGiftsInstruction": "Choose the gifts you own to track your portfolio value",
     "openInTelegram": "Please open app in Telegram",
     "assets": "Assets",
     "noAssets": "No assets yet",
     "noGifts": "No gifts available",
     "cash": "Cash",
     "addGift": "Add Gift",
+    "importFromProfile": "Import from profile",
     "avgPrice": "Avg price",
     "amount": "Amount",
     "watchlist": "Watchlist",
-    "emptyWatchlist": "Your Watchlist is Empty"
+    "emptyWatchlist": "Your Watchlist is Empty",
+    "save": "Save",
+    "removeGift": "Remove Gift",
+    "gift": "Gift",
+    "gifts": "Gifts"
   },
   "filters": {
     "hideFilters": "Hide Filters",
@@ -34,7 +76,7 @@
     "sortBy": "Sort By",
     "price": "Price",
     "marketCap": "Market Cap",
-    "change": "Change",
+    "change": "Price Change",
     "supply": "Supply",
     "initSupply": "Init. Supply",
     "starsPrice": "Stars Price",
@@ -47,9 +89,36 @@
     "top": "Top",
     "ton": "Ton",
     "usd": "Usd",
+    "24h": "24 hours",
+    "1w": "Week",
+    "1m": "Month",
     "onSale": "On sale",
     "volume": "Volume",
-    "salesCount": "Sales count"
+    "salesCount": "Sales count",
+    "growth": "Growth",
+    "volatility": "Volatility",
+    "upgradedSupply": "Upgraded Supply",
+    "releaseDate": "Release Date",
+    "alphabet": "Alphabet",
+    "highFirst": "High first",
+    "lowFirst": "Low first",
+    "order": "Order",
+    "reset": "Reset",
+    "viewBy": "View by",
+    "timePeriod": "Time Period",
+    "currency": "Currency",
+    "displayAmount": "Amount displayed",
+    "all": "All",
+    "displayAll": "Display All"
+  },
+
+  "indexTimegap": {
+    "all": "All",
+    "3m": "3m",
+    "1m": "1m",
+    "1w": "1w",
+    "3d": "3d",
+    "1d": "24h"
   },
 
   "timegap": {
@@ -67,19 +136,27 @@
 
   "navbar": {
     "home": "Home",
+    "gifts": "Gifts",
     "tools": "Tools",
     "profile": "Account",
     "settings": "Settings"
   },
 
+  "indexWidget": {
+    "7days": "7 days",
+    "marketCap": "Market Cap"
+  },
+
   "mainPage": {
-    "searchPlaceholder": "Search gifts...",
-    "customise": "Customise",
+    "searchPlaceholder": "Search Gifts",
     "gainers": "Gainers",
     "losers": "Losers",
     "floor": "floor",
     "saved": "Saved",
-    "emptyWatchlist": "Your Watchlist is Empty"
+    "emptyWatchlist": "Your Watchlist is Empty",
+    "allGifts": "All Gifts",
+    "supportApp": "Support the app",
+    "thankYou": "Thank You!"
   },
 
   "giftInfo": {
@@ -90,31 +167,54 @@
     "totalStarsPrice": "Total Stars Price",
     "totalStarsPriceInUSD": "Total Stars Price in USD",
     "totalStarsPriceInTON": "Total Stars Price in TON",
+    "initStarsPrice": "Init stars price",
+    "initUsdtPrice": "Init USDT price",
+    "initStarsMarketcap": "Init stars market cap",
+    "initUsdtMarketcap": "Init USDT market cap",
     "initialSupply": "Inital Supply",
     "supply": "Supply",
     "upgradedSupply": "Upgraded Supply",
-    "percentUpdgraded": "Percent Upgraded",
     "amountBurnt": "Amount Burnt",
-    "percentBurnt": "Percent Burnt",
-    "viewModels": "View Models"
-  },
-
-  "tools": {
-    "heatmap": {
-      "name": "Heatmap",
-      "resetZoom": "Reset Zoom",
-      "download": "Download Heatmap as an Image"
-    },
+    "upgraded": "Upgraded",
+    "burnt": "Burnt",
+    "notUpgraded": "Not upgraded",
+    "viewModels": "View Models",
     "marketCap": "Market Cap"
   },
 
-  "settings": {
-    "colorTheme": {
-      "name": "Color Theme",
-      "light": "Light",
-      "dark": "Dark",
-      "system": "System"
-    }
+  "priceOptions": {
+    "ton": "TON",
+    "usd": "USDT",
+    "onSale": "On sale",
+    "volume": "Volume",
+    "salesCount": "Sales count"
+  },
+
+  "giftHeader": {
+    "gift": "Gift",
+    "price": "Price",
+    "marketCap": "Market Cap",
+    "24h": "24h",
+    "week": "Week",
+    "month": "Month"
+  },
+
+  "heatmap": {
+    "editHeatmap": "Edit Heatmap",
+    "download": "Download",
+    "downloadHeatmapText": "Image will be sent to you soon",
+    "close": "Close"
+  },
+
+  "vote": {
+    "marketSentiment": "Market Sentiment",
+    "howDoYouFeel": "How do you feel about the market?",
+    "veryNegative": "Very Negative",
+    "negative": "Negative",
+    "neutral": "Neutral",
+    "positive": "Positive",
+    "veryPositive": "Very Positive",
+    "totalVotes": "Total votes:"
   },
 
   "fearAndGreed": {
@@ -124,5 +224,10 @@
     "neutral": "Neutral",
     "greed": "Greed",
     "extremeGreed": "Extreme greed"
+  },
+
+  "stars": {
+    "text1": "Stars Swap was made by our partners",
+    "text2": "You can swap any coin from TON blockchain to Telegram Stars without KYC"
   }
 }

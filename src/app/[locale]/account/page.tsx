@@ -2,7 +2,7 @@ import Account from "@/components/account/Account";
 
 export default function page() {
   return (
-    <main className='w-full lg:w-5/6 pt-[0px] lg:pt-16 pb-20'>
+    <main className='w-full lg:w-[98%] pt-[0px] pb-20'>
       <Account />
     </main>
   );

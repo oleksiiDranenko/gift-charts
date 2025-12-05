@@ -13,15 +13,19 @@ import { useRouter } from "next/navigation";
 import useVibrate from "@/hooks/useVibrate";
 import EditWatchlistItem from "./EditWatchlistItem";
 import BackButton from "@/utils/ui/backButton";
-import { ListPlus } from "lucide-react";
+import { ListPlus, Search, X } from "lucide-react";
 import AddWatchlistItemModal from "./AddWatchlistItemModal";
 import { useTranslations } from "next-intl";
+import ScrollToTopButton from "@/components/scrollControl/ScrollToTopButton";
+import InfoMessage from "@/components/generalHints/InfoMessage";
+import OpenInTelegram from "../OpenInTelegram";
 
 export default function EditWatchlist() {
   const vibrate = useVibrate();
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const giftsList = useAppSelector((state) => state.giftsList);
   const dispatch = useAppDispatch();
@@ -112,60 +116,67 @@ export default function EditWatchlist() {
     setAddGiftList(list);
   }, [editedUser, giftsList]);
 
-  const removeGift = (id: string) => {
-    if (editedUser) {
-      const filteredList = editedUser.savedList.filter((item) => item !== id);
-      setEditedUser({ ...editedUser, savedList: filteredList });
-
-      const removedGift = giftsList.find((gift) => gift._id === id);
-      if (removedGift) {
-        setAddGiftList((prevList) =>
-          [...prevList, removedGift].sort((a, b) =>
-            a.name.localeCompare(b.name)
-          )
-        );
-      }
-    }
-  };
-
-  const addGift = (id: string) => {
-    if (editedUser) {
-      const newGift = id;
-      setEditedUser({
-        ...editedUser,
-        savedList: [...editedUser.savedList, newGift],
-      });
-      setAddGiftList((prevList) => prevList.filter((gift) => gift._id !== id));
-    }
-  };
-
-  const saveChanges = async () => {
+  const autoSave = async (updatedUser: UserInterface) => {
     try {
-      if (editedUser && user.telegramId) {
-        const updatedUser = {
-          username: editedUser.username,
-          savedList: editedUser.savedList,
-          assets: editedUser.assets,
-          ton: editedUser.ton,
-          usd: editedUser.usd,
-          token: user.token,
-        };
+      const payload = {
+        telegramId: updatedUser.telegramId,
+        username: updatedUser.username,
+        savedList: updatedUser.savedList,
+        // Keep other fields (assets, ton, usd) unchanged
+        assets: updatedUser.assets || [],
+        ton: updatedUser.ton ?? 0,
+        usd: updatedUser.usd ?? 0,
+      };
 
-        const updateRes = await axios.patch(
-          `${process.env.NEXT_PUBLIC_API}/users/update-account/${user.telegramId}`,
-          updatedUser,
-          { headers: { "Content-Type": "application/json" } }
-        );
+      const res = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API}/users/update-account/${updatedUser.telegramId}`,
+        payload
+      );
 
-        dispatch(setUser(updateRes.data.user));
-      } else {
-        setError("Cannot save changes: No user data or Telegram ID available.");
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-      setError("Failed to save changes. Please try again.");
+      dispatch(setUser(res.data.user));
+    } catch (err) {
+      console.error("Auto-save failed:", err);
+      // Optional: show toast notification here
     }
   };
+
+  const removeGift = async (id: string) => {
+    if (!editedUser) return;
+
+    const newSavedList = editedUser.savedList.filter((item) => item !== id);
+    const updatedUser = { ...editedUser, savedList: newSavedList };
+
+    setEditedUser(updatedUser);
+
+    const removedGift = giftsList.find((gift) => gift._id === id);
+    if (removedGift) {
+      setAddGiftList((prev) =>
+        [...prev, removedGift].sort((a, b) => a.name.localeCompare(b.name))
+      );
+    }
+
+    await autoSave(updatedUser);
+  };
+
+  // Add gift with instant save
+  const addGift = async (id: string) => {
+    if (!editedUser) return;
+
+    const updatedSavedList = [...editedUser.savedList, id];
+    const updatedUser = { ...editedUser, savedList: updatedSavedList };
+
+    setEditedUser(updatedUser);
+    setAddGiftList((prev) => prev.filter((gift) => gift._id !== id));
+    setIsModalOpen(false); // Close modal after adding
+
+    await autoSave(updatedUser);
+  };
+
+  const filteredGiftList = addGiftList
+    .filter((gift) =>
+      gift.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className='w-full flex flex-col px-3'>
@@ -180,62 +191,89 @@ export default function EditWatchlist() {
           />
         </div>
       ) : error ? (
-        <div className='w-full text-center text-red-500'>{error}</div>
+        <OpenInTelegram />
       ) : (
         <>
-          <div className='w-full flex flex-row justify-between gap-x-3'>
-            <div onClick={saveChanges}>
-              <BackButton />
-            </div>
-          </div>
+          <BackButton middleText={translate("watchlist")} />
 
-          <div className='w-full mt-5 pr-2 gap-x-3'>
-            <h2 className='w-full text-xl font-bold mb-3'>
-              {translate("watchlist")}
-            </h2>
-            {editedUser ? (
-              editedUser.savedList.length === 0 ? (
-                <div className='pt-3 pb-5 text-secondaryText'>
-                  {translate("emptyWatchlist")}
-                </div>
-              ) : (
-                editedUser.savedList.map((gift) => (
-                  <EditWatchlistItem
-                    giftId={gift}
-                    giftsList={giftsList}
-                    removeGift={removeGift}
-                    key={gift}
-                  />
-                ))
-              )
-            ) : null}
+          <div className='w-full mt-7 pr-2 gap-x-3'>
+            {editedUser
+              ? editedUser.savedList.length === 0
+                ? null
+                : editedUser.savedList.map((gift) => (
+                    <EditWatchlistItem
+                      giftId={gift}
+                      giftsList={giftsList}
+                      removeGift={removeGift}
+                      key={gift}
+                    />
+                  ))
+              : null}
           </div>
-
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className='w-full flex flex-row items-center justify-center gap-x-1 h-10 mt-3 bg-primary rounded-xl'>
-            <ListPlus size={20} />
-            {translate("addGift")}
-          </button>
 
           <AddWatchlistItemModal
+            trigger={
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className='w-full flex flex-row items-center justify-center text-primary gap-x-1 h-16 bg-secondaryTransparent rounded-3xl'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-6'>
+                  <path
+                    fillRule='evenodd'
+                    d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+
+                {translate("addGift")}
+              </button>
+            }
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}>
-            <div className='w-full p-3'>
-              {addGiftList.length > 0 ? (
-                addGiftList.map((gift) => (
-                  <AddListItem
-                    _id={gift._id}
-                    name={gift.name}
-                    image={gift.image}
-                    addGift={addGift}
-                    key={gift._id}
-                  />
+            <div className='w-full'>
+              <div className='relative w-full my-2 mb-3'>
+                <input
+                  type='text'
+                  placeholder={translateGeneral("searchPlaceholder")}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className='w-full h-12 pl-10 pr-10 bg-secondaryTransparent rounded-3xl text-foreground placeholder:text-secondaryText focus:outline-none'
+                />
+                <Search
+                  className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText pointer-events-none'
+                  size={18}
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className='absolute right-3 top-1/2 -translate-y-1/2 text-secondaryText hover:text-foreground'>
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+
+              <ScrollToTopButton />
+              {filteredGiftList.length > 0 ? (
+                filteredGiftList.map((gift) => (
+                  <div onClick={() => setSearchTerm("")} key={gift._id}>
+                    <AddListItem
+                      _id={gift._id}
+                      name={gift.name}
+                      image={gift.image}
+                      addGift={addGift}
+                      onClose={() => setIsModalOpen(false)}
+                    />
+                  </div>
                 ))
               ) : (
-                <p className='text-center text-primary'>
-                  {translate("noGifts")}
-                </p>
+                <InfoMessage
+                  text={`No gifts matching "${searchTerm}"`}
+                  buttonText='Clear search'
+                  onClick={() => setSearchTerm("")}
+                />
               )}
             </div>
           </AddWatchlistItemModal>

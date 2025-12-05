@@ -36,7 +36,7 @@ export default function Page() {
   const t = useTranslations("fearAndGreed");
 
   return (
-    <main className='w-full lg:w-5/6 pt-[0px]  px-3'>
+    <main className='w-full lg:w-[98%] pt-[0px]  px-3'>
       <div className='w-full h-10 gap-x-3 flex items-center justify-between'>
         <BackButton />
       </div>
@@ -73,7 +73,7 @@ export default function Page() {
               {t("name")}
             </h1>
             <div
-              className={`w-fit flex flex-row items-center gap-x-1 px-3 py-2 rounded-xl ${
+              className={`w-fit flex flex-row items-center gap-x-1 px-3 py-2 rounded-3xl ${
                 percent !== undefined
                   ? percent >= 0 && percent < 0.2
                     ? "text-red-500 bg-red-500/5"
@@ -132,7 +132,7 @@ export default function Page() {
         </div>
       )}
 
-      <div className='flex flex-row items-center gap-x-3 bg-blue-400 text-primary bg-opacity-15 mt-5 p-5 rounded-xl'>
+      <div className='flex flex-row items-center gap-x-3 bg-blue-400 text-primary bg-opacity-15 mt-5 p-5 rounded-3xl'>
         <Info size={20} /> Index is currently in testing
       </div>
     </main>

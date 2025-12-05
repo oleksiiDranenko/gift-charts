@@ -7,9 +7,11 @@ import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { AlarmClock } from "lucide-react";
 import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
+import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
+import GiftInitPriceSection from "@/components/giftInfo/GiftInitPriceSection";
+import { GiftSkeleton } from "@/components/giftInfo/GiftSkeleton";
 
 async function fetchGift(id: string) {
   const { data } = await axios.get(
@@ -67,14 +69,14 @@ export default function Page({ params }: any) {
   const loading = isGiftLoading || isWeekLoading || isLifeLoading;
 
   return (
-    <div className='w-full lg:w-5/6 pt-[0px]  pb-24 flex justify-center'>
+    <div className='w-full lg:w-[98%] pt-[0px] flex justify-center'>
       <div className='w-full'>
+        <div className='px-3'>
+          <BackButton />
+        </div>
         {loading ? (
           <div className='flex flex-col'>
-            <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>
-              <BackButton />
-            </div>
-            <div className='w-full h-20 flex justify-center items-center'>
+            <div className='w-full flex h-20 justify-center items-center'>
               <ReactLoading
                 type='spin'
                 color='var(--primary)'
@@ -83,24 +85,27 @@ export default function Page({ params }: any) {
                 className='mt-5'
               />
             </div>
+            {/* <div className='block lg:hidden'>
+              <GiftSkeleton />
+            </div> */}
           </div>
         ) : gift ? (
           <div className='flex flex-col'>
-            <div className='w-full h-10 px-3 gap-x-3 flex items-center justify-between'>
-              <BackButton />
-              <div className='w-1/2 h-10 pr-3 flex items-center justify-end text-sm '>
-                {weekList.length > 0 ? (
-                  <span className='flex flex-row items-center gap-x-1'>
-                    <AlarmClock size={14} />
-                    {`${weekList[weekList.length - 1].time} UTC+1`}
-                  </span>
-                ) : (
-                  "No time data"
-                )}
-              </div>
-            </div>
             <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
-            <GiftStats gift={gift} />
+            {/* <GiftStats gift={gift} /> */}
+
+            <div className='w-full flex flex-col lg:items-start lg:flex-row px-3 mt-5 space-y-5 lg:space-y-0 lg:space-x-3'>
+              <GiftInitPriceSection
+                initStarsPrice={gift.starsPrice}
+                initSupply={gift.initSupply}
+                starUsdtCost={0.015}
+              />
+              <GiftSupplyPie
+                initSupply={gift.initSupply}
+                supply={gift.supply}
+                upgradedSupply={gift.upgradedSupply}
+              />
+            </div>
           </div>
         ) : (
           <div className='text-center text-red-500'>

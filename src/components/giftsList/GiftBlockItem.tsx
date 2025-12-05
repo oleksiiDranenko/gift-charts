@@ -94,13 +94,20 @@ export default function GiftBlockItem({
     return number.toString();
   };
 
+  const formatPrice = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  };
+
   const countPercentChange = (last24: number, current: number) => {
     return parseFloat((((current - last24) / last24) * 100).toFixed(2));
   };
 
   return (
     <Link
-      className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-md ${
+      className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-3xl ${
         background === "color"
           ? `bg-gradient-to-b ${
               percentChange !== "no data" && percentChange >= 0
@@ -118,8 +125,8 @@ export default function GiftBlockItem({
         <Image
           alt='gift image'
           src={`/gifts/${item.image}.webp`}
-          width={60}
-          height={60}
+          width={70}
+          height={70}
           className={`p-1 ${borderColor ? "border" : ""}'`}
           style={borderColor ? { borderColor: `${borderColor}80` } : {}}
         />
@@ -142,22 +149,28 @@ export default function GiftBlockItem({
           <div className='flex flex-row items-center'>
             {currency === "ton" ? (
               <Image
-                alt='ton logo'
+                alt='ton'
                 src='/images/toncoin.webp'
                 width={15}
                 height={15}
                 className='mr-1'
               />
             ) : (
-              <span className='mr-1'>$</span>
+              <Image
+                alt='usdt'
+                src='/images/usdt.svg'
+                width={15}
+                height={15}
+                className='mr-1'
+              />
             )}
-            <span className='text-base font-bold'>
+            <span className='text-sm font-bold'>
               {currency === "ton" && displayValue === "price"
-                ? item.priceTon
+                ? formatPrice(item.priceTon)
                 : currency === "ton" && displayValue === "marketCap"
                 ? formatNumber(item.priceTon * item.upgradedSupply)
                 : currency === "usd" && displayValue === "price"
-                ? item.priceUsd.toFixed(2)
+                ? formatPrice(item.priceUsd)
                 : currency === "usd" && displayValue === "marketCap"
                 ? formatNumber(item.priceUsd * item.upgradedSupply)
                 : null}
@@ -165,7 +178,7 @@ export default function GiftBlockItem({
           </div>
 
           <span
-            className={`py-[2px] px-1 mt-1 rounded-xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+            className={`py-[2px] px-1 mt-2 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
               percentChange !== "no data"
                 ? percentChange >= 0
                   ? "text-green-500 bg-green-500"

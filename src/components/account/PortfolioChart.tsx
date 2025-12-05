@@ -51,13 +51,18 @@ export default function PortfolioChart({
   // Filter numeric values
   const numericValues = values.filter((v): v is number => v !== null);
 
-  // 🧮 Calculate percent change (first vs last)
   const percentChange =
     numericValues.length > 1
       ? ((numericValues[numericValues.length - 1] - numericValues[0]) /
           numericValues[0]) *
         100
       : 0;
+
+  const minValue = Math.min(...numericValues);
+  const maxValue = Math.max(...numericValues);
+  const padding = (maxValue - minValue) * 0.5; // 5% padding
+  const yMin = minValue - padding;
+  const yMax = maxValue + padding;
 
   // 🎨 Create gradient when theme, currency, or data changes
   useEffect(() => {
@@ -147,6 +152,7 @@ export default function PortfolioChart({
 
   const options: ChartOptions<"line"> = {
     responsive: true,
+    maintainAspectRatio: false,
     // onHover: function (event, elements) {
     //   if (elements.length > 0) {
     //     const newIndex = elements[0].index;
@@ -205,45 +211,22 @@ export default function PortfolioChart({
       mode: "index",
       intersect: false,
     },
+    layout: {
+      padding: 0, // remove internal padding
+    },
     scales: {
       x: {
-        grid: {
-          display: false,
-        },
-        ticks: { display: false },
+        display: false,
       },
       y: {
-        grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.00)"
-              : "rgba(0, 0, 0, 0.00)",
-          drawTicks: true,
-          tickLength: 10,
-        },
-        ticks: {
-          display: false,
-        },
-        position: "right",
-        suggestedMax:
-          numericValues.length > 0
-            ? Math.max(...numericValues) * 1.01
-            : undefined,
-        suggestedMin:
-          numericValues.length > 0
-            ? Math.min(...numericValues) * 0.99
-            : undefined,
+        display: false,
+        min: yMin,
+        max: yMax,
       },
     },
   };
   return (
-    <div
-      className={
-        resolvedTheme === "dark"
-          ? "relative"
-          : "relative bg-secondaryTransparent rounded-xl p-4"
-      }
-      ref={chartContainerRef}>
+    <div className={"relative"} ref={chartContainerRef}>
       <Line
         ref={chartRef as any}
         data={chartData}

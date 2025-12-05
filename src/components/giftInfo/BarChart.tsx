@@ -14,6 +14,7 @@ import { useTheme } from "next-themes";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
+import useVibrate from "@/hooks/useVibrate";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -43,6 +44,7 @@ export default function BarChart({
     "24h" | "3d" | "1w" | "1m" | "3m" | "all"
   >("24h");
   const { resolvedTheme } = useTheme();
+  const vibrate = useVibrate();
 
   const translateTime = useTranslations("timegap");
 
@@ -360,10 +362,7 @@ export default function BarChart({
     scales: {
       x: {
         grid: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.05)"
-              : "rgba(0, 0, 0, 0.05)",
+          display: false,
         },
         ticks: {
           color:
@@ -391,16 +390,17 @@ export default function BarChart({
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.6)"
               : "rgba(0, 0, 0, 0.6)",
-          padding: 10,
+          padding: 3,
+          maxTicksLimit: 7,
         },
         position: "right",
         suggestedMax:
           numericValues.length > 0
-            ? Math.max(...numericValues) * 1.1
+            ? Math.max(...numericValues) * 1.05
             : undefined,
         suggestedMin:
           numericValues.length > 0
-            ? Math.min(...numericValues) * 0.9
+            ? Math.min(...numericValues) * 0.95
             : undefined,
       },
     },
@@ -411,15 +411,20 @@ export default function BarChart({
       className={
         resolvedTheme === "dark"
           ? "relative"
-          : "relative bg-secondaryTransparent rounded-xl"
+          : "relative bg-secondaryTransparent rounded-3xl"
       }
       ref={chartContainerRef}>
-      <Bar ref={chartRef as any} data={data} options={options} />
-      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-xl time-gap-buttons'>
+      <Bar
+        ref={chartRef as any}
+        data={data}
+        options={options}
+        height={window.innerWidth < 1080 ? 200 : 150}
+      />
+      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -430,55 +435,60 @@ export default function BarChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "3m"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("3m");
+            vibrate();
           }}>
           3{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1m"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             if (lifeData.length > 0) setListType("1m");
+            vibrate();
           }}>
           1{translateTime("month")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1w"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             setListType("1w");
+            vibrate();
           }}>
           1{translateTime("week")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "3d"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             setListType("3d");
+            vibrate();
           }}>
           3{translateTime("day")}
         </button>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "24h"
-              ? "rounded-xl bg-secondary font-bold"
+              ? "rounded-3xl bg-secondary font-bold"
               : "text-secondaryText"
           }`}
           onClick={() => {
             setListType("24h");
+            vibrate();
           }}>
           24{translateTime("hour")}
         </button>
