@@ -56,35 +56,38 @@ export default function Account() {
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValuePrev, setPortfolioValuePrev] = useState<number>(0);
 
-  const { data: chartData = [], isLoading: chartLoading } = useQuery<
-    GiftWeekDataInterface[]
-  >({
-    queryKey: ["userChart", user.telegramId],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
-      );
-      return data;
-    },
-    enabled:
-      !!user.telegramId && giftsList.length > 0 && user.assets.length > 0,
-    refetchOnWindowFocus: false,
-  });
+  const giftsMap = useMemo(() => {
+    const map = new Map<string, GiftInterface>();
+
+    for (const gift of giftsList) {
+      map.set(gift._id, gift);
+    }
+
+    return map;
+  }, [giftsList]);
 
   useEffect(() => {
-    if (chartData.length > 1) {
-      const first = chartData[0];
-      const last = chartData[chartData.length - 1];
+    if (!user.assets?.length || giftsList.length === 0) return;
+
+    let current = 0;
+    let previous = 0;
+
+    for (const { giftId, amount } of user.assets) {
+      const gift = giftsMap.get(giftId);
+      if (!gift) continue;
 
       if (currency === "ton") {
-        setPortfolioValue(last.priceTon);
-        setPortfolioValuePrev(first.priceTon);
+        current += gift.priceTon * amount;
+        previous += (gift.tonPrice24hAgo ?? gift.priceTon) * amount;
       } else {
-        setPortfolioValue(last.priceUsd);
-        setPortfolioValuePrev(first.priceUsd);
+        current += gift.priceUsd * amount;
+        previous += (gift.usdPrice24hAgo ?? gift.priceUsd) * amount;
       }
     }
-  }, [chartData, currency]);
+
+    setPortfolioValue(current);
+    setPortfolioValuePrev(previous);
+  }, [user.assets, giftsMap, currency]);
 
   // 🟣 2. Fetch gifts if not in Redux store
   useEffect(() => {
@@ -225,8 +228,6 @@ export default function Account() {
                 </div>
               </div>
             </div>
-
-            <PortfolioChart data={chartData} currency={currency} />
           </div>
 
           {/* Assets List */}
