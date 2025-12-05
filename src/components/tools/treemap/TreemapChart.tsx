@@ -326,13 +326,13 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       vibrate();
       if (data.length === 0) return;
 
-      const isTelegram = !!window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
       const width = 1920;
       const height = 1080;
 
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
+
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
@@ -340,7 +340,10 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       const { TreemapController, TreemapElement } = await import(
         "chartjs-chart-treemap"
       );
+
       ChartJS.register(TreemapController, TreemapElement);
+
+      ChartJS.defaults.devicePixelRatio = 1;
 
       const transformed = transformGiftData(data, chartType, timeGap, currency);
       const imageMap = await preloadImagesAsync(transformed);
@@ -358,10 +361,13 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
           ],
         },
         options: {
-          responsive: false,
+          responsive: false, // important
           maintainAspectRatio: false,
           animation: false,
-          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false },
+          },
         },
         plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 1, type)],
       });
@@ -369,27 +375,10 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       const url = canvas.toDataURL("image/jpeg", 1.0);
       tempChart.destroy();
 
-      if (!isTelegram) {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `treemap-${Date.now()}.jpeg`;
-        a.click();
-        return;
-      }
-
-      const blob = await (await fetch(url)).blob();
-      const form = new FormData();
-      form.append("file", blob, `treemap-${Date.now()}.jpeg`);
-      form.append(
-        "chatId",
-        window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
-      );
-      form.append("content", "Here is your treemap!");
-
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
-        form
-      );
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `treemap-${Date.now()}.jpeg`;
+      a.click();
     };
 
     useImperativeHandle(ref, () => ({
