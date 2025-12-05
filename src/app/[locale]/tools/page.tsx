@@ -78,7 +78,7 @@ export default function Page() {
             vibrate();
           }}>
           <div
-            className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'
+            className='w-full p-3 flex flex-row justify-between items-center '
             onClick={() => {
               vibrate();
             }}>
