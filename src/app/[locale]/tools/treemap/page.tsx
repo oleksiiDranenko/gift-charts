@@ -141,9 +141,9 @@ export default function Page() {
   }, [giftsList, listType, timeGap]);
 
   return (
-    <div className='w-full pt-[0px]  pb-24 flex flex-col items-center overflow-visible'>
+    <div className='w-full pt-[0px] pb-24 flex flex-col items-center overflow-visible'>
       <div className='w-full flex flex-col items-center px-3 gap-y-3 mb-3'>
-        <div className='w-full lg:w-[98%] flex flex-row justify-between items-center gap-x-3'>
+        <div className='w-full lg:w-[98%] mb-2 flex flex-row justify-between items-center gap-x-3'>
           <BackButton />
         </div>
 

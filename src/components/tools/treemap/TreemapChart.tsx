@@ -124,7 +124,7 @@ const imagePlugin = (
     const { ctx, data } = chart;
     const dataset = data.datasets[0] as any;
     const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
-    const scale = chart.getZoomLevel ? chart.getZoomLevel() : 1;
+    const scale = chart.getZoomLevel ? chart.getZoomLevel() : 0.9;
 
     // ensure toncoin & usdt images
     let toncoinImg = imageMap.get("toncoin");
@@ -165,8 +165,7 @@ const imagePlugin = (
       ctx.lineWidth = borderWidth / scale;
 
       ctx.beginPath();
-      const cornerRadius =
-        type === "round" ? Math.min(width, height) * 0.15 : 0;
+      const cornerRadius = type === "round" ? Math.min(width, height) * 0.3 : 0;
       ctx.roundRect(x, y, width, height, cornerRadius);
       ctx.fill();
       if (borderWidth > 0) ctx.stroke();
@@ -193,13 +192,51 @@ const imagePlugin = (
       const startY = y + (height - totalContentHeight) / 2;
       const centerX = x + width / 2;
 
+      // Draw gift image in a white circle with padding
+      const imgCenterX = x + width / 2;
+      const imgCenterY = startY + drawHeight / 2;
+
+      // Circle radius stays the same
+      const circleRadius = (Math.min(drawWidth, drawHeight) / 2) * 0.92;
+
+      // ADD: image should be smaller than the circle area
+      const imagePaddingFactor = 0.88; // lower = more padding
+      const imageWidth = drawWidth * scale * imagePaddingFactor;
+      const imageHeight = drawHeight * scale * imagePaddingFactor;
+
+      // 1. White circle background
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(imgCenterX, imgCenterY, circleRadius, 0, Math.PI * 2);
+      ctx.fillStyle = "#E0D9D9";
+      ctx.fill();
+
+      // 2. Clip to circle so image stays round
+      ctx.clip();
+
+      // 3. Draw the padded image (smaller than circle)
       ctx.drawImage(
         img,
-        x + (width - drawWidth) / 2,
-        startY,
-        drawWidth,
-        drawHeight
+        imgCenterX - imageWidth / 2,
+        imgCenterY - imageHeight / 2,
+        imageWidth,
+        imageHeight
       );
+
+      ctx.restore();
+
+      //  ctx.drawImage(
+      //   img,
+      //   x + (width - drawWidth) / 2,
+      //   startY,
+      //   drawWidth,
+      //   drawHeight
+      // );
+      // ctx.fillStyle = "white";
+      // ctx.textAlign = "center";
+      // ctx.strokeStyle = "transparent";
+      // ctx.lineWidth = 0;
+
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
       ctx.strokeStyle = "transparent";
@@ -445,7 +482,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
 
     return (
       <div className='w-full lg:w-[98%] min-h-[600px] px-3'>
-        <div className=' min-h-[600px] bg-secondaryTransparent rounded-3xl'>
+        <div className=' min-h-[600px]'>
           <canvas ref={canvasRef} />
         </div>
       </div>
