@@ -27,23 +27,28 @@ export default function Page() {
       <div className='w-full lg:w-[98%]'>
         <BackButton />
       </div>
-      <div className='flex flex-col bg-secondaryTransparent rounded-3xl p-3 mt-5 items-center'>
-        <h1 className='font-bold mb-3 flex flex-row items-center text-center gap-x-1'>
-          {translate("donate")}
-        </h1>
+      <div className='w-full flex justify-center'>
+        <div className='w-full lg:w-1/2 flex flex-col bg-secondaryTransparent rounded-3xl p-3 mt-5 items-center'>
+          <h1 className='font-bold mb-3 flex flex-row items-center text-center gap-x-1'>
+            {translate("donate")}
+          </h1>
 
-        <div
-          onClick={handleCopy}
-          className='relative bg-background rounded-3xl flex flex-col py-3 pl-3 pr-8'>
-          <span className='text-foreground font-bold mb-1'>
-            {translate("tonWallet")}
-          </span>
-          <p className='text-secondaryText'>{walletAddress}</p>
-          {copied ? (
-            <Check className='absolute top-3 right-3 text-primary' size={20} />
-          ) : (
-            <Copy className='absolute top-3 right-3 text-primary' size={20} />
-          )}
+          <div
+            onClick={handleCopy}
+            className='relative bg-background rounded-3xl flex flex-col py-3 pl-3 pr-8'>
+            <span className='text-foreground font-bold mb-1'>
+              {translate("tonWallet")}
+            </span>
+            <p className='text-secondaryText'>{walletAddress}</p>
+            {copied ? (
+              <Check
+                className='absolute top-3 right-3 text-primary'
+                size={20}
+              />
+            ) : (
+              <Copy className='absolute top-3 right-3 text-primary' size={20} />
+            )}
+          </div>
         </div>
       </div>
     </div>

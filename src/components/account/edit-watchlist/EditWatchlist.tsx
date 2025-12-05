@@ -18,6 +18,7 @@ import AddWatchlistItemModal from "./AddWatchlistItemModal";
 import { useTranslations } from "next-intl";
 import ScrollToTopButton from "@/components/scrollControl/ScrollToTopButton";
 import InfoMessage from "@/components/generalHints/InfoMessage";
+import OpenInTelegram from "../OpenInTelegram";
 
 export default function EditWatchlist() {
   const vibrate = useVibrate();
@@ -190,7 +191,7 @@ export default function EditWatchlist() {
           />
         </div>
       ) : error ? (
-        <div className='w-full text-center text-red-500'>{error}</div>
+        <OpenInTelegram />
       ) : (
         <>
           <BackButton middleText={translate("watchlist")} />

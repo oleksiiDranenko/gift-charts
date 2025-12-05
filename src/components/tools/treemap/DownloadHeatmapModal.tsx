@@ -4,6 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface MarketsModalProps {
   trigger: ReactNode;
@@ -12,6 +13,8 @@ interface MarketsModalProps {
 export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const vibrate = useVibrate();
+
+  const translate = useTranslations("heatmap");
 
   const openModal = () => {
     vibrate();
@@ -67,13 +70,13 @@ export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
                   </svg>
 
                   <p className='text-lg font-semibold mb-2'>
-                    Image will be sent to you soon
+                    {translate("downloadHeatmapText")}
                   </p>
 
                   <button
                     onClick={closeModal}
                     className='w-full mt-4 px-4 py-3 bg-primary rounded-2xl text-white font-semibold'>
-                    Close
+                    {translate("close")}
                   </button>
                 </div>
               </Dialog.Panel>

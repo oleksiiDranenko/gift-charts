@@ -202,7 +202,9 @@
 
   "heatmap": {
     "editHeatmap": "Настроить",
-    "download": "Скачать"
+    "download": "Скачать",
+    "downloadHeatmapText": "Изображение будет отправлено вам в ближайшее время",
+    "close": "Закрыть"
   },
 
   "vote": {

@@ -201,7 +201,9 @@
 
   "heatmap": {
     "editHeatmap": "Edit Heatmap",
-    "download": "Download"
+    "download": "Download",
+    "downloadHeatmapText": "Image will be sent to you soon",
+    "close": "Close"
   },
 
   "vote": {

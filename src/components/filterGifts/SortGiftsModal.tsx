@@ -21,7 +21,7 @@ const SORT_LABELS = [
   "supply",
   "initSupply",
   "upgradedSupply",
-  "releaseDate",
+  // "releaseDate",
   "alphabet",
 ] as const;
 
@@ -89,9 +89,9 @@ export default function SortGiftsModal({ trigger }: Props) {
       case "upgradedSupplyHigh":
       case "upgradedSupplyLow":
         return "upgradedSupply";
-      case "newest":
-      case "oldest":
-        return "releaseDate";
+      // case "newest":
+      // case "oldest":
+      //   return "releaseDate";
       case "atoz":
       case "ztoa":
         return "alphabet";
@@ -132,8 +132,8 @@ export default function SortGiftsModal({ trigger }: Props) {
         return highFirst ? "initSupplyHigh" : "initSupplyLow";
       case "upgradedSupply":
         return highFirst ? "upgradedSupplyHigh" : "upgradedSupplyLow";
-      case "releaseDate":
-        return highFirst ? "newest" : "oldest";
+      // case "releaseDate":
+      //   return highFirst ? "newest" : "oldest";
       case "alphabet":
         return highFirst ? "ztoa" : "atoz";
       default:

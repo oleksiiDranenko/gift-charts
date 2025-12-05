@@ -19,6 +19,7 @@ import AddAssetModal from "./AddAssetModal";
 import { useTranslations } from "next-intl";
 import ScrollToTopButton from "@/components/scrollControl/ScrollToTopButton";
 import InfoMessage from "@/components/generalHints/InfoMessage";
+import OpenInTelegram from "../OpenInTelegram";
 
 export default function EditAssets() {
   const vibrate = useVibrate();
@@ -314,7 +315,7 @@ export default function EditAssets() {
           />
         </div>
       ) : error ? (
-        <div className='w-full text-center text-red-500'>{error}</div>
+        <OpenInTelegram />
       ) : (
         <>
           <div className='w-full'>
