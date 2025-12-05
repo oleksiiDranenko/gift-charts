@@ -9,7 +9,7 @@ import { useState } from "react";
 
 export default function Page() {
   const [copied, setCopied] = useState(false);
-  const walletAddress = "UQBs_lO45Mcj5oxXtUmu-ZLpC-4cUBWUNKUm7QpPSsx0U28S";
+  const walletAddress = "UQDduNgyVyGb6M5sTgqOpVpiCDm6hq_xcyfgsommpoMSTF1-";
   const translate = useTranslations("donate");
 
   const handleCopy = async () => {
