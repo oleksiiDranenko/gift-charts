@@ -217,22 +217,36 @@ const imagePlugin = (
         startY + drawHeight + fontSize + lineSpacing
       );
 
-      // ——— MIDDLE LINE: PRICE (with TON or USDT icon) ———
+      // ——— MIDDLE LINE: PRICE or MARKET CAP ———
       ctx.font = `${fontSize}px sans-serif`;
-      const priceText = `${item.price.toFixed(2)}`;
-      const priceTextWidth = ctx.measureText(priceText).width;
+
+      let middleText = "";
+      let middleTextWidth = 0;
+
+      // MARKET CAP MODE → show market cap instead of percent
+      if (chartType === "marketCap") {
+        const mc = item.marketCap ?? 0;
+
+        if (mc >= 1_000_000) middleText = `${(mc / 1_000_000).toFixed(1)}M`;
+        else middleText = `${(mc / 1_000).toFixed(1)}K`;
+
+        middleTextWidth = ctx.measureText(middleText).width;
+      }
+      // NORMAL MODE → show price (existing behavior)
+      else {
+        middleText = item.price.toFixed(2);
+        middleTextWidth = ctx.measureText(middleText).width;
+      }
+
+      // Draw ICON + TEXT exactly as before
       const iconSize = fontSize * 1.0;
       const iconSpacing = fontSize * -0.1;
 
-      if (
-        currency === "ton" &&
-        toncoinImg?.complete &&
-        toncoinImg.naturalWidth > 0
-      ) {
+      if (currency === "ton" && toncoinImg?.complete) {
         try {
           ctx.drawImage(
             toncoinImg,
-            centerX - priceTextWidth / 2 - iconSize - iconSpacing,
+            centerX - middleTextWidth / 2 - iconSize - iconSpacing,
             startY +
               drawHeight +
               fontSize * 2 +
@@ -241,28 +255,24 @@ const imagePlugin = (
             iconSize,
             iconSize
           );
+
           ctx.fillText(
-            priceText,
+            middleText,
             centerX + iconSize / 2 + iconSpacing,
             startY + drawHeight + fontSize * 2 + lineSpacing * 2
           );
-        } catch (e) {
-          console.error("Error drawing toncoin image for price:", e);
+        } catch {
           ctx.fillText(
-            `TON ${priceText}`,
+            middleText,
             centerX,
             startY + drawHeight + fontSize * 2 + lineSpacing * 2
           );
         }
-      } else if (
-        currency === "usd" &&
-        usdtImg?.complete &&
-        usdtImg.naturalWidth > 0
-      ) {
+      } else if (currency === "usd" && usdtImg?.complete) {
         try {
           ctx.drawImage(
             usdtImg,
-            centerX - priceTextWidth / 2 - iconSize - iconSpacing,
+            centerX - middleTextWidth / 2 - iconSize - iconSpacing,
             startY +
               drawHeight +
               fontSize * 2 +
@@ -271,22 +281,22 @@ const imagePlugin = (
             iconSize,
             iconSize
           );
+
           ctx.fillText(
-            priceText,
+            middleText,
             centerX + iconSize / 2 + iconSpacing,
             startY + drawHeight + fontSize * 2 + lineSpacing * 2
           );
-        } catch (e) {
-          console.error("Error drawing USDT image:", e);
+        } catch {
           ctx.fillText(
-            `USDT ${priceText}`,
+            middleText,
             centerX,
             startY + drawHeight + fontSize * 2 + lineSpacing * 2
           );
         }
       } else {
         ctx.fillText(
-          priceText,
+          middleText,
           centerX,
           startY + drawHeight + fontSize * 2 + lineSpacing * 2
         );
