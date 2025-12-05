@@ -120,7 +120,7 @@ export default function Page() {
           onClick={() => {
             vibrate();
           }}>
-          <div className='w-full p-3 flex flex-row justify-between items-center backdrop-blur-lg'>
+          <div className='w-full p-3 flex flex-row justify-between items-center'>
             <div className='flex flex-row items-center gap-x-3'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -187,7 +187,7 @@ export default function Page() {
           onClick={() => {
             vibrate();
           }}>
-          <div className='w-full p-3 flex flex-row justify-between items-center text-secondaryText backdrop-blur-lg'>
+          <div className='w-full p-3 flex flex-row justify-between items-center text-secondaryText'>
             <div className='flex flex-row items-center gap-x-3'>
               <Gauge size={28} className='text-secondary' />
               <div className='flex flex-col'>
