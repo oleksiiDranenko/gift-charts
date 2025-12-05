@@ -35,11 +35,13 @@ export default function Page() {
 
           <div
             onClick={handleCopy}
-            className='relative bg-background rounded-3xl flex flex-col py-3 pl-3 pr-8'>
-            <span className='text-foreground font-bold mb-1'>
+            className='w-full relative bg-background rounded-3xl flex flex-col py-3 pl-3 pr-8'>
+            <span className='w-full text-foreground font-bold mb-1 '>
               {translate("tonWallet")}
             </span>
-            <p className='text-secondaryText'>{walletAddress}</p>
+            <p className='w-full text-secondaryText break-all'>
+              {walletAddress}
+            </p>
             {copied ? (
               <Check
                 className='absolute top-3 right-3 text-primary'
