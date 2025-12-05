@@ -27,16 +27,14 @@ export default function Page() {
       <div className='w-full lg:w-[98%]'>
         <BackButton />
       </div>
-      <div className='flex flex-col mt-3 items-center'>
-        <h1 className='text-xl font-bold mb-1 flex flex-row items-center gap-x-1'>
-          <HeartHandshake size={20} />
+      <div className='flex flex-col bg-secondaryTransparent rounded-3xl p-3 mt-5 items-center'>
+        <h1 className='font-bold mb-3 flex flex-row items-center text-center gap-x-1'>
           {translate("donate")}
         </h1>
-        <p className='mb-3'>{translate("thankYou")}</p>
 
         <div
           onClick={handleCopy}
-          className='relative bg-secondaryTransparent rounded-3xl flex flex-col py-3 pl-3 pr-8 mb-3'>
+          className='relative bg-background rounded-3xl flex flex-col py-3 pl-3 pr-8'>
           <span className='text-foreground font-bold mb-1'>
             {translate("tonWallet")}
           </span>

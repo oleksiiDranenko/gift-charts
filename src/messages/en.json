@@ -21,8 +21,7 @@
     "soon": "Soon"
   },
   "donate": {
-    "donate": "Donate",
-    "thankYou": "Thanks you for supporting the app!",
+    "donate": "Donations go to cover the hosting cost",
     "tonWallet": "TON Wallet Address"
   },
   "settings": {
@@ -155,7 +154,9 @@
     "floor": "floor",
     "saved": "Saved",
     "emptyWatchlist": "Your Watchlist is Empty",
-    "allGifts": "All Gifts"
+    "allGifts": "All Gifts",
+    "supportApp": "Support the app",
+    "thankYou": "Thank You!"
   },
 
   "giftInfo": {
