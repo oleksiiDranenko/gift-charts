@@ -56,13 +56,9 @@ export default function NavbarLeft() {
 
       {/* Fixed sidebar */}
       <div
-        className={`hidden fixed bg-background lg:flex lg:flex-col lg:justify-between transition-all duration-300 ease-in-out ${
+        className={`hidden fixed lg:flex lg:flex-col lg:justify-between transition-all duration-300 ease-in-out bg-secondaryTransparent dark:bg-background dark:border-r-2 dark:border-secondaryTransparent ${
           isOpen ? "" : "items-center"
-        } left-0 top-0 h-screen ${sidebarWidth} z-40 p-3 ${
-          resolvedTheme === "dark"
-            ? "border-r-2 border-secondaryTransparent"
-            : "bg-secondaryTransparent"
-        }`}>
+        } left-0 top-0 h-screen ${sidebarWidth} z-40 p-3 `}>
         <div className='space-y-3 flex flex-col items-center'>
           <Link
             href='/'
