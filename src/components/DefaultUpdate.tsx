@@ -30,26 +30,26 @@ export default function DefaultUpdate({
     },
   });
 
-  useQuery(
-    ["voteStatus", "marketSentiment"],
-    async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/vote/marketSentiment`
-      );
-      return response.data;
-    },
-    { retry: false }
-  );
+  // useQuery(
+  //   ["voteStatus", "marketSentiment"],
+  //   async () => {
+  //     const response = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_API}/vote/marketSentiment`
+  //     );
+  //     return response.data;
+  //   },
+  //   { retry: false }
+  // );
 
-  useQuery({
-    queryKey: ["monthData"],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/indexMonthData/68493d064b37eed02b7ae5af`
-      );
-      return data.slice(-336);
-    },
-  });
+  // useQuery({
+  //   queryKey: ["monthData"],
+  //   queryFn: async () => {
+  //     const { data } = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_API}/indexMonthData/68493d064b37eed02b7ae5af`
+  //     );
+  //     return data.slice(-336);
+  //   },
+  // });
 
   useEffect(() => {
     dispatch(setDefaultFilters());

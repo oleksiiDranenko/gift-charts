@@ -34,9 +34,9 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
     queryKey: ["indexMonthData"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/indexMonthData/68493d064b37eed02b7ae5af`
+        `${process.env.NEXT_PUBLIC_API}/indexMonthData/market-cap/latest`
       );
-      return data.slice(-336);
+      return data;
     },
   });
 
