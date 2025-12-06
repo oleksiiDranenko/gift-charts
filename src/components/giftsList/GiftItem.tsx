@@ -1,6 +1,5 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import { BadgeCheck, Cannabis } from "lucide-react";
 import { useTheme } from "next-themes";
 import GiftItemChart from "./GiftItemChart";
 import { useTranslations } from "next-intl";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface PropsInterface {
   item: GiftInterface;
@@ -140,7 +140,7 @@ export default function GiftItem({
 
   return (
     <>
-      <Link
+      <NoPrefetchLink
         className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-3xl ${
           background === "color"
             ? `bg-gradient-to-r ${
@@ -262,7 +262,7 @@ export default function GiftItem({
             </span>
           </div>
         </div>
-      </Link>
+      </NoPrefetchLink>
 
       {/* wide screen */}
       {/* wide screen */}
@@ -274,7 +274,7 @@ export default function GiftItem({
       {/* wide screen */}
 
       <div className='hidden lg:block'>
-        <Link
+        <NoPrefetchLink
           className={`w-full h-16 flex flex-row items-center justify-between  ${
             background === "color"
               ? `bg-gradient-to-r ${
@@ -500,7 +500,7 @@ export default function GiftItem({
               </span>
             </div>
           </div> */}
-        </Link>
+        </NoPrefetchLink>
       </div>
     </>
   );

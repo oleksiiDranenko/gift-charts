@@ -2,7 +2,6 @@
 
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useAppSelector } from "@/redux/hooks";
-import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
@@ -20,6 +19,7 @@ import IndexWidget from "./IndexWidget";
 import ListSkeleton from "../giftsList/ListSkeleton";
 import VoteBanner from "../tools/vote/VoteBanner";
 import { GiftSorter } from "../filterGifts/GiftSorter";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -85,7 +85,7 @@ export default function MainPage() {
   return (
     <div>
       <div className='w-full px-3 mb-4'>
-        <Link
+        <NoPrefetchLink
           href='https://t.me/giftshitpost'
           className='w-full h-20 p-3 flex flex-row bg-primary rounded-3xl relative overflow-hidden'>
           <div className='flex flex-col justify-evenly'>
@@ -111,7 +111,7 @@ export default function MainPage() {
               />
             </svg>
           </div>
-        </Link>
+        </NoPrefetchLink>
       </div>
 
       <SearchBar />
@@ -225,7 +225,7 @@ export default function MainPage() {
       </Link> */}
 
       <div className='w-full px-3'>
-        <Link
+        <NoPrefetchLink
           href={"/donate"}
           onClick={() => {
             vibrate();
@@ -252,7 +252,7 @@ export default function MainPage() {
 
             <ChevronRight size={20} className='text-primary' />
           </div>
-        </Link>
+        </NoPrefetchLink>
       </div>
     </div>
   );

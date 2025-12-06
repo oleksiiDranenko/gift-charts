@@ -7,9 +7,8 @@ import axios from "axios";
 import { useRef } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import GaugeChart from "react-gauge-chart";
-import { Link } from "@/i18n/navigation";
-import { Gauge } from "lucide-react";
 import { useTranslations } from "next-intl";
+import NoPrefetchLink from "@/components/NoPrefetchLink";
 
 export default function VoteBanner() {
   const queryClient = useQueryClient();
@@ -146,7 +145,7 @@ export default function VoteBanner() {
       {isVoteStatusLoading ? null : hasUserVoted || !isAuthenticated ? (
         <div className='w-full flex flex-col box-border p-3 rounded-3xl bg-secondaryTransparent overflow-hidden'>
           <div className='w-full flex mb-3'>
-            <Link
+            <NoPrefetchLink
               href={"/tools/vote"}
               onClick={() => vibrate()}
               className='w-fit lg:w-full flex flex-row items-center text-center pl-1'>
@@ -162,7 +161,7 @@ export default function VoteBanner() {
                   clipRule='evenodd'
                 />
               </svg>
-            </Link>
+            </NoPrefetchLink>
 
             <div className='hidden lg:flex w-full lg:flex-row justify-start items-center gap-x-2'>
               <span

@@ -7,7 +7,6 @@ import useVibrate from "@/hooks/useVibrate";
 import LanguageSwitcher from "@/components/languageSwitcher";
 import GiftItem from "@/components/giftsList/GiftItem";
 import GiftBlockItem from "@/components/giftsList/GiftBlockItem";
-import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import {
   ChevronRight,
@@ -24,6 +23,7 @@ import {
 } from "lucide-react";
 import ListSkeleton from "@/components/giftsList/ListSkeleton";
 import { useTranslations } from "next-intl";
+import NoPrefetchLink from "@/components/NoPrefetchLink";
 
 type Settings = {
   currency: "ton" | "usd";
@@ -82,7 +82,7 @@ export default function Page() {
           <h1 className='text-xl font-bold'>{translate("accountSettings")}</h1>
 
           <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>
-            <Link
+            <NoPrefetchLink
               href='/settings/edit-assets'
               className='w-full h-14 px-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
               onClick={() => vibrate()}>
@@ -91,8 +91,8 @@ export default function Page() {
                 {translate("editAssets")}
               </span>
               <ChevronRight size={20} className='text-primary' />
-            </Link>
-            <Link
+            </NoPrefetchLink>
+            <NoPrefetchLink
               href='/settings/edit-watchlist'
               className='w-full h-14 px-3 flex flex-row justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
               onClick={() => vibrate()}>
@@ -101,7 +101,7 @@ export default function Page() {
                 {translate("editWatchlist")}
               </span>
               <ChevronRight size={20} className='text-primary' />
-            </Link>
+            </NoPrefetchLink>
           </div>
         </>
       )}

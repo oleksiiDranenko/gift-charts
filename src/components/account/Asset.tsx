@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import { useTheme } from "next-themes";
 import useVibrate from "@/hooks/useVibrate";
 import { useTranslations } from "next-intl";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface PropsInterface {
   _id: string;
@@ -35,7 +35,7 @@ export default function Asset({
   const vibrate = useVibrate();
   const translate = useTranslations("account");
   return (
-    <Link
+    <NoPrefetchLink
       className={`w-full h-16 mb-2 pl-2 pr-3 flex flex-row items-center rounded-3xl justify-between ${
         resolvedTheme === "dark"
           ? "border-b-2 border-secondaryTransparent"
@@ -115,6 +115,6 @@ export default function Asset({
           </div>
         </div>
       </div>
-    </Link>
+    </NoPrefetchLink>
   );
 }

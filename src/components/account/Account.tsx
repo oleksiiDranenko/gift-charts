@@ -14,8 +14,8 @@ import PortfolioChart from "./PortfolioChart";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
-import { Link } from "@/i18n/navigation";
 import OpenInTelegram from "./OpenInTelegram";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -216,7 +216,7 @@ export default function Account() {
           {/* Assets List */}
           <div className='w-full h-auto mt-3 px-2'>
             <div className='w-full mb-5 flex flex-row justify-between items-center'>
-              <Link
+              <NoPrefetchLink
                 className='w-fit flex flex-row items-center text-sm h-8 px-3  box-border bg-secondaryTransparent rounded-3xl gap-x-2'
                 href={"/settings/edit-assets"}
                 onClick={() => vibrate()}>
@@ -232,7 +232,7 @@ export default function Account() {
                   />
                 </svg>
                 {translate("editPortfolio")}
-              </Link>
+              </NoPrefetchLink>
               <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
                 <button
                   className={`text-sm h-8 px-3 box-border ${
@@ -304,12 +304,12 @@ export default function Account() {
               </h1>
               <p className='px-3'>{translate("addGiftsInstruction")}</p>
             </div>
-            <Link
+            <NoPrefetchLink
               href={"/settings/edit-assets"}
               className='w-full h-12 font-bold flex items-center justify-center text-sm text-white bg-primary rounded-3xl'
               onClick={() => vibrate()}>
               {translate("addGiftsToPortfolio")}
-            </Link>
+            </NoPrefetchLink>
           </div>
         </div>
       )}

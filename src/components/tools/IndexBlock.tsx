@@ -1,11 +1,11 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
 import { Gift } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface IndexProps {
   name: string;
@@ -83,7 +83,7 @@ export default function IndexBlock({
   const diffSign = diff > 0 ? "+" : "";
 
   return (
-    <Link
+    <NoPrefetchLink
       href={`/tools/index/${id}`}
       className={`w-full flex flex-row justify-between items-center h-18 p-3 rounded-3xl ${
         resolvedTheme === "dark"
@@ -151,6 +151,6 @@ export default function IndexBlock({
           {countPercentChange(previousIndexValue, indexValue)}%
         </span>
       </div>
-    </Link>
+    </NoPrefetchLink>
   );
 }

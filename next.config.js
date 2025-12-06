@@ -1,27 +1,30 @@
-import createNextIntlPlugin from 'next-intl/plugin'
+import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin()
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    formats: ['image/webp'], 
+    formats: ["image/webp"],
     minimumCacheTTL: 31536000,
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**',
+        protocol: "https",
+        hostname: "**",
       },
     ],
+  },
+  experimental: {
+    prefetchOnHover: false,
   },
   async headers() {
     return [
       {
-        source: '/:all*(.webp|.png|.jpg)',
+        source: "/:all*(.webp|.png|.jpg)",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
@@ -29,4 +32,4 @@ const nextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig)
+export default withNextIntl(nextConfig);

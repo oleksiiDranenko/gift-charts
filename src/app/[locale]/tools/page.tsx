@@ -3,7 +3,6 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import axios from "axios";
-import { Link } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
 import IndexBlock from "@/components/tools/IndexBlock";
 import useVibrate from "@/hooks/useVibrate";
@@ -11,6 +10,7 @@ import { ChevronRight, Gauge } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
 import IndexBlockSkeleton from "@/components/tools/IndexBlockSkeleton";
+import NoPrefetchLink from "@/components/NoPrefetchLink";
 
 export default function Page() {
   const dispatch = useAppDispatch();
@@ -71,7 +71,7 @@ export default function Page() {
         {translate("services")}
       </h1>
       <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
-        <Link
+        <NoPrefetchLink
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'
           href={"/tools/stars"}
           onClick={() => {
@@ -107,14 +107,14 @@ export default function Page() {
 
             <ChevronRight size={20} className='text-primary' />
           </div>
-        </Link>
+        </NoPrefetchLink>
       </div>
       <h1 className='w-full text-xl font-bold mb-5 mt-5 ml-1 flex flex-row gap-x-2'>
         {translate("analyticsTools")}
       </h1>
 
       <div className='lg:grid lg:grid-cols-2 flex flex-col gap-3'>
-        <Link
+        <NoPrefetchLink
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'
           href={"/tools/treemap"}
           onClick={() => {
@@ -146,7 +146,7 @@ export default function Page() {
 
             <ChevronRight size={20} className='text-primary' />
           </div>
-        </Link>
+        </NoPrefetchLink>
 
         {/* <Link
           className='bg-secondaryTransparent rounded-3xl overflow-hidden'

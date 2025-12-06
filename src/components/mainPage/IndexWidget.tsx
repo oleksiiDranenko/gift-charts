@@ -1,6 +1,5 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -8,6 +7,7 @@ import IndexChart from "./IndexChart";
 import Image from "next/image";
 import { Activity, ChartSpline } from "lucide-react";
 import { useTranslations } from "next-intl";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface Props {
   indexId: string;
@@ -62,7 +62,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
     }
   }, [monthData]);
   return (
-    <Link
+    <NoPrefetchLink
       href={`/tools/index/${indexId}`}
       className={`flex flex-col box-border h-40 rounded-3xl bg-secondaryTransparent overflow-hidden ${
         isLoading && "animate-pulse"
@@ -125,6 +125,6 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
           <ChartSpline size={30} />
         </div>
       )}
-    </Link>
+    </NoPrefetchLink>
   );
 }

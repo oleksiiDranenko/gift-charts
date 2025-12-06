@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface Props {
   imageUrl: string;
@@ -21,7 +21,7 @@ export default function ImageBanner({ imageUrl, productUrl }: Props) {
         />
         <div className='absolute inset-0 bg-black/40' />
 
-        <Link
+        <NoPrefetchLink
           href={productUrl}
           className='relative z-10 inline-block w-full md:w-2/3 lg:w-full 2xl:w-4/6 rounded-lg overflow-hidden'>
           <Image
@@ -32,7 +32,7 @@ export default function ImageBanner({ imageUrl, productUrl }: Props) {
             sizes='100vw'
             className='w-full h-auto'
           />{" "}
-        </Link>
+        </NoPrefetchLink>
       </div>
     </div>
   );

@@ -4,10 +4,10 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import useVibrate from "@/hooks/useVibrate";
 import { useTranslations } from "next-intl";
 import ModalBase from "@/utils/ui/ModalBase";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface MarketsModalProps {
   trigger: ReactNode; // Button or any clickable element
@@ -78,7 +78,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
           <h2 className='mb-3 text-lg font-bold'>Off-Chain:</h2>
           <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
             {offchain.map((market) => (
-              <Link
+              <NoPrefetchLink
                 key={market.name}
                 href={market.link}
                 onClick={() => vibrate()}
@@ -92,7 +92,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                   className='rounded-3xl mb-2'
                 />
                 <span className='font-bold'>{market.name}</span>
-              </Link>
+              </NoPrefetchLink>
             ))}
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
           <h2 className='mb-3 text-lg font-bold'>On-Chain:</h2>
           <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
             {onchain.map((market) => (
-              <Link
+              <NoPrefetchLink
                 key={market.name}
                 href={market.link}
                 onClick={() => vibrate()}
@@ -115,7 +115,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                   className='rounded-3xl mb-2'
                 />
                 <span className='font-bold'>{market.name}</span>
-              </Link>
+              </NoPrefetchLink>
             ))}
           </div>
         </div>

@@ -1,11 +1,10 @@
 "use client";
-
-import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import GiftItemChart from "./GiftItemChart";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface PropsInterface {
   item: GiftInterface;
@@ -106,7 +105,7 @@ export default function GiftBlockItem({
   };
 
   return (
-    <Link
+    <NoPrefetchLink
       className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-3xl ${
         background === "color"
           ? `bg-gradient-to-b ${
@@ -193,6 +192,6 @@ export default function GiftBlockItem({
           </span>
         </div>
       </div>
-    </Link>
+    </NoPrefetchLink>
   );
 }

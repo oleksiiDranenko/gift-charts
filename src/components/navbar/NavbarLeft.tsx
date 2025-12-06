@@ -1,12 +1,12 @@
 "use client";
 
-import { Link } from "@/i18n/navigation"; // Use locale-aware Link
 import { useEffect, useState } from "react";
 import { usePathname } from "@/i18n/navigation"; // Use locale-aware usePathname
 import useVibrate from "@/hooks/useVibrate";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 export default function NavbarLeft() {
   const pathname = usePathname(); // Returns pathname without locale (e.g., /tools)
@@ -60,7 +60,7 @@ export default function NavbarLeft() {
           isOpen ? "" : "items-center"
         } left-0 top-0 h-screen ${sidebarWidth} z-40 p-3 `}>
         <div className='space-y-3 flex flex-col items-center'>
-          <Link
+          <NoPrefetchLink
             href='/'
             className={`w-full flex flex-row ${
               isOpen ? "justify-start" : "justify-center"
@@ -79,8 +79,8 @@ export default function NavbarLeft() {
               }`}>
               Gift Charts
             </h1>
-          </Link>
-          <Link
+          </NoPrefetchLink>
+          <NoPrefetchLink
             className={`flex flex-row gap-x-2 items-center w-full justify-start p-3 rounded-3xl box-border hover:bg-secondary ${
               selectedPage === "home"
                 ? "text-white bg-primary hover:!bg-primary"
@@ -100,8 +100,8 @@ export default function NavbarLeft() {
               <path d='m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z' />
             </svg>
             {isOpen && <span>{t("home")}</span>}
-          </Link>
-          <Link
+          </NoPrefetchLink>
+          <NoPrefetchLink
             className={`flex flex-row gap-x-2 items-center w-full justify-start p-3 rounded-3xl box-border hover:bg-secondary ${
               selectedPage === "gifts"
                 ? "text-white bg-primary hover:!bg-primary"
@@ -120,8 +120,8 @@ export default function NavbarLeft() {
               <path d='M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z' />
             </svg>
             {isOpen && <span>{t("gifts")}</span>}
-          </Link>
-          <Link
+          </NoPrefetchLink>
+          <NoPrefetchLink
             className={`flex flex-row gap-x-1 items-center w-full justify-start p-3 rounded-3xl box-border hover:bg-secondary ${
               selectedPage === "tools"
                 ? "text-white bg-primary hover:!bg-primary"
@@ -144,8 +144,8 @@ export default function NavbarLeft() {
               />
             </svg>
             {isOpen && <span>{t("tools")}</span>}
-          </Link>
-          <Link
+          </NoPrefetchLink>
+          <NoPrefetchLink
             className={`flex flex-row gap-x-1 items-center w-full justify-start p-3 rounded-3xl box-border hover:bg-secondary ${
               selectedPage === "account"
                 ? "text-white bg-primary hover:!bg-primary"
@@ -168,8 +168,8 @@ export default function NavbarLeft() {
               />
             </svg>
             {isOpen && <span>{t("profile")}</span>}
-          </Link>
-          <Link
+          </NoPrefetchLink>
+          <NoPrefetchLink
             className={`flex flex-row gap-x-1 items-center w-full justify-start p-3 rounded-3xl box-border hover:bg-secondary ${
               selectedPage === "settings"
                 ? "text-white bg-primary hover:!bg-primary"
@@ -192,7 +192,7 @@ export default function NavbarLeft() {
               />
             </svg>
             {isOpen && <span>{t("settings")}</span>}
-          </Link>
+          </NoPrefetchLink>
         </div>
 
         <div className='flex flex-col items-center pb-5'>
