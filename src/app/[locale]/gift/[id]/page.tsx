@@ -11,14 +11,8 @@ import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
 import GiftInitPriceSection from "@/components/giftInfo/GiftInitPriceSection";
-import { GiftSkeleton } from "@/components/giftInfo/GiftSkeleton";
-
-async function fetchGift(id: string) {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API}/gifts/${id}`
-  );
-  return data;
-}
+import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
 
 async function fetchWeekData(name: string) {
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/weekChart`, {
@@ -37,12 +31,16 @@ async function fetchLifeData(name: string) {
 export default function Page({ params }: any) {
   const { id } = params;
 
-  // Fetch gift
-  const {
-    data: gift,
-    isLoading: isGiftLoading,
-    isError: isGiftError,
-  } = useQuery<GiftInterface, Error>(["gift", id], () => fetchGift(id));
+  const giftsList = useAppSelector((state) => state.giftsList);
+
+  const [gift, setGift] = useState<GiftInterface | null>(null);
+
+  useEffect(() => {
+    if (giftsList) {
+      const selectedGift = giftsList.find((item) => item._id === id) || null;
+      setGift(selectedGift);
+    }
+  }, [giftsList, id]);
 
   // Fetch week data (depends on gift)
   const {
@@ -66,7 +64,8 @@ export default function Page({ params }: any) {
     { enabled: !!gift } // only fetch when gift is loaded
   );
 
-  const loading = isGiftLoading || isWeekLoading || isLifeLoading;
+  const giftLoading = !gift && giftsList !== null;
+  const loading = giftLoading || isWeekLoading || isLifeLoading;
 
   return (
     <div className='w-full lg:w-[98%] pt-[0px] flex justify-center'>

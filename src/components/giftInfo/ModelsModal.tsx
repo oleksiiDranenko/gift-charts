@@ -39,7 +39,10 @@ export default function ModelsModal({
     isLoading,
     isError,
   } = useQuery(["giftModels", giftId], () => fetchGiftModels(giftId), {
-    enabled: !!giftId, // only run if giftId is defined
+    enabled: isOpen && !!giftId,
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   const closeModal = () => {
