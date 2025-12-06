@@ -6,5 +6,5 @@ import { ComponentProps } from "react";
 type NoPrefetchLinkProps = ComponentProps<typeof Link>;
 
 export default function NoPrefetchLink(props: NoPrefetchLinkProps) {
-  return <Link prefetch={false} {...props} />;
+  return <Link {...props} />;
 }
