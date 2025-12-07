@@ -174,7 +174,7 @@ export default function Page() {
             />
           </div>
 
-          <DownloadHeatmapModal
+          {/* <DownloadHeatmapModal
             trigger={
               <button
                 className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
@@ -183,7 +183,6 @@ export default function Page() {
                   chartRef.current?.downloadImage();
                   vibrate();
                 }}>
-                {/* This moving shine bar creates the "alive" flowing effect */}
                 <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
                   <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12' />
                 </span>
@@ -193,7 +192,7 @@ export default function Page() {
                 </span>
               </button>
             }
-          />
+          /> */}
         </div>
       </div>
       {loading ? (
