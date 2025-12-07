@@ -1,33 +1,21 @@
 "use client";
 
 import GiftsList from "@/components/giftsList/GiftsList";
-import { useAppDispatch } from "@/redux/hooks";
-import { setGiftsList } from "@/redux/slices/giftsListSlice";
-import axios from "axios";
-import { useQuery } from "react-query";
-
-const fetchGifts = async () => {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts`);
-  return res.data;
-};
+import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
 
 export default function Page() {
-  const dispatch = useAppDispatch();
+  const giftsList = useAppSelector((state) => state.giftsList);
 
-  const { isLoading } = useQuery({
-    queryKey: ["gifts"],
-    queryFn: fetchGifts,
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    onSuccess: (data) => {
-      dispatch(setGiftsList(data));
-    },
-  });
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (giftsList.length > 0) setLoading(false);
+  }, [giftsList]);
 
   return (
     <div className='w-full lg:w-[98%] pt-[0px] pb-24'>
-      <GiftsList loading={isLoading} />
+      <GiftsList loading={loading} />
     </div>
   );
 }

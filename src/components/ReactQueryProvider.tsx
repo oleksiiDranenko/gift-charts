@@ -15,7 +15,8 @@ export default function ReactQueryProvider({
             refetchOnReconnect: false,
             refetchOnMount: false,
             retry: 1,
-            staleTime: 60 * 1000,
+            staleTime: 30 * 60 * 1000,
+            cacheTime: 30 * 60 * 1000,
           },
         },
       })

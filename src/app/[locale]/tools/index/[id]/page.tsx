@@ -52,7 +52,6 @@ export default function Page({ params }: any) {
   } = useQuery({
     queryKey: ["index", params.id],
     queryFn: () => fetchIndex(params.id),
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const {
@@ -62,7 +61,6 @@ export default function Page({ params }: any) {
   } = useQuery({
     queryKey: ["indexData", params.id],
     queryFn: () => fetchIndexData(params.id),
-    staleTime: 1000 * 60 * 5,
   });
 
   const {
@@ -72,16 +70,7 @@ export default function Page({ params }: any) {
   } = useQuery({
     queryKey: ["indexMonthData", params.id],
     queryFn: () => fetchIndexMonthData(params.id),
-    staleTime: 1000 * 60 * 60, // 1 hour (less frequent updates)
   });
-
-  const goBack = () => {
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.push("/");
-    }
-  };
 
   const isLoading = loadingIndex || loadingData || loadingMonthData;
 
