@@ -174,7 +174,7 @@ export default function Page() {
             />
           </div>
 
-          {/* <DownloadHeatmapModal
+          <DownloadHeatmapModal
             trigger={
               <button
                 className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
@@ -192,7 +192,7 @@ export default function Page() {
                 </span>
               </button>
             }
-          /> */}
+          />
         </div>
       </div>
       {loading ? (
