@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { Transition } from "@headlessui/react";
 import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
-import AddBanner from "./AddBanner";
 
 interface Props {
   children: React.ReactNode;
@@ -29,7 +28,6 @@ export default function PageTransition({ children }: Props) {
       className={`relative w-full flex flex-col ${
         isTelegram ? "pt-[110px]" : "pt-5"
       } lg:pt-5`}>
-      <AddBanner className={isTelegram ? "pt-[110px]" : "pt-5"} />
       <Transition
         key={pathname}
         appear

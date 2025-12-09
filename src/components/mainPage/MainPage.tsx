@@ -20,12 +20,20 @@ import ListSkeleton from "../giftsList/ListSkeleton";
 import VoteBanner from "../tools/vote/VoteBanner";
 import { GiftSorter } from "../filterGifts/GiftSorter";
 import NoPrefetchLink from "../NoPrefetchLink";
+import GiftsList from "../giftsList/GiftsList";
+import AddBanner from "../AddBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
 
   const giftsList = useAppSelector((state) => state.giftsList);
   const user = useAppSelector((state) => state.user);
+
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (giftsList.length > 0) setLoading(false);
+  }, [giftsList]);
 
   const translateMain = useTranslations("mainPage");
 
@@ -83,15 +91,19 @@ export default function MainPage() {
 
   return (
     <div>
-      <SearchBar />
-      <div className='px-3 mb-3'>
+      {/* <SearchBar /> */}
+      <div className='w-full px-3 mb-5'>
         <IndexWidget
           currency={currency}
           indexId='68493d064b37eed02b7ae5af'
           indexName='marketCap'
         />
+
+        {/* <VoteBanner /> */}
       </div>
-      <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
+
+      <GiftsList loading={loading} />
+      {/* <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
             className={`flex ml-3 items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
@@ -178,7 +190,7 @@ export default function MainPage() {
             currency={currency}
           />
         )}
-      </div>
+      </div> */}
       {/* <div className='w-full px-3'>
         <VoteBanner />
       </div> */}
@@ -187,7 +199,7 @@ export default function MainPage() {
         className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
         Donate
       </Link> */}
-      <div className='w-full px-3'>
+      {/* <div className='w-full px-3'>
         <NoPrefetchLink
           href={"/donate"}
           onClick={() => {
@@ -216,7 +228,7 @@ export default function MainPage() {
             <ChevronRight size={20} className='text-primary' />
           </div>
         </NoPrefetchLink>
-      </div>
+      </div> */}
     </div>
   );
 }

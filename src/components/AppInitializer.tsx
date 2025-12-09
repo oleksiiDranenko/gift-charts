@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 import axios from "axios";
 import NavbarLeft from "./navbar/NavbarLeft";
+import AddBanner from "./AddBanner";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function AppInitializer({
   children,
@@ -14,6 +16,18 @@ export default function AppInitializer({
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const dispatch = useDispatch();
+
+  const user = useAppSelector((state) => state.user);
+
+  const [isTelegram, setIsTelegram] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (user.username === "_guest") {
+      setIsTelegram(false);
+    } else {
+      setIsTelegram(true);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -186,7 +200,10 @@ export default function AppInitializer({
       className={`h-screen w-screen pb-5 overflow-scroll scrollbar-hide bg-fixed flex flex-col`}>
       <div className='w-screen flex justify-center flex-grow'>
         <NavbarLeft />
-        {children}
+        <div className='w-full flex flex-col'>
+          <AddBanner className={isTelegram ? "pt-[110px]" : "pt-5"} />
+          {children}
+        </div>
       </div>
 
       <NavbarBottom />

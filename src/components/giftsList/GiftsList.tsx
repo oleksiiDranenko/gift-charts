@@ -27,6 +27,7 @@ export default function GiftsList({ loading }: PropsInterface) {
   const [isMounted, setIsMounted] = useState(false);
   const [selectedList, setSelectedList] = useState<"all" | "saved">("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isTelegram, setIsTelegram] = useState<boolean>(true);
 
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -35,6 +36,14 @@ export default function GiftsList({ loading }: PropsInterface) {
   const vibrate = useVibrate();
 
   const translate = useTranslations("mainPage");
+
+  useEffect(() => {
+    if (user.username === "_guest") {
+      setIsTelegram(false);
+    } else {
+      setIsTelegram(true);
+    }
+  }, [user]);
 
   // Settings from localStorage
   const [settings] = useState(() => {
@@ -180,7 +189,7 @@ export default function GiftsList({ loading }: PropsInterface) {
         <>
           {/* Tabs */}
           <div className='w-full px-3'>
-            <div className='w-80 relative flex mb-5'>
+            <div className='w-80 relative flex mb-3'>
               <button
                 onClick={() => {
                   setSelectedList("all");
@@ -222,7 +231,9 @@ export default function GiftsList({ loading }: PropsInterface) {
           ) && (
             <div
               className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-300 ${
-                isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
+                isSticky
+                  ? `${isTelegram ? "pt-[105px]" : "pt-5"} lg:pt-5`
+                  : "pt-0"
               }`}>
               <div className='flex gap-1 mb-2'>
                 {/* Search */}

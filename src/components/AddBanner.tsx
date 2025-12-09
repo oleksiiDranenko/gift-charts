@@ -10,10 +10,9 @@ export default function AddBanner({ className }: Props) {
   const translateAdd = useTranslations("add");
   return (
     <div>
-      <div className={` w-full h-20 p-3 ${className}`}></div>
       <NoPrefetchLink
         href='https://t.me/giftshitpost'
-        className={`${className} w-full min-h-20 p-3 flex flex-row bg-primary rounded-b-3xl fixed z-50 top-0 left-0 overflow-hidden`}>
+        className={`${className} w-full min-h-20 p-3 flex flex-row bg-primary rounded-b-3xl overflow-hidden`}>
         <div className='w-full h-full relative'>
           <div className='flex flex-col justify-evenly'>
             <div className='flex flex-row'>
