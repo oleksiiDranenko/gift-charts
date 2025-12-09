@@ -147,11 +147,11 @@ export default function Page() {
           <BackButton />
         </div>
 
-        <div className='w-full lg:w-[98%] gap-x-2 flex flex-row items-center justify-start'>
+        <div className='w-full lg:w-[98%] gap-x-2 flex flex-row items-center justify-start bg-secondaryTransparent p-3 rounded-3xl'>
           <div>
             <TreemapControlModal
               trigger={
-                <button className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm bg-secondaryTransparent rounded-3xl'>
+                <button className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm bg-secondary rounded-3xl'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'

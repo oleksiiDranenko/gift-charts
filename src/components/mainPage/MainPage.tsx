@@ -154,7 +154,7 @@ export default function MainPage() {
             )}
           </>
         ) : giftsList.length === 0 ? (
-          <ListSkeleton type={giftType} count={giftType === "line" ? 3 : 8} />
+          <ListSkeleton type={giftType} count={giftType === "line" ? 5 : 12} />
         ) : (
           <ListHandler
             key={chosenFilter}
@@ -162,15 +162,15 @@ export default function MainPage() {
               chosenFilter === "gainers"
                 ? giftType === "line"
                   ? sortedGainers.slice(0, 5)
-                  : sortedGainers.slice(0, 8)
+                  : sortedGainers.slice(0, 12)
                 : chosenFilter === "losers"
                 ? giftType === "line"
                   ? sortedLosers.slice(0, 5)
-                  : sortedLosers.slice(0, 8)
+                  : sortedLosers.slice(0, 12)
                 : chosenFilter === "floor"
                 ? giftType === "line"
                   ? sortedFloor.slice(0, 5)
-                  : sortedFloor.slice(0, 8)
+                  : sortedFloor.slice(0, 12)
                 : []
             }
             type={giftType}
