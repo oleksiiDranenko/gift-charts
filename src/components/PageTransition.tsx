@@ -26,10 +26,10 @@ export default function PageTransition({ children }: Props) {
 
   return (
     <div
-      className={`relative w-full flex flex-row justify-center ${
+      className={`relative w-full flex flex-col ${
         isTelegram ? "pt-[110px]" : "pt-5"
       } lg:pt-5`}>
-      {/* <AddBanner className={isTelegram ? "pt-[110px]" : "pt-5"} /> */}
+      <AddBanner className={isTelegram ? "pt-[110px]" : "pt-5"} />
       <Transition
         key={pathname}
         appear

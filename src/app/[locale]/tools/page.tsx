@@ -240,7 +240,6 @@ export default function Page() {
           </p>
         )}
 
-        {/* ✅ Data rendering */}
         {!isLoading &&
           !isError &&
           indexList &&
