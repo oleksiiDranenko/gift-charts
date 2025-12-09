@@ -189,7 +189,7 @@ export default function GiftsList({ loading }: PropsInterface) {
         <>
           {/* Tabs */}
           <div className='w-full px-3'>
-            <div className='w-80 relative flex mb-3'>
+            {/* <div className='w-80 relative flex mb-3'>
               <button
                 onClick={() => {
                   setSelectedList("all");
@@ -219,7 +219,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                   selectedList === "all" ? "w-1/2" : "translate-x-full w-1/2"
                 }`}
               />
-            </div>
+            </div> */}
           </div>
 
           <div ref={sentinelRef} />

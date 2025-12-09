@@ -19,16 +19,6 @@ export default function AppInitializer({
 
   const user = useAppSelector((state) => state.user);
 
-  const [isTelegram, setIsTelegram] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (user.username === "_guest") {
-      setIsTelegram(false);
-    } else {
-      setIsTelegram(true);
-    }
-  }, [user]);
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("@twa-dev/sdk")
@@ -200,10 +190,7 @@ export default function AppInitializer({
       className={`h-screen w-screen pb-5 overflow-scroll scrollbar-hide bg-fixed flex flex-col`}>
       <div className='w-screen flex justify-center flex-grow'>
         <NavbarLeft />
-        <div className='w-full flex flex-col'>
-          <AddBanner className={isTelegram ? "pt-[110px]" : "pt-5"} />
-          {children}
-        </div>
+        {children}
       </div>
 
       <NavbarBottom />
