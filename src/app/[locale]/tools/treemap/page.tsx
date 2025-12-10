@@ -147,7 +147,7 @@ export default function Page() {
           <BackButton />
         </div>
 
-        <div className='w-full lg:w-[98%] gap-x-2 flex flex-row items-center justify-start bg-secondaryTransparent p-3 rounded-3xl'>
+        <div className='w-full lg:w-[98%] gap-x-2 flex flex-row items-center justify-start'>
           <div>
             <TreemapControlModal
               trigger={
