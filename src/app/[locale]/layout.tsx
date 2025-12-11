@@ -13,6 +13,12 @@ import { routing } from "@/i18n/routing";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import PageTransition from "@/components/PageTransition";
 import { Metadata } from "next";
+import TelegramAnalytics from "@telegram-apps/analytics";
+
+TelegramAnalytics.init({
+  token: process.env.NEXT_PUBLIC_TG_APPS_KEY!,
+  appName: "gift_charts",
+});
 
 export const metadata: Metadata = {
   title: {

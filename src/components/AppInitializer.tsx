@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 import axios from "axios";
 import NavbarLeft from "./navbar/NavbarLeft";
-import TelegramAnalytics from "@telegram-apps/analytics";
 
 export default function AppInitializer({
   children,
@@ -15,13 +14,6 @@ export default function AppInitializer({
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    TelegramAnalytics.init({
-      token: process.env.NEXT_PUBLIC_TG_APPS_KEY!,
-      appName: "gift_charts",
-    });
-  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
