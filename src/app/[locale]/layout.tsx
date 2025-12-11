@@ -5,7 +5,6 @@ import { ThemeProvider } from "next-themes";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Script from "next/script";
-
 import AppInitializer from "../../components/AppInitializer";
 import DefaultUpdate from "../../components/DefaultUpdate";
 import Analytics from "../../components/Analytics";
@@ -13,7 +12,6 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import PageTransition from "@/components/PageTransition";
-import ModalWrapper from "@/components/ModalWrapper";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
