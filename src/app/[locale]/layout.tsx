@@ -13,6 +13,7 @@ import { routing } from "@/i18n/routing";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import PageTransition from "@/components/PageTransition";
 import { Metadata } from "next";
+import TgAnalytics from "@/components/TgAnalytics";
 
 export const metadata: Metadata = {
   title: {
@@ -82,6 +83,7 @@ export default async function RootLayout({
               <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
                 <ReactQueryProvider>
                   <Analytics />
+                  <TgAnalytics />
                   <AppInitializer>
                     <DefaultUpdate>
                       <PageTransition>{children}</PageTransition>
@@ -91,19 +93,6 @@ export default async function RootLayout({
               </ThemeProvider>
             </ReduxProvider>
           </NextIntlClientProvider>
-
-          <Script
-            src='https://tganalytics.xyz/index.js'
-            strategy='afterInteractive'
-            onLoad={() => {
-              if (typeof window !== "undefined" && window.telegramAnalytics) {
-                window.telegramAnalytics.init({
-                  token: process.env.NEXT_PUBLIC_TG_APPS_KEY!,
-                  appName: "gift_charts",
-                });
-              }
-            }}
-          />
         </body>
       </html>
     </>
