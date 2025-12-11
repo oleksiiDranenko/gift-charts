@@ -75,20 +75,6 @@ export default async function RootLayout({
       </Script>
 
       <html lang={locale}>
-        <head>
-          <Script
-            src='https://tganalytics.xyz/index.js'
-            strategy='afterInteractive'
-            onLoad={() => {
-              if (typeof window !== "undefined" && window.telegramAnalytics) {
-                window.telegramAnalytics.init({
-                  token: process.env.NEXT_PUBLIC_TG_APPS_KEY!,
-                  appName: "gift_charts",
-                });
-              }
-            }}
-          />
-        </head>
         <body
           className={`${inter.className} min-h-screen overflow-auto transition-all duration-300 ease-in-out`}>
           <NextIntlClientProvider messages={messages}>
@@ -105,6 +91,19 @@ export default async function RootLayout({
               </ThemeProvider>
             </ReduxProvider>
           </NextIntlClientProvider>
+
+          <Script
+            src='https://tganalytics.xyz/index.js'
+            strategy='afterInteractive'
+            onLoad={() => {
+              if (typeof window !== "undefined" && window.telegramAnalytics) {
+                window.telegramAnalytics.init({
+                  token: process.env.NEXT_PUBLIC_TG_APPS_KEY!,
+                  appName: "gift_charts",
+                });
+              }
+            }}
+          />
         </body>
       </html>
     </>
