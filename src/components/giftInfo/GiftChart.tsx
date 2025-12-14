@@ -30,6 +30,7 @@ import { useTranslations } from "next-intl";
 import useWindowSize from "@/hooks/useWindowSize";
 import { formatAmount, formatPrice } from "@/utils/formatNumber";
 import Watermark from "@/utils/ui/Watermark";
+import AddBanner from "../AddBanner";
 
 interface PropsInterface {
   gift: GiftInterface | null;

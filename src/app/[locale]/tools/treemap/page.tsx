@@ -15,6 +15,7 @@ import TreemapControlModal from "@/components/tools/treemap/EditTreemapModal";
 import { Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import DownloadHeatmapModal from "@/components/tools/treemap/DownloadHeatmapModal";
+import AddBanner from "@/components/AddBanner";
 
 export default function Page() {
   const [settings, setSettings] = useState(() => {

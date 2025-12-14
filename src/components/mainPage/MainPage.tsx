@@ -20,6 +20,7 @@ import ListSkeleton from "../giftsList/ListSkeleton";
 import VoteBanner from "../tools/vote/VoteBanner";
 import { GiftSorter } from "../filterGifts/GiftSorter";
 import NoPrefetchLink from "../NoPrefetchLink";
+import AddBanner from "../AddBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -83,7 +84,10 @@ export default function MainPage() {
 
   return (
     <div>
-      <SearchBar />
+      {/* <SearchBar /> */}
+      <div className='w-full px-3'>
+        <AddBanner className='mb-3' />
+      </div>
       <div className='px-3 mb-3'>
         <IndexWidget
           currency={currency}
@@ -91,6 +95,7 @@ export default function MainPage() {
           indexName='marketCap'
         />
       </div>
+
       <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
         <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
           <button
@@ -134,6 +139,7 @@ export default function MainPage() {
           </button>
         </div>
       </div>
+
       <div className='w-full flex flex-row mb-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
         {chosenFilter === "saved" ? (
           <>
