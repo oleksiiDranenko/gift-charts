@@ -34,7 +34,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
           </div>
 
           {/* Right arrow icon */}
-          <div className='absolute right-3 top-1/2 transform -translate-y-1/2'>
+          <div className='absolute right-1 top-1/2 transform -translate-y-1/2'>
             <Image
               src={
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxb28xJhPJADqj8I_x2w8DmrDgjkWnzS3Fgw&s"
