@@ -76,6 +76,10 @@ export default async function RootLayout({
           gtag('config', 'G-HFQGDBLR7K', { page_path: window.location.pathname });
         `}
       </Script>
+      <Script
+        src='https://telegram.org/js/telegram-web-app.js'
+        strategy='beforeInteractive'
+      />
 
       <html lang={locale}>
         <body
