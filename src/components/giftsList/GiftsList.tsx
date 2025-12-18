@@ -187,7 +187,11 @@ export default function GiftsList({ loading }: PropsInterface) {
           {/* Search + Sort/Filter bar */}
           <div
             className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-300 ${
-              isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
+              isSticky
+                ? user.username === "_guest"
+                  ? "pt-5"
+                  : "pt-[105px] lg:pt-5"
+                : "pt-0"
             }`}>
             <div className='flex gap-1 mb-2'>
               {/* Search */}
