@@ -14,8 +14,6 @@ import ReactQueryProvider from "@/components/ReactQueryProvider";
 import PageTransition from "@/components/PageTransition";
 import { Metadata } from "next";
 import TgAnalytics from "@/components/TgAnalytics";
-import TelegramRedirect from "@/components/TelegramRedirect";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -76,10 +74,6 @@ export default async function RootLayout({
           gtag('config', 'G-HFQGDBLR7K', { page_path: window.location.pathname });
         `}
       </Script>
-      <Script
-        src='https://telegram.org/js/telegram-web-app.js'
-        strategy='beforeInteractive'
-      />
 
       <html lang={locale}>
         <body
@@ -90,9 +84,6 @@ export default async function RootLayout({
                 <ReactQueryProvider>
                   <Analytics />
                   <TgAnalytics />
-                  <Suspense fallback={null}>
-                    <TelegramRedirect />
-                  </Suspense>
                   <AppInitializer>
                     <DefaultUpdate>
                       <PageTransition>{children}</PageTransition>
