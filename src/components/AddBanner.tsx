@@ -21,7 +21,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
       <NoPrefetchLink
         href='https://t.me/tapps_bot/center?startapp=app_giftcharts'
         className={`${className} relative w-full min-h-20 p-3 flex flex-row bg-gradient-to-tr from-primary to-cyan-600 rounded-3xl overflow-hidden`}>
-        <div className='w-full h-full relative'>
+        <div className='w-full h-full flex flex-row justify-between relative'>
           <div className='flex flex-col justify-evenly'>
             <div className='flex flex-row'>
               <h1 className='flex flex-row gap-x-1 items-center text-white font-bold text-lg'>
@@ -34,7 +34,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
           </div>
 
           {/* Right arrow icon */}
-          <div className='absolute right-1 top-1/2 transform -translate-y-1/2'>
+          <div className=''>
             <Image
               src={
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxb28xJhPJADqj8I_x2w8DmrDgjkWnzS3Fgw&s"
@@ -42,7 +42,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
               width={50}
               height={50}
               alt={""}
-              className='rounded-full  mt-1'
+              className='rounded-full'
             />
           </div>
         </div>
