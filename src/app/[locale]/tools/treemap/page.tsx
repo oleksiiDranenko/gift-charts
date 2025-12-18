@@ -145,14 +145,27 @@ export default function Page() {
     <div className='w-full pt-[0px] pb-24 flex flex-col items-center overflow-visible'>
       <div className='w-full flex flex-col items-center px-3 gap-y-3 mb-3'>
         <div className='w-full lg:w-[98%] mb-2 flex flex-row justify-between items-center gap-x-3'>
-          <BackButton />
+          <BackButton
+          // rightElement={
+          //   <div className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm bg-secondaryTransparent rounded-3xl'>
+          //     Share
+          //     <svg
+          //       xmlns='http://www.w3.org/2000/svg'
+          //       viewBox='0 0 16 16'
+          //       fill='currentColor'
+          //       className='size-4'>
+          //       <path d='M12 6a2 2 0 1 0-1.994-1.842L5.323 6.5a2 2 0 1 0 0 3l4.683 2.342a2 2 0 1 0 .67-1.342L5.995 8.158a2.03 2.03 0 0 0 0-.316L10.677 5.5c.353.311.816.5 1.323.5Z' />
+          //     </svg>
+          //   </div>
+          // }
+          />
         </div>
 
         <div className='w-full lg:w-[98%] gap-x-2 flex flex-row items-center justify-start'>
-          <div>
+          <div className='w-full lg:w-fit'>
             <TreemapControlModal
               trigger={
-                <button className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm bg-secondary rounded-3xl'>
+                <button className='lg:w-fit w-full flex flex-row flex-nowrap items-center justify-center gap-x-2 h-8 px-6 text-sm bg-secondary rounded-3xl'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'
@@ -160,7 +173,9 @@ export default function Page() {
                     className='size-6'>
                     <path d='M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z' />
                   </svg>
-                  {translate("editHeatmap")}
+                  <span className='text-nowrap'>
+                    {translate("editHeatmap")}
+                  </span>
                 </button>
               }
               listType={listType}
@@ -178,7 +193,7 @@ export default function Page() {
           <DownloadHeatmapModal
             trigger={
               <button
-                className='group relative overflow-hidden w-fit px-6 h-8 rounded-3xl bg-primary
+                className='group relative overflow-hidden w-full lg:w-fit px-6 h-8 rounded-3xl bg-primary
              flex items-center justify-center gap-x-2 text-white text-sm font-bold'
                 onClick={() => {
                   chartRef.current?.downloadImage();

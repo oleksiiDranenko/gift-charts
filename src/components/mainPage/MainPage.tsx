@@ -84,10 +84,11 @@ export default function MainPage() {
 
   return (
     <div>
-      {/* <SearchBar /> */}
       <div className='w-full px-3'>
         <AddBanner className='mb-3' />
       </div>
+      <SearchBar />
+
       <div className='px-3 mb-3'>
         <IndexWidget
           currency={currency}

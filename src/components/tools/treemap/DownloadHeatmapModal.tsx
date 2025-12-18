@@ -29,7 +29,7 @@ export default function DownloadHeatmapModal({ trigger }: MarketsModalProps) {
   return (
     <>
       {/* Trigger */}
-      <span onClick={openModal} className='inline-block w-fit'>
+      <span onClick={openModal} className='inline-block w-full'>
         {trigger}
       </span>
 

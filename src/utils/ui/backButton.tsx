@@ -1,3 +1,5 @@
+"use client";
+
 import useVibrate from "@/hooks/useVibrate";
 import { ChevronLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
