@@ -1,7 +1,7 @@
 "use client";
 
 import GiftInterface from "@/interfaces/GiftInterface";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import FilterGiftsModal from "../filterGifts/FilterGiftsModal";
@@ -14,6 +14,7 @@ import useVibrate from "@/hooks/useVibrate";
 import ListSkeleton from "./ListSkeleton";
 import { GiftSorter, SortKey } from "../filterGifts/GiftSorter";
 import { useTranslations } from "next-intl";
+import { setFilters } from "@/redux/slices/filterListSlice";
 
 interface PropsInterface {
   loading: boolean;
@@ -23,6 +24,7 @@ export default function GiftsList({ loading }: PropsInterface) {
   const giftsList = useAppSelector((state) => state.giftsList);
   const filters = useAppSelector((state) => state.filters);
   const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const [isMounted, setIsMounted] = useState(false);
   const [selectedList, setSelectedList] = useState<"all" | "saved">("all");
@@ -30,11 +32,14 @@ export default function GiftsList({ loading }: PropsInterface) {
 
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const clearFilterRef = useRef<(() => void) | null>(null);
+  const clearSortRef = useRef<(() => void) | null>(null);
 
   const router = useRouter();
   const vibrate = useVibrate();
 
   const translate = useTranslations("mainPage");
+  const translateGeneral = useTranslations("general");
 
   // Settings from localStorage
   const [settings] = useState(() => {
@@ -180,151 +185,176 @@ export default function GiftsList({ loading }: PropsInterface) {
         <>
           <div ref={sentinelRef} />
           {/* Search + Sort/Filter bar */}
-          {!(
-            selectedList === "saved" &&
-            (!user?.savedList || user.savedList.length === 0)
-          ) && (
-            <div
-              className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-300 ${
-                isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
-              }`}>
-              <div className='flex gap-1 mb-2'>
-                {/* Search */}
-                <div className='relative flex-1'>
-                  <input
-                    type='text'
-                    placeholder={translate("searchPlaceholder")}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
+          <div
+            className={`w-full sticky px-3 top-0 z-30 bg-background transition-all duration-300 ${
+              isSticky ? "pt-[105px] lg:pt-5" : "pt-0"
+            }`}>
+            <div className='flex gap-1 mb-2'>
+              {/* Search */}
+              <div className='relative flex-1'>
+                <input
+                  type='text'
+                  placeholder={translate("searchPlaceholder")}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
+                />
+                <Search
+                  className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText'
+                  size={18}
+                />
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className='absolute right-3 top-1/2 -translate-y-1/2 text-secondaryText hover:text-foreground'>
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+
+              {/* Sort & Filter Buttons */}
+              <div className='flex gap-1'>
+                {/* Sort Button with active dot */}
+                <div className='relative'>
+                  <SortGiftsModal
+                    trigger={
+                      <button
+                        onClick={() => vibrate()}
+                        className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
+                        <svg
+                          className='size-4'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'>
+                          <path
+                            fillRule='evenodd'
+                            d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      </button>
+                    }
                   />
-                  <Search
-                    className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText'
-                    size={18}
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={clearSearch}
-                      className='absolute right-3 top-1/2 -translate-y-1/2 text-secondaryText hover:text-foreground'>
-                      <X size={16} />
-                    </button>
+                  {/* Active dot when sort is not default */}
+                  {filters.sort !== "highFirst" && (
+                    <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
                   )}
                 </div>
 
-                {/* Sort & Filter Buttons */}
-                <div className='flex gap-1'>
-                  {/* Sort Button with active dot */}
-                  <div className='relative'>
-                    <SortGiftsModal
-                      trigger={
-                        <button
-                          onClick={() => vibrate()}
-                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
-                          <svg
-                            className='size-4'
-                            viewBox='0 0 24 24'
-                            fill='currentColor'>
-                            <path
-                              fillRule='evenodd'
-                              d='M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                        </button>
-                      }
-                    />
-                    {/* Active dot when sort is not default */}
-                    {filters.sort !== "highFirst" && (
-                      <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
-                    )}
-                  </div>
-
-                  <div className='relative'>
-                    <FilterGiftsModal
-                      trigger={
-                        <button
-                          onClick={() => vibrate()}
-                          className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
-                          <svg
-                            className='size-4'
-                            viewBox='0 0 24 24'
-                            fill='currentColor'>
-                            <path
-                              fillRule='evenodd'
-                              d='M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                        </button>
-                      }
-                      giftsList={giftsList}
-                    />
-                    {hasActiveFilter && (
-                      <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
-                    )}
-                  </div>
+                <div className='relative'>
+                  <FilterGiftsModal
+                    trigger={
+                      <button
+                        onClick={() => vibrate()}
+                        className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
+                        <svg
+                          className='size-4'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'>
+                          <path
+                            fillRule='evenodd'
+                            d='M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      </button>
+                    }
+                    giftsList={giftsList}
+                  />
+                  {hasActiveFilter && (
+                    <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
+                  )}
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
-          <div className='w-full max-w-[100vw] px-3 mb-3 mt-3 overflow-scroll scrollbar-hide gap-x-1 flex flex-row items-center text-nowrap text-sm text-secondaryText'>
-            <div className='px-3 py-2 bg-primary text-white rounded-3xl flex flex-row items-center gap-x-1'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 20 20'
-                fill='currentColor'
-                className='size-4'>
-                <path
-                  fillRule='evenodd'
-                  d='M14 6a2.5 2.5 0 0 0-4-3 2.5 2.5 0 0 0-4 3H3.25C2.56 6 2 6.56 2 7.25v.5C2 8.44 2.56 9 3.25 9h6V6h1.5v3h6C17.44 9 18 8.44 18 7.75v-.5C18 6.56 17.44 6 16.75 6H14Zm-1-1.5a1 1 0 0 1-1 1h-1v-1a1 1 0 1 1 2 0Zm-6 0a1 1 0 0 0 1 1h1v-1a1 1 0 0 0-2 0Z'
-                  clipRule='evenodd'
-                />
-                <path d='M9.25 10.5H3v4.75A2.75 2.75 0 0 0 5.75 18h3.5v-7.5ZM10.75 18v-7.5H17v4.75A2.75 2.75 0 0 1 14.25 18h-3.5Z' />
-              </svg>
-              All gifts
+          <div className='w-full border-b border-secondaryTransparent pb-3 px-3  mt-2 overflow-scroll scrollbar-hide flex flex-row items-center justify-between text-nowrap text-sm text-secondaryText'>
+            <div className='flex flex-row gap-x-2'>
+              <button
+                onClick={() => {
+                  vibrate();
+                  setSelectedList("all");
+                }}
+                className={` ${
+                  selectedList === "all"
+                    ? "bg-primary text-white"
+                    : "bg-secondaryTransparent"
+                } transition-colors ease-in-out duration-300 px-3 py-2 rounded-3xl flex flex-row items-center gap-x-1`}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 20 20'
+                  fill='currentColor'
+                  className='size-4'>
+                  <path
+                    fillRule='evenodd'
+                    d='M14 6a2.5 2.5 0 0 0-4-3 2.5 2.5 0 0 0-4 3H3.25C2.56 6 2 6.56 2 7.25v.5C2 8.44 2.56 9 3.25 9h6V6h1.5v3h6C17.44 9 18 8.44 18 7.75v-.5C18 6.56 17.44 6 16.75 6H14Zm-1-1.5a1 1 0 0 1-1 1h-1v-1a1 1 0 1 1 2 0Zm-6 0a1 1 0 0 0 1 1h1v-1a1 1 0 0 0-2 0Z'
+                    clipRule='evenodd'
+                  />
+                  <path d='M9.25 10.5H3v4.75A2.75 2.75 0 0 0 5.75 18h3.5v-7.5ZM10.75 18v-7.5H17v4.75A2.75 2.75 0 0 1 14.25 18h-3.5Z' />
+                </svg>
+                {translate("allGifts")}
+              </button>
+              <button
+                onClick={() => {
+                  vibrate();
+                  setSelectedList("saved");
+                }}
+                className={` ${
+                  selectedList === "saved"
+                    ? "bg-primary text-white"
+                    : "bg-secondaryTransparent"
+                } transition-colors ease-in-out duration-300 px-3 py-2 rounded-3xl flex flex-row items-center gap-x-1`}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 20 20'
+                  fill='currentColor'
+                  className='size-4'>
+                  <path
+                    fillRule='evenodd'
+                    d='M10 2c-1.716 0-3.408.106-5.07.31C3.806 2.45 3 3.414 3 4.517V17.25a.75.75 0 0 0 1.075.676L10 15.082l5.925 2.844A.75.75 0 0 0 17 17.25V4.517c0-1.103-.806-2.068-1.93-2.207A41.403 41.403 0 0 0 10 2Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+                {translate("saved")}
+              </button>
             </div>
-            <div className='px-3 py-2 bg-secondaryTransparent rounded-3xl flex flex-row items-center gap-x-1'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 20 20'
-                fill='currentColor'
-                className='size-4'>
-                <path
-                  fillRule='evenodd'
-                  d='M10 2c-1.716 0-3.408.106-5.07.31C3.806 2.45 3 3.414 3 4.517V17.25a.75.75 0 0 0 1.075.676L10 15.082l5.925 2.844A.75.75 0 0 0 17 17.25V4.517c0-1.103-.806-2.068-1.93-2.207A41.403 41.403 0 0 0 10 2Z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              Saved
-            </div>
-            <div className='px-3 py-2 bg-secondaryTransparent rounded-3xl flex flex-row items-center gap-x-1'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 20 20'
-                fill='currentColor'
-                className='size-4'>
-                <path
-                  fillRule='evenodd'
-                  d='M5.22 14.78a.75.75 0 0 0 1.06 0l7.22-7.22v5.69a.75.75 0 0 0 1.5 0v-7.5a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0 0 1.5h5.69l-7.22 7.22a.75.75 0 0 0 0 1.06Z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              Gainers
-            </div>
-            <div className='px-3 py-2 bg-secondaryTransparent rounded-3xl flex flex-row items-center gap-x-1'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 20 20'
-                fill='currentColor'
-                className='size-4 rotate-90'>
-                <path
-                  fillRule='evenodd'
-                  d='M5.22 14.78a.75.75 0 0 0 1.06 0l7.22-7.22v5.69a.75.75 0 0 0 1.5 0v-7.5a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0 0 1.5h5.69l-7.22 7.22a.75.75 0 0 0 0 1.06Z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              Loosers
+            <div className='flex flex-row'>
+              <span className='text-sm flex flex-row items-center gap-x-1'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 16 16'
+                  fill='currentColor'
+                  className='size-4'>
+                  <path
+                    fillRule='evenodd'
+                    d='M3.75 3.5c0 .563.186 1.082.5 1.5H2a1 1 0 0 0 0 2h5.25V5h1.5v2H14a1 1 0 1 0 0-2h-2.25A2.5 2.5 0 0 0 8 1.714 2.5 2.5 0 0 0 3.75 3.5Zm3.499 0v-.038A1 1 0 1 0 6.25 4.5h1l-.001-1Zm2.5-1a1 1 0 0 0-1 .962l.001.038v1h.999a1 1 0 0 0 0-2Z'
+                    clipRule='evenodd'
+                  />
+                  <path d='M7.25 8.5H2V12a2 2 0 0 0 2 2h3.25V8.5ZM8.75 14V8.5H14V12a2 2 0 0 1-2 2H8.75Z' />
+                </svg>
+                {selectedList === "saved"
+                  ? user.savedList.length
+                  : displayedGifts.length}{" "}
+              </span>
+
+              <button
+                className={`py-2 px-3 bg-secondaryTransparent rounded-3xl ml-3 ${
+                  hasActiveFilter || filters.sort !== "highFirst"
+                    ? "text-primary"
+                    : "text-secondaryText opacity-50"
+                }`}
+                onClick={() => {
+                  dispatch(
+                    setFilters({
+                      ...filters,
+                      sort: "highFirst",
+                      chosenGifts: [],
+                    })
+                  );
+                  clearSearch();
+                }}>
+                {translateGeneral("clear")}
+              </button>
             </div>
           </div>
 

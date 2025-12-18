@@ -126,8 +126,7 @@ export default function GiftBlockItem({
           src={`/gifts/${item.image}.webp`}
           width={70}
           height={70}
-          className={`p-1 ${borderColor ? "border" : ""}'`}
-          style={borderColor ? { borderColor: `${borderColor}80` } : {}}
+          className={`p-1`}
         />
         {item.preSale && (
           <span className='text-[8px] text-cyan-500 font-bold ml-2 absolute top-0 right-0'>

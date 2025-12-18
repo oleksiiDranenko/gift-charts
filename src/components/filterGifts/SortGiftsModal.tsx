@@ -1,6 +1,5 @@
 "use client";
 
-import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
