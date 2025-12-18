@@ -50,23 +50,13 @@
   --foreground: #ffffff;
 } */
 
-/* html.dark {
+html.dark {
   --primary: #3b82f6;
   --secondary: #2c3039;
   --secondary-transparent: #1c1f24;
   --secondary-light: #27272a33;
   --secondary-text: #9ca3af;
   --background: #0f1216;
-  --foreground: #ffffff;
-} */
-
-html.dark {
-  --primary: #3b82f6;
-  --secondary: #23262d;
-  --secondary-transparent: #101114;
-  --secondary-light: #27272a33;
-  --secondary-text: #9ca3af;
-  --background: #000000;
   --foreground: #ffffff;
 }
 
