@@ -24,7 +24,7 @@ export default function FilterGiftItem({
       className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start rounded-3xl
         transition-all active:scale-[95%] duration-200 ease-in-out 
         ${selected ? "bg-secondaryTransparent" : "bg-transparent"} ${
-        resolvedTheme === "dark" ? "border-b-2 border-secondaryTransparent" : ""
+        resolvedTheme === "dark" ? "border-b border-secondaryTransparent" : ""
       }
       `}
       key={gift._id}

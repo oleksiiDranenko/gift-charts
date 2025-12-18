@@ -8,7 +8,7 @@ export default function GiftItemSkeleton({
   return type === "line" ? (
     // LINE TYPE — horizontal card
     <>
-      <div className='w-full lg:hidden h-16 lg:h-14 mb-2 flex flex-row items-center justify-between border-b-2 border-secondaryTransparent rounded-3xl animate-pulse'>
+      <div className='w-full lg:hidden h-16 lg:h-14 mb-2 flex flex-row items-center justify-between border-b border-secondaryTransparent rounded-3xl animate-pulse'>
         <div className='flex flex-row items-center'>
           <div className='w-[50px] h-[50px] p-[6px] bg-secondaryTransparent animate-pulse mr-3 ml-2 rounded-3xl'></div>
           <div className='flex flex-col gap-y-[2px]'>

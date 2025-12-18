@@ -178,43 +178,7 @@ export default function GiftsList({ loading }: PropsInterface) {
     <div className='w-full flex flex-col items-center'>
       {giftsList ? (
         <>
-          {/* Tabs */}
-          <div className='w-full px-3'>
-            <div className='w-80 relative flex mb-5'>
-              <button
-                onClick={() => {
-                  setSelectedList("all");
-                  vibrate();
-                }}
-                className={`w-1/2 pb-3 text-center transition ${
-                  selectedList === "all"
-                    ? "text-foreground font-bold"
-                    : "text-secondaryText"
-                }`}>
-                {translate("allGifts")}
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedList("saved");
-                  vibrate();
-                }}
-                className={`w-1/2 pb-3 text-center transition ${
-                  selectedList === "saved"
-                    ? "text-foreground font-bold"
-                    : "text-secondaryText"
-                }`}>
-                {translate("saved")}
-              </button>
-              <span
-                className={`absolute bottom-0 left-0 h-[2px] bg-foreground rounded-full transition-all duration-300 ${
-                  selectedList === "all" ? "w-1/2" : "translate-x-full w-1/2"
-                }`}
-              />
-            </div>
-          </div>
-
           <div ref={sentinelRef} />
-
           {/* Search + Sort/Filter bar */}
           {!(
             selectedList === "saved" &&
@@ -303,6 +267,66 @@ export default function GiftsList({ loading }: PropsInterface) {
               </div>
             </div>
           )}
+
+          <div className='w-full max-w-[100vw] px-3 mb-3 mt-3 overflow-scroll scrollbar-hide gap-x-1 flex flex-row items-center text-nowrap text-sm text-secondaryText'>
+            <div className='px-3 py-2 bg-primary text-white rounded-3xl flex flex-row items-center gap-x-1'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M14 6a2.5 2.5 0 0 0-4-3 2.5 2.5 0 0 0-4 3H3.25C2.56 6 2 6.56 2 7.25v.5C2 8.44 2.56 9 3.25 9h6V6h1.5v3h6C17.44 9 18 8.44 18 7.75v-.5C18 6.56 17.44 6 16.75 6H14Zm-1-1.5a1 1 0 0 1-1 1h-1v-1a1 1 0 1 1 2 0Zm-6 0a1 1 0 0 0 1 1h1v-1a1 1 0 0 0-2 0Z'
+                  clipRule='evenodd'
+                />
+                <path d='M9.25 10.5H3v4.75A2.75 2.75 0 0 0 5.75 18h3.5v-7.5ZM10.75 18v-7.5H17v4.75A2.75 2.75 0 0 1 14.25 18h-3.5Z' />
+              </svg>
+              All gifts
+            </div>
+            <div className='px-3 py-2 bg-secondaryTransparent rounded-3xl flex flex-row items-center gap-x-1'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M10 2c-1.716 0-3.408.106-5.07.31C3.806 2.45 3 3.414 3 4.517V17.25a.75.75 0 0 0 1.075.676L10 15.082l5.925 2.844A.75.75 0 0 0 17 17.25V4.517c0-1.103-.806-2.068-1.93-2.207A41.403 41.403 0 0 0 10 2Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Saved
+            </div>
+            <div className='px-3 py-2 bg-secondaryTransparent rounded-3xl flex flex-row items-center gap-x-1'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M5.22 14.78a.75.75 0 0 0 1.06 0l7.22-7.22v5.69a.75.75 0 0 0 1.5 0v-7.5a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0 0 1.5h5.69l-7.22 7.22a.75.75 0 0 0 0 1.06Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Gainers
+            </div>
+            <div className='px-3 py-2 bg-secondaryTransparent rounded-3xl flex flex-row items-center gap-x-1'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+                className='size-4 rotate-90'>
+                <path
+                  fillRule='evenodd'
+                  d='M5.22 14.78a.75.75 0 0 0 1.06 0l7.22-7.22v5.69a.75.75 0 0 0 1.5 0v-7.5a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0 0 1.5h5.69l-7.22 7.22a.75.75 0 0 0 0 1.06Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Loosers
+            </div>
+          </div>
 
           {/* List Content */}
           <div className='w-full pt-2'>

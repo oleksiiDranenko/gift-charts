@@ -18,7 +18,7 @@ export default function GiftInitPriceSection({
   const translate = useTranslations("giftInfo");
   return (
     <div className='w-full lg:w-1/2 flex flex-col gap-x-3 rounded-3xl p-3 bg-secondaryTransparent'>
-      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
         <span className='w-full text-secondaryText'>
           {translate("initStarsPrice")}
         </span>
@@ -38,7 +38,7 @@ export default function GiftInitPriceSection({
         </div>
       </div>
 
-      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
         <span className='w-full text-secondaryText'>
           {translate("initUsdtPrice")}
         </span>
@@ -54,7 +54,7 @@ export default function GiftInitPriceSection({
         </div>
       </div>
 
-      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
         <span className='w-full text-secondaryText'>
           {translate("initStarsMarketcap")}
         </span>

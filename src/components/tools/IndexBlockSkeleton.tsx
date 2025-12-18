@@ -2,7 +2,7 @@ import React from "react";
 
 export default function IndexBlockSkeleton() {
   return (
-    <div className='w-full h-[68px] p-3 flex flex-row justify-between items-center rounded-3xl animate-pulse border-b-2 border-secondaryTransparent'>
+    <div className='w-full h-[68px] p-3 flex flex-row justify-between items-center rounded-3xl animate-pulse border-b border-secondaryTransparent'>
       <div className='h-full flex flex-row items-center gap-x-2'>
         <svg
           xmlns='http://www.w3.org/2000/svg'

@@ -94,7 +94,7 @@ export default function EditAssetItem({
         <div
           className={`w-full h-16 mb-3 flex flex-row rounded-3xl px-2 transition-all active:scale-[95%] duration-200 ease-in-out ${
             resolvedTheme === "dark"
-              ? "border-b-2 border-secondaryTransparent"
+              ? "border-b border-secondaryTransparent"
               : "bg-secondaryTransparent"
           } `}
           onClick={() => setIsOpen(true)}>

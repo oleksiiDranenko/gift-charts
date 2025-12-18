@@ -87,7 +87,7 @@ export default function IndexBlock({
       href={`/tools/index/${id}`}
       className={`w-full flex flex-row justify-between items-center h-18 p-3 rounded-3xl ${
         resolvedTheme === "dark"
-          ? "border-b-2 border-secondaryTransparent"
+          ? "border-b border-secondaryTransparent"
           : "bg-secondaryTransparent"
       }`}
       onClick={() => vibrate()}>

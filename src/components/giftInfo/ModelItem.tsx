@@ -25,7 +25,7 @@ export default function ModelItem({ model }: Props) {
       key={model._id}
       className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-3xl ${
         resolvedTheme === "dark"
-          ? "border-b-2 border-secondaryTransparent"
+          ? "border-b border-secondaryTransparent"
           : "bg-secondaryTransparent"
       }`}>
       <div className='h-full flex flex-row items-center justify-start'>

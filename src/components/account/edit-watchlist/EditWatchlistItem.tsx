@@ -36,7 +36,7 @@ export default function EditWatchlistItem({
     <div
       className={`w-full h-16 mb-3 flex flex-row justify-between items-center rounded-3xl pr-3 transition-all active:scale-[95%] duration-200 ease-in-out ${
         resolvedTheme === "dark"
-          ? "border-b-2 border-secondaryTransparent"
+          ? "border-b border-secondaryTransparent"
           : "bg-secondaryTransparent"
       }`}>
       <div className='flex flex-row items-center'>

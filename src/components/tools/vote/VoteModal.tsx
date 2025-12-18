@@ -165,7 +165,7 @@ export default function VoteModal({
 
                 <div className='w-full flex items-center justify-center'>
                   <button
-                    className='text-secondaryText border-b-2 border-secondary'
+                    className='text-secondaryText border-b border-secondary'
                     onClick={() => {
                       closeModal();
                       vibrate();

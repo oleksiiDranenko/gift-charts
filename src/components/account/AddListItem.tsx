@@ -30,7 +30,7 @@ export default function AddAssetItem({
     <div
       className={`lg:hidden w-full h-16 mb-2 pr-3 flex flex-row items-center justify-between rounded-3xl transition-all active:scale-[95%] duration-200 ease-in-out  ${
         resolvedTheme === "dark"
-          ? "border-b-2 border-secondaryTransparent"
+          ? "border-b border-secondaryTransparent"
           : "bg-secondaryTransparent"
       }`}
       onClick={() => {

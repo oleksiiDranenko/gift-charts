@@ -303,7 +303,7 @@ export default function GiftChart({
           )}
 
           <div className='w-full mt-5 flex flex-col gap-y-2 font-normal bg-secondaryTransparent p-3 rounded-3xl'>
-            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
               <span className='w-full text-secondaryText'>
                 {translateInfo("marketCap")}
               </span>
@@ -332,13 +332,13 @@ export default function GiftChart({
                 )}
               </span>
             </div>
-            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
               <span className='w-full text-secondaryText'>
                 {translateInfo("upgradedSupply")}
               </span>
               <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
             </div>
-            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
               <span className='w-full text-secondaryText'>
                 {translateInfo("supply")}
               </span>
@@ -467,7 +467,7 @@ export default function GiftChart({
                 </span>
               </div>
               <div className='w-full mt-5 flex flex-col gap-y-2'>
-                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("marketCap")}
                   </span>
@@ -496,13 +496,13 @@ export default function GiftChart({
                     )}
                   </span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("upgradedSupply")}
                   </span>
                   <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("supply")}
                   </span>

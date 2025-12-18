@@ -38,7 +38,7 @@ export default function Asset({
     <NoPrefetchLink
       className={`w-full h-16 mb-2 pl-2 pr-3 flex flex-row items-center rounded-3xl justify-between ${
         resolvedTheme === "dark"
-          ? "border-b-2 border-secondaryTransparent"
+          ? "border-b border-secondaryTransparent"
           : "bg-secondaryTransparent"
       }`}
       href={`/gift/${_id}`}
