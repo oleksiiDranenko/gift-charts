@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Asset from "./Asset";
 import ReactLoading from "react-loading";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -14,8 +14,8 @@ import PortfolioChart from "./PortfolioChart";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
-import NoPrefetchLink from "../NoPrefetchLink";
 import OpenInTelegram from "./OpenInTelegram";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -31,6 +31,19 @@ interface AssetDisplayInterface {
 }
 
 export default function Account() {
+  const [settings, setSettings] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("settings");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          console.warn("Failed to parse settings from localStorage");
+        }
+      }
+    }
+    return { currency: "ton", giftType: "line", giftBackground: "none" };
+  });
   const vibrate = useVibrate();
   const translate = useTranslations("account");
 
@@ -38,26 +51,44 @@ export default function Account() {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const [currency, setCurrency] = useState<"ton" | "usd">("ton");
+  const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
   const [loading, setLoading] = useState<boolean>(false);
   const [assetsArray, setAssetsArray] = useState<AssetDisplayInterface[]>([]);
   const [portfolioValue, setPortfolioValue] = useState<number>(0);
   const [portfolioValuePrev, setPortfolioValuePrev] = useState<number>(0);
 
-  const { data: chartData = [], isLoading: chartLoading } = useQuery<
-    GiftWeekDataInterface[]
-  >({
-    queryKey: ["userChart", user.telegramId],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/users/get-user-chart/${user.telegramId}`
-      );
-      return data;
-    },
-    enabled:
-      !!user.telegramId && giftsList.length > 0 && user.assets.length > 0,
-    refetchOnWindowFocus: false,
-  });
+  const giftsMap = useMemo(() => {
+    const map = new Map<string, GiftInterface>();
+
+    for (const gift of giftsList) {
+      map.set(gift._id, gift);
+    }
+
+    return map;
+  }, [giftsList]);
+
+  useEffect(() => {
+    if (!user.assets?.length || giftsList.length === 0) return;
+
+    let current = 0;
+    let previous = 0;
+
+    for (const { giftId, amount } of user.assets) {
+      const gift = giftsMap.get(giftId);
+      if (!gift) continue;
+
+      if (currency === "ton") {
+        current += gift.priceTon * amount;
+        previous += (gift.tonPrice24hAgo ?? gift.priceTon) * amount;
+      } else {
+        current += gift.priceUsd * amount;
+        previous += (gift.usdPrice24hAgo ?? gift.priceUsd) * amount;
+      }
+    }
+
+    setPortfolioValue(current);
+    setPortfolioValuePrev(previous);
+  }, [user.assets, giftsMap, currency]);
 
   // 🟣 2. Fetch gifts if not in Redux store
   useEffect(() => {
@@ -78,22 +109,6 @@ export default function Account() {
     };
     fetchGifts();
   }, [dispatch, giftsList]);
-
-  // 🟢 3. Calculate portfolio change based on cached chart data
-  useEffect(() => {
-    if (chartData.length > 1) {
-      const first = chartData[0];
-      const last = chartData[chartData.length - 1];
-
-      if (currency === "ton") {
-        setPortfolioValue(last.priceTon);
-        setPortfolioValuePrev(first.priceTon);
-      } else {
-        setPortfolioValue(last.priceUsd);
-        setPortfolioValuePrev(first.priceUsd);
-      }
-    }
-  }, [chartData, currency]);
 
   // 🟣 4. Build assets list
   useEffect(() => {
@@ -149,7 +164,7 @@ export default function Account() {
         <>
           <div className=''>
             <div className='w-full flex flex-row justify-center items-center relative px-3'>
-              <div className='flex flex-col items-center justify-center'>
+              <div className='w-full h-44 flex flex-col items-center justify-center'>
                 <div className='flex flex-row items-center'>
                   {currency === "ton" ? (
                     <Image
@@ -169,15 +184,9 @@ export default function Account() {
                     />
                   )}
 
-                  {chartLoading ? (
-                    <h1 className='text-3xl font-bold text-secondaryText animate-pulse'>
-                      ...
-                    </h1>
-                  ) : (
-                    <h1 className='text-4xl font-bold'>
-                      {portfolioValue.toFixed(2)}
-                    </h1>
-                  )}
+                  <h1 className='text-4xl font-bold '>
+                    {portfolioValue.toFixed(2)}
+                  </h1>
                 </div>
                 <div className='flex flex-row items-center gap-x-2 mt-2 bg-secondaryTransparent px-3 py-1 rounded-3xl'>
                   <span className='text-sm text-secondaryText'>
@@ -202,8 +211,6 @@ export default function Account() {
                 </div>
               </div>
             </div>
-
-            <PortfolioChart data={chartData} currency={currency} />
           </div>
 
           {/* Assets List */}
