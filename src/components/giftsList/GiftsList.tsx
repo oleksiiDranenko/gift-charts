@@ -183,6 +183,39 @@ export default function GiftsList({ loading }: PropsInterface) {
     <div className='w-full flex flex-col items-center'>
       {giftsList ? (
         <>
+          <div className='w-full px-3'>
+            <div className='lg:w-80 w-full relative flex mb-4'>
+              <button
+                onClick={() => {
+                  setSelectedList("all");
+                  vibrate();
+                }}
+                className={`w-1/2 pb-2 text-center transition ${
+                  selectedList === "all"
+                    ? "text-foreground font-bold"
+                    : "text-secondaryText"
+                }`}>
+                {translate("allGifts")}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedList("saved");
+                  vibrate();
+                }}
+                className={`w-1/2 pb-2 text-center transition ${
+                  selectedList === "saved"
+                    ? "text-foreground font-bold"
+                    : "text-secondaryText"
+                }`}>
+                {translate("saved")}
+              </button>
+              <span
+                className={`absolute bottom-0 left-0 h-[2px] bg-foreground rounded-full transition-all duration-300 ${
+                  selectedList === "all" ? "w-1/2" : "translate-x-full w-1/2"
+                }`}
+              />
+            </div>
+          </div>
           <div ref={sentinelRef} />
           {/* Search + Sort/Filter bar */}
           <div
@@ -193,7 +226,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                   : "pt-[105px] lg:pt-5"
                 : "pt-0"
             }`}>
-            <div className='flex gap-1 mb-2'>
+            <div className='flex gap-1 mb-3'>
               {/* Search */}
               <div className='relative flex-1'>
                 <input
@@ -218,7 +251,6 @@ export default function GiftsList({ loading }: PropsInterface) {
 
               {/* Sort & Filter Buttons */}
               <div className='flex gap-1'>
-                {/* Sort Button with active dot */}
                 <div className='relative'>
                   <SortGiftsModal
                     trigger={
@@ -226,7 +258,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                         onClick={() => vibrate()}
                         className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
                         <svg
-                          className='size-4'
+                          className='size-5'
                           viewBox='0 0 24 24'
                           fill='currentColor'>
                           <path
@@ -238,7 +270,6 @@ export default function GiftsList({ loading }: PropsInterface) {
                       </button>
                     }
                   />
-                  {/* Active dot when sort is not default */}
                   {filters.sort !== "highFirst" && (
                     <div className='absolute top-[7px] right-[7px] w-2 h-2 bg-primary rounded-full' />
                   )}
@@ -272,56 +303,64 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           </div>
 
-          {/* <div className='w-full border-b border-secondaryTransparent pb-3 px-3  mt-2 overflow-scroll scrollbar-hide flex flex-row items-center justify-between text-nowrap text-sm text-secondaryText'>
-            <div className='flex flex-row gap-x-2'>
-              <button
-                onClick={() => {
-                  vibrate();
-                  setSelectedList("all");
-                }}
-                className={` ${
-                  selectedList === "all"
-                    ? "bg-primary text-white"
-                    : "bg-secondaryTransparent"
-                } transition-colors ease-in-out duration-300 px-3 py-2 rounded-3xl flex flex-row items-center gap-x-1`}>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 20 20'
-                  fill='currentColor'
-                  className='size-4'>
-                  <path
-                    fillRule='evenodd'
-                    d='M14 6a2.5 2.5 0 0 0-4-3 2.5 2.5 0 0 0-4 3H3.25C2.56 6 2 6.56 2 7.25v.5C2 8.44 2.56 9 3.25 9h6V6h1.5v3h6C17.44 9 18 8.44 18 7.75v-.5C18 6.56 17.44 6 16.75 6H14Zm-1-1.5a1 1 0 0 1-1 1h-1v-1a1 1 0 1 1 2 0Zm-6 0a1 1 0 0 0 1 1h1v-1a1 1 0 0 0-2 0Z'
-                    clipRule='evenodd'
-                  />
-                  <path d='M9.25 10.5H3v4.75A2.75 2.75 0 0 0 5.75 18h3.5v-7.5ZM10.75 18v-7.5H17v4.75A2.75 2.75 0 0 1 14.25 18h-3.5Z' />
-                </svg>
-                {translate("allGifts")}
-              </button>
-              <button
-                onClick={() => {
-                  vibrate();
-                  setSelectedList("saved");
-                }}
-                className={` ${
-                  selectedList === "saved"
-                    ? "bg-primary text-white"
-                    : "bg-secondaryTransparent"
-                } transition-colors ease-in-out duration-300 px-3 py-2 rounded-3xl flex flex-row items-center gap-x-1`}>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 20 20'
-                  fill='currentColor'
-                  className='size-4'>
-                  <path
-                    fillRule='evenodd'
-                    d='M10 2c-1.716 0-3.408.106-5.07.31C3.806 2.45 3 3.414 3 4.517V17.25a.75.75 0 0 0 1.075.676L10 15.082l5.925 2.844A.75.75 0 0 0 17 17.25V4.517c0-1.103-.806-2.068-1.93-2.207A41.403 41.403 0 0 0 10 2Z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-                {translate("saved")}
-              </button>
-            </div>
+          {/* <div className='w-full pb-3 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap text-sm gap-x-1'>
+            <button className='flex flex-row items-center justify-center gap-x-1 px-3 h-10 bg-primary rounded-3xl'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Hot
+            </button>
+            <button className='flex flex-row items-center justify-center gap-x-1 px-3 h-10 bg-secondaryTransparent text-secondaryText rounded-3xl'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Gainers
+            </button>
+            <button className='flex flex-row items-center justify-center gap-x-1 px-3 h-10 bg-secondaryTransparent text-secondaryText rounded-3xl'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Loosers
+            </button>
+            <button className='flex flex-row items-center justify-center gap-x-1 px-3 h-10 bg-secondaryTransparent text-secondaryText rounded-3xl'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-4'>
+                <path
+                  fillRule='evenodd'
+                  d='M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 0 0-.584.859 6.753 6.753 0 0 0 6.138 5.6 6.73 6.73 0 0 0 2.743 1.346A6.707 6.707 0 0 1 9.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 0 0-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 0 1-1.112-3.173 6.73 6.73 0 0 0 2.743-1.347 6.753 6.753 0 0 0 6.139-5.6.75.75 0 0 0-.585-.858 47.077 47.077 0 0 0-3.07-.543V2.62a.75.75 0 0 0-.658-.744 49.22 49.22 0 0 0-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 0 0-.657.744Zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 0 1 3.16 5.337a45.6 45.6 0 0 1 2.006-.343v.256Zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 0 1-2.863 3.207 6.72 6.72 0 0 0 .857-3.294Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              Floor
+            </button>
+
             <div className='flex flex-row'>
               <button
                 className={`py-2 px-3 bg-secondaryTransparent rounded-3xl ml-3 ${
