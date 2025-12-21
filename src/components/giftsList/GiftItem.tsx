@@ -152,7 +152,7 @@ export default function GiftItem({
               }`
             : resolvedTheme === "dark"
             ? "border-b border-secondaryTransparent"
-            : "bg-secondaryTransparent"
+            : "bg-secondaryTransparent rounded-3xl"
         }`}
         key={item._id}
         href={`/gift/${item._id}`}

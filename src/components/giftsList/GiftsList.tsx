@@ -184,7 +184,7 @@ export default function GiftsList({ loading }: PropsInterface) {
       {giftsList ? (
         <>
           <div className='w-full px-3'>
-            <div className='lg:w-80 w-full relative flex mb-4'>
+            <div className='lg:w-80 w-full relative flex mb-5'>
               <button
                 onClick={() => {
                   setSelectedList("all");
@@ -226,7 +226,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                   : "pt-[105px] lg:pt-5"
                 : "pt-0"
             }`}>
-            <div className='flex gap-1 mb-3'>
+            <div className='flex gap-1 mb-1'>
               {/* Search */}
               <div className='relative flex-1'>
                 <input
