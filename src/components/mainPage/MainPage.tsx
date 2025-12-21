@@ -39,12 +39,6 @@ export default function MainPage() {
         <AddBanner className='mb-5' />
       </div>
 
-      <NoPrefetchLink
-        href={"https://telegra.ph/Test-12-21-410"}
-        className='text-primary'>
-        open article
-      </NoPrefetchLink>
-
       <GiftsList loading={loading} />
     </div>
   );

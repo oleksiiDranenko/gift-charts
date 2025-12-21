@@ -121,7 +121,7 @@ export default function LineChart({
     );
 
     const topColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 1)" : "rgba(239, 68, 68, 1)";
+      percentChange >= 0 ? "rgba(34, 197, 94, 0.7)" : "rgba(239, 68, 68, 0.7)";
     const bottomColor =
       percentChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
 
@@ -363,8 +363,8 @@ export default function LineChart({
             : "Price",
         data: values,
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        borderWidth: 1,
-        tension: 0,
+        borderWidth: 1.3,
+        tension: 0.4,
         pointRadius: 0,
         pointHoverRadius: 6,
         fill: true,
