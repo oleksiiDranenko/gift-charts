@@ -141,7 +141,7 @@ export default function GiftItem({
   return (
     <>
       <NoPrefetchLink
-        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between rounded-3xl ${
+        className={`lg:hidden w-full h-16 mb-2 flex flex-row items-center justify-between ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0
@@ -247,17 +247,55 @@ export default function GiftItem({
             </div>
 
             <span
-              className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+              className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
                 percentChange !== "no data"
                   ? percentChange >= 0
-                    ? "text-green-500 bg-green-500"
+                    ? "text-green-500"
                     : percentChange < 0
-                    ? "text-red-500 bg-red-500"
+                    ? "text-red-500"
                     : "text-slate-500"
                   : "text-slate-500"
               }`}>
-              {percentChange !== "no data" && percentChange >= 0 && "+"}
-              {percentChange}
+              {percentChange !== "no data" && percentChange >= 0 ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-3 mr-1'>
+                  <path
+                    fillRule='evenodd'
+                    d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-3 mr-1'>
+                  <path
+                    fillRule='evenodd'
+                    d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              )}
+              {percentChange === "no data" ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-4'>
+                  <path
+                    fillRule='evenodd'
+                    d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              ) : (
+                Math.abs(percentChange)
+              )}
               {percentChange !== "no data" ? "%" : null}
             </span>
           </div>
