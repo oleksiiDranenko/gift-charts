@@ -32,6 +32,7 @@ interface TreemapChartProps {
   timeGap: "24h" | "1w" | "1m";
   currency: "ton" | "usd";
   type: HeatmapType;
+  customHeight?: boolean;
 }
 
 const preloadImages = (data: GiftData[]) => {
@@ -96,7 +97,7 @@ const transformGiftData = (
       size = Math.pow(Math.abs(percentChange) + 1, 1.5) * 2;
     } else {
       marketCap = now * (gift.upgradedSupply ?? 0);
-      size = Math.max(marketCap / 1000, 1);
+      size = marketCap;
     }
 
     return {
@@ -327,7 +328,7 @@ const imagePlugin = (
 });
 
 const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
-  ({ data, chartType, timeGap, currency, type }, ref) => {
+  ({ data, chartType, timeGap, currency, type, customHeight }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const chartRef = useRef<any>(null);
     const vibrate = useVibrate();
@@ -464,9 +465,9 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
     }, [data, chartType, timeGap, currency, type]);
 
     return (
-      <div className='w-full lg:w-[98%] min-h-[600px] px-3'>
-        <div className=' min-h-[600px]'>
-          <canvas ref={canvasRef} />
+      <div className={`w-full lg:w-[98%] ${!customHeight && "min-h-[600px]"}`}>
+        <div className={` ${!customHeight && "min-h-[600px]"} w-full`}>
+          <canvas ref={canvasRef} className='w-full' />
         </div>
       </div>
     );

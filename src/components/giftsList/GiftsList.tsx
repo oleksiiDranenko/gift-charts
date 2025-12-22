@@ -183,7 +183,7 @@ export default function GiftsList({ loading }: PropsInterface) {
     <div className='w-full flex flex-col items-center'>
       {giftsList ? (
         <>
-          <div className='w-full px-3'>
+          {/* <div className='w-full px-3'>
             <div className='lg:w-80 w-full relative flex mb-5'>
               <button
                 onClick={() => {
@@ -215,7 +215,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                 }`}
               />
             </div>
-          </div>
+          </div> */}
           <div ref={sentinelRef} />
           {/* Search + Sort/Filter bar */}
           <div

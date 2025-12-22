@@ -220,14 +220,16 @@ export default function Page() {
           className='mt-5'
         />
       ) : (
-        <TreemapChart
-          ref={chartRef}
-          data={list.slice(0, amount)}
-          chartType={listType}
-          timeGap={timeGap}
-          currency={currency}
-          type='default'
-        />
+        <div className='w-full px-3'>
+          <TreemapChart
+            ref={chartRef}
+            data={list.slice(0, amount)}
+            chartType={listType}
+            timeGap={timeGap}
+            currency={currency}
+            type='default'
+          />
+        </div>
       )}
     </div>
   );

@@ -36,7 +36,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API}/indexMonthData/${indexId}`
       );
-      return data.slice(-336);
+      return data.slice(-48);
     },
   });
 
@@ -64,18 +64,26 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
   return (
     <NoPrefetchLink
       href={`/tools/index/${indexId}`}
-      className={`flex flex-col box-border h-40 rounded-3xl bg-secondaryTransparent overflow-hidden ${
+      className={`w-full flex flex-col box-border h-44 rounded-3xl bg-secondaryTransparent overflow-hidden ${
         isLoading && "animate-pulse"
       }`}>
       {!isLoading ? (
         <>
-          <div className='p-3 flex flex-row justify-between items-center'>
+          <div className='p-5 flex flex-row justify-between items-center'>
             <div className='flex flex-col'>
-              <div className='flex flex-row items-center gap-x-2'>
+              <div className='flex flex-row items-center gap-x-1'>
                 <span className='text-sm'>{translate(indexName)}</span>
-                <span className='text-xs text-secondaryText'>
-                  {translate("7days")}
-                </span>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-4 text-primary'>
+                  <path
+                    fillRule='evenodd'
+                    d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
               </div>
               <span className='flex flex-row items-center mt-1 text-xl font-bold'>
                 {currency === "ton" ? (
@@ -109,12 +117,35 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
             </div>
 
             <span
-              className={`py-[2px] px-2 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
-                percentChange < 0
-                  ? "text-red-500 bg-red-500"
-                  : "text-green-500 bg-green-500"
+              className={`flex flex-row items-center text-sm font-normal py-1 px-3 rounded-3xl bg-green-500/10 ${
+                percentChange < 0 ? "text-red-500" : "text-green-500"
               }`}>
-              {percentChange >= 0 && "+"} {percentChange}%
+              {percentChange >= 0 ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-3 mr-1'>
+                  <path
+                    fillRule='evenodd'
+                    d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-3 mr-1'>
+                  <path
+                    fillRule='evenodd'
+                    d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              )}{" "}
+              {percentChange}%
             </span>
           </div>
 

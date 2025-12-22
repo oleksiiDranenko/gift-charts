@@ -14,7 +14,7 @@ export default function NavbarBottom() {
   const user = useAppSelector((state) => state.user);
 
   const [selectedPage, setSelectedPage] = useState<
-    "home" | "gifts" | "tools" | "account" | "settings" | null
+    "home" | "research" | "tools" | "account" | "settings" | null
   >(null);
 
   useEffect(() => {
@@ -24,8 +24,8 @@ export default function NavbarBottom() {
       setSelectedPage("account");
     } else if (pathname.startsWith("/settings")) {
       setSelectedPage("settings");
-    } else if (pathname.startsWith("/gifts-list")) {
-      setSelectedPage("gifts");
+    } else if (pathname.startsWith("/research")) {
+      setSelectedPage("research");
     } else {
       setSelectedPage("home");
     }
@@ -63,11 +63,11 @@ export default function NavbarBottom() {
         </NoPrefetchLink>
         <NoPrefetchLink
           className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
-            selectedPage === "gifts" ? "text-primary" : "text-secondaryText"
+            selectedPage === "research" ? "text-primary" : "text-secondaryText"
           }`}
-          href='/gifts-list'
+          href='/research'
           onClick={() => {
-            setSelectedPage("gifts");
+            setSelectedPage("research");
             vibrate();
           }}>
           {/* <Gift size={24} /> */}
@@ -76,10 +76,14 @@ export default function NavbarBottom() {
             viewBox='0 0 24 24'
             fill='currentColor'
             className='size-7'>
-            <path d='M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z' />
+            <path
+              fillRule='evenodd'
+              d='M2.25 2.25a.75.75 0 0 0 0 1.5H3v10.5a3 3 0 0 0 3 3h1.21l-1.172 3.513a.75.75 0 0 0 1.424.474l.329-.987h8.418l.33.987a.75.75 0 0 0 1.422-.474l-1.17-3.513H18a3 3 0 0 0 3-3V3.75h.75a.75.75 0 0 0 0-1.5H2.25Zm6.54 15h6.42l.5 1.5H8.29l.5-1.5Zm8.085-8.995a.75.75 0 1 0-.75-1.299 12.81 12.81 0 0 0-3.558 3.05L11.03 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l2.47-2.47 1.617 1.618a.75.75 0 0 0 1.146-.102 11.312 11.312 0 0 1 3.612-3.321Z'
+              clipRule='evenodd'
+            />
           </svg>
 
-          <span className='text-xs'>{t("gifts")}</span>
+          <span className='text-xs'>{t("research")}</span>
         </NoPrefetchLink>
         <NoPrefetchLink
           className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
@@ -98,7 +102,7 @@ export default function NavbarBottom() {
             className='size-7'>
             <path
               fillRule='evenodd'
-              d='M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm4.5 7.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0v-2.25a.75.75 0 0 1 .75-.75Zm3.75-1.5a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 0 1.5 0V12Zm2.25-3a.75.75 0 0 1 .75.75v6.75a.75.75 0 0 1-1.5 0V9.75A.75.75 0 0 1 13.5 9Zm3.75-1.5a.75.75 0 0 0-1.5 0v9a.75.75 0 0 0 1.5 0v-9Z'
+              d='M10.5 3.798v5.02a3 3 0 0 1-.879 2.121l-2.377 2.377a9.845 9.845 0 0 1 5.091 1.013 8.315 8.315 0 0 0 5.713.636l.285-.071-3.954-3.955a3 3 0 0 1-.879-2.121v-5.02a23.614 23.614 0 0 0-3 0Zm4.5.138a.75.75 0 0 0 .093-1.495A24.837 24.837 0 0 0 12 2.25a25.048 25.048 0 0 0-3.093.191A.75.75 0 0 0 9 3.936v4.882a1.5 1.5 0 0 1-.44 1.06l-6.293 6.294c-1.62 1.621-.903 4.475 1.471 4.88 2.686.46 5.447.698 8.262.698 2.816 0 5.576-.239 8.262-.697 2.373-.406 3.092-3.26 1.47-4.881L15.44 9.879A1.5 1.5 0 0 1 15 8.818V3.936Z'
               clipRule='evenodd'
             />
           </svg>

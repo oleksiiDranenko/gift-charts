@@ -141,7 +141,7 @@ export default function GiftItem({
   return (
     <>
       <NoPrefetchLink
-        className={`lg:hidden w-full h-[76px] flex flex-row items-center justify-between ${
+        className={`lg:hidden w-full h-[72px] flex flex-row items-center justify-between ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0
@@ -151,7 +151,7 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "border-b border-secondaryTransparent"
+            ? ""
             : "bg-secondaryTransparent rounded-3xl mb-2"
         }`}
         key={item._id}
@@ -163,9 +163,9 @@ export default function GiftItem({
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
               resolvedTheme === "dark"
-                ? "bg-gradient-to-b from-secondaryLight to-secondary"
+                ? "bg-gradient-to-b from-secondaryLight to-secondary border border-secondary"
                 : "bg-background"
             }`}
           />
@@ -214,7 +214,7 @@ export default function GiftItem({
         </div>
 
         <div className=' flex flex-row items-center justify-end'>
-          <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
+          <div className='w-fit text-sm flex flex-col items-end justify-center mr-3'>
             <div className='flex flex-row items-center'>
               {currency === "ton" ? (
                 <Image
@@ -233,7 +233,7 @@ export default function GiftItem({
                   className='mr-1'
                 />
               )}
-              <span className='text-base font-bold'>
+              <span className='text-base'>
                 {currency === "ton" && displayValue === "price"
                   ? formatPrice(item.priceTon)
                   : currency === "ton" && displayValue === "marketCap"
@@ -247,7 +247,7 @@ export default function GiftItem({
             </div>
 
             <span
-              className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
+              className={`py-[2px] px-1 rounded-3xl flex flex-row items-center text-sm font-normal ${
                 percentChange !== "no data"
                   ? percentChange >= 0
                     ? "text-green-500"
@@ -301,6 +301,10 @@ export default function GiftItem({
           </div>
         </div>
       </NoPrefetchLink>
+
+      <div className='w-full pl-16 pr-3 lg:hidden'>
+        <div className='border-b border-secondaryTransparent'></div>
+      </div>
 
       {/* wide screen */}
       {/* wide screen */}

@@ -82,7 +82,7 @@ export default function IndexChart({ data, currency }: IndexChartProps) {
         data: values,
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
         borderWidth: 1.5,
-        tension: 0.2,
+        tension: 0.3,
         pointRadius: 0,
         fill: true,
         backgroundColor:
