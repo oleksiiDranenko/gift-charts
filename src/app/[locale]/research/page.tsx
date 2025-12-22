@@ -34,11 +34,21 @@ export default function Page() {
       let sortedList = rawList.filter(
         (gift) => gift.preSale === false || gift.preSale === undefined
       );
+
       setSortedList(
-        sortedList.sort(
-          (a, b) =>
-            b.priceTon * b.upgradedSupply - a.priceTon * a.upgradedSupply
-        )
+        sortedList.sort((a, b) => {
+          const aChange = a.tonPrice24hAgo
+            ? Math.abs(
+                ((a.priceTon - a.tonPrice24hAgo) / a.tonPrice24hAgo) * 100
+              )
+            : 0;
+          const bChange = b.tonPrice24hAgo
+            ? Math.abs(
+                ((b.priceTon - b.tonPrice24hAgo) / b.tonPrice24hAgo) * 100
+              )
+            : 0;
+          return bChange - aChange;
+        })
       );
     }
   }, giftsList);
@@ -77,20 +87,7 @@ export default function Page() {
               </svg>
               Last 24 hours
             </h1>
-            <div className='w-full rounded-3xl overflow-hidden bg-secondaryTransparent'>
-              <NoPrefetchLink
-                className='w-full flex justify-center'
-                href={"/tools/treemap"}>
-                <TreemapChart
-                  data={sortedList.slice(0, 50)}
-                  chartType={"marketCap"}
-                  timeGap={"24h"}
-                  currency={currency}
-                  type={"default"}
-                  customHeight={true}
-                />
-              </NoPrefetchLink>
-            </div>
+
             <IndexWidget
               currency={currency}
               indexId='68493d064b37eed02b7ae5af'
@@ -166,6 +163,21 @@ export default function Page() {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className='w-full rounded-3xl overflow-hidden bg-secondaryTransparent'>
+            <NoPrefetchLink
+              className='w-full flex justify-center'
+              href={"/tools/treemap"}>
+              <TreemapChart
+                data={sortedList.slice(0, 50)}
+                chartType={"change"}
+                timeGap={"24h"}
+                currency={currency}
+                type={"default"}
+                customHeight={true}
+              />
+            </NoPrefetchLink>
           </div>
         </div>
       )}

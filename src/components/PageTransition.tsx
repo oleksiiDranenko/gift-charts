@@ -29,7 +29,7 @@ export default function PageTransition({ children }: Props) {
     <div
       className={`relative w-full flex flex-row justify-center ${
         isTelegram ? "pt-[110px]" : "pt-5"
-      }`}>
+      } lg:pt-5`}>
       {/* <AddBanner className={isTelegram ? "pt-[110px]" : "pt-5"} /> */}
       <Transition
         key={pathname}
@@ -41,19 +41,7 @@ export default function PageTransition({ children }: Props) {
         leave='transition-all ease-in duration-300'
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-0'>
-        <div className='w-full flex flex-row justify-center'>
-          {isTelegram && (
-            <div className='w-full h-[110px] fixed z-50 bg-background top-0 flex justify-center items-center'>
-              <Image
-                src={"/images/logo.webp"}
-                alt={"Gift Charts"}
-                width={30}
-                height={30}
-              />
-            </div>
-          )}
-          {children}
-        </div>
+        <div className='w-full flex flex-row justify-center'>{children}</div>
       </Transition>
     </div>
   );
