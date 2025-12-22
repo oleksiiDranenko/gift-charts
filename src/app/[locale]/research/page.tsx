@@ -8,7 +8,7 @@ import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function page() {
+export default function Page() {
   const giftsList = useAppSelector((state) => state.giftsList);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(true);
