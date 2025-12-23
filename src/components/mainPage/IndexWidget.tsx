@@ -117,8 +117,10 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
             </div>
 
             <span
-              className={`flex flex-row items-center text-sm font-normal py-1 px-3 rounded-3xl bg-green-500/10 ${
-                percentChange < 0 ? "text-red-500" : "text-green-500"
+              className={`flex flex-row items-center text-sm font-normal py-1 px-3 rounded-3xl ${
+                percentChange < 0
+                  ? "text-red-500 bg-red-500/10"
+                  : "text-green-500 bg-green-500/10"
               }`}>
               {percentChange >= 0 ? (
                 <svg
