@@ -247,7 +247,7 @@ export default function GiftItem({
             </div>
 
             <span
-              className={`py-[2px] px-1 rounded-3xl flex flex-row items-center text-sm font-normal ${
+              className={`py-[2px] px-1 rounded-3xl flex flex-row items-center text-xs font-normal ${
                 percentChange !== "no data"
                   ? percentChange >= 0
                     ? "text-green-500"
