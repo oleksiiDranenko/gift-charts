@@ -141,7 +141,7 @@ export default function GiftItem({
   return (
     <>
       <NoPrefetchLink
-        className={`lg:hidden w-full h-[72px] flex flex-row items-center justify-between ${
+        className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0
@@ -157,15 +157,18 @@ export default function GiftItem({
         key={item._id}
         href={`/gift/${item._id}`}
         onClick={() => vibrate()}>
-        <div className=' flex flex-row items-center'>
+        <div className='flex flex-row items-center'>
+          <span className='w-10 box-border text-center text-secondaryText text-sm'>
+            {number + 1}
+          </span>
           <Image
             alt={item.name}
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-full ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
               resolvedTheme === "dark"
-                ? "bg-gradient-to-b from-secondaryLight to-secondary"
+                ? "bg-gradient-to-b from-background to-secondaryTransparent"
                 : "bg-background"
             }`}
           />
@@ -213,7 +216,7 @@ export default function GiftItem({
           </div>
         </div>
 
-        <div className=' flex flex-row items-center justify-end'>
+        <div className='flex flex-row items-center justify-end'>
           <div className='w-fit text-sm flex flex-col items-end justify-center mr-3'>
             <div className='flex flex-row items-center'>
               {currency === "ton" ? (
@@ -233,7 +236,7 @@ export default function GiftItem({
                   className='mr-1'
                 />
               )}
-              <span className='text-base'>
+              <span className='text-base font-bold'>
                 {currency === "ton" && displayValue === "price"
                   ? formatPrice(item.priceTon)
                   : currency === "ton" && displayValue === "marketCap"
@@ -302,9 +305,11 @@ export default function GiftItem({
         </div>
       </NoPrefetchLink>
 
-      <div className='w-full pl-16 pr-3 lg:hidden'>
-        <div className='border-b border-secondaryTransparent'></div>
-      </div>
+      {resolvedTheme === "dark" && (
+        <div className='w-full pl-[100px] pr-3 lg:hidden'>
+          <div className='border-b-2 border-secondaryLight'></div>
+        </div>
+      )}
 
       {/* wide screen */}
       {/* wide screen */}

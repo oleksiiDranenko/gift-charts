@@ -1,3 +1,5 @@
+import { useTheme } from "next-themes";
+
 export default function GiftItemSkeleton({
   type,
   index,
@@ -5,24 +7,64 @@ export default function GiftItemSkeleton({
   type?: "line" | "block";
   index: number;
 }) {
+  const { resolvedTheme } = useTheme();
   return type === "line" ? (
     // LINE TYPE — horizontal card
     <>
-      <div className='w-full lg:hidden h-16 lg:h-14 mb-2 flex flex-row items-center justify-between border-b border-secondaryTransparent rounded-3xl animate-pulse'>
+      <div
+        className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
+          resolvedTheme === "dark"
+            ? ""
+            : "bg-secondaryTransparent rounded-3xl mb-2"
+        }`}>
         <div className='flex flex-row items-center'>
-          <div className='w-[50px] h-[50px] p-[6px] bg-secondaryTransparent animate-pulse mr-3 ml-2 rounded-3xl'></div>
+          <span className='w-10 box-border text-center text-secondaryText text-sm'>
+            {index + 1}
+          </span>
+          <div
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
+              resolvedTheme === "dark"
+                ? "bg-gradient-to-b from-background to-secondaryTransparent"
+                : "bg-background"
+            }`}></div>
           <div className='flex flex-col gap-y-[2px]'>
-            <div className='h-4 w-20 rounded-3xl bg-secondaryTransparent animate-pulse'></div>
-            <div className='h-4 w-10 rounded-3xl bg-secondaryTransparent animate-pulse'></div>
+            <div
+              className={`h-4 w-20 rounded-3xl ${
+                resolvedTheme === "dark"
+                  ? "bg-secondaryTransparent"
+                  : "bg-background"
+              } animate-pulse`}></div>
+            <div
+              className={`h-4 w-10 rounded-3xl ${
+                resolvedTheme === "dark"
+                  ? "bg-secondaryTransparent"
+                  : "bg-background"
+              } animate-pulse`}></div>
           </div>
         </div>
         <div className='flex flex-row items-center justify-end'>
           <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
-            <div className='h-4 w-10 rounded-3xl bg-secondaryTransparent animate-pulse'></div>
-            <div className='h-4 w-12 rounded-3xl bg-secondaryTransparent animate-pulse'></div>
+            <div
+              className={`h-4 w-20 rounded-3xl ${
+                resolvedTheme === "dark"
+                  ? "bg-secondaryTransparent"
+                  : "bg-background"
+              } animate-pulse`}></div>
+            <div
+              className={`h-4 w-10 rounded-3xl ${
+                resolvedTheme === "dark"
+                  ? "bg-secondaryTransparent"
+                  : "bg-background"
+              } animate-pulse`}></div>
           </div>
         </div>
       </div>
+
+      {resolvedTheme === "dark" && (
+        <div className='w-full pl-[100px] pr-3 lg:hidden'>
+          <div className='border-b-2 border-secondaryLight'></div>
+        </div>
+      )}
 
       {/* LARGE SCREEN */}
       {/* LARGE SCREEN */}

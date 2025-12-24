@@ -20,7 +20,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
     <div className='w-full relative'>
       <NoPrefetchLink
         href='https://t.me/tapps_bot/center?startapp=app_giftcharts'
-        className={`${className} relative w-full min-h-20 p-3 flex flex-row bg-gradient-to-tr from-primary to-cyan-600 rounded-3xl overflow-hidden`}>
+        className={`${className} relative w-full min-h-16 p-3 flex flex-row bg-gradient-to-tr from-primary to-cyan-600 rounded-3xl overflow-hidden`}>
         <div className='w-full h-full flex flex-row justify-between relative'>
           <div className='flex flex-col justify-evenly'>
             <div className='flex flex-row'>

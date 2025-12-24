@@ -109,14 +109,14 @@ export default function GiftChart({
                 src={`/gifts/${gift?.image}.webp`}
                 width={55}
                 height={55}
-                className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-3xl ${
+                className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
                   resolvedTheme === "dark"
-                    ? "bg-gradient-to-b from-secondaryLight to-secondary border border-secondary"
+                    ? "bg-gradient-to-b from-background to-secondaryTransparent"
                     : "bg-background"
-                } `}
+                }`}
               />
               <h1 className='flex flex-col'>
-                <span className='text-xl font-bold'>{gift?.name}</span>
+                <span className='text-lg font-bold'>{gift?.name}</span>
                 <span className='text-secondaryText text-sm flex justify-start'>
                   {gift ? formatNumber(gift?.upgradedSupply) : null}
                 </span>

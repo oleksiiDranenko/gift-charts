@@ -80,7 +80,7 @@ export default function ModalBase({
               leaveFrom='translate-y-0 opacity-100'
               leaveTo='translate-y-full opacity-0'>
               <Dialog.Panel
-                className={`flex flex-col w-full lg:w-[98%] h-5/6 p-3 rounded-t-3xl bg-background`}>
+                className={`flex flex-col w-full lg:w-1/2 h-5/6 p-3 rounded-t-3xl bg-background`}>
                 {children}
               </Dialog.Panel>
             </Transition.Child>

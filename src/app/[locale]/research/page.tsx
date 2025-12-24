@@ -77,21 +77,6 @@ export default function Page() {
       ) : (
         <div className='w-full p-3 gap-y-3 flex flex-col justify-center'>
           <div className='w-full flex flex-col gap-3'>
-            <div className='w-full rounded-3xl overflow-hidden bg-secondaryTransparent'>
-              <NoPrefetchLink
-                className='w-full flex justify-center'
-                href={"/tools/treemap"}>
-                <TreemapChart
-                  data={sortedList.slice(0, 50)}
-                  chartType={"change"}
-                  timeGap={"24h"}
-                  currency={currency}
-                  type={"default"}
-                  customHeight={true}
-                />
-              </NoPrefetchLink>
-            </div>
-
             <IndexWidget
               currency={currency}
               indexId='68493d064b37eed02b7ae5af'
@@ -166,6 +151,21 @@ export default function Page() {
                   2.4%
                 </div>
               </div>
+            </div>
+
+            <div className='w-full rounded-3xl overflow-hidden bg-secondaryTransparent'>
+              <NoPrefetchLink
+                className='w-full flex justify-center'
+                href={"/tools/treemap"}>
+                <TreemapChart
+                  data={sortedList.slice(0, 50)}
+                  chartType={"change"}
+                  timeGap={"24h"}
+                  currency={currency}
+                  type={"default"}
+                  customHeight={true}
+                />
+              </NoPrefetchLink>
             </div>
           </div>
         </div>

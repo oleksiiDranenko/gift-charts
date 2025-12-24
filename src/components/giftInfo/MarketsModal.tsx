@@ -57,75 +57,77 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
   return (
     <>
       <ModalBase trigger={trigger} open={isOpen} onOpenChange={setIsOpen}>
-        <div className='w-full h-10 pb-3 flex justify-end items-center'>
-          <button
-            onClick={closeModal}
-            className='w-fit p-2 bg-secondaryTransparent rounded-full'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='currentColor'
-              className='size-5'>
-              <path
-                fillRule='evenodd'
-                d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
-                clipRule='evenodd'
-              />
-            </svg>
-          </button>
-        </div>
-        <div className='w-full px-3'>
-          <h2 className='mb-3 text-lg font-bold'>Off-Chain:</h2>
-          <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
-            {offchain.map((market) => (
-              <NoPrefetchLink
-                key={market.name}
-                href={market.link}
-                onClick={() => vibrate()}
-                target='_blank'
-                className=' p-3 rounded-3xl bg-secondaryTransparent flex flex-col items-center'>
-                <Image
-                  src={market.img}
-                  alt={""}
-                  width={70}
-                  height={70}
-                  className='rounded-3xl mb-2'
+        <div className='w-full h-full relative'>
+          <div className='w-full h-10 pb-3 flex justify-end items-center'>
+            <button
+              onClick={closeModal}
+              className='w-fit p-2 bg-secondaryTransparent rounded-full'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-5'>
+                <path
+                  fillRule='evenodd'
+                  d='M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z'
+                  clipRule='evenodd'
                 />
-                <span className='font-bold'>{market.name}</span>
-              </NoPrefetchLink>
-            ))}
+              </svg>
+            </button>
           </div>
-        </div>
-
-        <div className='w-full mt-6 px-3'>
-          <h2 className='mb-3 text-lg font-bold'>On-Chain:</h2>
-          <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
-            {onchain.map((market) => (
-              <NoPrefetchLink
-                key={market.name}
-                href={market.link}
-                onClick={() => vibrate()}
-                target='_blank'
-                className=' p-3 rounded-3xl bg-secondaryTransparent flex flex-col items-center'>
-                <Image
-                  src={market.img}
-                  alt={""}
-                  width={70}
-                  height={70}
-                  className='rounded-3xl mb-2'
-                />
-                <span className='font-bold'>{market.name}</span>
-              </NoPrefetchLink>
-            ))}
+          <div className='w-full px-3'>
+            <h2 className='mb-3 text-lg font-bold'>Off-Chain:</h2>
+            <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
+              {offchain.map((market) => (
+                <NoPrefetchLink
+                  key={market.name}
+                  href={market.link}
+                  onClick={() => vibrate()}
+                  target='_blank'
+                  className=' p-3 rounded-3xl bg-secondaryTransparent flex flex-col items-center'>
+                  <Image
+                    src={market.img}
+                    alt={""}
+                    width={70}
+                    height={70}
+                    className='rounded-3xl mb-2'
+                  />
+                  <span className='font-bold'>{market.name}</span>
+                </NoPrefetchLink>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className='w-full fixed left-0 bottom-14 px-3'>
-          <button
-            onClick={closeModal}
-            className='w-full h-12 bg-primary text-white font-bold rounded-3xl'>
-            Close
-          </button>
+          <div className='w-full mt-6 px-3'>
+            <h2 className='mb-3 text-lg font-bold'>On-Chain:</h2>
+            <div className='w-full flex flex-row gap-x-3 justify-start items-center'>
+              {onchain.map((market) => (
+                <NoPrefetchLink
+                  key={market.name}
+                  href={market.link}
+                  onClick={() => vibrate()}
+                  target='_blank'
+                  className=' p-3 rounded-3xl bg-secondaryTransparent flex flex-col items-center'>
+                  <Image
+                    src={market.img}
+                    alt={""}
+                    width={70}
+                    height={70}
+                    className='rounded-3xl mb-2'
+                  />
+                  <span className='font-bold'>{market.name}</span>
+                </NoPrefetchLink>
+              ))}
+            </div>
+          </div>
+
+          <div className='w-full fixed left-0 bottom-14 flex justify-center px-3'>
+            <button
+              onClick={closeModal}
+              className='w-full lg:w-1/2 h-12 bg-primary text-white font-bold rounded-3xl'>
+              Close
+            </button>
+          </div>
         </div>
       </ModalBase>
     </>
