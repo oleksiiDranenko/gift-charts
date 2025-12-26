@@ -32,8 +32,6 @@ export default function GiftsList({ loading }: PropsInterface) {
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [isSearchFocus, setIsSearchFocus] = useState<boolean>(false);
-
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const clearFilterRef = useRef<(() => void) | null>(null);
@@ -240,14 +238,8 @@ export default function GiftsList({ loading }: PropsInterface) {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => {
                     vibrate();
-                    setIsSearchFocus(true);
                   }}
-                  onBlur={() => {
-                    vibrate();
-                    setIsSearchFocus(false);
-                    setSearchQuery("");
-                  }}
-                  className='transition-all ease-in-out duration-300 w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
+                  className='w-full h-12 pl-10 bg-secondaryTransparent text-foreground px-3 rounded-3xl focus:outline-none focus:bg-secondaryTransparent  placeholder:text-secondaryText placeholder:text-sm '
                 />
                 <Search
                   className='absolute left-3 top-1/2 -translate-y-1/2 text-secondaryText'
@@ -263,10 +255,7 @@ export default function GiftsList({ loading }: PropsInterface) {
               </div>
 
               {/* Sort & Filter Buttons */}
-              <div
-                className={`flex gap-1 ${
-                  isSearchFocus ? "hidden" : ""
-                } transition-all duration-300 ease-in-out`}>
+              <div className='flex gap-1'>
                 <div className='relative'>
                   <SortGiftsModal
                     trigger={
@@ -319,18 +308,17 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           </div>
 
-          <div
-            className={`w-full mt-2 mb-1 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap text-xs gap-x-1 ${
-              isSearchFocus ? "hidden" : "block"
-            } ease-in-out transition-all duration-300`}>
+          <div className='w-full mt-2 mb-1 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap text-xs gap-x-1'>
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "all"
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white font-bold"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
+                vibrate();
                 setSelectedList("all");
+                dispatch(setFilters({ ...filters, sort: "highFirst" }));
               }}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -344,11 +332,19 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "saved"
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white font-bold"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
+                vibrate();
                 setSelectedList("saved");
+                dispatch(
+                  setFilters({
+                    ...filters,
+                    sort: "highFirst",
+                    chosenGifts: user.savedList,
+                  })
+                );
               }}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -366,11 +362,19 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "gainers"
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white font-bold"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
+                vibrate();
                 setSelectedList("gainers");
+                dispatch(
+                  setFilters({
+                    ...filters,
+                    sort:
+                      currency === "ton" ? "changeGrowth" : "changeGrowthTon",
+                  })
+                );
               }}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -388,11 +392,21 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "loosers"
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white font-bold"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
+                vibrate();
                 setSelectedList("loosers");
+                dispatch(
+                  setFilters({
+                    ...filters,
+                    sort:
+                      currency === "ton"
+                        ? "changeGrowthAsc"
+                        : "changeGrowthTonAsc",
+                  })
+                );
               }}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
