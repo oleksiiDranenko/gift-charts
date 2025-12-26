@@ -35,9 +35,9 @@ export default function MainPage() {
           indexName='marketCap'
         />
       </div> */}
-      <div className='w-full px-3'>
+      {/* <div className='w-full px-3'>
         <AddBanner className='mb-5' />
-      </div>
+      </div> */}
 
       <GiftsList loading={loading} />
     </div>

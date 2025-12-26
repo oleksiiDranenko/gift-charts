@@ -158,15 +158,15 @@ export default function GiftItem({
         href={`/gift/${item._id}`}
         onClick={() => vibrate()}>
         <div className='flex flex-row items-center'>
-          <span className='w-10 box-border text-center text-secondaryText text-sm'>
+          {/* <span className='w-6 h-6 bg-secondaryTransparent rounded-3xl box-border flex items-center text-secondaryText text-xs'>
             {number + 1}
-          </span>
+          </span> */}
           <Image
             alt={item.name}
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible ml-2 mr-3 rounded-[15px] ${
               resolvedTheme === "dark"
                 ? "bg-gradient-to-b from-background to-secondaryTransparent"
                 : "bg-background"
@@ -306,7 +306,7 @@ export default function GiftItem({
       </NoPrefetchLink>
 
       {resolvedTheme === "dark" && (
-        <div className='w-full pl-[100px] pr-3 lg:hidden'>
+        <div className='w-full pl-16 pr-3 lg:hidden'>
           <div className='border-b-2 border-secondaryLight'></div>
         </div>
       )}
