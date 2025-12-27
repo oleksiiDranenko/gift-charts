@@ -318,7 +318,9 @@ export default function GiftsList({ loading }: PropsInterface) {
               onClick={() => {
                 vibrate();
                 setSelectedList("all");
-                dispatch(setFilters({ ...filters, sort: "highFirst" }));
+                dispatch(
+                  setFilters({ ...filters, sort: "highFirst", chosenGifts: [] })
+                );
               }}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -373,6 +375,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                     ...filters,
                     sort:
                       currency === "ton" ? "changeGrowth" : "changeGrowthTon",
+                    chosenGifts: [],
                   })
                 );
               }}>
@@ -405,6 +408,7 @@ export default function GiftsList({ loading }: PropsInterface) {
                       currency === "ton"
                         ? "changeGrowthAsc"
                         : "changeGrowthTonAsc",
+                    chosenGifts: [],
                   })
                 );
               }}>

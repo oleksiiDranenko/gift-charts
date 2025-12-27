@@ -40,10 +40,6 @@ export default function MainPage() {
         <AddBanner className='mb-5' />
       </div> */}
 
-      <div className='px-3 mb-5'>
-        <VoteBanner />
-      </div>
-
       <GiftsList loading={loading} />
     </div>
   );
