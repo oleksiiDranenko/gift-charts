@@ -151,7 +151,7 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? ""
+            ? "bg-secondaryLight rounded-3xl mb-2"
             : "bg-secondaryTransparent rounded-3xl mb-2"
         }`}
         key={item._id}
@@ -166,14 +166,14 @@ export default function GiftItem({
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible ml-2 mr-3 rounded-full ${
+            className={`w-[50px] h-[50px] p-1 !overflow-visible ml-2 mr-3 rounded-full ${
               resolvedTheme === "dark"
                 ? "bg-gradient-to-b from-background to-secondaryTransparent"
                 : "bg-background"
             }`}
           />
           <div className='flex flex-col gap-y-[2px]'>
-            <span className='flex flex-row items-center text-base font-bold'>
+            <span className='flex flex-row items-center text-lg font-bold'>
               {item.name}
 
               {item.preSale && (
@@ -236,7 +236,7 @@ export default function GiftItem({
                   className='mr-1'
                 />
               )}
-              <span className='text-base font-bold'>
+              <span className='text-lg font-bold'>
                 {currency === "ton" && displayValue === "price"
                   ? formatPrice(item.priceTon)
                   : currency === "ton" && displayValue === "marketCap"
@@ -305,11 +305,11 @@ export default function GiftItem({
         </div>
       </NoPrefetchLink>
 
-      {resolvedTheme === "dark" && (
+      {/* {resolvedTheme === "dark" && (
         <div className='w-full pl-16 pr-3 lg:hidden'>
-          <div className='border-b-2 border-secondaryLight'></div>
+          <div className='border-b-2 border-secondaryTransparent'></div>
         </div>
-      )}
+      )} */}
 
       {/* wide screen */}
       {/* wide screen */}
