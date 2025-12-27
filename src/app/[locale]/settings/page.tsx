@@ -314,7 +314,7 @@ export default function Page() {
           ) : gifts.length === 0 ? (
             <ListSkeleton type='block' count={1} />
           ) : (
-            <div className='grid grid-cols-4 gap-x-2 px-2'>
+            <div className='grid grid-cols-3 gap-x-2 px-2'>
               <GiftBlockItem
                 item={gifts[0]}
                 currency={settings.currency}

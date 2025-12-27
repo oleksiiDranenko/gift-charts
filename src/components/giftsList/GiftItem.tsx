@@ -141,7 +141,7 @@ export default function GiftItem({
   return (
     <>
       <NoPrefetchLink
-        className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
+        className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl mb-2 ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0
@@ -151,8 +151,8 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "bg-secondaryLight rounded-3xl mb-2"
-            : "bg-secondaryTransparent rounded-3xl mb-2"
+            ? "bg-secondaryTransparent"
+            : "bg-secondaryTransparent"
         }`}
         key={item._id}
         href={`/gift/${item._id}`}
@@ -168,7 +168,7 @@ export default function GiftItem({
             height={50}
             className={`w-[50px] h-[50px] p-1 !overflow-visible ml-2 mr-3 rounded-full ${
               resolvedTheme === "dark"
-                ? "bg-gradient-to-b from-background to-secondaryTransparent"
+                ? "bg-gradient-to-b from-secondary to-secondaryTransparent"
                 : "bg-background"
             }`}
           />

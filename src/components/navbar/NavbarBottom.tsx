@@ -39,7 +39,8 @@ export default function NavbarBottom() {
       <div
         className={`w-full flex flex-row justify-between items-center pt-3 ${
           user.username === "_guest" ? "pb-3" : "pb-10"
-        } px-3 rounded-t-3xl bg-secondaryTransparent`}>
+        } px-3 rounded-t-3xl bg-secondaryLight backdrop-blur-xl
+`}>
         <NoPrefetchLink
           className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
             selectedPage === "home" ? "text-primary " : "text-secondaryText"

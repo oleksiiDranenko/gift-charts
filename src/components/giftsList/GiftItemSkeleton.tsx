@@ -21,7 +21,7 @@ export default function GiftItemSkeleton({
           <div
             className={`w-[50px] h-[50px] p-[6px] !overflow-visible ml-2 mr-3 rounded-full ${
               resolvedTheme === "dark"
-                ? "bg-gradient-to-b from-background to-secondaryTransparent"
+                ? "bg-gradient-to-b from-secondary to-secondaryTransparent"
                 : "bg-background"
             }`}></div>
           <div className='flex flex-col gap-y-[2px]'>

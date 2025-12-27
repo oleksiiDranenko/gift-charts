@@ -7,7 +7,7 @@
   --secondary: #cbdfff;
   --secondary-transparent: #ffffff;
   --secondary-text: #455c78;
-  --secondary-light: #ffffff;
+  --secondary-light: #ffffff99;
   --background: #f3f3f3;
   --foreground: #000000;
 }
@@ -54,7 +54,7 @@ html.dark {
   --primary: #3b82f6;
   --secondary: #2c3039;
   --secondary-transparent: #1c1f24;
-  --secondary-light: #16191d;
+  --secondary-light: #1c1f2499;
   --secondary-text: #9ca3af;
   --background: #0f1216;
   --foreground: #ffffff;
