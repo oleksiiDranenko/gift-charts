@@ -18,11 +18,8 @@ export default function GiftItemSkeleton({
             : "bg-secondaryTransparent rounded-3xl mb-2"
         }`}>
         <div className='flex flex-row items-center'>
-          <span className='w-10 box-border text-center text-secondaryText text-sm'>
-            {index + 1}
-          </span>
           <div
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible ml-2 mr-3 rounded-full ${
               resolvedTheme === "dark"
                 ? "bg-gradient-to-b from-background to-secondaryTransparent"
                 : "bg-background"
@@ -61,7 +58,7 @@ export default function GiftItemSkeleton({
       </div>
 
       {resolvedTheme === "dark" && (
-        <div className='w-full pl-[100px] pr-3 lg:hidden'>
+        <div className='w-full pl-16 pr-3 lg:hidden'>
           <div className='border-b-2 border-secondaryLight'></div>
         </div>
       )}

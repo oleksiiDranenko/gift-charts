@@ -6,6 +6,7 @@ import useVibrate from "@/hooks/useVibrate";
 import AddBanner from "../AddBanner";
 import GiftsList from "../giftsList/GiftsList";
 import NoPrefetchLink from "../NoPrefetchLink";
+import VoteBanner from "../tools/vote/VoteBanner";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -38,6 +39,10 @@ export default function MainPage() {
       {/* <div className='w-full px-3'>
         <AddBanner className='mb-5' />
       </div> */}
+
+      <div className='px-3 mb-5'>
+        <VoteBanner />
+      </div>
 
       <GiftsList loading={loading} />
     </div>

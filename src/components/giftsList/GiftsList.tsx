@@ -308,7 +308,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           </div>
 
-          <div className='w-full mt-2 mb-1 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap text-xs gap-x-1'>
+          <div className='w-full mt-2 mb-2 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap text-xs gap-x-1'>
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "all"

@@ -9,10 +9,11 @@ import useVibrate from "@/hooks/useVibrate";
 import GaugeChart from "react-gauge-chart";
 import { useTranslations } from "next-intl";
 import NoPrefetchLink from "@/components/NoPrefetchLink";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function VoteBanner() {
   const queryClient = useQueryClient();
-  const [hasVoted, setHasVoted] = useState<boolean | null>(null);
+  const user = useAppSelector((state) => state.user);
   const [selectedVote, setSelectedVote] = useState<
     "negative" | "neutral" | "positive" | null
   >(null);
@@ -67,7 +68,6 @@ export default function VoteBanner() {
       return response.data;
     },
     onSuccess: () => {
-      setHasVoted(true);
       setSelectedVote(null);
       queryClient.invalidateQueries({
         queryKey: ["voteStatus", "marketSentiment"],
@@ -137,12 +137,12 @@ export default function VoteBanner() {
 
   const percentages = getVotePercentages();
 
-  const isAuthenticated = voteStatus?.isAuthenticated ?? false;
   const hasUserVoted = voteStatus?.userVote != null;
 
   return (
     <div className='w-full lg:1/2'>
-      {isVoteStatusLoading ? null : hasUserVoted || !isAuthenticated ? (
+      {isVoteStatusLoading ? null : hasUserVoted ||
+        user.username === "_guest" ? (
         <div className='w-full flex flex-col box-border p-3 rounded-3xl bg-secondaryTransparent overflow-hidden'>
           <div className='w-full flex mb-3'>
             <NoPrefetchLink

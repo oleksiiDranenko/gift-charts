@@ -68,7 +68,7 @@ export default function Page({ params }: any) {
   const loading = giftLoading || isWeekLoading || isLifeLoading;
 
   return (
-    <div className='w-full lg:w-[98%] pt-[0px] flex justify-center'>
+    <div className='w-full lg:w-[98%] pt-[0px] flex justify-center pb-20'>
       <div className='w-full'>
         <div className='px-3'>
           <BackButton />

@@ -281,7 +281,7 @@ export default function GiftChart({
             </span>
           </div>
 
-          <div className='w-full flex flex-row gap-x-2 mt-5'>
+          <div className='w-full fixed bottom-0 left-0 flex flex-row gap-x-2 bg-secondaryTransparent rounded-t-3xl pb-10 px-3 pt-3'>
             <MarketsModal
               trigger={
                 <button
@@ -309,7 +309,7 @@ export default function GiftChart({
               <ModelsModal
                 trigger={
                   <button
-                    className={`w-full h-12 mt-5 flex flex-row justify-center items-center gap-x-1 px-3 box-border rounded-3xl ${
+                    className={`w-full h-12 mt-4 flex flex-row justify-center items-center gap-x-1 px-3 box-border rounded-3xl ${
                       resolvedTheme === "dark"
                         ? "bg-secondaryTransparent"
                         : "bg-secondaryTransparent"

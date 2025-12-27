@@ -166,7 +166,7 @@ export default function GiftItem({
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible ml-2 mr-3 rounded-[15px] ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible ml-2 mr-3 rounded-full ${
               resolvedTheme === "dark"
                 ? "bg-gradient-to-b from-background to-secondaryTransparent"
                 : "bg-background"
