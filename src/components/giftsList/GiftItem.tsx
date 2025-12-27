@@ -173,7 +173,7 @@ export default function GiftItem({
             }`}
           />
           <div className='flex flex-col gap-y-[2px]'>
-            <span className='flex flex-row items-center text-lg font-bold'>
+            <span className='flex flex-row items-center text-base font-bold'>
               {item.name}
 
               {item.preSale && (
@@ -236,7 +236,7 @@ export default function GiftItem({
                   className='mr-1'
                 />
               )}
-              <span className='text-lg font-bold'>
+              <span className='text-base font-bold'>
                 {currency === "ton" && displayValue === "price"
                   ? formatPrice(item.priceTon)
                   : currency === "ton" && displayValue === "marketCap"

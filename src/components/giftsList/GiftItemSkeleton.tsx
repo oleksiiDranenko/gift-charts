@@ -14,7 +14,7 @@ export default function GiftItemSkeleton({
       <div
         className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
           resolvedTheme === "dark"
-            ? ""
+            ? "bg-secondaryTransparent rounded-3xl mb-2"
             : "bg-secondaryTransparent rounded-3xl mb-2"
         }`}>
         <div className='flex flex-row items-center'>
@@ -27,15 +27,11 @@ export default function GiftItemSkeleton({
           <div className='flex flex-col gap-y-[2px]'>
             <div
               className={`h-4 w-20 rounded-3xl ${
-                resolvedTheme === "dark"
-                  ? "bg-secondaryTransparent"
-                  : "bg-background"
+                resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
             <div
               className={`h-4 w-10 rounded-3xl ${
-                resolvedTheme === "dark"
-                  ? "bg-secondaryTransparent"
-                  : "bg-background"
+                resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
           </div>
         </div>
@@ -43,25 +39,15 @@ export default function GiftItemSkeleton({
           <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
             <div
               className={`h-4 w-20 rounded-3xl ${
-                resolvedTheme === "dark"
-                  ? "bg-secondaryTransparent"
-                  : "bg-background"
+                resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
             <div
               className={`h-4 w-10 rounded-3xl ${
-                resolvedTheme === "dark"
-                  ? "bg-secondaryTransparent"
-                  : "bg-background"
+                resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
           </div>
         </div>
       </div>
-
-      {resolvedTheme === "dark" && (
-        <div className='w-full pl-16 pr-3 lg:hidden'>
-          <div className='border-b-2 border-secondaryLight'></div>
-        </div>
-      )}
 
       {/* LARGE SCREEN */}
       {/* LARGE SCREEN */}
