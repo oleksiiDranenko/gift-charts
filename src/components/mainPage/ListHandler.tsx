@@ -25,7 +25,7 @@ export default function ListHandler({
         className={
           type === "block"
             ? "grid grid-flow-row grid-cols-3 lg:grid-cols-6 gap-x-2 px-3"
-            : "px-2"
+            : "px-3"
         }>
         {type === "line" ? <GiftListHeader /> : null}
         {giftsList.map((item: GiftInterface, i) =>
