@@ -20,8 +20,12 @@ ChartJS.register(
   Legend
 );
 
-const GiftItemChart = () => {
-  const labels = Array.from({ length: 48 }, (_, i) => (i + 1).toString());
+interface Props {
+  percentChange: number | "no data";
+}
+
+const GiftItemChart = ({ percentChange }: Props) => {
+  const labels = Array.from({ length: 10 }, (_, i) => (i + 1).toString());
 
   // generate 48 random data points
   const values = Array.from(
@@ -34,12 +38,19 @@ const GiftItemChart = () => {
       {
         label: "",
         data: values,
-        borderColor: "#22c55e",
+        borderColor:
+          percentChange !== "no data"
+            ? percentChange >= 0
+              ? "#22c55e"
+              : percentChange < 0
+              ? "#ef4444"
+              : "#64748b"
+            : "#64748b",
         borderWidth: 2,
         fill: false, // remove area shading
         pointRadius: 0, // ❌ removes dots
         pointHoverRadius: 0, // ❌ removes hover dots
-        tension: 0,
+        tension: 0.2,
       },
     ],
   };
@@ -57,7 +68,7 @@ const GiftItemChart = () => {
     },
   };
 
-  return <Line data={data} options={options} height={40} width={80} />;
+  return <Line data={data} options={options} height={80} width={80} />;
 };
 
 export default GiftItemChart;

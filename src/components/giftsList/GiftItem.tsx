@@ -214,6 +214,10 @@ export default function GiftItem({
           </div>
         </div>
 
+        <div className='w-10 h-full flex items-center'>
+          <GiftItemChart percentChange={percentChange24h} />
+        </div>
+
         <div className='flex flex-row items-center justify-end'>
           <div className='w-fit text-sm flex flex-col items-end justify-center mr-3'>
             <div className='flex flex-row items-center'>
