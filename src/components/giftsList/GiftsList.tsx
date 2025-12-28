@@ -312,7 +312,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "all"
-                  ? "bg-primary text-white font-bold"
+                  ? "bg-primary text-white"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
@@ -334,7 +334,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "saved"
-                  ? "bg-primary text-white font-bold"
+                  ? "bg-primary text-white"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
@@ -364,7 +364,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "gainers"
-                  ? "bg-primary text-white font-bold"
+                  ? "bg-primary text-white"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
@@ -395,7 +395,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
                 selectedList === "loosers"
-                  ? "bg-primary text-white font-bold"
+                  ? "bg-primary text-white"
                   : "bg-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {

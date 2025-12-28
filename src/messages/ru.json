@@ -130,8 +130,8 @@
   },
 
   "number": {
-    "thousand": "тыс.",
-    "million": "млн."
+    "thousand": " тыс.",
+    "million": " млн."
   },
 
   "navbar": {

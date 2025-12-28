@@ -109,10 +109,8 @@ export default function GiftChart({
                 src={`/gifts/${gift?.image}.webp`}
                 width={55}
                 height={55}
-                className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
-                  resolvedTheme === "dark"
-                    ? "bg-gradient-to-b from-background to-secondaryTransparent"
-                    : "bg-background"
+                className={`w-[50px] h-[50px] p-1 !overflow-visible mr-2 rounded-full ${
+                  resolvedTheme === "dark" ? "" : "bg-background"
                 }`}
               />
               <h1 className='flex flex-col'>
@@ -281,7 +279,7 @@ export default function GiftChart({
             </span>
           </div>
 
-          <div className='w-full fixed bottom-0 left-0 flex flex-row gap-x-2 bg-secondaryTransparent rounded-t-3xl pb-10 px-3 pt-3'>
+          <div className='w-full fixed bottom-0 left-0 flex flex-row gap-x-2 bg-secondaryLight backdrop-blur-xl rounded-t-3xl pb-10 px-3 pt-3'>
             <MarketsModal
               trigger={
                 <button
