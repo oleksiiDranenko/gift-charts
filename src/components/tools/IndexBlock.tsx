@@ -76,7 +76,7 @@ export default function IndexBlock({
     if (typeof oldVal !== "number" || typeof newVal !== "number") return "0.00";
     if (oldVal === 0) return "0.00";
     const pct = ((newVal - oldVal) / oldVal) * 100;
-    return pct.toFixed(2);
+    return Math.abs(pct).toFixed(2);
   };
 
   const diff = indexValue - previousIndexValue;
@@ -85,29 +85,17 @@ export default function IndexBlock({
   return (
     <NoPrefetchLink
       href={`/tools/index/${id}`}
-      className={`w-full flex flex-row justify-between items-center h-18 p-3 rounded-3xl ${
+      className={`lg:hidden w-full p-5 flex flex-col items-start justify-between rounded-3xl ${
         resolvedTheme === "dark"
-          ? "border-b-2 border-secondaryTransparent"
+          ? "bg-secondaryTransparent"
           : "bg-secondaryTransparent"
       }`}
       onClick={() => vibrate()}>
-      <div className='h-full flex flex-row items-center gap-x-2'>
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          viewBox='0 0 24 24'
-          fill='currentColor'
-          className='size-6 text-primary'>
-          <path
-            fillRule='evenodd'
-            d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z'
-            clipRule='evenodd'
-          />
-        </svg>
-
-        <span className='font-bold'>{name}</span>
+      <div className='h-full flex flex-row items-center mb-2'>
+        <span className='text-sm '>{name}</span>
       </div>
 
-      <div className='flex flex-col items-end justify-between gap-y-1'>
+      <div className='flex flex-col items-start justify-between gap-y-1'>
         <div className='flex flex-row items-center'>
           {/* Icon depending on valueType and currency */}
           {valueType === "price" ? (
@@ -129,10 +117,21 @@ export default function IndexBlock({
               />
             )
           ) : valueType === "amount" ? (
-            <Gift size={15} className='mr-1' />
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 20 20'
+              fill='currentColor'
+              className='size-3 mr-1'>
+              <path
+                fillRule='evenodd'
+                d='M14 6a2.5 2.5 0 0 0-4-3 2.5 2.5 0 0 0-4 3H3.25C2.56 6 2 6.56 2 7.25v.5C2 8.44 2.56 9 3.25 9h6V6h1.5v3h6C17.44 9 18 8.44 18 7.75v-.5C18 6.56 17.44 6 16.75 6H14Zm-1-1.5a1 1 0 0 1-1 1h-1v-1a1 1 0 1 1 2 0Zm-6 0a1 1 0 0 0 1 1h1v-1a1 1 0 0 0-2 0Z'
+                clipRule='evenodd'
+              />
+              <path d='M9.25 10.5H3v4.75A2.75 2.75 0 0 0 5.75 18h3.5v-7.5ZM10.75 18v-7.5H17v4.75A2.75 2.75 0 0 1 14.25 18h-3.5Z' />
+            </svg>
           ) : null}
 
-          <span className='text-sm font-bold'>
+          <span className='font-bold'>
             {formatNumber(indexValue, valueType)}
             {valueType === "percent" && "%"}
           </span>
@@ -140,14 +139,38 @@ export default function IndexBlock({
 
         {/* 24h % change */}
         <span
-          className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+          className={`px-1 rounded-3xl flex flex-row items-center text-sm font-normal ${
             diff > 0
-              ? "text-green-500 bg-green-500"
+              ? "text-green-500"
               : diff < 0
-              ? "text-red-500 bg-red-500"
+              ? "text-red-500"
               : "text-slate-500"
           }`}>
-          {diffSign}
+          {diff >= 0 ? (
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-4 mr-1'>
+              <path
+                fillRule='evenodd'
+                d='M15.22 6.268a.75.75 0 0 1 .968-.431l5.942 2.28a.75.75 0 0 1 .431.97l-2.28 5.94a.75.75 0 1 1-1.4-.537l1.63-4.251-1.086.484a11.2 11.2 0 0 0-5.45 5.173.75.75 0 0 1-1.199.19L9 12.312l-6.22 6.22a.75.75 0 0 1-1.06-1.061l6.75-6.75a.75.75 0 0 1 1.06 0l3.606 3.606a12.695 12.695 0 0 1 5.68-4.974l1.086-.483-4.251-1.632a.75.75 0 0 1-.432-.97Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-4 mr-1'>
+              <path
+                fillRule='evenodd'
+                d='M1.72 5.47a.75.75 0 0 1 1.06 0L9 11.69l3.756-3.756a.75.75 0 0 1 .985-.066 12.698 12.698 0 0 1 4.575 6.832l.308 1.149 2.277-3.943a.75.75 0 1 1 1.299.75l-3.182 5.51a.75.75 0 0 1-1.025.275l-5.511-3.181a.75.75 0 0 1 .75-1.3l3.943 2.277-.308-1.149a11.194 11.194 0 0 0-3.528-5.617l-3.809 3.81a.75.75 0 0 1-1.06 0L1.72 6.53a.75.75 0 0 1 0-1.061Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          )}
           {countPercentChange(previousIndexValue, indexValue)}%
         </span>
       </div>

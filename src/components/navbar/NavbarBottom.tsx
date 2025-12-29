@@ -37,7 +37,7 @@ export default function NavbarBottom() {
         pathname.startsWith("/gift/") ? "hidden" : ""
       } fixed bottom-0 mb-0 w-screen z-40 flex justify-center gap-3 items-center`}>
       <div
-        className={`w-full flex flex-row justify-between items-center pt-3 ${
+        className={`w-full flex flex-row justify-around items-center pt-3 ${
           user.username === "_guest" ? "pb-3" : "pb-10"
         } px-3 rounded-t-3xl bg-secondaryLight backdrop-blur-xl`}>
         <NoPrefetchLink
@@ -61,7 +61,7 @@ export default function NavbarBottom() {
 
           <span className='text-xs'>{t("home")}</span>
         </NoPrefetchLink>
-        <NoPrefetchLink
+        {/* <NoPrefetchLink
           className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
             selectedPage === "gifts" ? "text-primary" : "text-secondaryText"
           }`}
@@ -70,7 +70,6 @@ export default function NavbarBottom() {
             setSelectedPage("gifts");
             vibrate();
           }}>
-          {/* <Gift size={24} /> */}
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 24 24'
@@ -80,7 +79,7 @@ export default function NavbarBottom() {
           </svg>
 
           <span className='text-xs'>{t("gifts")}</span>
-        </NoPrefetchLink>
+        </NoPrefetchLink> */}
         <NoPrefetchLink
           className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
             selectedPage === "tools" ? "text-primary" : "text-secondaryText"
