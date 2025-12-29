@@ -21,6 +21,7 @@ import VoteBanner from "../tools/vote/VoteBanner";
 import { GiftSorter } from "../filterGifts/GiftSorter";
 import NoPrefetchLink from "../NoPrefetchLink";
 import AddBanner from "../AddBanner";
+import GiftsList from "../giftsList/GiftsList";
 
 export default function MainPage() {
   const vibrate = useVibrate();
@@ -30,11 +31,8 @@ export default function MainPage() {
 
   const translateMain = useTranslations("mainPage");
 
-  const [userList, setUserList] = useState<GiftInterface[]>([]);
-  const [chosenFilter, setChosenFilter] = useState<
-    "gainers" | "losers" | "floor" | "saved"
-  >("gainers");
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [settings, setSettings] = useState(() => {
     if (typeof window !== "undefined") {
@@ -52,20 +50,11 @@ export default function MainPage() {
 
   const { currency, giftType, giftBackground } = settings;
 
-  const sortedGainers = new GiftSorter(giftsList).sortBy(
-    currency === "ton" ? "priceChangeGrowthTon" : "priceChangeGrowth",
-    "desc"
-  );
-
-  const sortedLosers = new GiftSorter(giftsList).sortBy(
-    currency === "ton" ? "priceChangeGrowthTon" : "priceChangeGrowth",
-    "asc"
-  );
-
-  const sortedFloor = new GiftSorter(giftsList).sortBy(
-    currency === "ton" ? "priceTon" : "priceUsd",
-    "desc"
-  );
+  useEffect(() => {
+    if (giftsList.length > 0) {
+      setIsLoading(false);
+    }
+  }, [giftsList]);
 
   // ✅ Sync settings to localStorage
   useEffect(() => {
@@ -85,9 +74,9 @@ export default function MainPage() {
   return (
     <div>
       <div className='w-full px-3'>
-        <AddBanner className='mb-3' />
+        <AddBanner className='mb-5' />
       </div>
-      <SearchBar />
+      {/* <SearchBar />
 
       <div className='px-3 mb-3'>
         <IndexWidget
@@ -95,106 +84,11 @@ export default function MainPage() {
           indexId='68493d064b37eed02b7ae5af'
           indexName='marketCap'
         />
-      </div>
-
-      <div className='max-w-full gap-x-1 flex items-center justify-between mb-4'>
-        <div className='w-full gap-x-1 flex flex-row overflow-x-scroll scrollbar-hide'>
-          <button
-            className={`flex ml-3 items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
-              chosenFilter === "gainers"
-                ? "text-foreground font-bold bg-secondary rounded-3xl"
-                : "text-secondaryText bg-secondaryTransparent"
-            }`}
-            onClick={() => {
-              setChosenFilter("gainers");
-              vibrate();
-            }}>
-            <span>{translateMain("gainers")}</span>
-            <TrendingUp size={14} className='ml-1' />
-          </button>
-          <button
-            className={`flex items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
-              chosenFilter === "losers"
-                ? "text-foreground font-bold bg-secondary rounded-3xl"
-                : "text-secondaryText bg-secondaryTransparent"
-            }`}
-            onClick={() => {
-              setChosenFilter("losers");
-              vibrate();
-            }}>
-            <span>{translateMain("losers")}</span>
-            <TrendingDown size={14} className='ml-1' />
-          </button>
-          <button
-            className={`flex items-center justify-center px-3 text-xs h-8 rounded-3xl active:scale-[95%] duration-200 ${
-              chosenFilter === "floor"
-                ? "text-foreground font-bold bg-secondary rounded-3xl"
-                : "text-secondaryText bg-secondaryTransparent"
-            }`}
-            onClick={() => {
-              setChosenFilter("floor");
-              vibrate();
-            }}>
-            <span>{translateMain("floor")}</span>
-            <Trophy size={14} className='ml-1' />
-          </button>
-        </div>
-      </div>
-
-      <div className='w-full flex flex-row mb-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
-        {chosenFilter === "saved" ? (
-          <>
-            {userList.length !== 0 ? (
-              <ListHandler
-                key={chosenFilter}
-                giftsList={userList.slice(0, 5)}
-                type={giftType}
-                background={giftBackground}
-                currency={currency}
-              />
-            ) : (
-              <div className='flex-none w-full text-center snap-start'>
-                <div className='px-3 pt-3 pb-1 font-bold'>
-                  {translateMain("emptyWatchlist")}
-                </div>
-              </div>
-            )}
-          </>
-        ) : giftsList.length === 0 ? (
-          <ListSkeleton type={giftType} count={giftType === "line" ? 5 : 12} />
-        ) : (
-          <ListHandler
-            key={chosenFilter}
-            giftsList={
-              chosenFilter === "gainers"
-                ? giftType === "line"
-                  ? sortedGainers.slice(0, 5)
-                  : sortedGainers.slice(0, 12)
-                : chosenFilter === "losers"
-                ? giftType === "line"
-                  ? sortedLosers.slice(0, 5)
-                  : sortedLosers.slice(0, 12)
-                : chosenFilter === "floor"
-                ? giftType === "line"
-                  ? sortedFloor.slice(0, 5)
-                  : sortedFloor.slice(0, 12)
-                : []
-            }
-            type={giftType}
-            background={giftBackground}
-            currency={currency}
-          />
-        )}
-      </div>
-      {/* <div className='w-full px-3'>
-        <VoteBanner />
       </div> */}
-      {/* <Link
-        href={"/donate"}
-        className='w-full p-3 bg-secondaryTransparent rounded-3xl'>
-        Donate
-      </Link> */}
-      <div className='w-full px-3'>
+
+      <GiftsList loading={isLoading} />
+
+      {/* <div className='w-full px-3'>
         <NoPrefetchLink
           href={"/donate"}
           onClick={() => {
@@ -223,7 +117,7 @@ export default function MainPage() {
             <ChevronRight size={20} className='text-primary' />
           </div>
         </NoPrefetchLink>
-      </div>
+      </div> */}
     </div>
   );
 }
