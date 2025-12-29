@@ -190,10 +190,10 @@ export default function IndexChart({
 
   const formatNumber = (num: number) =>
     num >= 1_000_000
-      ? `${(num / 1_000_000).toFixed(1)}M`
+      ? `${(num / 1_000_000).toFixed(2)}M`
       : num >= 1_000
-      ? `${(num / 1_000).toFixed(1)}K`
-      : num.toString();
+      ? `${(num / 1_000).toFixed(2)} K`
+      : num.toFixed(2);
 
   const formatNumberWithDots = (value: number, type: string) => {
     if (typeof value !== "number" || isNaN(value)) return "0";
