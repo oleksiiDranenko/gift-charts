@@ -109,14 +109,12 @@ export default function GiftChart({
                 src={`/gifts/${gift?.image}.webp`}
                 width={55}
                 height={55}
-                className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-3xl ${
-                  resolvedTheme === "dark"
-                    ? "bg-secondaryTransparent"
-                    : "bg-background"
-                } `}
+                className={`w-[50px] h-[50px] p-1 !overflow-visible mr-2 rounded-full ${
+                  resolvedTheme === "dark" ? "" : "bg-background"
+                }`}
               />
               <h1 className='flex flex-col'>
-                <span className='text-xl font-bold'>{gift?.name}</span>
+                <span className='text-lg font-bold'>{gift?.name}</span>
                 <span className='text-secondaryText text-sm flex justify-start'>
                   {gift ? formatNumber(gift?.upgradedSupply) : null}
                 </span>
@@ -153,17 +151,40 @@ export default function GiftChart({
                 ) : (
                   <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
                 )}
-                <span className='text-xl font-extrabold'>
+                <span className='text-xl font-bold'>
                   {currentValue !== null ? currentValue.toFixed(2) : "N/A"}
                 </span>
               </div>
               <span
-                className={`text-sm ${
+                className={`text-sm flex flex-row items-center ${
                   percentChange >= 0 ? "text-green-500" : "text-red-500"
                 }`}>
-                {(percentChange > 0 ? "+" : "") +
-                  percentChange.toFixed(2) +
-                  "%"}
+                {percentChange > 0 ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-3 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-3 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                )}{" "}
+                {percentChange.toFixed(2) + "%"}
               </span>
             </div>
           </div>
@@ -258,7 +279,7 @@ export default function GiftChart({
             </span>
           </div>
 
-          <div className='w-full flex flex-row gap-x-2 mt-5'>
+          <div className='w-full fixed bottom-0 left-0 flex flex-row gap-x-2 bg-secondaryLight backdrop-blur-xl rounded-t-3xl pb-10 px-3 pt-3'>
             <MarketsModal
               trigger={
                 <button
@@ -286,13 +307,24 @@ export default function GiftChart({
               <ModelsModal
                 trigger={
                   <button
-                    className={`w-full h-10 mt-3 flex flex-row justify-center items-center gap-x-1 text-sm px-3 box-border rounded-3xl ${
+                    className={`w-full h-12 mt-4 flex flex-row justify-center items-center gap-x-1 px-3 box-border rounded-3xl ${
                       resolvedTheme === "dark"
                         ? "bg-secondaryTransparent"
                         : "bg-secondaryTransparent"
                     }`}
                     onClick={() => vibrate()}>
-                    <Component size={16} />
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='currentColor'
+                      className='size-5 text-primary mr-1'>
+                      <path
+                        fillRule='evenodd'
+                        d='M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+
                     {translateInfo("viewModels")}
                   </button>
                 }
@@ -303,7 +335,7 @@ export default function GiftChart({
           )}
 
           <div className='w-full mt-5 flex flex-col gap-y-2 font-normal bg-secondaryTransparent p-3 rounded-3xl'>
-            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
               <span className='w-full text-secondaryText'>
                 {translateInfo("marketCap")}
               </span>
@@ -332,13 +364,13 @@ export default function GiftChart({
                 )}
               </span>
             </div>
-            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
               <span className='w-full text-secondaryText'>
                 {translateInfo("upgradedSupply")}
               </span>
               <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
             </div>
-            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+            <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
               <span className='w-full text-secondaryText'>
                 {translateInfo("supply")}
               </span>
@@ -467,7 +499,7 @@ export default function GiftChart({
                 </span>
               </div>
               <div className='w-full mt-5 flex flex-col gap-y-2'>
-                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("marketCap")}
                   </span>
@@ -496,13 +528,13 @@ export default function GiftChart({
                     )}
                   </span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("upgradedSupply")}
                   </span>
                   <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
                 </div>
-                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b-2 border-secondaryTransparent'>
+                <div className='w-full flex flex-col justify-between items-start p-1 gap-y-1 border-b border-secondaryTransparent'>
                   <span className='w-full text-secondaryText'>
                     {translateInfo("supply")}
                   </span>
