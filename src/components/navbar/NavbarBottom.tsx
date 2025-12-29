@@ -5,8 +5,10 @@ import { usePathname } from "@/i18n/navigation"; // Use locale-aware usePathname
 import useVibrate from "@/hooks/useVibrate";
 import { useTranslations } from "next-intl";
 import NoPrefetchLink from "../NoPrefetchLink";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function NavbarBottom() {
+  const user = useAppSelector((state) => state.user);
   const pathname = usePathname(); // Returns pathname without locale (e.g., /tools)
   const vibrate = useVibrate();
   const t = useTranslations("navbar");
@@ -34,7 +36,10 @@ export default function NavbarBottom() {
       className={`lg:hidden ${
         pathname.startsWith("/gift/") ? "hidden" : ""
       } fixed bottom-0 mb-0 w-screen z-40 flex justify-center gap-3 items-center`}>
-      <div className='w-full flex flex-row justify-between items-center pt-3 pb-10 px-3 rounded-t-3xl bg-secondaryTransparent'>
+      <div
+        className={`w-full flex flex-row justify-between items-center pt-3 ${
+          user.username === "_guest" ? "pb-3" : "pb-10"
+        } px-3 rounded-t-3xl bg-secondaryLight backdrop-blur-xl`}>
         <NoPrefetchLink
           className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
             selectedPage === "home" ? "text-primary " : "text-secondaryText"
