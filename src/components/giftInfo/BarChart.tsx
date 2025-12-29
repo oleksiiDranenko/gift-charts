@@ -420,11 +420,11 @@ export default function BarChart({
         options={options}
         height={window.innerWidth < 1080 ? 200 : 150}
       />
-      <div className='w-full mt-3 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "all"
-              ? "rounded-3xl bg-secondary font-bold"
+              ? "rounded-3xl bg-primary font-bold text-white"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -435,7 +435,7 @@ export default function BarChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "3m"
-              ? "rounded-3xl bg-secondary font-bold"
+              ? "rounded-3xl bg-primary font-bold text-white"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -447,7 +447,7 @@ export default function BarChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1m"
-              ? "rounded-3xl bg-secondary font-bold"
+              ? "rounded-3xl bg-primary font-bold text-white"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -459,7 +459,7 @@ export default function BarChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "1w"
-              ? "rounded-3xl bg-secondary font-bold"
+              ? "rounded-3xl bg-primary font-bold text-white"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -471,7 +471,7 @@ export default function BarChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "3d"
-              ? "rounded-3xl bg-secondary font-bold"
+              ? "rounded-3xl bg-primary font-bold text-white"
               : "text-secondaryText"
           }`}
           onClick={() => {
@@ -483,7 +483,7 @@ export default function BarChart({
         <button
           className={`w-full px-1 text-sm h-8 ${
             listType === "24h"
-              ? "rounded-3xl bg-secondary font-bold"
+              ? "rounded-3xl bg-primary font-bold text-white"
               : "text-secondaryText"
           }`}
           onClick={() => {

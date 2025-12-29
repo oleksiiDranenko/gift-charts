@@ -485,13 +485,13 @@ export default function IndexChart({
               options={options}
               height={window.innerWidth < 1080 ? 200 : 150}
             />
-            <div className='w-full mt-1 p-1 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl'>
+            <div className='w-full mt-1 p-2 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl'>
               {["all", "3m", "1m", "1w", "3d", "1d"].map((type) => (
                 <button
                   key={type}
                   className={`w-full px-1 text-sm h-8 ${
                     listType === type
-                      ? "rounded-3xl bg-secondary font-bold"
+                      ? "rounded-3xl bg-primary font-bold text-white"
                       : "text-secondaryText"
                   }`}
                   onClick={() => {
