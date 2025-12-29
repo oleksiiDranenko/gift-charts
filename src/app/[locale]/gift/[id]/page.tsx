@@ -31,7 +31,9 @@ async function fetchLifeData(name: string) {
 export default function Page({ params }: any) {
   const { id } = params;
 
-  const giftsList = useAppSelector((state) => state.giftsList);
+  const giftsList = useAppSelector(
+    (state) => state.giftsList as GiftInterface[]
+  );
 
   const [gift, setGift] = useState<GiftInterface | null>(null);
 
