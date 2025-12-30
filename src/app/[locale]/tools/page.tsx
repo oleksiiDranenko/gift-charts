@@ -223,7 +223,7 @@ export default function Page() {
         {translate("indexes")}
       </h1>
 
-      <div className='w-full h-auto grid grid-cols-2 gap-2'>
+      <div className='w-full h-auto grid grid-cols-2 lg:grid-cols-4 gap-2'>
         {/* ✅ Loading placeholder */}
         {isLoading && (
           <>

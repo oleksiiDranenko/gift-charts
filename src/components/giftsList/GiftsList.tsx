@@ -28,7 +28,7 @@ export default function GiftsList({ loading }: PropsInterface) {
 
   const [isMounted, setIsMounted] = useState(false);
   const [selectedList, setSelectedList] = useState<
-    "all" | "saved" | "gainers" | "loosers"
+    "all" | "saved" | "gainers" | "losers"
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -56,6 +56,43 @@ export default function GiftsList({ loading }: PropsInterface) {
   });
 
   const { currency, giftType, giftBackground } = settings;
+
+  useEffect(() => {
+    switch (selectedList) {
+      case "all":
+        dispatch(
+          setFilters({ ...filters, sort: "highFirst", chosenGifts: [] })
+        );
+        return;
+      case "saved":
+        dispatch(
+          setFilters({
+            ...filters,
+            sort: "highFirst",
+            chosenGifts: user.savedList,
+          })
+        );
+        return;
+      case "gainers":
+        dispatch(
+          setFilters({
+            ...filters,
+            sort: currency === "ton" ? "changeGrowth" : "changeGrowthTon",
+            chosenGifts: [],
+          })
+        );
+        return;
+      case "losers":
+        dispatch(
+          setFilters({
+            ...filters,
+            sort: currency === "ton" ? "changeGrowthTonAsc" : "changeGrowthAsc",
+            chosenGifts: [],
+          })
+        );
+        return;
+    }
+  }, [selectedList]);
 
   // Map UI sort option → actual sort key + order
   const getSortConfig = (): { key: SortKey; order: "asc" | "desc" } => {
@@ -102,6 +139,9 @@ export default function GiftsList({ loading }: PropsInterface) {
       // Optional TON versions
       case "changeGrowthTon":
         return { key: "priceChangeGrowthTon", order: "desc" };
+      case "changeGrowthTonAsc":
+        return { key: "priceChangeGrowthTon", order: "asc" };
+
       case "changeAbsoluteTon":
         return { key: "priceChangeAbsoluteTon", order: "desc" };
 
@@ -218,6 +258,126 @@ export default function GiftsList({ loading }: PropsInterface) {
               />
             </div>
           </div> */}
+          <div className='w-full mb-3 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap '>
+            <button
+              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
+                selectedList === "all"
+                  ? "border-b border-foreground"
+                  : "border-b border-secondaryTransparent text-secondaryText"
+              }`}
+              onClick={() => {
+                vibrate();
+                setSelectedList("all");
+                // dispatch(
+                //   setFilters({ ...filters, sort: "highFirst", chosenGifts: [] })
+                // );
+              }}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-5 text-primary mr-1'>
+                <path d='M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z' />
+              </svg>
+              {translate("allGifts")}
+            </button>
+            <button
+              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
+                selectedList === "saved"
+                  ? "border-b border-foreground"
+                  : "border-b border-secondaryTransparent text-secondaryText"
+              }`}
+              onClick={() => {
+                vibrate();
+                setSelectedList("saved");
+                // dispatch(
+                //   setFilters({
+                //     ...filters,
+                //     sort: "highFirst",
+                //     chosenGifts: user.savedList,
+                //   })
+                // );
+              }}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='size-5 text-primary mr-1'>
+                <path
+                  fillRule='evenodd'
+                  d='M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              {translate("saved")}
+            </button>
+            <button
+              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
+                selectedList === "gainers"
+                  ? "border-b border-foreground"
+                  : "border-b border-secondaryTransparent text-secondaryText"
+              }`}
+              onClick={() => {
+                vibrate();
+                setSelectedList("gainers");
+                // dispatch(
+                //   setFilters({
+                //     ...filters,
+                //     sort:
+                //       currency === "ton" ? "changeGrowth" : "changeGrowthTon",
+                //     chosenGifts: [],
+                //   })
+                // );
+              }}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+                className='size-5 text-primary mr-1'>
+                <path
+                  fillRule='evenodd'
+                  d='M12.577 4.878a.75.75 0 0 1 .919-.53l4.78 1.281a.75.75 0 0 1 .531.919l-1.281 4.78a.75.75 0 0 1-1.449-.387l.81-3.022a19.407 19.407 0 0 0-5.594 5.203.75.75 0 0 1-1.139.093L7 10.06l-4.72 4.72a.75.75 0 0 1-1.06-1.061l5.25-5.25a.75.75 0 0 1 1.06 0l3.074 3.073a20.923 20.923 0 0 1 5.545-4.931l-3.042-.815a.75.75 0 0 1-.53-.919Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+
+              {translate("gainers")}
+            </button>
+            <button
+              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
+                selectedList === "losers"
+                  ? "border-b border-foreground"
+                  : "border-b border-secondaryTransparent text-secondaryText"
+              }`}
+              onClick={() => {
+                vibrate();
+                setSelectedList("losers");
+                // dispatch(
+                //   setFilters({
+                //     ...filters,
+                //     sort:
+                //       currency === "ton"
+                //         ? "changeGrowthTonAsc"
+                //         : "changeGrowthAsc",
+                //     chosenGifts: [],
+                //   })
+                // );
+              }}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+                className='size-5 text-primary mr-1'>
+                <path
+                  fillRule='evenodd'
+                  d='M1.22 5.222a.75.75 0 0 1 1.06 0L7 9.942l3.768-3.769a.75.75 0 0 1 1.113.058 20.908 20.908 0 0 1 3.813 7.254l1.574-2.727a.75.75 0 0 1 1.3.75l-2.475 4.286a.75.75 0 0 1-1.025.275l-4.287-2.475a.75.75 0 0 1 .75-1.3l2.71 1.565a19.422 19.422 0 0 0-3.013-6.024L7.53 11.533a.75.75 0 0 1-1.06 0l-5.25-5.25a.75.75 0 0 1 0-1.06Z'
+                  clipRule='evenodd'
+                />
+              </svg>
+
+              {translate("losers")}
+            </button>
+          </div>
           <div ref={sentinelRef} />
           {/* Search + Sort/Filter bar */}
           <div
@@ -307,126 +467,6 @@ export default function GiftsList({ loading }: PropsInterface) {
               </div>
             </div>
           </div>
-
-          <div className='w-full mt-2 mb-2 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap text-sm gap-x-1'>
-            <button
-              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
-                selectedList === "all"
-                  ? "bg-secondary text-primary"
-                  : "bg-secondaryTransparent text-secondaryText"
-              }`}
-              onClick={() => {
-                vibrate();
-                setSelectedList("all");
-                dispatch(
-                  setFilters({ ...filters, sort: "highFirst", chosenGifts: [] })
-                );
-              }}>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 24 24'
-                fill='currentColor'
-                className='size-4'>
-                <path d='M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z' />
-              </svg>
-              {translate("allGifts")}
-            </button>
-            <button
-              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
-                selectedList === "saved"
-                  ? "bg-secondary text-primary"
-                  : "bg-secondaryTransparent text-secondaryText"
-              }`}
-              onClick={() => {
-                vibrate();
-                setSelectedList("saved");
-                dispatch(
-                  setFilters({
-                    ...filters,
-                    sort: "highFirst",
-                    chosenGifts: user.savedList,
-                  })
-                );
-              }}>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 24 24'
-                fill='currentColor'
-                className='size-4'>
-                <path
-                  fillRule='evenodd'
-                  d='M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              {translate("saved")}
-            </button>
-            <button
-              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
-                selectedList === "gainers"
-                  ? "bg-secondary text-primary"
-                  : "bg-secondaryTransparent text-secondaryText"
-              }`}
-              onClick={() => {
-                vibrate();
-                setSelectedList("gainers");
-                dispatch(
-                  setFilters({
-                    ...filters,
-                    sort:
-                      currency === "ton" ? "changeGrowth" : "changeGrowthTon",
-                    chosenGifts: [],
-                  })
-                );
-              }}>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 24 24'
-                fill='currentColor'
-                className='size-4'>
-                <path
-                  fillRule='evenodd'
-                  d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              {translate("gainers")}
-            </button>
-            <button
-              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 rounded-3xl ${
-                selectedList === "loosers"
-                  ? "bg-secondary text-primary"
-                  : "bg-secondaryTransparent text-secondaryText"
-              }`}
-              onClick={() => {
-                vibrate();
-                setSelectedList("loosers");
-                dispatch(
-                  setFilters({
-                    ...filters,
-                    sort:
-                      currency === "ton"
-                        ? "changeGrowthAsc"
-                        : "changeGrowthTonAsc",
-                    chosenGifts: [],
-                  })
-                );
-              }}>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 24 24'
-                fill='currentColor'
-                className='size-4'>
-                <path
-                  fillRule='evenodd'
-                  d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              {translate("losers")}
-            </button>
-          </div>
-
           {/* List Content */}
           <div className='w-full pt-2'>
             <ScrollToTopButton />
