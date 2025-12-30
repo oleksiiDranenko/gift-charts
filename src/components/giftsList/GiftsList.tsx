@@ -15,6 +15,7 @@ import ListSkeleton from "./ListSkeleton";
 import { GiftSorter, SortKey } from "../filterGifts/GiftSorter";
 import { useTranslations } from "next-intl";
 import { setFilters } from "@/redux/slices/filterListSlice";
+import { useTheme } from "next-themes";
 
 interface PropsInterface {
   loading: boolean;
@@ -31,6 +32,7 @@ export default function GiftsList({ loading }: PropsInterface) {
     "all" | "saved" | "gainers" | "losers"
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { resolvedTheme } = useTheme();
 
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -468,7 +470,7 @@ export default function GiftsList({ loading }: PropsInterface) {
             </div>
           </div>
           {/* List Content */}
-          <div className='w-full pt-2'>
+          <div className={`w-full ${resolvedTheme === "dark" ? "" : "pt-1"}`}>
             <ScrollToTopButton />
 
             {giftsList.length === 0 && selectedList === "all" ? (

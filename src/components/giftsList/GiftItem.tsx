@@ -141,7 +141,7 @@ export default function GiftItem({
   return (
     <>
       <NoPrefetchLink
-        className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl mb-2 ${
+        className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
           background === "color"
             ? `bg-gradient-to-r ${
                 percentChange !== "no data" && percentChange >= 0
@@ -151,16 +151,16 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "bg-secondaryTransparent"
-            : "bg-secondaryTransparent"
+            ? ""
+            : "bg-secondaryTransparent mb-2 pl-2"
         }`}
         key={item._id}
         href={`/gift/${item._id}`}
         onClick={() => vibrate()}>
         <div className='flex flex-row items-center'>
-          {/* <span className='w-6 h-6 bg-secondaryTransparent rounded-3xl box-border flex items-center text-secondaryText text-xs'>
+          <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
             {number + 1}
-          </span> */}
+          </span>
           <Image
             alt={item.name}
             src={`/gifts/${item.image}.webp`}
