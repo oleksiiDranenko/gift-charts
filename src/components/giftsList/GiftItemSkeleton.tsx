@@ -14,23 +14,24 @@ export default function GiftItemSkeleton({
       <div
         className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
           resolvedTheme === "dark"
-            ? "bg-secondaryTransparent rounded-3xl mb-2"
+            ? "pl-1"
             : "bg-secondaryTransparent rounded-3xl mb-2"
         }`}>
         <div className='flex flex-row items-center'>
+          <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
+            {index + 1}
+          </span>
           <div
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible ml-2 mr-3 rounded-full ${
-              resolvedTheme === "dark"
-                ? "bg-gradient-to-b from-secondary to-secondaryTransparent"
-                : "bg-background"
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible  mr-3 rounded-full ml-2 animate-pulse ${
+              resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
             }`}></div>
           <div className='flex flex-col gap-y-[2px]'>
             <div
-              className={`h-4 w-20 rounded-3xl ${
+              className={`h-4 w-24 rounded-3xl ${
                 resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
             <div
-              className={`h-4 w-10 rounded-3xl ${
+              className={`h-4 w-20 rounded-3xl ${
                 resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
           </div>
@@ -38,11 +39,11 @@ export default function GiftItemSkeleton({
         <div className='flex flex-row items-center justify-end'>
           <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
             <div
-              className={`h-4 w-20 rounded-3xl ${
+              className={`h-4 w-24 rounded-3xl ${
                 resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
             <div
-              className={`h-4 w-10 rounded-3xl ${
+              className={`h-4 w-16 rounded-3xl ${
                 resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
               } animate-pulse`}></div>
           </div>
