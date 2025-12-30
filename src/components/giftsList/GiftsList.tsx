@@ -227,45 +227,12 @@ export default function GiftsList({ loading }: PropsInterface) {
     <div className='w-full flex flex-col items-center'>
       {giftsList ? (
         <>
-          {/* <div className='w-full px-3'>
-            <div className='lg:w-80 w-full relative flex mb-5'>
-              <button
-                onClick={() => {
-                  setSelectedList("all");
-                  vibrate();
-                }}
-                className={`w-1/2 pb-2 text-center transition ${
-                  selectedList === "all"
-                    ? "text-foreground font-bold"
-                    : "text-secondaryText"
-                }`}>
-                {translate("allGifts")}
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedList("saved");
-                  vibrate();
-                }}
-                className={`w-1/2 pb-2 text-center transition ${
-                  selectedList === "saved"
-                    ? "text-foreground font-bold"
-                    : "text-secondaryText"
-                }`}>
-                {translate("saved")}
-              </button>
-              <span
-                className={`absolute bottom-0 left-0 h-[2px] bg-foreground rounded-full transition-all duration-300 ${
-                  selectedList === "all" ? "w-1/2" : "translate-x-full w-1/2"
-                }`}
-              />
-            </div>
-          </div> */}
           <div className='w-full mb-3 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap '>
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
                 selectedList === "all"
-                  ? "border-b border-foreground"
-                  : "border-b border-secondaryTransparent text-secondaryText"
+                  ? "border-b-2 border-foreground"
+                  : "border-b-2 border-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
                 vibrate();
@@ -286,8 +253,8 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
                 selectedList === "saved"
-                  ? "border-b border-foreground"
-                  : "border-b border-secondaryTransparent text-secondaryText"
+                  ? "border-b-2 border-foreground"
+                  : "border-b-2 border-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
                 vibrate();
@@ -316,8 +283,8 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
                 selectedList === "gainers"
-                  ? "border-b border-foreground"
-                  : "border-b border-secondaryTransparent text-secondaryText"
+                  ? "border-b-2 border-foreground"
+                  : "border-b-2 border-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
                 vibrate();
@@ -348,8 +315,8 @@ export default function GiftsList({ loading }: PropsInterface) {
             <button
               className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
                 selectedList === "losers"
-                  ? "border-b border-foreground"
-                  : "border-b border-secondaryTransparent text-secondaryText"
+                  ? "border-b-2 border-foreground"
+                  : "border-b-2 border-secondaryTransparent text-secondaryText"
               }`}
               onClick={() => {
                 vibrate();
