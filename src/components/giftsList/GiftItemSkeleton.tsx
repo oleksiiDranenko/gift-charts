@@ -14,8 +14,8 @@ export default function GiftItemSkeleton({
       <div
         className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
           resolvedTheme === "dark"
-            ? "pl-1"
-            : "bg-secondaryTransparent rounded-3xl mb-2"
+            ? "pr-2"
+            : "bg-secondaryTransparent mb-2 pl-2 pr-3"
         }`}>
         <div className='flex flex-row items-center'>
           <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
@@ -37,7 +37,7 @@ export default function GiftItemSkeleton({
           </div>
         </div>
         <div className='flex flex-row items-center justify-end'>
-          <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center mr-3'>
+          <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center'>
             <div
               className={`h-4 w-24 rounded-3xl ${
                 resolvedTheme === "dark" ? "bg-secondary" : "bg-background"

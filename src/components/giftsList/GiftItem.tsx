@@ -151,8 +151,8 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? ""
-            : "bg-secondaryTransparent mb-2 pl-2"
+            ? "pr-2"
+            : "bg-secondaryTransparent mb-2 pl-2 pr-3"
         }`}
         key={item._id}
         href={`/gift/${item._id}`}
@@ -219,7 +219,7 @@ export default function GiftItem({
         </div> */}
 
         <div className='flex flex-row items-center justify-end'>
-          <div className='w-fit text-sm flex flex-col items-end justify-center mr-3'>
+          <div className='w-fit text-sm flex flex-col items-end justify-center'>
             <div className='flex flex-row items-center'>
               {currency === "ton" ? (
                 <Image
