@@ -234,8 +234,8 @@ export default function IndexChart({
           selectedPrice === "ton" ? item.priceTon : item.priceUsd
         ),
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        borderWidth: 1,
-        tension: 0,
+        borderWidth: 1.3,
+        tension: 0.4,
         pointRadius: 0,
         pointHoverRadius: 6,
         fill: true,
@@ -255,7 +255,7 @@ export default function IndexChart({
           const base = isUp ? "34, 197, 94" : "239, 68, 68"; // RGB only
 
           // fade from 1 → 0
-          gradient.addColorStop(0, `rgba(${base}, 1)`); // fully opaque
+          gradient.addColorStop(0, `rgba(${base}, 0.7)`); // fully opaque
           gradient.addColorStop(1, `rgba(${base}, 0)`); // fully transparent
 
           return gradient;
