@@ -1,6 +1,8 @@
 "use client";
 
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
+import { formatPrice } from "@/utils/formatNumber";
+import { Percent } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -28,7 +30,7 @@ export default function ModelItem({ model }: Props) {
           ? "bg-secondaryTransparent"
           : "bg-secondaryTransparent"
       }`}>
-      <div className='w-full bg-gradient-to-b from-background to-secondaryTransparent rounded-3xl p-3 flex justify-center items-center'>
+      <div className='w-full bg-gradient-to-b from-background to-secondaryTransparent rounded-t-3xl p-3 flex justify-center items-center'>
         <Image
           alt={model.name}
           src={model.image}
@@ -37,11 +39,14 @@ export default function ModelItem({ model }: Props) {
           className={`w-[80px] h-[80px]`}
         />
       </div>
-      <div className='w-full flex-col items-start p-3 space-y-1'>
+      <div className='w-full flex-col items-start justify-start p-3 space-y-1'>
         <span className=' mr-2'>{model.name}</span>
         <div className='flex flex-row items-center'>
           <span className='text-sm mr-1 text-secondaryText'>Rarity:</span>
-          <span className='w-fit text-sm text-primary '>{model.rarity}%</span>
+          <span className='w-fit text-sm text-primary flex flex-row items-center'>
+            {model.rarity}
+            <Percent size={12} />
+          </span>
         </div>
         <div className='w-fit text-sm flex flex-col items-start justify-center space-y-1'>
           <div className='flex flex-row items-center'>
@@ -52,7 +57,9 @@ export default function ModelItem({ model }: Props) {
               height={15}
               className='mr-1'
             />
-            <span className='text-base font-bold'>{model.priceTon}</span>
+            <span className='text-lg font-bold'>
+              {formatPrice(model.priceTon)}
+            </span>
           </div>
 
           <span

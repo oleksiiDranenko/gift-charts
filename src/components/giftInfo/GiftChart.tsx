@@ -109,8 +109,8 @@ export default function GiftChart({
                 src={`/gifts/${gift?.image}.webp`}
                 width={55}
                 height={55}
-                className={`w-[50px] h-[50px] p-1 !overflow-visible mr-2 rounded-full ${
-                  resolvedTheme === "dark" ? "" : "bg-background"
+                className={`w-[60px] h-[60px] p-1 overflow-hidden mr-2 ${
+                  resolvedTheme === "dark" ? "" : "bg-background rounded-full"
                 }`}
               />
               <h1 className='flex flex-col'>

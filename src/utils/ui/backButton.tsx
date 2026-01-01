@@ -36,7 +36,7 @@ export default function BackButton({ middleText, rightElement }: Props) {
             />
           </svg>
 
-          <span className='pr-1 font-bold'>{translate("back")}</span>
+          <span className='pr-1 text-lg'>{translate("back")}</span>
         </div>
       </div>
       <div className='w-full flex-nowrap text-nowrap flex justify-center'>

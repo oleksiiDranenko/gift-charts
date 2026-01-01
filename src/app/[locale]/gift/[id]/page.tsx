@@ -15,6 +15,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import ModelsList from "@/components/giftInfo/ModelsList";
+import { Transition } from "@headlessui/react";
 
 async function fetchWeekData(name: string) {
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/weekChart`, {
@@ -74,12 +75,12 @@ export default function Page({ params }: any) {
   return (
     <div className='w-full lg:w-[98%] pt-[0px] flex justify-center pb-20'>
       <div className='w-full'>
-        <div className='px-3'>
+        <div className='px-3 mb-1'>
           <BackButton
             rightElement={
-              <div className='w-full flex flex-row justify-end'>
+              <div className='w-full flex flex-row justify-end text-lg'>
                 <button
-                  className={`flex flex-row items-center justify-center pb-1 gap-x-1 px-3 border-b-2 ${
+                  className={`flex flex-row items-center justify-center h-10 gap-x-1 px-3 border-b-2 ${
                     page === "overview"
                       ? "border-foreground"
                       : "border-secondaryTransparent text-secondaryText"
@@ -98,7 +99,7 @@ export default function Page({ params }: any) {
                   Overview
                 </button>
                 <button
-                  className={`flex flex-row items-center justify-center pb-1 gap-x-1 px-3 border-b-2 ${
+                  className={`flex flex-row items-center justify-center h-10 gap-x-1 px-3 border-b-2 ${
                     page === "models"
                       ? "border-foreground"
                       : "border-secondaryTransparent text-secondaryText"
@@ -140,32 +141,47 @@ export default function Page({ params }: any) {
             </div> */}
           </div>
         ) : gift ? (
-          page === "overview" ? (
-            <div className='flex flex-col'>
-              <GiftChart gift={gift} lifeData={lifeList} weekData={weekList} />
-
-              <div className='w-full flex flex-col lg:items-start lg:flex-row px-3 mt-5 space-y-5 lg:space-y-0 lg:space-x-3'>
-                <GiftInitPriceSection
-                  initStarsPrice={gift.starsPrice}
-                  initSupply={gift.initSupply}
-                  starUsdtCost={0.015}
+          <Transition
+            key={page}
+            appear
+            show={true}
+            enter='transition-all ease-out duration-300'
+            enterFrom='opacity-0 translate-y-0'
+            enterTo='opacity-100 translate-y-0'
+            leave='transition-all ease-in duration-300'
+            leaveFrom='opacity-100 translate-y-0'
+            leaveTo='opacity-0 translate-y-0'>
+            {page === "overview" ? (
+              <div className='flex flex-col'>
+                <GiftChart
+                  gift={gift}
+                  lifeData={lifeList}
+                  weekData={weekList}
                 />
-                <GiftSupplyPie
-                  initSupply={gift.initSupply}
-                  supply={gift.supply}
-                  upgradedSupply={gift.upgradedSupply}
+
+                <div className='w-full flex flex-col lg:items-start lg:flex-row px-3 mt-5 space-y-5 lg:space-y-0 lg:space-x-3'>
+                  <GiftInitPriceSection
+                    initStarsPrice={gift.starsPrice}
+                    initSupply={gift.initSupply}
+                    starUsdtCost={0.015}
+                  />
+                  <GiftSupplyPie
+                    initSupply={gift.initSupply}
+                    supply={gift.supply}
+                    upgradedSupply={gift.upgradedSupply}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className='w-full pt-5'>
+                <ModelsList
+                  isOpen={page === "models"}
+                  giftName={gift.name}
+                  giftId={gift._id}
                 />
               </div>
-            </div>
-          ) : (
-            <div className='w-full pt-5'>
-              <ModelsList
-                isOpen={page === "models"}
-                giftName={gift.name}
-                giftId={gift._id}
-              />
-            </div>
-          )
+            )}
+          </Transition>
         ) : (
           <div className='text-center text-red-500'>
             Error loading gift data
