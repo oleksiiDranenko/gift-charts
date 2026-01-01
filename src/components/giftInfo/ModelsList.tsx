@@ -87,7 +87,7 @@ export default function ModelsList({
           <div ref={sentinelRef} />
           {/* Search + Sort/Filter bar */}
           <div
-            className={`w-full sticky px-3 pb-1 top-0 z-30 bg-background  transition-all duration-300 ${
+            className={`w-full sticky px-3 pb-1 top-0 z-30 bg-background mb-2 transition-all duration-300 ${
               isSticky
                 ? user.username === "_guest"
                   ? "pt-5"
@@ -139,7 +139,7 @@ export default function ModelsList({
                   </button>
                 </div>
 
-                <div className='relative'>
+                {/* <div className='relative'>
                   <button
                     onClick={() => vibrate()}
                     className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
@@ -154,7 +154,7 @@ export default function ModelsList({
                       />
                     </svg>
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

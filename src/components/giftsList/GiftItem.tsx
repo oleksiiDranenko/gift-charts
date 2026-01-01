@@ -351,7 +351,7 @@ export default function GiftItem({
               height={50}
               className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl ${
                 resolvedTheme === "dark"
-                  ? "bg-secondaryTransparent"
+                  ? "bg-gradient-to-t from-secondaryTransparent to-background"
                   : "bg-background"
               }`}
             />
@@ -452,55 +452,129 @@ export default function GiftItem({
           <div className='w-1/3 flex flex-row'>
             <div className='w-full flex flex-row justify-start items-center'>
               <span
-                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
                   percentChange24h !== "no data"
                     ? percentChange24h >= 0
-                      ? "text-green-500 bg-green-500"
+                      ? "text-green-500 "
                       : percentChange24h < 0
-                      ? "text-red-500 bg-red-500"
+                      ? "text-red-500 "
                       : "text-slate-500"
                     : "text-slate-500"
                 }`}>
-                {percentChange24h !== "no data" && percentChange24h >= 0 && "+"}
-                {percentChange24h}
+                {percentChange24h !== "no data" && percentChange24h >= 0 ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M15.22 6.268a.75.75 0 0 1 .968-.431l5.942 2.28a.75.75 0 0 1 .431.97l-2.28 5.94a.75.75 0 1 1-1.4-.537l1.63-4.251-1.086.484a11.2 11.2 0 0 0-5.45 5.173.75.75 0 0 1-1.199.19L9 12.312l-6.22 6.22a.75.75 0 0 1-1.06-1.061l6.75-6.75a.75.75 0 0 1 1.06 0l3.606 3.606a12.695 12.695 0 0 1 5.68-4.974l1.086-.483-4.251-1.632a.75.75 0 0 1-.432-.97Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M1.72 5.47a.75.75 0 0 1 1.06 0L9 11.69l3.756-3.756a.75.75 0 0 1 .985-.066 12.698 12.698 0 0 1 4.575 6.832l.308 1.149 2.277-3.943a.75.75 0 1 1 1.299.75l-3.182 5.51a.75.75 0 0 1-1.025.275l-5.511-3.181a.75.75 0 0 1 .75-1.3l3.943 2.277-.308-1.149a11.194 11.194 0 0 0-3.528-5.617l-3.809 3.81a.75.75 0 0 1-1.06 0L1.72 6.53a.75.75 0 0 1 0-1.061Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                )}
+                {percentChange24h === "no data"
+                  ? "-"
+                  : Math.abs(percentChange24h)}
                 {percentChange24h !== "no data" ? "%" : null}
               </span>
             </div>
 
             <div className='w-full flex flex-row justify-start items-center'>
               <span
-                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
                   percentChangeWeek !== "no data"
                     ? percentChangeWeek >= 0
-                      ? "text-green-500 bg-green-500"
+                      ? "text-green-500 "
                       : percentChangeWeek < 0
-                      ? "text-red-500 bg-red-500"
+                      ? "text-red-500 "
                       : "text-slate-500"
                     : "text-slate-500"
                 }`}>
-                {percentChangeWeek !== "no data" &&
-                  percentChangeWeek >= 0 &&
-                  "+"}
-                {percentChangeWeek}
+                {percentChangeWeek !== "no data" && percentChangeWeek >= 0 ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M15.22 6.268a.75.75 0 0 1 .968-.431l5.942 2.28a.75.75 0 0 1 .431.97l-2.28 5.94a.75.75 0 1 1-1.4-.537l1.63-4.251-1.086.484a11.2 11.2 0 0 0-5.45 5.173.75.75 0 0 1-1.199.19L9 12.312l-6.22 6.22a.75.75 0 0 1-1.06-1.061l6.75-6.75a.75.75 0 0 1 1.06 0l3.606 3.606a12.695 12.695 0 0 1 5.68-4.974l1.086-.483-4.251-1.632a.75.75 0 0 1-.432-.97Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M1.72 5.47a.75.75 0 0 1 1.06 0L9 11.69l3.756-3.756a.75.75 0 0 1 .985-.066 12.698 12.698 0 0 1 4.575 6.832l.308 1.149 2.277-3.943a.75.75 0 1 1 1.299.75l-3.182 5.51a.75.75 0 0 1-1.025.275l-5.511-3.181a.75.75 0 0 1 .75-1.3l3.943 2.277-.308-1.149a11.194 11.194 0 0 0-3.528-5.617l-3.809 3.81a.75.75 0 0 1-1.06 0L1.72 6.53a.75.75 0 0 1 0-1.061Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                )}
+                {percentChangeWeek === "no data"
+                  ? "-"
+                  : Math.abs(percentChangeWeek)}
                 {percentChangeWeek !== "no data" ? "%" : null}
               </span>
             </div>
 
             <div className='w-full flex flex-row justify-start items-center'>
               <span
-                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-xs font-normal ${
+                className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${
                   percentChangeMonth !== "no data"
                     ? percentChangeMonth >= 0
-                      ? "text-green-500 bg-green-500"
+                      ? "text-green-500 "
                       : percentChangeMonth < 0
-                      ? "text-red-500 bg-red-500"
+                      ? "text-red-500 "
                       : "text-slate-500"
                     : "text-slate-500"
                 }`}>
-                {percentChangeMonth !== "no data" &&
-                  percentChangeMonth >= 0 &&
-                  "+"}
-                {percentChangeMonth}
+                {percentChangeMonth !== "no data" && percentChangeMonth >= 0 ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M15.22 6.268a.75.75 0 0 1 .968-.431l5.942 2.28a.75.75 0 0 1 .431.97l-2.28 5.94a.75.75 0 1 1-1.4-.537l1.63-4.251-1.086.484a11.2 11.2 0 0 0-5.45 5.173.75.75 0 0 1-1.199.19L9 12.312l-6.22 6.22a.75.75 0 0 1-1.06-1.061l6.75-6.75a.75.75 0 0 1 1.06 0l3.606 3.606a12.695 12.695 0 0 1 5.68-4.974l1.086-.483-4.251-1.632a.75.75 0 0 1-.432-.97Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M1.72 5.47a.75.75 0 0 1 1.06 0L9 11.69l3.756-3.756a.75.75 0 0 1 .985-.066 12.698 12.698 0 0 1 4.575 6.832l.308 1.149 2.277-3.943a.75.75 0 1 1 1.299.75l-3.182 5.51a.75.75 0 0 1-1.025.275l-5.511-3.181a.75.75 0 0 1 .75-1.3l3.943 2.277-.308-1.149a11.194 11.194 0 0 0-3.528-5.617l-3.809 3.81a.75.75 0 0 1-1.06 0L1.72 6.53a.75.75 0 0 1 0-1.061Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                )}
+                {percentChangeMonth === "no data"
+                  ? "-"
+                  : Math.abs(percentChangeMonth)}
                 {percentChangeMonth !== "no data" ? "%" : null}
               </span>
             </div>
