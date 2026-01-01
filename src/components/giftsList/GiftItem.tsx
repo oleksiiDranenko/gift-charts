@@ -143,7 +143,7 @@ export default function GiftItem({
       <NoPrefetchLink
         className={`lg:hidden w-full h-[70px] flex flex-row items-center justify-between rounded-3xl ${
           background === "color"
-            ? `bg-gradient-to-r ${
+            ? `bg-gradient-to-r pr-3 mt-2 ${
                 percentChange !== "no data" && percentChange >= 0
                   ? "from-green-500/5 to-green-500/25"
                   : percentChange !== "no data" &&
@@ -158,9 +158,9 @@ export default function GiftItem({
         href={`/gift/${item._id}`}
         onClick={() => vibrate()}>
         <div className='flex flex-row items-center'>
-          <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
+          {/* <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
             {number + 1}
-          </span>
+          </span> */}
           <Image
             alt={item.name}
             src={`/gifts/${item.image}.webp`}
@@ -215,7 +215,7 @@ export default function GiftItem({
         </div>
 
         {/* <div className='w-10 h-full flex items-center'>
-          <GiftItemChart percentChange={percentChange24h} />
+          <GiftItemChart />
         </div> */}
 
         <div className='flex flex-row items-center justify-end'>

@@ -106,7 +106,7 @@ export default function GiftBlockItem({
 
   return (
     <NoPrefetchLink
-      className={`w-full mb-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-3xl ${
+      className={`w-full mt-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-3xl ${
         background === "color"
           ? `bg-gradient-to-b ${
               percentChange !== "no data" && percentChange >= 0

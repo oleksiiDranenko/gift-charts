@@ -21,7 +21,7 @@ ChartJS.register(
 );
 
 const GiftItemChart = () => {
-  const labels = Array.from({ length: 48 }, (_, i) => (i + 1).toString());
+  const labels = Array.from({ length: 10 }, (_, i) => (i + 1).toString());
 
   // generate 48 random data points
   const values = Array.from(
@@ -35,7 +35,7 @@ const GiftItemChart = () => {
         label: "",
         data: values,
         borderColor: "#22c55e",
-        borderWidth: 2,
+        borderWidth: 1.5,
         fill: false, // remove area shading
         pointRadius: 0, // ❌ removes dots
         pointHoverRadius: 0, // ❌ removes hover dots
@@ -57,7 +57,7 @@ const GiftItemChart = () => {
     },
   };
 
-  return <Line data={data} options={options} height={40} width={80} />;
+  return <Line data={data} options={options} height={80} width={80} />;
 };
 
 export default GiftItemChart;

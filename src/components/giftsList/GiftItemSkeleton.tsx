@@ -18,9 +18,9 @@ export default function GiftItemSkeleton({
             : "bg-secondaryTransparent mb-2 pl-2 pr-3"
         }`}>
         <div className='flex flex-row items-center'>
-          <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
+          {/* <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
             {index + 1}
-          </span>
+          </span> */}
           <div
             className={`w-[50px] h-[50px] p-[6px] !overflow-visible  mr-3 rounded-full ml-2 animate-pulse ${
               resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
