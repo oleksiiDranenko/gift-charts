@@ -14,6 +14,7 @@ import GiftInitPriceSection from "@/components/giftInfo/GiftInitPriceSection";
 import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
+import ModelsList from "@/components/giftInfo/ModelsList";
 
 async function fetchWeekData(name: string) {
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/weekChart`, {
@@ -87,6 +88,13 @@ export default function Page({ params }: any) {
                     vibrate();
                     setPage("overview");
                   }}>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1 text-primary'>
+                    <path d='M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z' />
+                  </svg>
                   Overview
                 </button>
                 <button
@@ -99,6 +107,17 @@ export default function Page({ params }: any) {
                     vibrate();
                     setPage("models");
                   }}>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-4 mr-1 text-primary'>
+                    <path
+                      fillRule='evenodd'
+                      d='M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
                   Models
                 </button>
               </div>
@@ -139,7 +158,13 @@ export default function Page({ params }: any) {
               </div>
             </div>
           ) : (
-            <div></div>
+            <div className='w-full pt-5'>
+              <ModelsList
+                isOpen={page === "models"}
+                giftName={gift.name}
+                giftId={gift._id}
+              />
+            </div>
           )
         ) : (
           <div className='text-center text-red-500'>

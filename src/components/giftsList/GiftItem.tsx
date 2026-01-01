@@ -335,7 +335,7 @@ export default function GiftItem({
                 }`
               : resolvedTheme === "dark"
               ? "bg-none hover:bg-secondaryTransparent ease-in-out duration-200 border-b border-secondaryTransparent rounded-3xl"
-              : "bg-secondaryTransparent hover:bg-background border-b border-secondary rounded-3xl"
+              : "bg-secondaryTransparent hover:bg-background border-b border-background rounded-3xl"
           }`}
           key={item._id}
           href={`/gift/${item._id}`}
