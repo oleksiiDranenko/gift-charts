@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import GiftItemChart from "./GiftItemChart";
 import NoPrefetchLink from "../NoPrefetchLink";
+import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
 
 interface PropsInterface {
-  item: GiftInterface;
+  item: GiftListItemInterface;
   currency: "ton" | "usd";
   sortBy:
     | "price"
@@ -36,44 +37,16 @@ export default function GiftBlockItem({
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
 
   useEffect(() => {
-    if (item.tonPrice24hAgo && item.usdPrice24hAgo) {
-      if (currency === "ton") {
-        if (timeGap === "24h") {
-          setPercentChange(
-            countPercentChange(item.tonPrice24hAgo, item.priceTon)
-          );
-        } else if (timeGap === "1w") {
-          item.tonPriceWeekAgo
-            ? setPercentChange(
-                countPercentChange(item.tonPriceWeekAgo, item.priceTon)
-              )
-            : setPercentChange("no data");
-        } else if (timeGap === "1m") {
-          item.tonPriceMonthAgo
-            ? setPercentChange(
-                countPercentChange(item.tonPriceMonthAgo, item.priceTon)
-              )
-            : setPercentChange("no data");
-        }
-      } else {
-        if (timeGap === "24h") {
-          setPercentChange(
-            countPercentChange(item.usdPrice24hAgo, item.priceUsd)
-          );
-        } else if (timeGap === "1w") {
-          item.usdPriceWeekAgo
-            ? setPercentChange(
-                countPercentChange(item.usdPriceWeekAgo, item.priceUsd)
-              )
-            : setPercentChange("no data");
-        } else if (timeGap === "1m" || timeGap === "all") {
-          item.usdPriceMonthAgo
-            ? setPercentChange(
-                countPercentChange(item.usdPriceMonthAgo, item.priceUsd)
-              )
-            : setPercentChange("no data");
-        }
-      }
+    if (timeGap === "24h") {
+      setPercentChange(
+        countPercentChange(item.prices.h24, item.prices.current)
+      );
+    } else if (timeGap === "1w") {
+      setPercentChange(countPercentChange(item.prices.d7, item.prices.current));
+    } else if (timeGap === "1m") {
+      setPercentChange(
+        countPercentChange(item.prices.d30, item.prices.current)
+      );
     } else {
       setPercentChange("no data");
     }
@@ -129,16 +102,6 @@ export default function GiftBlockItem({
           className={`p-1 ${borderColor ? "border" : ""}'`}
           style={borderColor ? { borderColor: `${borderColor}80` } : {}}
         />
-        {item.preSale && (
-          <span className='text-[8px] text-cyan-500 font-bold ml-2 absolute top-0 right-0'>
-            Pre-Market
-          </span>
-        )}
-        {/* <div className="flex flex-col items-center">
-                    <span className="text-sm text-center text-wrap font-bold">
-                        {item.name}
-                    </span>
-                </div> */}
       </div>
 
       {/* <GiftItemChart /> */}
@@ -164,15 +127,7 @@ export default function GiftBlockItem({
               />
             )}
             <span className='text-sm font-bold'>
-              {currency === "ton" && displayValue === "price"
-                ? formatPrice(item.priceTon)
-                : currency === "ton" && displayValue === "marketCap"
-                ? formatNumber(item.priceTon * item.upgradedSupply)
-                : currency === "usd" && displayValue === "price"
-                ? formatPrice(item.priceUsd)
-                : currency === "usd" && displayValue === "marketCap"
-                ? formatNumber(item.priceUsd * item.upgradedSupply)
-                : null}
+              {formatPrice(item.prices.current)}
             </span>
           </div>
 

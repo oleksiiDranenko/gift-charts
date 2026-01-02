@@ -9,9 +9,10 @@ import { useTheme } from "next-themes";
 import GiftItemChart from "./GiftItemChart";
 import { useTranslations } from "next-intl";
 import NoPrefetchLink from "../NoPrefetchLink";
+import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
 
 interface PropsInterface {
-  item: GiftInterface;
+  item: GiftListItemInterface;
   currency: "ton" | "usd";
   sortBy:
     | "price"
@@ -54,13 +55,13 @@ export default function GiftItem({
 
   useEffect(() => {
     // Helper: pick the right price depending on currency
-    const currentPrice = currency === "ton" ? item.priceTon : item.priceUsd;
+    const currentPrice = item.prices.current;
     const price24hAgo =
-      currency === "ton" ? item.tonPrice24hAgo : item.usdPrice24hAgo;
+      currency === "ton" ? item.prices.h24 : item.prices.current;
     const priceWeekAgo =
-      currency === "ton" ? item.tonPriceWeekAgo : item.usdPriceWeekAgo;
+      currency === "ton" ? item.prices.d7 : item.prices.current;
     const priceMonthAgo =
-      currency === "ton" ? item.tonPriceMonthAgo : item.usdPriceMonthAgo;
+      currency === "ton" ? item.prices.d30 : item.prices.current;
 
     // --- Update main percentChange (based on selected timeGap) ---
     if (price24hAgo && currentPrice) {
@@ -157,7 +158,7 @@ export default function GiftItem({
         key={item._id}
         href={`/gift/${item._id}`}
         onClick={() => vibrate()}>
-        <div className='flex flex-row items-center'>
+        <div className='w-[50%] flex flex-row items-center'>
           {/* <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
             {number + 1}
           </span> */}
@@ -173,52 +174,22 @@ export default function GiftItem({
           <div className='flex flex-col'>
             <span className='flex flex-row items-center text-base font-bold'>
               {item.name}
-
-              {item.preSale && (
-                <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-3xl'>
-                  Pre-Market
-                </span>
-              )}
             </span>
             <span className='text-secondaryText w-fit rounded-lg text-xs font-normal'>
-              {sortBy === "price"
-                ? formatNumberWithWord(item.upgradedSupply) +
-                  " / " +
-                  formatNumberWithWord(item.supply)
-                : sortBy === "marketCap" && displayValue === "price"
-                ? formatNumber(
-                    currency === "ton"
-                      ? item.priceTon * item.upgradedSupply
-                      : item.priceUsd * item.upgradedSupply
-                  )
-                : sortBy === "marketCap" && displayValue === "marketCap"
-                ? formatNumberWithWord(item.upgradedSupply) +
-                  " / " +
-                  formatNumberWithWord(item.supply)
-                : sortBy === "percentChange"
-                ? formatNumberWithWord(item.upgradedSupply) +
-                  " / " +
-                  formatNumberWithWord(item.supply)
-                : sortBy === "supply"
-                ? formatNumberWithWord(item.upgradedSupply) +
-                  " / " +
-                  formatNumberWithWord(item.supply)
-                : sortBy === "initSupply"
-                ? formatNumberWithWord(item.upgradedSupply) +
-                  " / " +
-                  formatNumberWithWord(item.initSupply)
-                : sortBy === "starsPrice"
-                ? `${item.starsPrice} ⭐`
-                : null}
+              {formatNumberWithWord(item.upgradedSupply) +
+                " / " +
+                formatNumberWithWord(item.supply)}
             </span>
           </div>
         </div>
 
-        {/* <div className='w-10 h-full flex items-center'>
-          <GiftItemChart />
-        </div> */}
+        <div className='w-[20%] h-full flex items-center justify-center'>
+          <div className='w-10'>
+            <GiftItemChart gift={item} />
+          </div>
+        </div>
 
-        <div className='flex flex-row items-center justify-end'>
+        <div className='w-[30%] flex flex-row items-center justify-end'>
           <div className='w-fit text-sm flex flex-col items-end justify-center'>
             <div className='flex flex-row items-center'>
               {currency === "ton" ? (
@@ -239,15 +210,7 @@ export default function GiftItem({
                 />
               )}
               <span className='text-base font-bold'>
-                {currency === "ton" && displayValue === "price"
-                  ? formatPrice(item.priceTon)
-                  : currency === "ton" && displayValue === "marketCap"
-                  ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
-                  : currency === "usd" && displayValue === "price"
-                  ? formatPrice(item.priceUsd)
-                  : currency === "usd" && displayValue === "marketCap"
-                  ? formatNumberWithWord(item.priceUsd * item.upgradedSupply)
-                  : null}
+                {formatPrice(item.prices.current)}
               </span>
             </div>
 
@@ -359,42 +322,11 @@ export default function GiftItem({
             <div className='flex flex-col gap-y-[2px]'>
               <span className='flex flex-row items-center text-base font-bold'>
                 {item.name}
-                {item.preSale && (
-                  <span className='text-xs text-cyan-500 ml-2 py-1 px-2 bg-cyan-500/10 rounded-3xl'>
-                    Pre-Market
-                  </span>
-                )}
               </span>
               <span className='text-secondaryText gap-y-1 w-fit rounded-lg text-xs font-normal'>
-                {sortBy === "price"
-                  ? formatNumber(item.upgradedSupply) +
-                    " / " +
-                    formatNumberWithWord(item.supply)
-                  : sortBy === "marketCap" && displayValue === "price"
-                  ? formatNumber(
-                      currency === "ton"
-                        ? item.priceTon * item.upgradedSupply
-                        : item.priceUsd * item.upgradedSupply
-                    )
-                  : sortBy === "marketCap" && displayValue === "marketCap"
-                  ? formatNumber(item.upgradedSupply) +
-                    " / " +
-                    formatNumberWithWord(item.supply)
-                  : sortBy === "percentChange"
-                  ? formatNumber(item.upgradedSupply) +
-                    " / " +
-                    formatNumberWithWord(item.supply)
-                  : sortBy === "supply"
-                  ? formatNumber(item.upgradedSupply) +
-                    " / " +
-                    formatNumberWithWord(item.supply)
-                  : sortBy === "initSupply"
-                  ? formatNumber(item.upgradedSupply) +
-                    " / " +
-                    formatNumberWithWord(item.initSupply)
-                  : sortBy === "starsPrice"
-                  ? `${item.starsPrice} ⭐`
-                  : null}
+                {formatNumber(item.upgradedSupply) +
+                  " / " +
+                  formatNumberWithWord(item.supply)}
               </span>
             </div>
           </div>
@@ -418,9 +350,7 @@ export default function GiftItem({
                   className='mr-1'
                 />
               )}
-              <span className='text-sm'>
-                {currency === "ton" ? item.priceTon : item.priceUsd.toFixed(2)}
-              </span>
+              <span className='text-sm'>{item.prices.current}</span>
             </div>
 
             <div className='w-full flex flex-row justify-start items-center'>
@@ -442,9 +372,9 @@ export default function GiftItem({
                 />
               )}
               <span className='text-sm'>
-                {currency === "ton"
-                  ? formatNumberWithWord(item.priceTon * item.upgradedSupply)
-                  : formatNumberWithWord(item.priceUsd * item.upgradedSupply)}
+                {formatNumberWithWord(
+                  item.prices.current * item.upgradedSupply
+                )}
               </span>
             </div>
           </div>

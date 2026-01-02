@@ -1,3 +1,4 @@
+import { Activity } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function GiftItemSkeleton({
@@ -17,7 +18,7 @@ export default function GiftItemSkeleton({
             ? "pr-2"
             : "bg-secondaryTransparent mb-2 pl-2 pr-3"
         }`}>
-        <div className='flex flex-row items-center'>
+        <div className='w-[50%] flex flex-row items-center'>
           {/* <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
             {index + 1}
           </span> */}
@@ -36,7 +37,10 @@ export default function GiftItemSkeleton({
               } animate-pulse`}></div>
           </div>
         </div>
-        <div className='flex flex-row items-center justify-end'>
+        <div className='w-[20%] flex justify-center items-center text-secondary'>
+          <Activity size={20} />
+        </div>
+        <div className='w-[30%] flex flex-row items-center justify-end'>
           <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center'>
             <div
               className={`h-4 w-24 rounded-3xl ${

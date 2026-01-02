@@ -5,9 +5,10 @@ import GiftItem from "../giftsList/GiftItem";
 import GiftBlockItem from "../giftsList/GiftBlockItem";
 import { Transition } from "@headlessui/react";
 import GiftListHeader from "../giftsList/GiftListHeader";
+import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
 
 interface PropsInterface {
-  giftsList: GiftInterface[];
+  giftsList: GiftListItemInterface[];
   type: "line" | "block";
   background: "color" | "none";
   currency: "ton" | "usd";
@@ -28,7 +29,7 @@ export default function ListHandler({
             : "px-3"
         }>
         {type === "line" ? <GiftListHeader /> : null}
-        {giftsList.map((item: GiftInterface, i) =>
+        {giftsList.map((item: GiftListItemInterface, i) =>
           type === "line" ? (
             <GiftItem
               item={item}

@@ -4,10 +4,12 @@ import GiftListHeader from "./GiftListHeader";
 export default function ListSkeleton({
   type,
   count,
+  lastIndex = 0,
   hideHeader = true,
 }: {
   type: "line" | "block";
   count: number;
+  lastIndex?: number;
   hideHeader?: boolean;
 }) {
   return (
@@ -16,13 +18,21 @@ export default function ListSkeleton({
         <div className='w-full flex flex-col px-3'>
           {!hideHeader && <GiftListHeader />}
           {Array.from({ length: count }).map((_, i) => (
-            <GiftItemSkeleton key={i} type={"line"} index={i} />
+            <GiftItemSkeleton
+              key={i + lastIndex}
+              type={"line"}
+              index={i + lastIndex}
+            />
           ))}
         </div>
       ) : (
         <div className='w-full grid grid-flow-row grid-cols-3 lg:grid-cols-6 gap-x-2 px-3'>
           {Array.from({ length: count }).map((_, i) => (
-            <GiftItemSkeleton key={i} type={"block"} index={i} />
+            <GiftItemSkeleton
+              key={i + lastIndex}
+              type={"block"}
+              index={i + lastIndex}
+            />
           ))}
         </div>
       )}

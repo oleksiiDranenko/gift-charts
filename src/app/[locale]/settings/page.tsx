@@ -296,7 +296,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className='w-full mt-3 px-3 pt-3 pb-1 bg-background rounded-3xl'>
+        {/* <div className='w-full mt-3 px-3 pt-3 pb-1 bg-background rounded-3xl'>
           {settings.giftType === "line" ? (
             gifts.length === 0 ? (
               <ListSkeleton type='line' count={1} hideHeader={true} />
@@ -325,7 +325,7 @@ export default function Page() {
               />
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
