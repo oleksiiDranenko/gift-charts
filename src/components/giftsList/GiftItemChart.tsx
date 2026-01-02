@@ -32,19 +32,17 @@ const GiftItemChart = ({ gift }: GiftItemChartProps) => {
   const [gradient, setGradient] = useState<string | CanvasGradient>("");
 
   const chartDataPoints = gift.chartData || [];
-  if (chartDataPoints.length === 0) return null;
-
   const labels = chartDataPoints.map((_, i) => (i + 1).toString());
   const values = chartDataPoints.map((point) => point.price);
-
-  const priceChange = values[values.length - 1] - values[0];
+  const priceChange =
+    values.length > 0 ? values[values.length - 1] - values[0] : 0;
   const borderColor =
     priceChange >= 0 ? "rgba(34, 197, 94, 1)" : "rgba(239, 68, 68, 1)";
 
-  // Create gradient fill
+  // Hooks are safe here
   useEffect(() => {
     const chart = chartRef.current;
-    if (!chart) return;
+    if (!chart || chartDataPoints.length === 0) return;
 
     const ctx = chart.ctx;
     const chartArea = chart.chartArea;
@@ -67,6 +65,8 @@ const GiftItemChart = ({ gift }: GiftItemChartProps) => {
 
     setGradient(grad);
   }, [priceChange, chartDataPoints]);
+
+  if (chartDataPoints.length === 0) return null;
 
   const data = {
     labels,
