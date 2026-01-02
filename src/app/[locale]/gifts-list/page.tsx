@@ -15,7 +15,7 @@ export default function Page() {
 
   return (
     <div className='w-full lg:w-[98%] pt-[0px] pb-24'>
-      <GiftsList loading={loading} />
+      <GiftsList />
     </div>
   );
 }
