@@ -192,6 +192,7 @@
 
   "giftHeader": {
     "gift": "Gift",
+    "chart": "Chart",
     "price": "Price",
     "marketCap": "Market Cap",
     "24h": "24h",

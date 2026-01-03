@@ -158,7 +158,7 @@ export default function GiftItem({
         key={item._id}
         href={`/gift/${item._id}`}
         onClick={() => vibrate()}>
-        <div className='w-[50%] flex flex-row items-center'>
+        <div className='w-[55%] flex flex-row items-center'>
           {/* <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
             {number + 1}
           </span> */}
@@ -167,7 +167,7 @@ export default function GiftItem({
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[50px] h-[50px] p-[3px] ml-2 mr-3 ${
+            className={`w-[45px] h-[45px] p-[3px] ml-1 mr-3 ${
               resolvedTheme === "dark" ? "" : "bg-background rounded-3xl"
             }`}
           />
@@ -183,8 +183,8 @@ export default function GiftItem({
           </div>
         </div>
 
-        <div className='w-[20%] h-full flex items-center justify-center'>
-          <div className='w-10'>
+        <div className='w-[15%] h-full flex items-center justify-center'>
+          <div className='w-9 h-full flex items-center'>
             <GiftItemChart gift={item} />
           </div>
         </div>
@@ -215,7 +215,7 @@ export default function GiftItem({
             </div>
 
             <span
-              className={` px-1 rounded-3xl flex flex-row items-center text-sm font-normal ${
+              className={`flex flex-row items-center text-sm font-normal ${
                 percentChange !== "no data"
                   ? percentChange >= 0
                     ? "text-green-500"
@@ -303,7 +303,7 @@ export default function GiftItem({
           key={item._id}
           href={`/gift/${item._id}`}
           onClick={() => vibrate()}>
-          <div className='w-1/3 flex flex-row items-center'>
+          <div className='w-[30%] flex flex-row items-center'>
             <span className='mx-5 text-secondaryText text-sm'>
               {number + 1}
             </span>
@@ -330,8 +330,13 @@ export default function GiftItem({
               </span>
             </div>
           </div>
+          <div className='w-[16%] flex items-center justify-start'>
+            <div className='w-28 h-8 flex'>
+              <GiftItemChart gift={item} />
+            </div>
+          </div>
 
-          <div className='w-1/3 flex flex-row'>
+          <div className='w-[27%] flex flex-row'>
             <div className='w-full flex flex-row justify-start items-center'>
               {currency === "ton" ? (
                 <Image
@@ -379,7 +384,7 @@ export default function GiftItem({
             </div>
           </div>
 
-          <div className='w-1/3 flex flex-row'>
+          <div className='w-[27%] flex flex-row'>
             <div className='w-full flex flex-row justify-start items-center'>
               <span
                 className={`py-[2px] px-1 rounded-3xl bg-opacity-10 flex flex-row items-center text-sm font-normal ${

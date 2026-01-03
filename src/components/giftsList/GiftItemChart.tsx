@@ -75,9 +75,8 @@ const GiftItemChart = ({ gift }: GiftItemChartProps) => {
         label: gift.name,
         data: values,
         borderColor,
-        borderWidth: 1.5,
-        fill: true,
-        backgroundColor: gradient,
+        borderWidth: 2,
+        fill: false,
         pointRadius: 0,
         pointHoverRadius: 0,
         tension: 0,
@@ -103,8 +102,6 @@ const GiftItemChart = ({ gift }: GiftItemChartProps) => {
       ref={chartRef}
       data={data}
       options={options}
-      height={50}
-      width={80}
       className='rounded-b-md'
     />
   );
