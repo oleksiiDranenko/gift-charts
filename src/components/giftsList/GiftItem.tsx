@@ -152,8 +152,8 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "pr-2"
-            : "bg-secondaryTransparent mb-2 pl-2 pr-3"
+            ? "p-3 bg-secondaryTransparent mt-2"
+            : "bg-secondaryTransparent mt-2 pl-2 pr-3"
         }`}
         key={item._id}
         href={`/gift/${item._id}`}
@@ -167,9 +167,7 @@ export default function GiftItem({
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[45px] h-[45px] p-[3px] ml-1 mr-3 ${
-              resolvedTheme === "dark" ? "" : "bg-background rounded-3xl"
-            }`}
+            className={`w-[45px] h-[45px] p-[3px] mr-4 `}
           />
           <div className='flex flex-col'>
             <span className='flex flex-row items-center text-base font-bold'>
@@ -184,8 +182,8 @@ export default function GiftItem({
         </div>
 
         <div className='w-[15%] h-full flex items-center justify-center'>
-          <div className='w-9 h-full flex items-center'>
-            <GiftItemChart gift={item} />
+          <div className='w-full h-full flex items-center'>
+            <GiftItemChart gift={item} width={100} height={50} />
           </div>
         </div>
 
@@ -331,8 +329,8 @@ export default function GiftItem({
             </div>
           </div>
           <div className='w-[16%] flex items-center justify-start'>
-            <div className='w-28 h-8 flex'>
-              <GiftItemChart gift={item} />
+            <div className='w-fll h-full flex'>
+              <GiftItemChart gift={item} width={100} height={30} />
             </div>
           </div>
 

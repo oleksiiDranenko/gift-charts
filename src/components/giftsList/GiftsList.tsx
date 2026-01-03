@@ -354,7 +354,7 @@ export default function GiftsList() {
         {isLoading ? (
           <ListSkeleton
             type={giftType}
-            count={giftType === "line" ? 15 : 20}
+            count={15}
             lastIndex={lastIndex}
             hideHeader={false}
           />
@@ -370,7 +370,7 @@ export default function GiftsList() {
             {isFetchingNextPage && (
               <ListSkeleton
                 type={giftType}
-                count={5}
+                count={15}
                 lastIndex={lastIndex}
                 hideHeader
               />

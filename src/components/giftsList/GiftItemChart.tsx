@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
   ChartOptions,
+  Filler,
 } from "chart.js";
 import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
 import { useRef, useEffect, useState } from "react";
@@ -20,14 +21,17 @@ ChartJS.register(
   PointElement,
   LineElement,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 interface GiftItemChartProps {
   gift: GiftListItemInterface;
+  width: number;
+  height: number;
 }
 
-const GiftItemChart = ({ gift }: GiftItemChartProps) => {
+const GiftItemChart = ({ gift, width, height }: GiftItemChartProps) => {
   const chartRef = useRef<any>(null);
   const [gradient, setGradient] = useState<string | CanvasGradient>("");
 
@@ -75,11 +79,12 @@ const GiftItemChart = ({ gift }: GiftItemChartProps) => {
         label: gift.name,
         data: values,
         borderColor,
-        borderWidth: 2,
-        fill: false,
+        borderWidth: 1.5,
+        fill: true,
+        backgroundColor: gradient,
         pointRadius: 0,
         pointHoverRadius: 0,
-        tension: 0,
+        tension: 0.3,
       },
     ],
   };
@@ -102,7 +107,9 @@ const GiftItemChart = ({ gift }: GiftItemChartProps) => {
       ref={chartRef}
       data={data}
       options={options}
-      className='rounded-b-md'
+      height={height}
+      width={width}
+      className='rounded-b-md w-full h-full'
     />
   );
 };

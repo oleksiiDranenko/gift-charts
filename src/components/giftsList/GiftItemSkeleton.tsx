@@ -107,6 +107,6 @@ export default function GiftItemSkeleton({
     </>
   ) : (
     // GRID TYPE — vertical tile
-    <div className='w-full mt-2 h-[146px] gap-y-1 bg-secondaryTransparent rounded-3xl animate-pulse' />
+    <div className='w-full mt-2 h-[190px] gap-y-1 bg-secondaryTransparent rounded-3xl animate-pulse' />
   );
 }

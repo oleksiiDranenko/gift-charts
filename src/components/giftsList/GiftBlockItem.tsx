@@ -36,6 +36,18 @@ export default function GiftBlockItem({
 
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
 
+  const [isLarge, setIsLarge] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)"); // lg breakpoint
+    setIsLarge(media.matches);
+
+    const listener = (e: any) => setIsLarge(e.matches);
+    media.addEventListener("change", listener);
+
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
   useEffect(() => {
     if (timeGap === "24h") {
       setPercentChange(
@@ -79,7 +91,7 @@ export default function GiftBlockItem({
 
   return (
     <NoPrefetchLink
-      className={`w-full mt-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-3xl ${
+      className={`w-full mt-2 gap-y-1 flex flex-col items-center justify-between  rounded-3xl overflow-hidden ${
         background === "color"
           ? `bg-gradient-to-b ${
               percentChange !== "no data" && percentChange >= 0
@@ -93,7 +105,7 @@ export default function GiftBlockItem({
       key={item._id}
       href={`/gift/${item._id}`}
       onClick={() => vibrate()}>
-      <div className='w-full flex flex-col items-center relative'>
+      <div className='px-3 pt-3 w-full flex flex-col items-center relative'>
         <Image
           alt='gift image'
           src={`/gifts/${item.image}.webp`}
@@ -104,9 +116,7 @@ export default function GiftBlockItem({
         />
       </div>
 
-      {/* <GiftItemChart /> */}
-
-      <div className=' flex flex-row items-center justify-end'>
+      <div className='px-3 mt-3 flex flex-row items-center justify-end'>
         <div className='w-fit text-sm flex flex-col items-center justify-center'>
           <div className='flex flex-row items-center'>
             {currency === "ton" ? (
@@ -126,7 +136,7 @@ export default function GiftBlockItem({
                 className='mr-1'
               />
             )}
-            <span className='text-sm font-bold'>
+            <span className='text-base font-bold'>
               {formatPrice(item.prices.current)}
             </span>
           </div>
@@ -146,6 +156,13 @@ export default function GiftBlockItem({
             {percentChange !== "no data" ? "%" : null}
           </span>
         </div>
+      </div>
+      <div className='w-full flex items-center'>
+        <GiftItemChart
+          gift={item}
+          width={isLarge ? 150 : 100}
+          height={isLarge ? 30 : 40}
+        />
       </div>
     </NoPrefetchLink>
   );

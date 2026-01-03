@@ -26,7 +26,7 @@ export default function ListSkeleton({
           ))}
         </div>
       ) : (
-        <div className='w-full grid grid-flow-row grid-cols-3 lg:grid-cols-6 gap-x-2 px-3'>
+        <div className='w-full grid grid-flow-row grid-cols-3 lg:grid-cols-5 gap-x-2 px-3'>
           {Array.from({ length: count }).map((_, i) => (
             <GiftItemSkeleton
               key={i + lastIndex}
