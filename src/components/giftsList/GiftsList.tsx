@@ -167,7 +167,7 @@ export default function GiftsList() {
 
   return (
     <div className='w-full flex flex-col items-center'>
-      <div className='w-full mb-3 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap '>
+      <div className='w-full mb-5 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap '>
         <button
           className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 ${
             selectedList === "all"
@@ -348,7 +348,7 @@ export default function GiftsList() {
           </div>
         </div>
       </div>
-      <div className={`w-full ${resolvedTheme === "dark" ? "" : "pt-1"}`}>
+      <div className={`w-full ${resolvedTheme === "dark" ? "pt-1" : "pt-1"}`}>
         <ScrollToTopButton />
 
         {isLoading ? (

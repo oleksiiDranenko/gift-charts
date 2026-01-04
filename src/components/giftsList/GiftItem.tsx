@@ -56,12 +56,9 @@ export default function GiftItem({
   useEffect(() => {
     // Helper: pick the right price depending on currency
     const currentPrice = item.prices.current;
-    const price24hAgo =
-      currency === "ton" ? item.prices.h24 : item.prices.current;
-    const priceWeekAgo =
-      currency === "ton" ? item.prices.d7 : item.prices.current;
-    const priceMonthAgo =
-      currency === "ton" ? item.prices.d30 : item.prices.current;
+    const price24hAgo = item.prices.h24;
+    const priceWeekAgo = item.prices.d7;
+    const priceMonthAgo = item.prices.d30;
 
     // --- Update main percentChange (based on selected timeGap) ---
     if (price24hAgo && currentPrice) {
@@ -152,7 +149,7 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "p-3 bg-secondaryTransparent mt-2"
+            ? "pr-2"
             : "bg-secondaryTransparent mt-2 pl-2 pr-3"
         }`}
         key={item._id}
@@ -167,7 +164,7 @@ export default function GiftItem({
             src={`/gifts/${item.image}.webp`}
             width={50}
             height={50}
-            className={`w-[45px] h-[45px] p-[3px] mr-4 `}
+            className={`w-[45px] h-[45px] p-[3px] mr-4 ml-1`}
           />
           <div className='flex flex-col'>
             <span className='flex flex-row items-center text-base font-bold'>
@@ -268,11 +265,11 @@ export default function GiftItem({
         </div>
       </NoPrefetchLink>
 
-      {/* {resolvedTheme === "dark" && (
-        <div className='w-full pl-16 pr-3 lg:hidden'>
-          <div className='border-b-2 border-secondaryTransparent'></div>
+      {resolvedTheme === "dark" && (
+        <div className='w-full pl-[62px] pr-2 lg:hidden'>
+          <div className='border-b border-secondaryTransparent'></div>
         </div>
-      )} */}
+      )}
 
       {/* wide screen */}
       {/* wide screen */}

@@ -38,7 +38,7 @@ export default function GiftItemSkeleton({
           </div>
         </div>
         <div className='w-[15%] flex justify-center items-center text-secondary'>
-          <div className='w-9 h-[2px] bg-secondary'></div>
+          <div className='w-full h-[2px] bg-secondary'></div>
         </div>
         <div className='w-[30%] flex flex-row items-center justify-end'>
           <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center'>
