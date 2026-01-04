@@ -78,9 +78,9 @@ export default function Page({ params }: any) {
         <div className='px-3 mb-1'>
           <BackButton
             rightElement={
-              <div className='w-full flex flex-row justify-end text-lg'>
+              <div className='w-full flex flex-row justify-end'>
                 <button
-                  className={`flex flex-row items-center justify-center h-10 gap-x-1 px-3 border-b-2 ${
+                  className={`flex flex-row items-center justify-center h-8 gap-x-1 px-3 border-b-2 ${
                     page === "overview"
                       ? "border-foreground"
                       : "border-secondaryTransparent text-secondaryText"
@@ -99,7 +99,7 @@ export default function Page({ params }: any) {
                   Overview
                 </button>
                 <button
-                  className={`flex flex-row items-center justify-center h-10 gap-x-1 px-3 border-b-2 ${
+                  className={`flex flex-row items-center justify-center h-8 gap-x-1 px-3 border-b-2 ${
                     page === "models"
                       ? "border-foreground"
                       : "border-secondaryTransparent text-secondaryText"

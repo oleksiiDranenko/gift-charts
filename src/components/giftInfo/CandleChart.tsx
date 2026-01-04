@@ -218,22 +218,28 @@ export default function CandleChart({
       }`}>
       <div ref={chartContainerRef} className='w-full' />
 
-      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
-        {TIME_RANGES.map(({ key, label }) => (
-          <button
-            key={key}
-            className={`w-full px-3 py-2 text-sm text-nowrap transition-colors rounded-3xl ${
-              listType === key
-                ? "bg-primary font-bold text-white"
-                : "text-secondaryText"
-            }`}
-            onClick={() => {
-              setListType(key);
-              vibrate();
-            }}>
-            {label(translateTime)}
-          </button>
-        ))}
+      <div className='w-full pr-3'>
+        <div className='w-full mt-3 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+          {TIME_RANGES.map(({ key, label }) => {
+            const isActive = listType === key;
+
+            return (
+              <button
+                key={key}
+                className={`w-full px-3 h-10 text-sm text-nowrap transition-colors rounded-3xl ${
+                  isActive
+                    ? " bg-secondary font-bold text-primary"
+                    : "text-secondaryText"
+                } `}
+                onClick={() => {
+                  setListType(key);
+                  vibrate();
+                }}>
+                {label(translateTime)}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

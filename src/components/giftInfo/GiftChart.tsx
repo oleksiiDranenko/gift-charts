@@ -97,7 +97,7 @@ export default function GiftChart({
     <>
       {smallScreen ? (
         <div className='h-auto w-full'>
-          <div
+          {/* <div
             className={`w-full h-16 px-3 mt-3 gap-x-3 flex flex-row justify-between items-center ${
               resolvedTheme === "dark"
                 ? ""
@@ -187,6 +187,86 @@ export default function GiftChart({
                 {percentChange.toFixed(2) + "%"}
               </span>
             </div>
+          </div> */}
+
+          <div className='w-full pl-5 pr-3 mt-5 flex justify-between items-center'>
+            <div className='w-full flex flex-col items-start justify-center'>
+              <span className='mb-1'>{gift?.name}</span>
+              <div className='flex flex-row items-center'>
+                {selectedPrice === "ton" || chartType === "candle" ? (
+                  <Image
+                    alt='ton'
+                    src='/images/toncoin.webp'
+                    width={20}
+                    height={20}
+                    className='mr-1'
+                  />
+                ) : selectedPrice === "usd" ? (
+                  <Image
+                    alt='usdt'
+                    src='/images/usdt.svg'
+                    width={20}
+                    height={20}
+                    className='mr-1'
+                  />
+                ) : selectedPrice === "onSale" ? (
+                  <Store size={18} className='mr-2 font-bold' />
+                ) : selectedPrice === "volume" ? (
+                  <Image
+                    alt='TON logo'
+                    src='/images/toncoin.webp'
+                    width={20}
+                    height={20}
+                    className='mr-1'
+                  />
+                ) : (
+                  <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
+                )}
+                <span className='text-3xl font-bold'>
+                  {currentValue !== null ? formatPrice(currentValue) : "N/A"}
+                </span>
+              </div>
+              <span
+                className={` mt-1 flex flex-row items-center ${
+                  percentChange >= 0 ? "text-green-500" : "text-red-500"
+                }`}>
+                {percentChange > 0 ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-3 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-3 mr-1'>
+                    <path
+                      fillRule='evenodd'
+                      d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                )}{" "}
+                {Math.abs(percentChange).toFixed(2) + "%"}
+              </span>
+            </div>
+            <Image
+              alt='gift'
+              src={`/gifts/${gift?.image}.webp`}
+              width={70}
+              height={70}
+              className={` overflow-hidden ${
+                resolvedTheme === "dark" ? "" : "bg-background rounded-full"
+              }`}
+            />
           </div>
 
           {/* <div className='w-full h-fit px-3 mb-3 mt-3 flex flex-col gap-y-3'>
@@ -276,7 +356,7 @@ export default function GiftChart({
             )}
           </div>
 
-          <div className=' w-full fixed bottom-0 left-0 flex flex-row gap-x-2 bg-secondaryLight backdrop-blur-xl rounded-t-3xl pb-10 pt-3'>
+          <div className='px-3 w-full fixed bottom-0 left-0 flex flex-row gap-x-2 bg-secondaryLight backdrop-blur-xl rounded-t-3xl pb-10 pt-3'>
             <MarketsModal
               trigger={
                 <button
@@ -301,8 +381,8 @@ export default function GiftChart({
 
           <div className='w-full px-3'>
             <div className='w-full mt-5 flex flex-col gap-y-2 font-normal bg-secondaryTransparent p-3 rounded-3xl'>
-              <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
-                <span className='w-full text-secondaryText'>
+              <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b border-background dark:border-secondary'>
+                <span className='text-secondaryText'>
                   {translateInfo("marketCap")}
                 </span>
                 <span className='flex flex-row items-center'>
@@ -330,20 +410,20 @@ export default function GiftChart({
                   )}
                 </span>
               </div>
-              <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
-                <span className='w-full text-secondaryText'>
+              <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b border-background dark:border-secondary'>
+                <span className='text-secondaryText'>
                   {translateInfo("upgradedSupply")}
                 </span>
                 <span>{formatAmount(gift?.upgradedSupply || 0)}</span>
               </div>
-              <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b border-background dark:border-secondary'>
-                <span className='w-full text-secondaryText'>
+              <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b border-background dark:border-secondary'>
+                <span className='text-secondaryText'>
                   {translateInfo("supply")}
                 </span>
                 <span>{formatAmount(gift?.supply || 0)}</span>
               </div>
-              <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1'>
-                <span className='w-full text-secondaryText'>
+              <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1'>
+                <span className='text-secondaryText'>
                   {translateInfo("initialSupply")}
                 </span>
                 <span>{formatAmount(gift?.initSupply || 0)}</span>

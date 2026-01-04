@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice } from "@/utils/formatNumber";
+import { formatAmount, formatPrice } from "@/utils/formatNumber";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -18,8 +18,8 @@ export default function GiftInitPriceSection({
   const translate = useTranslations("giftInfo");
   return (
     <div className='w-full lg:w-1/2 flex flex-col gap-x-3 rounded-3xl p-3 bg-secondaryTransparent'>
-      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
-        <span className='w-full text-secondaryText'>
+      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+        <span className='text-secondaryText'>
           {translate("initStarsPrice")}
         </span>
         <div className='flex flex-row items-center'>
@@ -34,14 +34,12 @@ export default function GiftInitPriceSection({
               clipRule='evenodd'
             />
           </svg>
-          {formatPrice(initStarsPrice)}
+          {formatAmount(initStarsPrice)}
         </div>
       </div>
 
-      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
-        <span className='w-full text-secondaryText'>
-          {translate("initUsdtPrice")}
-        </span>
+      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+        <span className='text-secondaryText'>{translate("initUsdtPrice")}</span>
         <div className='flex flex-row items-center'>
           <Image
             alt='usdt'
@@ -54,8 +52,8 @@ export default function GiftInitPriceSection({
         </div>
       </div>
 
-      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
-        <span className='w-full text-secondaryText'>
+      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+        <span className='text-secondaryText'>
           {translate("initStarsMarketcap")}
         </span>
         <div className='flex flex-row items-center'>
@@ -70,12 +68,12 @@ export default function GiftInitPriceSection({
               clipRule='evenodd'
             />
           </svg>
-          {formatPrice(initStarsPrice * initSupply)}
+          {formatAmount(initStarsPrice * initSupply)}
         </div>
       </div>
 
-      <div className='w-full flex flex-col justify-between items-start p-2 gap-y-1'>
-        <span className='w-full text-secondaryText'>
+      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1'>
+        <span className='text-secondaryText'>
           {translate("initUsdtMarketcap")}
         </span>
         <div className='flex flex-row items-center'>

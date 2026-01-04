@@ -300,9 +300,7 @@ export default function LineChart({
                 key={key}
                 disabled={isDisabled}
                 className={`w-full px-3 h-10 text-sm text-nowrap transition-colors rounded-3xl ${
-                  isActive
-                    ? " bg-secondary font-bold text-primary"
-                    : "text-secondaryText"
+                  isActive ? "bg-secondary font-bold" : "text-secondaryText"
                 } ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
                 onClick={() => {
                   if (!isDisabled) {
