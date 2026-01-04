@@ -97,7 +97,7 @@ export default function GiftChart({
     <>
       {smallScreen ? (
         <div className='h-auto w-full'>
-          {/* <div
+          <div
             className={`w-full h-16 px-3 mt-3 gap-x-3 flex flex-row justify-between items-center ${
               resolvedTheme === "dark"
                 ? ""
@@ -187,9 +187,9 @@ export default function GiftChart({
                 {percentChange.toFixed(2) + "%"}
               </span>
             </div>
-          </div> */}
+          </div>
 
-          <div className='w-full pl-5 pr-3 mt-5 flex justify-between items-center'>
+          {/* <div className='w-full pl-5 pr-3 mt-5 flex justify-between items-center'>
             <div className='w-full flex flex-col items-start justify-center'>
               <span className='mb-1'>{gift?.name}</span>
               <div className='flex flex-row items-center'>
@@ -267,9 +267,9 @@ export default function GiftChart({
                 resolvedTheme === "dark" ? "" : "bg-background rounded-full"
               }`}
             />
-          </div>
+          </div> */}
 
-          {/* <div className='w-full h-fit px-3 mb-3 mt-3 flex flex-col gap-y-3'>
+          <div className='w-full h-fit px-3 mb-3 mt-3 flex flex-col gap-y-3'>
             <div className='w-full flex flex-row justify-between'>
               <PriceDropdown
                 selectedPrice={selectedPrice}
@@ -318,7 +318,7 @@ export default function GiftChart({
                 </button>
               </div>
             </div>
-          </div> */}
+          </div>
 
           <div className='relative pl-3'>
             {chartType === "line" ? (
