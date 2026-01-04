@@ -289,8 +289,8 @@ export default function LineChart({
       }`}>
       <div ref={chartContainerRef} className='w-full' />
 
-      <div className='w-full'>
-        <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+      <div className='w-full pr-3'>
+        <div className='w-full mt-3 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
           {TIME_RANGES.map(({ key, label, requiresLifeData }) => {
             const isActive = listType === key;
             const isDisabled = requiresLifeData && lifeData.length === 0;
@@ -299,9 +299,9 @@ export default function LineChart({
               <button
                 key={key}
                 disabled={isDisabled}
-                className={`w-full px-3 py-2 text-sm text-nowrap transition-colors rounded-3xl ${
+                className={`w-full px-3 h-10 text-sm text-nowrap transition-colors rounded-3xl ${
                   isActive
-                    ? " bg-primary font-bold text-white"
+                    ? " bg-secondary font-bold text-primary"
                     : "text-secondaryText"
                 } ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
                 onClick={() => {

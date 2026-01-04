@@ -189,7 +189,7 @@ export default function GiftChart({
             </div>
           </div>
 
-          <div className='w-full h-fit px-3 mb-3 mt-3 flex flex-col gap-y-3'>
+          {/* <div className='w-full h-fit px-3 mb-3 mt-3 flex flex-col gap-y-3'>
             <div className='w-full flex flex-row justify-between'>
               <PriceDropdown
                 selectedPrice={selectedPrice}
@@ -238,9 +238,9 @@ export default function GiftChart({
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className='relative pl-3 pr-1'>
+          <div className='relative pl-3'>
             {chartType === "line" ? (
               <LineChart
                 weekData={weekData}
