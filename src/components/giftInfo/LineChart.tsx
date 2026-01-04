@@ -10,7 +10,6 @@ import {
   UTCTimestamp,
   AreaSeries,
   LineType,
-  HistogramSeries,
 } from "lightweight-charts";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
@@ -51,7 +50,6 @@ export default function LineChart({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
-  const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
   const lastVibratedIndex = useRef<number | null>(null);
 
   const [list, setList] = useState<
@@ -99,6 +97,7 @@ export default function LineChart({
     setList(map[listType]);
   }, [listType, lifeData, weekData]);
 
+  // Sync Percent Change and Parent State
   useEffect(() => {
     if (list.length === 0) {
       setPercentChange(0);
@@ -107,17 +106,17 @@ export default function LineChart({
     }
 
     const getVal = (item: any) => {
-      const valMap = {
-        ton: "priceTon",
-        usd: "priceUsd",
-        onSale: "amountOnSale",
-        volume: "volume",
-        salesCount: "salesCount",
-      };
-      return item[valMap[selectedPrice]];
+      if (selectedPrice === "ton") return item.priceTon;
+      if (selectedPrice === "usd") return item.priceUsd;
+      if (selectedPrice === "onSale") return item.amountOnSale;
+      if (selectedPrice === "volume") return item.volume;
+      if (selectedPrice === "salesCount") return item.salesCount;
+      return null;
     };
 
-    const values = list.map(getVal).filter((v): v is number => v != null);
+    const values = list
+      .map(getVal)
+      .filter((v): v is number => v !== null && v !== undefined);
     if (values.length > 0) {
       const first = values[0];
       const last = values[values.length - 1];
@@ -127,7 +126,7 @@ export default function LineChart({
     }
   }, [selectedPrice, list, setPercentChange, onDataUpdate]);
 
-  // 3. Initialize Chart
+  // Initialize Chart
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
@@ -138,8 +137,8 @@ export default function LineChart({
           resolvedTheme === "dark"
             ? "rgba(255, 255, 255, 0.6)"
             : "rgba(0, 0, 0, 0.6)",
-        fontSize: 11,
         attributionLogo: false,
+        fontSize: 11,
       },
       grid: {
         vertLines: { visible: false },
@@ -170,36 +169,30 @@ export default function LineChart({
     });
 
     const series = chart.addSeries(AreaSeries, {
+      lineColor: "#22c55e",
+      topColor: "rgba(34, 197, 94, 0.4)",
+      bottomColor: "rgba(0, 0, 0, 0)",
       lineWidth: 1,
-      lineType: LineType.Curved,
       lastValueVisible: true,
 
       priceLineVisible: false,
       crosshairMarkerVisible: true,
+      lineType: LineType.Curved,
     });
 
-    const volumeSeries = chart.addSeries(HistogramSeries, {
-      color: "#3b82f680",
-      priceFormat: { type: "volume" },
-      priceScaleId: "volume-axis",
-      lastValueVisible: false,
-      priceLineVisible: false,
-    });
-
-    chart.priceScale("volume-axis").applyOptions({
-      scaleMargins: { top: 0.8, bottom: 0 },
-    });
-
-    chart.subscribeCrosshairMove((param) => {
-      if (param.logical && param.logical !== lastVibratedIndex.current) {
-        vibrate();
-        lastVibratedIndex.current = param.logical as number;
+    chart.subscribeCrosshairMove((param: MouseEventParams) => {
+      if (param.time) {
+        // Simple vibration logic on crosshair movement
+        const currentIndex = param.logical as number;
+        if (currentIndex !== lastVibratedIndex.current) {
+          vibrate();
+          lastVibratedIndex.current = currentIndex;
+        }
       }
     });
 
     chartRef.current = chart;
     seriesRef.current = series;
-    volumeSeriesRef.current = volumeSeries;
 
     const handleResize = () => {
       if (chartContainerRef.current) {
@@ -214,15 +207,15 @@ export default function LineChart({
     };
   }, [resolvedTheme]);
 
+  // Update Series Data
   useEffect(() => {
-    if (!seriesRef.current || !volumeSeriesRef.current || list.length === 0)
-      return;
+    if (!seriesRef.current || list.length === 0) return;
 
     const isPositive = percentChange >= 0;
     const color = isPositive ? "#22c55e" : "#ef4444";
     const topColor = isPositive
-      ? "rgba(34, 197, 94, 0.4)"
-      : "rgba(239, 68, 68, 0.4)";
+      ? "rgba(34, 197, 94, 0.5)"
+      : "rgba(239, 68, 68, 0.5";
     const bottomColor = isPositive
       ? "rgba(34, 197, 94, 0.001)"
       : "rgba(239, 68, 68, 0.001)";
@@ -234,49 +227,59 @@ export default function LineChart({
       priceLineColor: isPositive ? "#178941" : "#ef4444",
     });
 
-    const processedData = list
+    const formattedData = list
       .map((item) => {
+        // 1. Handle "dd-mm-yyyy"
         const dateParts = item.date.split("-");
-        let hours = 0,
-          minutes = 0;
+        const day = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // JS months are 0-11
+        const year = parseInt(dateParts[2], 10);
+
+        // 2. Handle "hh:mm" from GiftWeekDataInterface
+        let hours = 0;
+        let minutes = 0;
         if ("time" in item && item.time) {
           const timeParts = item.time.split(":");
-          hours = parseInt(timeParts[0]);
-          minutes = parseInt(timeParts[1]);
+          hours = parseInt(timeParts[0], 10);
+          minutes = parseInt(timeParts[1], 10);
         }
-        const timestamp = Math.floor(
-          new Date(
-            parseInt(dateParts[2]),
-            parseInt(dateParts[1]) - 1,
-            parseInt(dateParts[0]),
-            hours,
-            minutes
-          ).getTime() / 1000
-        ) as UTCTimestamp;
 
-        const valMap = {
-          ton: "priceTon",
-          usd: "priceUsd",
-          onSale: "amountOnSale",
-          volume: "volume",
-          salesCount: "salesCount",
-        };
+        const dateObj = new Date(year, month, day, hours, minutes, 0);
+        const timestamp = Math.floor(dateObj.getTime() / 1000);
+
+        if (isNaN(timestamp)) return null;
+
+        // 3. Map selected value
+        const val =
+          selectedPrice === "ton"
+            ? item.priceTon
+            : selectedPrice === "usd"
+            ? item.priceUsd
+            : selectedPrice === "onSale"
+            ? item.amountOnSale
+            : selectedPrice === "volume"
+            ? item.volume
+            : item.salesCount;
+
         return {
-          time: timestamp,
-          value: (item as any)[valMap[selectedPrice]] ?? 0,
-          vol: item.volume ?? 0,
+          time: timestamp as UTCTimestamp,
+          value: val ?? 0,
         };
       })
+      .filter(
+        (item): item is { time: UTCTimestamp; value: number } => item !== null
+      )
+      // 4. Critical: Sort by time ascending
       .sort((a, b) => (a.time as number) - (b.time as number))
-      .filter((item, i, self) => i === 0 || item.time !== self[i - 1].time);
+      // 5. Critical: Remove duplicate timestamps (Lightweight Charts will crash on duplicates)
+      .filter(
+        (item, index, self) => index === 0 || item.time !== self[index - 1].time
+      );
 
-    seriesRef.current.setData(
-      processedData.map((d) => ({ time: d.time, value: d.value }))
-    );
-    volumeSeriesRef.current.setData(
-      processedData.map((d) => ({ time: d.time, value: d.vol }))
-    );
-    chartRef.current?.timeScale().fitContent();
+    if (formattedData.length > 0) {
+      seriesRef.current.setData(formattedData);
+      chartRef.current?.timeScale().fitContent();
+    }
   }, [list, selectedPrice, percentChange]);
 
   return (
@@ -287,7 +290,7 @@ export default function LineChart({
       <div ref={chartContainerRef} className='w-full' />
 
       <div className='w-full pr-3'>
-        <div className='w-full mt-3 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+        <div className='w-full mt-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
           {TIME_RANGES.map(({ key, label, requiresLifeData }) => {
             const isActive = listType === key;
             const isDisabled = requiresLifeData && lifeData.length === 0;
