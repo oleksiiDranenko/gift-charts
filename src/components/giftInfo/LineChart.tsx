@@ -9,6 +9,7 @@ import {
   MouseEventParams,
   UTCTimestamp,
   AreaSeries,
+  LineType,
 } from "lightweight-charts";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
@@ -26,12 +27,11 @@ interface LineChartProps {
 }
 
 const TIME_RANGES: {
-  key: "24h" | "3d" | "1w" | "1m" | "3m" | "6m" | "all";
+  key: "24h" | "1w" | "1m" | "3m" | "6m" | "all";
   label: (t: (key: string) => string) => string;
   requiresLifeData?: boolean;
 }[] = [
   { key: "24h", label: (t) => `24${t("hour")}` },
-  { key: "3d", label: (t) => `3${t("day")}` },
   { key: "1w", label: (t) => `1${t("week")}` },
   { key: "1m", label: (t) => `1${t("month")}`, requiresLifeData: true },
   { key: "3m", label: (t) => `3${t("month")}`, requiresLifeData: true },
@@ -138,6 +138,7 @@ export default function LineChart({
             ? "rgba(255, 255, 255, 0.6)"
             : "rgba(0, 0, 0, 0.6)",
         attributionLogo: false,
+        fontSize: 11,
       },
       grid: {
         vertLines: { visible: false },
@@ -149,14 +150,13 @@ export default function LineChart({
         },
       },
       rightPriceScale: {
+        visible: true,
         borderVisible: false,
-        autoScale: true, // Ensures the scale adjusts to the data
-        // Add margins here:
+        autoScale: true,
         scaleMargins: {
-          top: 0.2,
+          top: 0.15,
           bottom: 0.15,
         },
-        entireTextOnly: true,
       },
       timeScale: {
         borderVisible: false,
@@ -165,7 +165,7 @@ export default function LineChart({
       },
       handleScroll: false,
       handleScale: false,
-      height: window.innerWidth < 1080 ? 300 : 500,
+      height: window.innerWidth < 1080 ? 250 : 450,
     });
 
     const series = chart.addSeries(AreaSeries, {
@@ -174,8 +174,10 @@ export default function LineChart({
       bottomColor: "rgba(0, 0, 0, 0)",
       lineWidth: 1,
       lastValueVisible: true,
-      priceLineVisible: false,
+
+      priceLineVisible: true,
       crosshairMarkerVisible: true,
+      lineType: LineType.Curved,
     });
 
     chart.subscribeCrosshairMove((param: MouseEventParams) => {
@@ -212,13 +214,16 @@ export default function LineChart({
     const isPositive = percentChange >= 0;
     const color = isPositive ? "#22c55e" : "#ef4444";
     const topColor = isPositive
-      ? "rgba(34, 197, 94, 1)"
-      : "rgba(239, 68, 68, 1)";
+      ? "rgba(34, 197, 94, 0.5)"
+      : "rgba(239, 68, 68, 0.5";
+    const bottomColor = isPositive
+      ? "rgba(34, 197, 94, 0.001)"
+      : "rgba(239, 68, 68, 0.001)";
 
     seriesRef.current.applyOptions({
       lineColor: color,
       topColor: topColor,
-      bottomColor: "rgba(0, 0, 0, 0)",
+      bottomColor: bottomColor,
       priceLineColor: isPositive ? "#178941" : "#ef4444",
     });
 
