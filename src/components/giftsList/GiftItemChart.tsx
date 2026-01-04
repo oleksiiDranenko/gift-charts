@@ -60,7 +60,7 @@ const GiftItemChart = ({ gift, width, height }: GiftItemChartProps) => {
     );
 
     const topColor =
-      priceChange >= 0 ? "rgba(34, 197, 94, 0.7)" : "rgba(239, 68, 68, 0.7)";
+      priceChange >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)";
     const bottomColor =
       priceChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
 
@@ -79,7 +79,7 @@ const GiftItemChart = ({ gift, width, height }: GiftItemChartProps) => {
         label: gift.name,
         data: values,
         borderColor,
-        borderWidth: 1.5,
+        borderWidth: 1,
         fill: true,
         backgroundColor: gradient,
         pointRadius: 0,
