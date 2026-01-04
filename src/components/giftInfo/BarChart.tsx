@@ -27,6 +27,21 @@ interface BarChartProps {
   onDataUpdate?: (data: { currentValue: number | null }) => void;
 }
 
+const TIME_RANGES: {
+  key: "24h" | "3d" | "1w" | "1m" | "3m" | "6m" | "1y" | "all";
+  label: (t: (key: string) => string) => string;
+  requiresLifeData?: boolean;
+}[] = [
+  { key: "24h", label: (t) => `24${t("hour")}` },
+  { key: "3d", label: (t) => `3${t("day")}` },
+  { key: "1w", label: (t) => `1${t("week")}` },
+  { key: "1m", label: (t) => `1${t("month")}`, requiresLifeData: true },
+  { key: "3m", label: (t) => `3${t("month")}`, requiresLifeData: true },
+  { key: "6m", label: (t) => `6${t("month")}`, requiresLifeData: true },
+  { key: "1y", label: (t) => `1${t("year")}`, requiresLifeData: true },
+  { key: "all", label: (t) => t("all"), requiresLifeData: true },
+];
+
 export default function BarChart({
   weekData,
   lifeData,
@@ -41,7 +56,7 @@ export default function BarChart({
     (GiftLifeDataInterface | GiftWeekDataInterface)[]
   >(weekData.slice(-24));
   const [listType, setListType] = useState<
-    "24h" | "3d" | "1w" | "1m" | "3m" | "all"
+    "24h" | "3d" | "1w" | "1m" | "3m" | "6m" | "1y" | "all"
   >("24h");
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
@@ -110,6 +125,12 @@ export default function BarChart({
         case "3m":
           setList(lifeData.slice(-90));
           break;
+        case "6m":
+          setList(lifeData.slice(-180));
+          break;
+        case "1y":
+          setList(lifeData.slice(-360));
+          break;
         case "all":
           setList(lifeData);
           break;
@@ -146,6 +167,12 @@ export default function BarChart({
         break;
       case "3m":
         setList([...lifeData.slice(-90), aggregatedWeekData]);
+        break;
+      case "6m":
+        setList([...lifeData.slice(-180), aggregatedWeekData]);
+        break;
+      case "1y":
+        setList([...lifeData.slice(-360), aggregatedWeekData]);
         break;
       case "all":
         setList([...lifeData, aggregatedWeekData]);
@@ -420,78 +447,30 @@ export default function BarChart({
         options={options}
         height={window.innerWidth < 1080 ? 200 : 150}
       />
-      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "all"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("all");
-          }}>
-          {translateTime("all")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("3m");
-            vibrate();
-          }}>
-          3{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("1m");
-            vibrate();
-          }}>
-          1{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1w"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("1w");
-            vibrate();
-          }}>
-          1{translateTime("week")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3d"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("3d");
-            vibrate();
-          }}>
-          3{translateTime("day")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "24h"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("24h");
-            vibrate();
-          }}>
-          24{translateTime("hour")}
-        </button>
+      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+        {TIME_RANGES.map(({ key, label, requiresLifeData }) => {
+          const isActive = listType === key;
+          const isDisabled = requiresLifeData && lifeData.length === 0;
+
+          return (
+            <button
+              key={key}
+              disabled={isDisabled}
+              className={`w-full px-3 py-2 text-sm text-nowrap ${
+                isActive
+                  ? "rounded-3xl bg-primary font-bold text-white"
+                  : "text-secondaryText"
+              } ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
+              onClick={() => {
+                if (!isDisabled) {
+                  setListType(key);
+                  vibrate();
+                }
+              }}>
+              {typeof label === "function" ? label(translateTime) : label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

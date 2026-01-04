@@ -25,6 +25,20 @@ type CandlestickData = {
   c: number;
 };
 
+const TIME_RANGES: {
+  key: "2w" | "1m" | "2m" | "3m" | "6m" | "1y" | "all";
+  label: (t: (key: string) => string) => string;
+  requiresData?: boolean;
+}[] = [
+  { key: "2w", label: (t) => `2${t("week")}` },
+  { key: "1m", label: (t) => `1${t("month")}` },
+  { key: "2m", label: (t) => `2${t("month")}` },
+  { key: "3m", label: (t) => `3${t("month")}` },
+  { key: "6m", label: (t) => `6${t("month")}` },
+  { key: "1y", label: (t) => `1${t("year")}` },
+  { key: "all", label: (t) => t("all"), requiresData: true },
+];
+
 interface PropsInterface {
   data: GiftLifeDataInterface[];
   weekData: GiftWeekDataInterface[];
@@ -43,9 +57,9 @@ export default function CandleChart({
   const chartRef = useRef<
     Chart<"candlestick", CandlestickData[], unknown> | null | undefined
   >(null);
-  const [listType, setListType] = useState<"2w" | "1m" | "2m" | "3m" | "all">(
-    "2w"
-  );
+  const [listType, setListType] = useState<
+    "2w" | "1m" | "2m" | "3m" | "6m" | "1y" | "all"
+  >("2w");
   const [list, setList] = useState<GiftLifeDataInterface[]>(data);
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
@@ -114,6 +128,12 @@ export default function CandleChart({
         break;
       case "3m":
         setList(updatedData.slice(-90));
+        break;
+      case "6m":
+        setList(updatedData.slice(-180));
+        break;
+      case "1y":
+        setList(updatedData.slice(-360));
         break;
       case "all":
         setList(updatedData);
@@ -291,67 +311,26 @@ export default function CandleChart({
         }
         height={window.innerWidth < 1080 ? 200 : 150}
       />
-      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl'>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "all"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (data.length > 0) setListType("all");
-            vibrate();
-          }}>
-          {translateTime("all")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (data.length > 0) setListType("3m");
-            vibrate();
-          }}>
-          3{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "2m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("2m");
-            vibrate();
-          }}>
-          2{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("1m");
-            vibrate();
-          }}>
-          1{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "2w"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("2w");
-            vibrate();
-          }}>
-          2{translateTime("week")}
-        </button>
+      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+        {TIME_RANGES.map(({ key, label }) => {
+          const isActive = listType === key;
+
+          return (
+            <button
+              key={key}
+              className={`w-full px-3 py-2 text-sm text-nowrap ${
+                isActive
+                  ? "rounded-3xl bg-primary font-bold text-white"
+                  : "text-secondaryText"
+              } `}
+              onClick={() => {
+                setListType(key);
+                vibrate();
+              }}>
+              {typeof label === "function" ? label(translateTime) : label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

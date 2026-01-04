@@ -1,31 +1,20 @@
 "use client";
 
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  LineElement,
-  PointElement,
-  LinearScale,
-  Tooltip,
-  CategoryScale,
-  ChartOptions,
-  Filler,
-} from "chart.js";
 import { useEffect, useRef, useState } from "react";
+import {
+  createChart,
+  IChartApi,
+  ISeriesApi,
+  ColorType,
+  MouseEventParams,
+  UTCTimestamp,
+  AreaSeries,
+} from "lightweight-charts";
 import { useTheme } from "next-themes";
-import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
-import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
 import useVibrate from "@/hooks/useVibrate";
-
-ChartJS.register(
-  LineElement,
-  PointElement,
-  LinearScale,
-  Tooltip,
-  CategoryScale,
-  Filler
-);
+import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
+import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 
 interface LineChartProps {
   weekData: GiftWeekDataInterface[];
@@ -36,6 +25,20 @@ interface LineChartProps {
   onDataUpdate?: (data: { currentValue: number | null }) => void;
 }
 
+const TIME_RANGES: {
+  key: "24h" | "3d" | "1w" | "1m" | "3m" | "6m" | "all";
+  label: (t: (key: string) => string) => string;
+  requiresLifeData?: boolean;
+}[] = [
+  { key: "24h", label: (t) => `24${t("hour")}` },
+  { key: "3d", label: (t) => `3${t("day")}` },
+  { key: "1w", label: (t) => `1${t("week")}` },
+  { key: "1m", label: (t) => `1${t("month")}`, requiresLifeData: true },
+  { key: "3m", label: (t) => `3${t("month")}`, requiresLifeData: true },
+  { key: "6m", label: (t) => `6${t("month")}`, requiresLifeData: true },
+  { key: "all", label: (t) => t("all"), requiresLifeData: true },
+];
+
 export default function LineChart({
   weekData,
   lifeData,
@@ -45,572 +48,268 @@ export default function LineChart({
   onDataUpdate,
 }: LineChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<ChartJS<"line">>(null);
-  const [gradient, setGradient] = useState<CanvasGradient | null>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
+  const lastVibratedIndex = useRef<number | null>(null);
+
   const [list, setList] = useState<
     (GiftLifeDataInterface | GiftWeekDataInterface)[]
-  >(weekData.slice(-24));
-  const [listType, setListType] = useState<
-    "24h" | "3d" | "1w" | "1m" | "3m" | "all"
-  >("24h");
-  const [low, setLow] = useState<number>();
-  const [high, setHigh] = useState<number>();
+  >([]);
+  const [listType, setListType] =
+    useState<(typeof TIME_RANGES)[number]["key"]>("24h");
+
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
-
   const translateTime = useTranslations("timegap");
 
-  useEffect(() => {
-    const chartContainer = chartContainerRef.current;
-    if (!chartContainer) return;
-
-    const buttonContainer = chartContainer.querySelector(
-      ".time-gap-buttons"
-    ) as HTMLElement;
-
-    const preventScroll = (e: TouchEvent) => {
-      if (buttonContainer && buttonContainer.contains(e.target as Node)) {
-        return;
-      }
-      e.preventDefault();
-    };
-
-    chartContainer.addEventListener("touchstart", preventScroll, {
-      passive: false,
-    });
-    chartContainer.addEventListener("touchmove", preventScroll, {
-      passive: false,
-    });
-    chartContainer.addEventListener("touchend", preventScroll, {
-      passive: false,
-    });
-
-    const handleClickOutside = (e: MouseEvent) => {
-      const chartCanvas = chartContainer.querySelector("canvas");
-      if (chartCanvas && !chartCanvas.contains(e.target as Node)) {
-        const chartInstance = ChartJS.getChart(chartCanvas);
-        if (chartInstance) {
-          chartInstance.setActiveElements([]);
-          chartInstance.tooltip?.setActiveElements([], { x: 0, y: 0 });
-          chartInstance.update();
-        }
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      chartContainer.removeEventListener("touchstart", preventScroll);
-      chartContainer.removeEventListener("touchmove", preventScroll);
-      chartContainer.removeEventListener("touchend", preventScroll);
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart) return;
-
-    const ctx = chart.ctx;
-    const chartArea = chart.chartArea;
-    const gradient = ctx.createLinearGradient(
-      0,
-      chartArea.top,
-      0,
-      chartArea.bottom
-    );
-
-    const topColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0.7)" : "rgba(239, 68, 68, 0.7)";
-    const bottomColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
-
-    gradient.addColorStop(0, topColor);
-    gradient.addColorStop(1, bottomColor);
-
-    setGradient(gradient);
-  }, [percentChange]);
-
+  // Handle Data Filtering (Logic kept from your original code)
   useEffect(() => {
     const lastPriceIndex = weekData.length - 1;
     if (lastPriceIndex < 0) {
-      switch (listType) {
-        case "24h":
-        case "3d":
-        case "1w":
-          setList([]);
-          break;
-        case "1m":
-          setList(lifeData.slice(-30));
-          break;
-        case "3m":
-          setList(lifeData.slice(-90));
-          break;
-        case "all":
-          setList(lifeData);
-          break;
-      }
+      const slices = { "1m": -30, "3m": -90, "6m": -180, "1y": -360 };
+      if (["24h", "3d", "1w"].includes(listType)) setList([]);
+      else
+        setList(lifeData.slice(slices[listType as keyof typeof slices] || 0));
       return;
     }
 
     const lastWeekData = weekData[lastPriceIndex];
-    const lastDate = lastWeekData.date;
-
-    // Aggregate volume and salesCount for weekData documents with the same date as the last document
-    const aggregatedWeekData: GiftWeekDataInterface = {
+    const aggregatedWeekData = {
       ...lastWeekData,
       volume: weekData
-        .filter((item) => item.date === lastDate)
-        .reduce((sum, item) => sum + (item.volume ?? 0), 0),
+        .filter((i) => i.date === lastWeekData.date)
+        .reduce((s, i) => s + (i.volume ?? 0), 0),
       salesCount: weekData
-        .filter((item) => item.date === lastDate)
-        .reduce((sum, item) => sum + (item.salesCount ?? 0), 0),
+        .filter((i) => i.date === lastWeekData.date)
+        .reduce((s, i) => s + (i.salesCount ?? 0), 0),
     };
 
-    switch (listType) {
-      case "24h":
-        setList(weekData.slice(-48));
-        break;
-      case "3d":
-        setList(weekData.slice(-144));
-        break;
-      case "1w":
-        setList(weekData);
-        break;
-      case "1m":
-        setList([...lifeData.slice(-30), aggregatedWeekData]);
-        break;
-      case "3m":
-        setList([...lifeData.slice(-90), aggregatedWeekData]);
-        break;
-      case "all":
-        setList([...lifeData, aggregatedWeekData]);
-        break;
-    }
+    const map = {
+      "24h": weekData.slice(-48),
+      "3d": weekData.slice(-144),
+      "1w": weekData,
+      "1m": [...lifeData.slice(-30), aggregatedWeekData],
+      "3m": [...lifeData.slice(-90), aggregatedWeekData],
+      "6m": [...lifeData.slice(-180), aggregatedWeekData],
+      "1y": [...lifeData.slice(-360), aggregatedWeekData],
+      all: [...lifeData, aggregatedWeekData],
+    };
+    setList(map[listType]);
   }, [listType, lifeData, weekData]);
 
+  // Sync Percent Change and Parent State
   useEffect(() => {
     if (list.length === 0) {
-      if (typeof setPercentChange === "function") {
-        setPercentChange(0);
-      } else {
-        console.warn("setPercentChange is not a function");
-      }
-      if (onDataUpdate) {
-        onDataUpdate({ currentValue: null });
-      }
+      setPercentChange(0);
+      onDataUpdate?.({ currentValue: null });
       return;
     }
 
-    let currentValue: number | null = null;
-    let calculatedPercentChange = 0;
+    const getVal = (item: any) => {
+      if (selectedPrice === "ton") return item.priceTon;
+      if (selectedPrice === "usd") return item.priceUsd;
+      if (selectedPrice === "onSale") return item.amountOnSale;
+      if (selectedPrice === "volume") return item.volume;
+      if (selectedPrice === "salesCount") return item.salesCount;
+      return null;
+    };
 
-    if (selectedPrice === "ton") {
-      const prices = list
-        .map((item) => item.priceTon)
-        .filter((v): v is number => v !== undefined && v !== null);
-      if (prices.length > 1 && prices[0] !== 0) {
-        const firstData = prices[0];
-        const lastData = prices[prices.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...prices));
-        setHigh(Math.max(...prices));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(prices.length > 0 ? Math.min(...prices) : undefined);
-        setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
-        currentValue =
-          prices.length > 0 && Number.isFinite(prices[prices.length - 1])
-            ? prices[prices.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "usd") {
-      const prices = list
-        .map((item) => item.priceUsd)
-        .filter((v): v is number => v !== undefined && v !== null);
-      if (prices.length > 1 && prices[0] !== 0) {
-        const firstData = prices[0];
-        const lastData = prices[prices.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...prices));
-        setHigh(Math.max(...prices));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(prices.length > 0 ? Math.min(...prices) : undefined);
-        setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
-        currentValue =
-          prices.length > 0 && Number.isFinite(prices[prices.length - 1])
-            ? prices[prices.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "onSale") {
-      const amounts = list
-        .map((item) =>
-          typeof item.amountOnSale === "number" ? item.amountOnSale : null
-        )
-        .filter((v): v is number => v !== null);
-      if (amounts.length > 1 && amounts[0] !== 0) {
-        const firstData = amounts[0];
-        const lastData = amounts[amounts.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...amounts));
-        setHigh(Math.max(...amounts));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(amounts.length > 0 ? Math.min(...amounts) : undefined);
-        setHigh(amounts.length > 0 ? Math.max(...amounts) : undefined);
-        currentValue =
-          amounts.length > 0 && Number.isFinite(amounts[amounts.length - 1])
-            ? amounts[amounts.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "volume") {
-      const volumes = list
-        .map((item) => (typeof item.volume === "number" ? item.volume : null))
-        .filter((v): v is number => v !== null);
-      if (volumes.length > 1 && volumes[0] !== 0) {
-        const firstData = volumes[0];
-        const lastData = volumes[volumes.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...volumes));
-        setHigh(Math.max(...volumes));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(volumes.length > 0 ? Math.min(...volumes) : undefined);
-        setHigh(volumes.length > 0 ? Math.max(...volumes) : undefined);
-        currentValue =
-          volumes.length > 0 && Number.isFinite(volumes[volumes.length - 1])
-            ? volumes[volumes.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "salesCount") {
-      const counts = list
-        .map((item) =>
-          typeof item.salesCount === "number" ? item.salesCount : null
-        )
-        .filter((v): v is number => v !== null);
-      if (counts.length > 1 && counts[0] !== 0) {
-        const firstData = counts[0];
-        const lastData = counts[counts.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...counts));
-        setHigh(Math.max(...counts));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(counts.length > 0 ? Math.min(...counts) : undefined);
-        setHigh(counts.length > 0 ? Math.max(...counts) : undefined);
-        currentValue =
-          counts.length > 0 && Number.isFinite(counts[counts.length - 1])
-            ? counts[counts.length - 1]
-            : null;
-      }
-    }
-
-    if (typeof setPercentChange === "function") {
-      setPercentChange(
-        Number.isFinite(calculatedPercentChange) ? calculatedPercentChange : 0
-      );
-    } else {
-      console.warn("setPercentChange is not a function");
-    }
-    if (onDataUpdate) {
-      onDataUpdate({ currentValue });
+    const values = list
+      .map(getVal)
+      .filter((v): v is number => v !== null && v !== undefined);
+    if (values.length > 0) {
+      const first = values[0];
+      const last = values[values.length - 1];
+      const change = first !== 0 ? ((last - first) / first) * 100 : 0;
+      setPercentChange(parseFloat(change.toFixed(2)));
+      onDataUpdate?.({ currentValue: last });
     }
   }, [selectedPrice, list, setPercentChange, onDataUpdate]);
 
-  const values = list.map((item) => {
-    if (selectedPrice === "ton") return item.priceTon;
-    if (selectedPrice === "usd") return item.priceUsd;
-    if (selectedPrice === "onSale")
-      return typeof item.amountOnSale === "number" ? item.amountOnSale : null;
-    if (selectedPrice === "volume")
-      return typeof item.volume === "number" ? item.volume : null;
-    if (selectedPrice === "salesCount")
-      return typeof item.salesCount === "number" ? item.salesCount : null;
-  });
+  // Initialize Chart
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
 
-  const data = {
-    labels: list.map((item) => {
-      if ("time" in item && listType === "24h") {
-        return item.time;
-      }
-      return item.date.slice(0, 5);
-    }),
-    datasets: [
-      {
-        label:
-          selectedPrice === "onSale"
-            ? "Amount On Sale"
-            : selectedPrice === "volume"
-            ? "Volume"
-            : selectedPrice === "salesCount"
-            ? "Sales Count"
-            : "Price",
-        data: values,
-        borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        borderWidth: 1.3,
-        tension: 0.4,
-        pointRadius: 0,
-        pointHoverRadius: 6,
-        fill: true,
-        backgroundColor:
-          gradient ||
-          (percentChange >= 0
-            ? "rgba(34, 197, 94, 0.2)"
-            : "rgba(239, 68, 68, 0.2)"),
-        pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        spanGaps: false,
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor:
+          resolvedTheme === "dark"
+            ? "rgba(255, 255, 255, 0.6)"
+            : "rgba(0, 0, 0, 0.6)",
+        attributionLogo: false,
       },
-    ],
-  };
-
-  const numericValues = (data.datasets[0].data as (number | null)[]).filter(
-    (v): v is number => v !== null
-  );
-
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      title: { display: false },
-      tooltip: {
-        enabled: true,
-        mode: "index",
-        intersect: false,
-        callbacks: {
-          title: function (tooltipItems) {
-            const item = list[tooltipItems[0].dataIndex];
-            if ("time" in item && (listType === "24h" || listType === "1w")) {
-              return `${item.time} ${item.date}`;
-            }
-            return item.date;
-          },
-          label: function (tooltipItem) {
-            if (selectedPrice === "onSale") {
-              return tooltipItem.raw === null
-                ? "No data"
-                : `On Sale: ${tooltipItem.raw}`;
-            } else if (selectedPrice === "volume") {
-              return tooltipItem.raw === null
-                ? "No data"
-                : `Volume: ${tooltipItem.raw} TON`;
-            } else if (selectedPrice === "salesCount") {
-              return tooltipItem.raw === null
-                ? "No data"
-                : `Amount sold: ${tooltipItem.raw}`;
-            }
-            return `Price: ${tooltipItem.raw} ${
-              selectedPrice === "ton" ? "TON" : "USD"
-            }`;
-          },
-        },
-        external: function (context) {
-          const { chart, tooltip } = context;
-          const ctx = chart.ctx;
-
-          if (!tooltip || !tooltip.opacity) {
-            // Tooltip hidden → reset last index
-            if ((chart as any).lastActiveIndex !== null) {
-              (chart as any).lastActiveIndex = null;
-            }
-            return;
-          }
-
-          if (!tooltip || !tooltip.opacity) {
-            return;
-          }
-
-          const tooltipX = tooltip.caretX;
-          const tooltipY = tooltip.caretY;
-
-          ctx.save();
-          ctx.beginPath();
-          ctx.setLineDash([5, 5]);
-          ctx.lineWidth = 1;
-          ctx.strokeStyle =
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.5)"
-              : "rgba(0, 0, 0, 0.5)";
-
-          ctx.moveTo(tooltipX, chart.chartArea.top);
-          ctx.lineTo(tooltipX, chart.chartArea.bottom);
-
-          ctx.moveTo(chart.chartArea.left, tooltipY);
-          ctx.lineTo(chart.chartArea.right, tooltipY);
-
-          ctx.stroke();
-          ctx.restore();
-
-          const currentIndex = tooltip.dataPoints?.[0]?.dataIndex;
-
-          if (currentIndex !== undefined) {
-            const lastIndex = (chart as any).lastActiveIndex;
-
-            // Vibrate only when moving to a NEW point
-            if (lastIndex !== null && lastIndex !== currentIndex) {
-              vibrate();
-            }
-
-            (chart as any).lastActiveIndex = currentIndex;
-          } else {
-            (chart as any).lastActiveIndex = null;
-          }
-        },
-      },
-    },
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
-          padding: 0,
-          autoSkip: true,
-          maxTicksLimit: 3,
-          maxRotation: 0,
-          minRotation: 0,
-        },
-      },
-      y: {
-        grid: {
+      grid: {
+        vertLines: { visible: false },
+        horzLines: {
           color:
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.05)"
               : "rgba(0, 0, 0, 0.05)",
-          drawTicks: true,
-          tickLength: 10,
         },
-        ticks: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
-          padding: 3,
-          maxTicksLimit: 7,
-        },
-        position: "right",
-        suggestedMax:
-          numericValues.length > 0
-            ? Math.max(...numericValues) * 1.05
-            : undefined,
-        suggestedMin:
-          numericValues.length > 0
-            ? Math.min(...numericValues) * 0.95
-            : undefined,
       },
-    },
-  };
+      rightPriceScale: {
+        borderVisible: false,
+        autoScale: true, // Ensures the scale adjusts to the data
+        // Add margins here:
+        scaleMargins: {
+          top: 0.2,
+          bottom: 0.15,
+        },
+        entireTextOnly: true,
+      },
+      timeScale: {
+        borderVisible: false,
+        timeVisible: true,
+        secondsVisible: false,
+      },
+      handleScroll: false,
+      handleScale: false,
+      height: window.innerWidth < 1080 ? 300 : 500,
+    });
+
+    const series = chart.addSeries(AreaSeries, {
+      lineColor: "#22c55e",
+      topColor: "rgba(34, 197, 94, 0.4)",
+      bottomColor: "rgba(0, 0, 0, 0)",
+      lineWidth: 1,
+      lastValueVisible: true,
+      priceLineVisible: false,
+      crosshairMarkerVisible: true,
+    });
+
+    chart.subscribeCrosshairMove((param: MouseEventParams) => {
+      if (param.time) {
+        // Simple vibration logic on crosshair movement
+        const currentIndex = param.logical as number;
+        if (currentIndex !== lastVibratedIndex.current) {
+          vibrate();
+          lastVibratedIndex.current = currentIndex;
+        }
+      }
+    });
+
+    chartRef.current = chart;
+    seriesRef.current = series;
+
+    const handleResize = () => {
+      if (chartContainerRef.current) {
+        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
+  }, [resolvedTheme]);
+
+  // Update Series Data
+  useEffect(() => {
+    if (!seriesRef.current || list.length === 0) return;
+
+    const isPositive = percentChange >= 0;
+    const color = isPositive ? "#22c55e" : "#ef4444";
+    const topColor = isPositive
+      ? "rgba(34, 197, 94, 1)"
+      : "rgba(239, 68, 68, 1)";
+
+    seriesRef.current.applyOptions({
+      lineColor: color,
+      topColor: topColor,
+      bottomColor: "rgba(0, 0, 0, 0)",
+      priceLineColor: isPositive ? "#178941" : "#ef4444",
+    });
+
+    const formattedData = list
+      .map((item) => {
+        // 1. Handle "dd-mm-yyyy"
+        const dateParts = item.date.split("-");
+        const day = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // JS months are 0-11
+        const year = parseInt(dateParts[2], 10);
+
+        // 2. Handle "hh:mm" from GiftWeekDataInterface
+        let hours = 0;
+        let minutes = 0;
+        if ("time" in item && item.time) {
+          const timeParts = item.time.split(":");
+          hours = parseInt(timeParts[0], 10);
+          minutes = parseInt(timeParts[1], 10);
+        }
+
+        const dateObj = new Date(year, month, day, hours, minutes, 0);
+        const timestamp = Math.floor(dateObj.getTime() / 1000);
+
+        if (isNaN(timestamp)) return null;
+
+        // 3. Map selected value
+        const val =
+          selectedPrice === "ton"
+            ? item.priceTon
+            : selectedPrice === "usd"
+            ? item.priceUsd
+            : selectedPrice === "onSale"
+            ? item.amountOnSale
+            : selectedPrice === "volume"
+            ? item.volume
+            : item.salesCount;
+
+        return {
+          time: timestamp as UTCTimestamp,
+          value: val ?? 0,
+        };
+      })
+      .filter(
+        (item): item is { time: UTCTimestamp; value: number } => item !== null
+      )
+      // 4. Critical: Sort by time ascending
+      .sort((a, b) => (a.time as number) - (b.time as number))
+      // 5. Critical: Remove duplicate timestamps (Lightweight Charts will crash on duplicates)
+      .filter(
+        (item, index, self) => index === 0 || item.time !== self[index - 1].time
+      );
+
+    if (formattedData.length > 0) {
+      seriesRef.current.setData(formattedData);
+      chartRef.current?.timeScale().fitContent();
+    }
+  }, [list, selectedPrice, percentChange]);
 
   return (
     <div
-      className={
-        resolvedTheme === "dark"
-          ? "relative"
-          : "relative bg-secondaryTransparent rounded-3xl"
-      }
-      ref={chartContainerRef}>
-      <Line
-        ref={chartRef as any}
-        data={data}
-        options={options}
-        height={window.innerWidth < 1080 ? 200 : 150}
-      />
-      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "all"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("all");
-            vibrate();
-          }}>
-          {translateTime("all")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("3m");
-            vibrate();
-          }}>
-          3{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("1m");
-            vibrate();
-          }}>
-          1{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1w"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("1w");
-            vibrate();
-          }}>
-          1{translateTime("week")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3d"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("3d");
-            vibrate();
-          }}>
-          3{translateTime("day")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "24h"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("24h");
-            vibrate();
-          }}>
-          24{translateTime("hour")}
-        </button>
+      className={`relative w-full ${
+        resolvedTheme !== "dark" && "bg-secondaryTransparent rounded-3xl"
+      }`}>
+      <div ref={chartContainerRef} className='w-full' />
+
+      <div className='w-full'>
+        <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+          {TIME_RANGES.map(({ key, label, requiresLifeData }) => {
+            const isActive = listType === key;
+            const isDisabled = requiresLifeData && lifeData.length === 0;
+
+            return (
+              <button
+                key={key}
+                disabled={isDisabled}
+                className={`w-full px-3 py-2 text-sm text-nowrap transition-colors rounded-3xl ${
+                  isActive
+                    ? " bg-primary font-bold text-white"
+                    : "text-secondaryText"
+                } ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                onClick={() => {
+                  if (!isDisabled) {
+                    setListType(key);
+                    vibrate();
+                  }
+                }}>
+                {label(translateTime)}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

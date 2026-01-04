@@ -122,10 +122,11 @@
   },
 
   "timegap": {
-    "hour": "h",
+    "hour": "hr",
     "day": "d",
     "week": "w",
     "month": "m",
+    "year": "year",
     "all": "All"
   },
 
