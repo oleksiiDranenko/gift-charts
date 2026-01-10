@@ -35,7 +35,6 @@ async function handleRequest(request: NextRequest, method: string) {
     // Copy original headers (important for content-type, cookies if any, etc.)
     const headers = new Headers(request.headers);
 
-    // Remove headers that could cause problems
     headers.delete("host");
     headers.delete("connection");
     headers.delete("referer");
