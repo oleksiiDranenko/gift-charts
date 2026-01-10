@@ -45,9 +45,9 @@ export default function AccountTest() {
       <div className='w-full grid grid-cols-3 lg:grid-cols-6 gap-3 px-3'>
         {isLoading && "loading..."}
         {gifts &&
-          gifts.map((gift) => {
+          gifts.map((gift, i) => {
             return (
-              <div className='p-3 bg-secondaryTransparent rounded-3xl'>
+              <div className='p-3 bg-secondaryTransparent rounded-3xl' key={i}>
                 <Image
                   src={`https://nft.fragment.com/gift/${gift.name.toLowerCase()}.medium.jpg`}
                   alt={""}
