@@ -1,76 +1,76 @@
-// // app/api/proxy/[...path]/route.ts
-// import { NextRequest, NextResponse } from "next/server";
+// app/api/proxy/[...path]/route.ts
+import { NextRequest, NextResponse } from "next/server";
 
-// const API_BASE_URL = process.env.NEXT_PUBLIC_RENDER_API;
+const API_BASE_URL = process.env.NEXT_PUBLIC_RENDER_API;
 
-// // We'll add the secret later — for now just basic proxy
-// export async function GET(request: NextRequest) {
-//   return handleRequest(request, "GET");
-// }
+// We'll add the secret later — for now just basic proxy
+export async function GET(request: NextRequest) {
+  return handleRequest(request, "GET");
+}
 
-// export async function POST(request: NextRequest) {
-//   return handleRequest(request, "POST");
-// }
+export async function POST(request: NextRequest) {
+  return handleRequest(request, "POST");
+}
 
-// export async function PUT(request: NextRequest) {
-//   return handleRequest(request, "PUT");
-// }
+export async function PUT(request: NextRequest) {
+  return handleRequest(request, "PUT");
+}
 
-// export async function PATCH(request: NextRequest) {
-//   return handleRequest(request, "PATCH");
-// }
+export async function PATCH(request: NextRequest) {
+  return handleRequest(request, "PATCH");
+}
 
-// export async function DELETE(request: NextRequest) {
-//   return handleRequest(request, "DELETE");
-// }
+export async function DELETE(request: NextRequest) {
+  return handleRequest(request, "DELETE");
+}
 
-// async function handleRequest(request: NextRequest, method: string) {
-//   try {
-//     // Remove /api/proxy prefix from the path
-//     const path = request.nextUrl.pathname.replace("/api/proxy", "");
+async function handleRequest(request: NextRequest, method: string) {
+  try {
+    // Remove /api/proxy prefix from the path
+    const path = request.nextUrl.pathname.replace("/api/proxy", "");
 
-//     // Build full target URL
-//     const targetUrl = `${API_BASE_URL}${path}${request.nextUrl.search}`;
+    // Build full target URL
+    const targetUrl = `${API_BASE_URL}${path}${request.nextUrl.search}`;
 
-//     // Copy original headers (important for content-type, cookies if any, etc.)
-//     const headers = new Headers(request.headers);
+    // Copy original headers (important for content-type, cookies if any, etc.)
+    const headers = new Headers(request.headers);
 
-//     // Remove headers that could cause problems
-//     headers.delete("host");
-//     headers.delete("connection");
-//     headers.delete("referer");
+    // Remove headers that could cause problems
+    headers.delete("host");
+    headers.delete("connection");
+    headers.delete("referer");
 
-//     headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET!);
+    headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET!);
 
-//     const body =
-//       method !== "GET" && method !== "HEAD" ? await request.text() : undefined;
+    const body =
+      method !== "GET" && method !== "HEAD" ? await request.text() : undefined;
 
-//     const response = await fetch(targetUrl, {
-//       method,
-//       headers,
-//       body,
-//       cache: "no-store",
-//       redirect: "manual",
-//     });
+    const response = await fetch(targetUrl, {
+      method,
+      headers,
+      body,
+      cache: "no-store",
+      redirect: "manual",
+    });
 
-//     const proxyHeaders = new Headers();
-//     ["content-type", "content-disposition", "set-cookie"].forEach((key) => {
-//       const value = response.headers.get(key);
-//       if (value) proxyHeaders.set(key, value);
-//     });
+    const proxyHeaders = new Headers();
+    ["content-type", "content-disposition", "set-cookie"].forEach((key) => {
+      const value = response.headers.get(key);
+      if (value) proxyHeaders.set(key, value);
+    });
 
-//     return new NextResponse(response.body, {
-//       status: response.status,
-//       statusText: response.statusText,
-//       headers: proxyHeaders,
-//     });
-//   } catch (err: any) {
-//     console.error("Proxy error:", err);
-//     return NextResponse.json(
-//       { error: "Something went wrong on our side" },
-//       { status: 502 }
-//     );
-//   }
-// }
+    return new NextResponse(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: proxyHeaders,
+    });
+  } catch (err: any) {
+    console.error("Proxy error:", err);
+    return NextResponse.json(
+      { error: "Something went wrong on our side" },
+      { status: 502 }
+    );
+  }
+}
 
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
