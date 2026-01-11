@@ -409,8 +409,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
 
         await axios.post(
           `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
-          form,
-          { headers: { "Content-Type": "multipart/form-data" } }
+          form
         );
       } catch (error) {
         console.error("Failed to send to Telegram", error);

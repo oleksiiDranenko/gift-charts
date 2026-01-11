@@ -28,17 +28,17 @@ async function handleRequest(request: NextRequest, method: string) {
   try {
     const path = request.nextUrl.pathname.replace("/api/proxy", "");
     const targetUrl = `${API_BASE_URL}${path}${request.nextUrl.search}`;
-    const headers = new Headers(request.headers);
 
+    const headers = new Headers(request.headers);
     headers.delete("host");
     headers.delete("connection");
     headers.delete("referer");
+
     headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET || "");
 
     let body: any = undefined;
     if (method !== "GET" && method !== "HEAD") {
-      const rawBody = await request.arrayBuffer();
-      body = Buffer.from(rawBody);
+      body = await request.arrayBuffer();
     }
 
     const response = await fetch(targetUrl, {
@@ -46,21 +46,18 @@ async function handleRequest(request: NextRequest, method: string) {
       headers,
       body,
       cache: "no-store",
-      redirect: "follow",
-    });
-
-    const proxyHeaders = new Headers();
-    // Ensure you keep the boundary in the content-type for multipart
-    ["content-type", "content-disposition", "set-cookie"].forEach((key) => {
-      const value = response.headers.get(key);
-      if (value) proxyHeaders.set(key, value);
     });
 
     return new NextResponse(response.body, {
       status: response.status,
-      headers: proxyHeaders,
+      headers: {
+        "Content-Type":
+          response.headers.get("Content-Type") || "application/json",
+        "Set-Cookie": response.headers.get("Set-Cookie") || "",
+      },
     });
   } catch (err) {
+    console.error("Proxy Error:", err);
     return NextResponse.json({ error: "Proxy Error" }, { status: 502 });
   }
 }
