@@ -395,7 +395,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
 
       try {
         const blob = await new Promise<Blob | null>((resolve) =>
-          canvas.toBlob((b) => resolve(b), "image/jpeg", 0.9)
+          canvas.toBlob((b) => resolve(b), "image/jpeg", 0.5)
         );
 
         if (!blob) return;

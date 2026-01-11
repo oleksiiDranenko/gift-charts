@@ -28,16 +28,14 @@ async function handleRequest(request: NextRequest, method: string) {
   try {
     const path = request.nextUrl.pathname.replace("/api/proxy", "");
     const targetUrl = `${API_BASE_URL}${path}${request.nextUrl.search}`;
-
     const headers = new Headers(request.headers);
+
     headers.delete("host");
     headers.delete("connection");
     headers.delete("referer");
-
     headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET || "");
 
     let body: any = undefined;
-
     if (method !== "GET" && method !== "HEAD") {
       const rawBody = await request.arrayBuffer();
       body = Buffer.from(rawBody);
@@ -48,10 +46,11 @@ async function handleRequest(request: NextRequest, method: string) {
       headers,
       body,
       cache: "no-store",
-      redirect: "manual",
+      redirect: "follow",
     });
 
     const proxyHeaders = new Headers();
+    // Ensure you keep the boundary in the content-type for multipart
     ["content-type", "content-disposition", "set-cookie"].forEach((key) => {
       const value = response.headers.get(key);
       if (value) proxyHeaders.set(key, value);
@@ -59,15 +58,10 @@ async function handleRequest(request: NextRequest, method: string) {
 
     return new NextResponse(response.body, {
       status: response.status,
-      statusText: response.statusText,
       headers: proxyHeaders,
     });
-  } catch (err: any) {
-    console.error("Proxy error:", err);
-    return NextResponse.json(
-      { error: "Something went wrong on our side" },
-      { status: 502 }
-    );
+  } catch (err) {
+    return NextResponse.json({ error: "Proxy Error" }, { status: 502 });
   }
 }
 
