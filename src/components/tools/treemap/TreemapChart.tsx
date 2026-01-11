@@ -23,7 +23,9 @@ interface GiftData {
 type HeatmapType = "default" | "round";
 
 export interface TreemapChartRef {
-  downloadImage: () => Promise<void>;
+  downloadImage: () => Promise<
+    { blob: Blob; url: string; filename: string } | undefined
+  >;
 }
 
 interface TreemapChartProps {
@@ -383,29 +385,36 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       });
 
       const url = canvas.toDataURL("image/jpeg", 1.0);
+      const blob = await (await fetch(url)).blob();
       tempChart.destroy();
 
-      if (!isTelegram) {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `treemap-${Date.now()}.jpeg`;
-        a.click();
-        return;
-      }
+      // if (!isTelegram) {
+      //   const a = document.createElement("a");
+      //   a.href = url;
+      //   a.download = `treemap-${Date.now()}.jpeg`;
+      //   a.click();
+      //   return;
+      // }
 
-      const blob = await (await fetch(url)).blob();
-      const form = new FormData();
-      form.append("file", blob, `treemap-${Date.now()}.jpeg`);
-      form.append(
-        "chatId",
-        window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
-      );
-      form.append("content", "Here is your treemap!");
+      // const blob = await (await fetch(url)).blob();
+      // const form = new FormData();
+      // form.append("file", blob, `treemap-${Date.now()}.jpeg`);
+      // form.append(
+      //   "chatId",
+      //   window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
+      // );
+      // form.append("content", "Here is your treemap!");
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
-        form
-      );
+      // await axios.post(
+      //   `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
+      //   form
+      // );
+
+      return {
+        blob,
+        url,
+        filename: `treemap-${Date.now()}.jpeg`,
+      };
     };
 
     useImperativeHandle(ref, () => ({
