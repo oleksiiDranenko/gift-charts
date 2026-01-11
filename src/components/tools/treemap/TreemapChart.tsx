@@ -393,27 +393,19 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
         return;
       }
 
-      try {
-        const blob = await new Promise<Blob | null>((resolve) =>
-          canvas.toBlob((b) => resolve(b), "image/jpeg", 0.9)
-        );
+      const blob = await (await fetch(url)).blob();
+      const form = new FormData();
+      form.append("file", blob, `treemap-${Date.now()}.jpeg`);
+      form.append(
+        "chatId",
+        window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
+      );
+      form.append("content", "Here is your treemap!");
 
-        if (!blob) return;
-
-        const form = new FormData();
-        form.append("file", blob, `treemap.jpg`);
-        form.append(
-          "chatId",
-          window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
-        );
-
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
-          form
-        );
-      } catch (error) {
-        console.error("Failed to send to Telegram", error);
-      }
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
+        form
+      );
     };
 
     useImperativeHandle(ref, () => ({
