@@ -26,24 +26,21 @@ export async function DELETE(request: NextRequest) {
 
 async function handleRequest(request: NextRequest, method: string) {
   try {
-    // Remove /api/proxy prefix from the path
     const path = request.nextUrl.pathname.replace("/api/proxy", "");
-
-    // Build full target URL
     const targetUrl = `${API_BASE_URL}${path}${request.nextUrl.search}`;
 
-    // Copy original headers (important for content-type, cookies if any, etc.)
     const headers = new Headers(request.headers);
-
     headers.delete("host");
     headers.delete("connection");
     headers.delete("referer");
 
-    headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET!);
+    headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET || "");
 
     let body: any = undefined;
+
     if (method !== "GET" && method !== "HEAD") {
-      body = await request.arrayBuffer();
+      const rawBody = await request.arrayBuffer();
+      body = Buffer.from(rawBody);
     }
 
     const response = await fetch(targetUrl, {
