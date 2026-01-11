@@ -41,8 +41,10 @@ async function handleRequest(request: NextRequest, method: string) {
 
     headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET!);
 
-    const body =
-      method !== "GET" && method !== "HEAD" ? await request.text() : undefined;
+    let body: any = undefined;
+    if (method !== "GET" && method !== "HEAD") {
+      body = await request.arrayBuffer();
+    }
 
     const response = await fetch(targetUrl, {
       method,
