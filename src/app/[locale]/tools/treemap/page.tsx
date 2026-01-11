@@ -15,6 +15,7 @@ import TreemapControlModal from "@/components/tools/treemap/EditTreemapModal";
 import { Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import DownloadHeatmapModal from "@/components/tools/treemap/DownloadHeatmapModal";
+import AddBanner from "@/components/AddBanner";
 
 export default function Page() {
   const [settings, setSettings] = useState(() => {
@@ -30,7 +31,6 @@ export default function Page() {
     }
     return { currency: "ton", giftType: "line", giftBackground: "none" };
   });
-
   const giftsList = useAppSelector((state) => state.giftsList);
   const [list, setList] = useState<GiftInterface[]>([]);
   const [listType, setListType] = useState<"change" | "marketCap">("marketCap");
@@ -40,50 +40,12 @@ export default function Page() {
   const [amount, setAmount] = useState<number>(100);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(true);
-  const [isSending, setIsSending] = useState<boolean>(false); // New state for Telegram upload
 
   const translate = useTranslations("heatmap");
+
   const vibrate = useVibrate();
   const totalGifts = giftsList.length;
   const chartRef = useRef<TreemapChartRef>(null);
-
-  // New handler for the download/send logic
-  const handleDownload = async () => {
-    if (isSending) return;
-    vibrate();
-
-    try {
-      setIsSending(true);
-      const result = await chartRef.current?.downloadImage();
-
-      if (!result) return;
-
-      const isTelegram = !!window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
-
-      if (!isTelegram) {
-        // Handle browser download
-        const a = document.createElement("a");
-        a.href = result.url;
-        a.download = result.filename;
-        a.click();
-      } else {
-        // Handle Telegram upload via Proxy
-        const form = new FormData();
-        form.append("file", result.blob, result.filename);
-        form.append(
-          "chatId",
-          window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
-        );
-
-        // Using relative path for the proxy
-        await axios.post("/api/proxy/telegram/send-image", form);
-      }
-    } catch (error) {
-      console.error("Failed to process image:", error);
-    } finally {
-      setIsSending(false);
-    }
-  };
 
   useEffect(() => {
     (async () => {
@@ -111,6 +73,7 @@ export default function Page() {
 
   useEffect(() => {
     let rawList = [...giftsList];
+
     let sortedList = rawList.filter(
       (gift) => gift.preSale === false || gift.preSale === undefined
     );
@@ -118,17 +81,53 @@ export default function Page() {
     switch (listType) {
       case "change":
         sortedList.sort((a, b) => {
-          const getChange = (val: GiftInterface, gap: string) => {
-            const now = val.priceTon;
-            const then =
-              gap === "24h"
-                ? val.tonPrice24hAgo
-                : gap === "1w"
-                ? val.tonPriceWeekAgo
-                : val.tonPriceMonthAgo;
-            return then ? Math.abs(((now - then) / then) * 100) : 0;
-          };
-          return getChange(b, timeGap) - getChange(a, timeGap);
+          if (timeGap === "24h") {
+            const aChange = a.tonPrice24hAgo
+              ? Math.abs(
+                  ((a.priceTon - a.tonPrice24hAgo) / a.tonPrice24hAgo) * 100
+                )
+              : 0;
+            const bChange = b.tonPrice24hAgo
+              ? Math.abs(
+                  ((b.priceTon - b.tonPrice24hAgo) / b.tonPrice24hAgo) * 100
+                )
+              : 0;
+            return bChange - aChange;
+          } else if (
+            timeGap === "1w" &&
+            a.tonPriceWeekAgo &&
+            b.tonPriceWeekAgo
+          ) {
+            const aChange = a.tonPrice24hAgo
+              ? Math.abs(
+                  ((a.priceTon - a.tonPriceWeekAgo) / a.tonPriceWeekAgo) * 100
+                )
+              : 0;
+            const bChange = b.tonPrice24hAgo
+              ? Math.abs(
+                  ((b.priceTon - b.tonPriceWeekAgo) / b.tonPriceWeekAgo) * 100
+                )
+              : 0;
+            return bChange - aChange;
+          } else if (
+            timeGap === "1m" &&
+            a.tonPriceMonthAgo &&
+            b.tonPriceMonthAgo
+          ) {
+            const aChange = a.tonPrice24hAgo
+              ? Math.abs(
+                  ((a.priceTon - a.tonPriceMonthAgo) / a.tonPriceMonthAgo) * 100
+                )
+              : 0;
+            const bChange = b.tonPrice24hAgo
+              ? Math.abs(
+                  ((b.priceTon - b.tonPriceMonthAgo) / b.tonPriceMonthAgo) * 100
+                )
+              : 0;
+            return bChange - aChange;
+          } else {
+            return 0;
+          }
         });
         break;
       case "marketCap":
@@ -138,6 +137,7 @@ export default function Page() {
         );
         break;
     }
+
     setList(sortedList);
   }, [giftsList, listType, timeGap]);
 
@@ -180,33 +180,24 @@ export default function Page() {
           <DownloadHeatmapModal
             trigger={
               <button
-                disabled={isSending}
                 className='group relative overflow-hidden w-full lg:w-fit px-6 h-8 rounded-3xl bg-primary
-             flex items-center justify-center gap-x-2 text-white text-sm font-bold disabled:opacity-70'
-                onClick={handleDownload}>
-                {isSending ? (
-                  <ReactLoading
-                    type='spin'
-                    color='#fff'
-                    height={16}
-                    width={16}
-                  />
-                ) : (
-                  <>
-                    <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
-                      <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12' />
-                    </span>
-                    <span className='relative z-10 flex flex-row items-center gap-x-1'>
-                      <Download size={16} /> {translate("download")}
-                    </span>
-                  </>
-                )}
+             flex items-center justify-center gap-x-2 text-white text-sm font-bold'
+                onClick={() => {
+                  chartRef.current?.downloadImage();
+                  vibrate();
+                }}>
+                <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
+                  <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12' />
+                </span>
+
+                <span className='relative z-10 flex flex-row items-center gap-x-1'>
+                  <Download size={16} className='' /> {translate("download")}
+                </span>
               </button>
             }
           />
         </div>
       </div>
-
       {loading ? (
         <ReactLoading
           type='spin'
