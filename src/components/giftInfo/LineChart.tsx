@@ -31,12 +31,12 @@ const TIME_RANGES: {
   label: (t: (key: string) => string) => string;
   requiresLifeData?: boolean;
 }[] = [
-  { key: "24h", label: (t) => `24${t("hour")}` },
-  { key: "1w", label: (t) => `1${t("week")}` },
-  { key: "1m", label: (t) => `1${t("month")}`, requiresLifeData: true },
-  { key: "3m", label: (t) => `3${t("month")}`, requiresLifeData: true },
-  { key: "6m", label: (t) => `6${t("month")}`, requiresLifeData: true },
   { key: "all", label: (t) => t("all"), requiresLifeData: true },
+  { key: "6m", label: (t) => `6${t("month")}`, requiresLifeData: true },
+  { key: "3m", label: (t) => `3${t("month")}`, requiresLifeData: true },
+  { key: "1m", label: (t) => `1${t("month")}`, requiresLifeData: true },
+  { key: "1w", label: (t) => `1${t("week")}` },
+  { key: "24h", label: (t) => `24${t("hour")}` },
 ];
 
 export default function LineChart({
@@ -140,6 +140,7 @@ export default function LineChart({
         attributionLogo: false,
         fontSize: 11,
       },
+
       grid: {
         vertLines: { visible: false },
         horzLines: {
@@ -149,9 +150,16 @@ export default function LineChart({
               : "rgba(0, 0, 0, 0.05)",
         },
       },
+      leftPriceScale: {
+        visible: false,
+      },
       rightPriceScale: {
         visible: true,
-        borderVisible: false,
+        borderVisible: true, // This adds the line at the right side before the numbers
+        borderColor:
+          resolvedTheme === "dark"
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.1)",
         autoScale: true,
         scaleMargins: {
           top: 0.15,
@@ -163,21 +171,22 @@ export default function LineChart({
         timeVisible: true,
         secondsVisible: false,
       },
-      handleScroll: false,
-      handleScale: false,
-      height: window.innerWidth < 1080 ? 250 : 450,
+
+      handleScroll: true, // Allows sliding/panning
+      handleScale: true,
+      height: window.innerWidth < 1080 ? 300 : 450,
     });
 
     const series = chart.addSeries(AreaSeries, {
       lineColor: "#22c55e",
       topColor: "rgba(34, 197, 94, 0.4)",
       bottomColor: "rgba(0, 0, 0, 0)",
-      lineWidth: 1,
+      lineWidth: 2,
       lastValueVisible: true,
+      priceLineVisible: true,
 
-      priceLineVisible: false,
       crosshairMarkerVisible: true,
-      lineType: LineType.Curved,
+      lineType: LineType.Simple,
     });
 
     chart.subscribeCrosshairMove((param: MouseEventParams) => {
@@ -283,13 +292,10 @@ export default function LineChart({
   }, [list, selectedPrice, percentChange]);
 
   return (
-    <div
-      className={`relative w-full ${
-        resolvedTheme !== "dark" && "bg-secondaryTransparent rounded-3xl"
-      }`}>
+    <div className={`relative w-full `}>
       <div ref={chartContainerRef} className='w-full' />
 
-      <div className='w-full pr-3'>
+      <div className='w-full'>
         <div className='w-full mt-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
           {TIME_RANGES.map(({ key, label, requiresLifeData }) => {
             const isActive = listType === key;
@@ -300,7 +306,9 @@ export default function LineChart({
                 key={key}
                 disabled={isDisabled}
                 className={`w-full px-3 h-10 text-sm text-nowrap transition-colors rounded-3xl ${
-                  isActive ? "bg-secondary font-bold" : "text-secondaryText"
+                  isActive
+                    ? "bg-primary text-white font-bold"
+                    : "text-secondaryText"
                 } ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
                 onClick={() => {
                   if (!isDisabled) {

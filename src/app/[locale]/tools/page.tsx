@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
 import IndexBlockSkeleton from "@/components/tools/IndexBlockSkeleton";
 import NoPrefetchLink from "@/components/NoPrefetchLink";
+import { MdOutlineSsidChart } from "react-icons/md";
 
 export default function Page() {
   const dispatch = useAppDispatch();
@@ -140,6 +141,28 @@ export default function Page() {
                 </span>
                 <span className='text-sm text-secondaryText'>
                   {translate("heatmapDescription")}
+                </span>
+              </div>
+            </div>
+
+            <ChevronRight size={20} className='text-primary' />
+          </div>
+        </NoPrefetchLink>
+
+        <NoPrefetchLink
+          className='bg-secondaryTransparent rounded-3xl overflow-hidden'
+          href={"/tools/compare-charts"}
+          onClick={() => {
+            vibrate();
+          }}>
+          <div className='w-full p-3 flex flex-row justify-between items-center'>
+            <div className='flex flex-row items-center gap-x-3'>
+              <MdOutlineSsidChart className='size-7 text-primary' />
+
+              <div className='flex flex-col'>
+                <span className='font-bold text-lg'>Compare Charts</span>
+                <span className='text-sm text-secondaryText'>
+                  Compare charts of the chosen gifts
                 </span>
               </div>
             </div>
