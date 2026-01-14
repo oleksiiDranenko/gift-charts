@@ -3,73 +3,60 @@ import { NextRequest, NextResponse } from "next/server";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_RENDER_API;
 
-// We'll add the secret later — for now just basic proxy
-export async function GET(request: NextRequest) {
-  return handleRequest(request, "GET");
-}
-
-export async function POST(request: NextRequest) {
-  return handleRequest(request, "POST");
-}
-
-export async function PUT(request: NextRequest) {
-  return handleRequest(request, "PUT");
-}
-
-export async function PATCH(request: NextRequest) {
-  return handleRequest(request, "PATCH");
-}
-
-export async function DELETE(request: NextRequest) {
-  return handleRequest(request, "DELETE");
-}
-
-async function handleRequest(request: NextRequest, method: string) {
+async function handleRequest(request: NextRequest) {
   try {
-    // Remove /api/proxy prefix from the path
     const path = request.nextUrl.pathname.replace("/api/proxy", "");
-
-    // Build full target URL
     const targetUrl = `${API_BASE_URL}${path}${request.nextUrl.search}`;
 
-    // Copy original headers (important for content-type, cookies if any, etc.)
+    // 1. Prepare headers
     const headers = new Headers(request.headers);
-
     headers.delete("host");
     headers.delete("connection");
     headers.delete("referer");
+    headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET || "");
 
-    headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET!);
-
-    const body =
-      method !== "GET" && method !== "HEAD" ? await request.text() : undefined;
-
+    // 2. Proxy the request using the raw request body stream
+    // This prevents corruption because we never 'touch' the binary data
     const response = await fetch(targetUrl, {
-      method,
-      headers,
-      body,
+      method: request.method,
+      headers: headers,
+      body:
+        request.method !== "GET" && request.method !== "HEAD"
+          ? request.body // PASS THE RAW STREAM DIRECTLY
+          : undefined,
       cache: "no-store",
-      redirect: "manual",
-    });
-
-    const proxyHeaders = new Headers();
-    ["content-type", "content-disposition", "set-cookie"].forEach((key) => {
-      const value = response.headers.get(key);
-      if (value) proxyHeaders.set(key, value);
-    });
+      // Important for Amplify: tell fetch not to try and decompress
+      // so the binary stays original
+      duplex: "half",
+    } as any);
 
     return new NextResponse(response.body, {
       status: response.status,
-      statusText: response.statusText,
-      headers: proxyHeaders,
+      headers: {
+        "Content-Type":
+          response.headers.get("Content-Type") || "application/json",
+      },
     });
-  } catch (err: any) {
-    console.error("Proxy error:", err);
-    return NextResponse.json(
-      { error: "Something went wrong on our side" },
-      { status: 502 }
-    );
+  } catch (err) {
+    console.error("Proxy Error:", err);
+    return NextResponse.json({ error: "Proxy Error" }, { status: 502 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  return handleRequest(req);
+}
+export async function POST(req: NextRequest) {
+  return handleRequest(req);
+}
+export async function PUT(req: NextRequest) {
+  return handleRequest(req);
+}
+export async function PATCH(req: NextRequest) {
+  return handleRequest(req);
+}
+export async function DELETE(req: NextRequest) {
+  return handleRequest(req);
 }
 
 export const dynamic = "force-dynamic";

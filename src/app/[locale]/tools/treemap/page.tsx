@@ -145,20 +145,7 @@ export default function Page() {
     <div className='w-full pt-[0px] pb-24 flex flex-col items-center overflow-visible'>
       <div className='w-full flex flex-col items-center px-3 gap-y-3 mb-3'>
         <div className='w-full lg:w-[98%] mb-2 flex flex-row justify-between items-center gap-x-3'>
-          <BackButton
-          // rightElement={
-          //   <div className='w-fit flex flex-row items-center gap-x-2 h-8 px-6 text-sm bg-secondaryTransparent rounded-3xl'>
-          //     Share
-          //     <svg
-          //       xmlns='http://www.w3.org/2000/svg'
-          //       viewBox='0 0 16 16'
-          //       fill='currentColor'
-          //       className='size-4'>
-          //       <path d='M12 6a2 2 0 1 0-1.994-1.842L5.323 6.5a2 2 0 1 0 0 3l4.683 2.342a2 2 0 1 0 .67-1.342L5.995 8.158a2.03 2.03 0 0 0 0-.316L10.677 5.5c.353.311.816.5 1.323.5Z' />
-          //     </svg>
-          //   </div>
-          // }
-          />
+          <BackButton />
         </div>
 
         <div className='w-full lg:w-[98%] gap-x-2 flex flex-row items-center justify-start'>

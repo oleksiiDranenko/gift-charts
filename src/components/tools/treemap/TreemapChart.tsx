@@ -382,25 +382,29 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
         plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 1, type)],
       });
 
-      const url = canvas.toDataURL("image/jpeg", 1.0);
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob((b) => resolve(b), "image/jpeg", 0.9);
+      });
       tempChart.destroy();
 
+      if (!blob) return;
+
       if (!isTelegram) {
+        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
         a.download = `treemap-${Date.now()}.jpeg`;
         a.click();
+        URL.revokeObjectURL(url);
         return;
       }
 
-      const blob = await (await fetch(url)).blob();
       const form = new FormData();
       form.append("file", blob, `treemap-${Date.now()}.jpeg`);
       form.append(
         "chatId",
         window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
       );
-      form.append("content", "Here is your treemap!");
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
