@@ -355,11 +355,13 @@ export default function TreemapControlModal({
                         </svg>
 
                         <div className='flex flex-col items-start'>
-                          <span className='text-lg font-bold'>Style</span>
+                          <span className='text-lg font-bold'>
+                            {translate("style")}
+                          </span>
                           <span className='text-sm text-secondaryText'>
                             {heatmapStyle === "round"
-                              ? "Rounded Corners"
-                              : "Square"}
+                              ? translate("rounded")
+                              : translate("square")}
                           </span>
                         </div>
                       </div>
@@ -406,10 +408,10 @@ export default function TreemapControlModal({
 
                         <div className='flex flex-col items-start'>
                           <span className='text-lg font-bold'>
-                            Dynamic Colors
+                            {translate("dynamicColor")}
                           </span>
                           <span className='text-sm text-secondaryText'>
-                            Intensity based on % change
+                            {translate("dynamicColorDescription")}
                           </span>
                         </div>
                       </div>
