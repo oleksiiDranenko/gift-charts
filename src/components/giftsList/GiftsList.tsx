@@ -249,6 +249,7 @@ export default function GiftsList() {
               background={giftBackground}
               currency={currency}
             />
+            <div ref={lastElementRef} className='h-0 w-full' />
             {isFetchingNextPage && (
               <ListSkeleton
                 type={giftType}
