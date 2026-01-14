@@ -1,4 +1,3 @@
-// components/tools/treemap/TreemapChart.tsx
 "use client";
 
 import React, {
@@ -32,6 +31,7 @@ interface TreemapChartProps {
   timeGap: "24h" | "1w" | "1m";
   currency: "ton" | "usd";
   type: HeatmapType;
+  dynamicColors?: boolean; // New Prop
 }
 
 const preloadImages = (data: GiftData[]) => {
@@ -117,7 +117,8 @@ const imagePlugin = (
   textScale: number = 1,
   imageScale: number = 1,
   borderWidth: number = 0,
-  type: HeatmapType
+  type: HeatmapType,
+  dynamicColors: boolean = false // Added dynamicColors to plugin
 ) => ({
   id: "treemapImages",
   afterDatasetDraw(chart: any) {
@@ -126,7 +127,6 @@ const imagePlugin = (
     const imageMap = dataset.imageMap as Map<string, HTMLImageElement>;
     const scale = chart.getZoomLevel ? chart.getZoomLevel() : 0.9;
 
-    // ensure toncoin & usdt images
     let toncoinImg = imageMap.get("toncoin");
     if (!toncoinImg) {
       toncoinImg = new Image();
@@ -153,12 +153,24 @@ const imagePlugin = (
         height = meta.height / scale;
       if (width <= 0 || height <= 0) return;
 
+      let opacity = 1;
+      if (dynamicColors) {
+        const baseOpacity = 0.3; // The "faded" look for 0% change
+        const sensitivity = 15; // At 15% change, the color is 100% solid
+
+        // Calculate how much to add to the base opacity
+        const addedOpacity = Math.abs(item.percentChange) / sensitivity;
+
+        // Cap it at 1 (100% solid)
+        opacity = Math.min(1, baseOpacity + addedOpacity);
+      }
+
       const baseColor =
         item.percentChange > 0
-          ? "#018f35"
+          ? `rgba(1, 143, 53, ${opacity})`
           : item.percentChange < 0
-          ? "#dc2626"
-          : "#8F9779";
+          ? `rgba(220, 38, 38, ${opacity})`
+          : `rgba(143, 151, 121, ${opacity})`;
 
       ctx.fillStyle = baseColor;
       ctx.strokeStyle = "#1e293b";
@@ -201,15 +213,6 @@ const imagePlugin = (
       );
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
-      ctx.strokeStyle = "transparent";
-      ctx.lineWidth = 0;
-
-      ctx.fillStyle = "white";
-      ctx.textAlign = "center";
-      ctx.strokeStyle = "transparent";
-      ctx.lineWidth = 0;
-
-      // Draw name (always first)
       ctx.font = `bold ${fontSize}px sans-serif`;
       ctx.fillText(
         item.name,
@@ -217,35 +220,28 @@ const imagePlugin = (
         startY + drawHeight + fontSize + lineSpacing
       );
 
-      // ——— MIDDLE LINE: PRICE or MARKET CAP ———
       ctx.font = `${fontSize}px sans-serif`;
-
       let middleText = "";
       let middleTextWidth = 0;
 
-      // MARKET CAP MODE → show market cap instead of percent
       if (chartType === "marketCap") {
         const mc = item.marketCap ?? 0;
-
         if (mc >= 1_000_000) middleText = `${(mc / 1_000_000).toFixed(1)}M`;
         else middleText = `${(mc / 1_000).toFixed(1)}K`;
-
         middleTextWidth = ctx.measureText(middleText).width;
-      }
-      // NORMAL MODE → show price (existing behavior)
-      else {
+      } else {
         middleText = item.price.toFixed(2);
         middleTextWidth = ctx.measureText(middleText).width;
       }
 
-      // Draw ICON + TEXT exactly as before
       const iconSize = fontSize * 1.0;
       const iconSpacing = fontSize * -0.1;
 
-      if (currency === "ton" && toncoinImg?.complete) {
+      const currentIcon = currency === "ton" ? toncoinImg : usdtImg;
+      if (currentIcon?.complete) {
         try {
           ctx.drawImage(
-            toncoinImg,
+            currentIcon,
             centerX - middleTextWidth / 2 - iconSize - iconSpacing,
             startY +
               drawHeight +
@@ -255,33 +251,6 @@ const imagePlugin = (
             iconSize,
             iconSize
           );
-
-          ctx.fillText(
-            middleText,
-            centerX + iconSize / 2 + iconSpacing,
-            startY + drawHeight + fontSize * 2 + lineSpacing * 2
-          );
-        } catch {
-          ctx.fillText(
-            middleText,
-            centerX,
-            startY + drawHeight + fontSize * 2 + lineSpacing * 2
-          );
-        }
-      } else if (currency === "usd" && usdtImg?.complete) {
-        try {
-          ctx.drawImage(
-            usdtImg,
-            centerX - middleTextWidth / 2 - iconSize - iconSpacing,
-            startY +
-              drawHeight +
-              fontSize * 2 +
-              lineSpacing * 2 -
-              iconSize * 0.8,
-            iconSize,
-            iconSize
-          );
-
           ctx.fillText(
             middleText,
             centerX + iconSize / 2 + iconSpacing,
@@ -302,7 +271,6 @@ const imagePlugin = (
         );
       }
 
-      // ——— BOTTOM LINE: % CHANGE ———
       ctx.font = `${priceFontSize}px sans-serif`;
       const changeText = `${item.percentChange >= 0 ? "+" : ""}${
         item.percentChange
@@ -313,7 +281,6 @@ const imagePlugin = (
         startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
       );
 
-      // Watermark on first item
       if (index === 0) {
         ctx.font = `${watermarkFontSize}px sans-serif`;
         ctx.fillStyle = "rgba(255,255,255,0.6)";
@@ -327,7 +294,10 @@ const imagePlugin = (
 });
 
 const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
-  ({ data, chartType, timeGap, currency, type }, ref) => {
+  (
+    { data, chartType, timeGap, currency, type, dynamicColors = false },
+    ref
+  ) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const chartRef = useRef<any>(null);
     const vibrate = useVibrate();
@@ -337,10 +307,8 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       if (data.length === 0) return;
 
       const isTelegram = !!window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
-
       const width = 1920;
       const height = 1080;
-
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
@@ -352,7 +320,6 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       const { TreemapController, TreemapElement } = await import(
         "chartjs-chart-treemap"
       );
-
       ChartJS.register(TreemapController, TreemapElement);
 
       const transformed = transformGiftData(data, chartType, timeGap, currency);
@@ -379,7 +346,9 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
             tooltip: { enabled: false },
           },
         },
-        plugins: [imagePlugin(chartType, currency, 35, 1, 1.2, 1, type)],
+        plugins: [
+          imagePlugin(chartType, currency, 35, 1, 1.2, 1, type, dynamicColors),
+        ],
       });
 
       const blob = await new Promise<Blob | null>((resolve) => {
@@ -405,16 +374,13 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
         "chatId",
         window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
       );
-
       await axios.post(
         `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
         form
       );
     };
 
-    useImperativeHandle(ref, () => ({
-      downloadImage,
-    }));
+    useImperativeHandle(ref, () => ({ downloadImage }));
 
     useEffect(() => {
       if (!canvasRef.current || data.length === 0) return;
@@ -427,7 +393,6 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
         ChartJS.register(TreemapController, TreemapElement);
 
         chartRef.current?.destroy();
-
         const transformed = transformGiftData(
           data,
           chartType,
@@ -460,12 +425,23 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
               tooltip: { enabled: false },
             },
           },
-          plugins: [imagePlugin(chartType, currency, 15, 1, 1.2, 1, type)],
+          plugins: [
+            imagePlugin(
+              chartType,
+              currency,
+              15,
+              1,
+              1.2,
+              1,
+              type,
+              dynamicColors
+            ),
+          ],
         });
       })();
 
       return () => chartRef.current?.destroy();
-    }, [data, chartType, timeGap, currency, type]);
+    }, [data, chartType, timeGap, currency, type, dynamicColors]);
 
     return (
       <div className='w-full lg:w-[98%] min-h-[600px] px-3'>

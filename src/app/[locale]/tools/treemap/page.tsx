@@ -36,6 +36,10 @@ export default function Page() {
   const [listType, setListType] = useState<"change" | "marketCap">("marketCap");
   const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m">("24h");
   const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
+  const [heatmapStyle, setHeatmapStyle] = useState<"round" | "default">(
+    "default"
+  );
+  const [isDynamic, setIsDynamic] = useState<boolean>(false);
 
   const [amount, setAmount] = useState<number>(100);
   const dispatch = useAppDispatch();
@@ -174,6 +178,10 @@ export default function Page() {
               onTimeGapChange={setTimeGap}
               onCurrencyChange={setCurrency}
               onAmountChange={setAmount}
+              onStyleChange={setHeatmapStyle}
+              onDynamicColorsChange={setIsDynamic}
+              heatmapStyle={heatmapStyle}
+              dynamicColors={isDynamic}
             />
           </div>
 
@@ -213,7 +221,8 @@ export default function Page() {
           chartType={listType}
           timeGap={timeGap}
           currency={currency}
-          type='default'
+          type={heatmapStyle}
+          dynamicColors={isDynamic}
         />
       )}
     </div>
