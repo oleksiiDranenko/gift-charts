@@ -422,7 +422,7 @@ export default function TreemapControlModal({
                           onDynamicColorsChange(!dynamicColors);
                           vibrate();
                         }}
-                        className={`w-16 h-8 flex items-center rounded-full p-1 transition-colors ${
+                        className={`min-w-16 h-8 flex items-center rounded-full p-1 transition-colors ${
                           dynamicColors ? "bg-primary" : "bg-secondary"
                         }`}>
                         <div
