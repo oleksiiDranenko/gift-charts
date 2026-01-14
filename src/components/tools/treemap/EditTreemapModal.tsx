@@ -416,7 +416,10 @@ export default function TreemapControlModal({
 
                       {/* Simple Toggle Switch */}
                       <button
-                        onClick={() => onDynamicColorsChange(!dynamicColors)}
+                        onClick={() => {
+                          onDynamicColorsChange(!dynamicColors);
+                          vibrate();
+                        }}
                         className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors ${
                           dynamicColors ? "bg-primary" : "bg-secondary"
                         }`}>
