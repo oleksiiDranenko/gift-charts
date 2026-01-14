@@ -213,7 +213,8 @@ export default function Page() {
           chartType={listType}
           timeGap={timeGap}
           currency={currency}
-          type='default'
+          type='round'
+          dynamicColors={true}
         />
       )}
     </div>
