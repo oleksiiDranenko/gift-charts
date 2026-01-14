@@ -10,21 +10,25 @@ import {
 } from "@/components/filterGifts/ModalReusable";
 import SectionTransition from "@/components/filterGifts/SelectTransition";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 interface Props {
   trigger: ReactNode;
-  // These callbacks will replace the local state setters you had on the page
-  onListTypeChange: (type: "change" | "marketCap") => void;
-  onTimeGapChange: (gap: "24h" | "1w" | "1m") => void;
-  onCurrencyChange: (cur: "ton" | "usd") => void;
-  onAmountChange: (amount: number) => void;
-
   // Current values – needed to show the selected option
   listType: "change" | "marketCap";
   timeGap: "24h" | "1w" | "1m";
   currency: "ton" | "usd";
   amount: number;
   totalGifts: number; // giftsList.length
+  heatmapStyle: "round" | "default";
+  dynamicColors: boolean;
+
+  onListTypeChange: (type: "change" | "marketCap") => void;
+  onTimeGapChange: (gap: "24h" | "1w" | "1m") => void;
+  onCurrencyChange: (cur: "ton" | "usd") => void;
+  onAmountChange: (amount: number) => void;
+  onStyleChange: (style: "round" | "default") => void;
+  onDynamicColorsChange: (val: boolean) => void;
 }
 
 export default function TreemapControlModal({
@@ -38,10 +42,14 @@ export default function TreemapControlModal({
   currency,
   amount,
   totalGifts,
+  heatmapStyle,
+  dynamicColors,
+  onStyleChange,
+  onDynamicColorsChange,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState<
-    "type" | "time" | "currency" | "amount" | null
+    "type" | "time" | "currency" | "amount" | "style" | null
   >(null);
 
   const vibrate = useVibrate();
@@ -258,14 +266,7 @@ export default function TreemapControlModal({
 
                   {/* 3. Currency */}
                   <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
-                    <button
-                      onClick={() => {
-                        vibrate();
-                        setOpenSection(
-                          openSection === "currency" ? null : "currency"
-                        );
-                      }}
-                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+                    <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -289,29 +290,147 @@ export default function TreemapControlModal({
                           </span>
                         </div>
                       </div>
-                      <ChevronIcon open={openSection === "currency"} />
-                    </button>
 
-                    <SectionTransition open={openSection === "currency"}>
+                      {/* Simple Toggle Switch */}
+                      <div className='w-fit flex flex-row box-border bg-secondary rounded-3xl gap-x-1'>
+                        <button
+                          className={`text-sm h-8 px-3 box-border ${
+                            currency === "ton"
+                              ? "rounded-3xl bg-primary font-bold"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            onCurrencyChange("ton");
+                            vibrate();
+                          }}>
+                          <Image
+                            src='/images/toncoin.webp'
+                            alt='ton'
+                            width={18}
+                            height={18}
+                          />
+                        </button>
+                        <button
+                          className={`text-sm h-8 px-3 box-border ${
+                            currency === "usd"
+                              ? "rounded-3xl bg-primary font-bold"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            onCurrencyChange("usd");
+                            vibrate();
+                          }}>
+                          <Image
+                            src='/images/usdt.svg'
+                            alt='usdt'
+                            width={18}
+                            height={18}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Heatmap Style */}
+                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+                    <button
+                      onClick={() => {
+                        vibrate();
+                        setOpenSection(
+                          openSection === "style" ? null : "style"
+                        );
+                      }}
+                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+                      <div className='flex flex-row items-center gap-x-3'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='size-7 text-primary'>
+                          <path
+                            fillRule='evenodd'
+                            d='M1.5 7.125c0-1.036.84-1.875 1.875-1.875h6c1.036 0 1.875.84 1.875 1.875v3.75c0 1.036-.84 1.875-1.875 1.875h-6A1.875 1.875 0 0 1 1.5 10.875v-3.75Zm12 1.5c0-1.036.84-1.875 1.875-1.875h5.25c1.035 0 1.875.84 1.875 1.875v8.25c0 1.035-.84 1.875-1.875 1.875h-5.25a1.875 1.875 0 0 1-1.875-1.875v-8.25ZM3 16.125c0-1.036.84-1.875 1.875-1.875h5.25c1.036 0 1.875.84 1.875 1.875v2.25c0 1.035-.84 1.875-1.875 1.875h-5.25A1.875 1.875 0 0 1 3 18.375v-2.25Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+
+                        <div className='flex flex-col items-start'>
+                          <span className='text-lg font-bold'>Style</span>
+                          <span className='text-sm text-secondaryText'>
+                            {heatmapStyle === "round"
+                              ? "Rounded Corners"
+                              : "Square"}
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronIcon open={openSection === "style"} />
+                    </button>
+                    <SectionTransition open={openSection === "style"}>
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {(["ton", "usd"] as const).map((item) => (
-                          <OptionButton
-                            key={item}
-                            label={translate(item)}
-                            selected={currency === item}
-                            onClick={() => {
-                              vibrate();
-                              onCurrencyChange(item);
-                              setOpenSection(null);
-                            }}
-                          />
-                        ))}
+                        <OptionButton
+                          label='Square'
+                          selected={heatmapStyle === "default"}
+                          onClick={() => {
+                            onStyleChange("default");
+                            setOpenSection(null);
+                          }}
+                        />
+                        <OptionButton
+                          label='Rounded'
+                          selected={heatmapStyle === "round"}
+                          onClick={() => {
+                            onStyleChange("round");
+                            setOpenSection(null);
+                          }}
+                        />
                       </div>
                     </SectionTransition>
                   </div>
 
-                  {/* 4. Amount (Top N) */}
+                  {/* Color Mode */}
+                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+                    <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+                      <div className='flex flex-row items-center gap-x-3'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='size-7 text-primary'>
+                          <path
+                            fillRule='evenodd'
+                            d='M16.098 2.598a3.75 3.75 0 1 1 3.622 6.275l-1.72.46V12a.75.75 0 0 1-.22.53l-.75.75a.75.75 0 0 1-1.06 0l-.97-.97-7.94 7.94a2.56 2.56 0 0 1-1.81.75 1.06 1.06 0 0 0-.75.31l-.97.97a.75.75 0 0 1-1.06 0l-.75-.75a.75.75 0 0 1 0-1.06l.97-.97a1.06 1.06 0 0 0 .31-.75c0-.68.27-1.33.75-1.81L11.69 9l-.97-.97a.75.75 0 0 1 0-1.06l.75-.75A.75.75 0 0 1 12 6h2.666l.461-1.72c.165-.617.49-1.2.971-1.682Zm-3.348 7.463L4.81 18a1.06 1.06 0 0 0-.31.75c0 .318-.06.63-.172.922a2.56 2.56 0 0 1 .922-.172c.281 0 .551-.112.75-.31l7.94-7.94-1.19-1.19Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+
+                        <div className='flex flex-col items-start'>
+                          <span className='text-lg font-bold'>
+                            Dynamic Colors
+                          </span>
+                          <span className='text-sm text-secondaryText'>
+                            Intensity based on % change
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Simple Toggle Switch */}
+                      <button
+                        onClick={() => {
+                          onDynamicColorsChange(!dynamicColors);
+                          vibrate();
+                        }}
+                        className={`w-16 h-8 flex items-center rounded-full p-1 transition-colors ${
+                          dynamicColors ? "bg-primary" : "bg-secondary"
+                        }`}>
+                        <div
+                          className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform ${
+                            dynamicColors ? "translate-x-8" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
 
                   {/* 4. Amount (Top N) - Slider Version */}
                   <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
