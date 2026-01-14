@@ -109,7 +109,12 @@
     "currency": "Валюта",
     "displayAmount": "Количество подарков",
     "all": "Все",
-    "displayAll": "Отображать все"
+    "displayAll": "Отображать все",
+    "style": "Стиль",
+    "rounded": "Закруглённый",
+    "square": "Квадратный",
+    "dynamicColor": "Динамический цвет",
+    "dynamicColorDescription": "Интенсивность зависит от процентного изменения"
   },
 
   "indexTimegap": {

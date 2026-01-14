@@ -109,7 +109,12 @@
     "currency": "Currency",
     "displayAmount": "Amount displayed",
     "all": "All",
-    "displayAll": "Display All"
+    "displayAll": "Display All",
+    "style": "Style",
+    "rounded": "Rounded",
+    "square": "Square",
+    "dynamicColor": "Dynamic Color",
+    "dynamicColorDescription": "Intensity based on % change"
   },
 
   "indexTimegap": {
