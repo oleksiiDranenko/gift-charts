@@ -371,7 +371,7 @@ export default function TreemapControlModal({
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
                         <OptionButton
-                          label='Square'
+                          label={translate("square")}
                           selected={heatmapStyle === "default"}
                           onClick={() => {
                             onStyleChange("default");
@@ -379,7 +379,7 @@ export default function TreemapControlModal({
                           }}
                         />
                         <OptionButton
-                          label='Rounded'
+                          label={translate("rounded")}
                           selected={heatmapStyle === "round"}
                           onClick={() => {
                             onStyleChange("round");
