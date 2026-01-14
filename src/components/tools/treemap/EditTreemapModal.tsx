@@ -10,6 +10,7 @@ import {
 } from "@/components/filterGifts/ModalReusable";
 import SectionTransition from "@/components/filterGifts/SelectTransition";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 interface Props {
   trigger: ReactNode;
@@ -265,14 +266,7 @@ export default function TreemapControlModal({
 
                   {/* 3. Currency */}
                   <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
-                    <button
-                      onClick={() => {
-                        vibrate();
-                        setOpenSection(
-                          openSection === "currency" ? null : "currency"
-                        );
-                      }}
-                      className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+                    <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -296,26 +290,45 @@ export default function TreemapControlModal({
                           </span>
                         </div>
                       </div>
-                      <ChevronIcon open={openSection === "currency"} />
-                    </button>
 
-                    <SectionTransition open={openSection === "currency"}>
-                      <div className='flex flex-col gap-1 px-4 pb-3'>
-                        <div className='h-[2px] w-full bg-secondary mb-1' />
-                        {(["ton", "usd"] as const).map((item) => (
-                          <OptionButton
-                            key={item}
-                            label={translate(item)}
-                            selected={currency === item}
-                            onClick={() => {
-                              vibrate();
-                              onCurrencyChange(item);
-                              setOpenSection(null);
-                            }}
+                      {/* Simple Toggle Switch */}
+                      <div className='w-fit flex flex-row box-border bg-secondary rounded-3xl gap-x-1'>
+                        <button
+                          className={`text-sm h-8 px-3 box-border ${
+                            currency === "ton"
+                              ? "rounded-3xl bg-primary font-bold"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            onCurrencyChange("ton");
+                            vibrate();
+                          }}>
+                          <Image
+                            src='/images/toncoin.webp'
+                            alt='ton'
+                            width={18}
+                            height={18}
                           />
-                        ))}
+                        </button>
+                        <button
+                          className={`text-sm h-8 px-3 box-border ${
+                            currency === "usd"
+                              ? "rounded-3xl bg-primary font-bold"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            onCurrencyChange("usd");
+                            vibrate();
+                          }}>
+                          <Image
+                            src='/images/usdt.svg'
+                            alt='usdt'
+                            width={18}
+                            height={18}
+                          />
+                        </button>
                       </div>
-                    </SectionTransition>
+                    </div>
                   </div>
 
                   {/* Heatmap Style */}
