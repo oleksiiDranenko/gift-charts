@@ -295,7 +295,7 @@ export default function LineChart({
     <div className={`relative w-full `}>
       <div ref={chartContainerRef} className='w-full' />
 
-      <div className='w-full'>
+      <div className='w-full pr-3'>
         <div className='w-full mt-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
           {TIME_RANGES.map(({ key, label, requiresLifeData }) => {
             const isActive = listType === key;

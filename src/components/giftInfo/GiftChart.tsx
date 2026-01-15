@@ -320,40 +320,46 @@ export default function GiftChart({
             </div>
           </div>
 
-          <div className='px-3'>
+          <div>
             <div className='relative '>
               {chartType === "line" ? (
-                <LineChart
-                  weekData={weekData}
-                  lifeData={lifeData}
-                  selectedPrice={selectedPrice}
-                  percentChange={percentChange}
-                  setPercentChange={setPercentChange}
-                  onDataUpdate={({ currentValue }) => {
-                    setCurrentValue(currentValue);
-                  }}
-                />
+                <div className='pl-3'>
+                  <LineChart
+                    weekData={weekData}
+                    lifeData={lifeData}
+                    selectedPrice={selectedPrice}
+                    percentChange={percentChange}
+                    setPercentChange={setPercentChange}
+                    onDataUpdate={({ currentValue }) => {
+                      setCurrentValue(currentValue);
+                    }}
+                  />
+                </div>
               ) : chartType === "candle" && selectedPrice === "ton" ? (
-                <CandleChart
-                  data={candleData}
-                  weekData={weekData}
-                  percentChange={percentChange}
-                  setPercentChange={setPercentChange}
-                  onDataUpdate={({ currentValue }) => {
-                    setCurrentValue(currentValue);
-                  }}
-                />
+                <div className='pl-3'>
+                  <CandleChart
+                    data={candleData}
+                    weekData={weekData}
+                    percentChange={percentChange}
+                    setPercentChange={setPercentChange}
+                    onDataUpdate={({ currentValue }) => {
+                      setCurrentValue(currentValue);
+                    }}
+                  />
+                </div>
               ) : (
-                <BarChart
-                  weekData={weekData}
-                  lifeData={lifeData}
-                  selectedPrice={selectedPrice}
-                  percentChange={percentChange}
-                  setPercentChange={setPercentChange}
-                  onDataUpdate={({ currentValue }) => {
-                    setCurrentValue(currentValue);
-                  }}
-                />
+                <div className='px-3'>
+                  <BarChart
+                    weekData={weekData}
+                    lifeData={lifeData}
+                    selectedPrice={selectedPrice}
+                    percentChange={percentChange}
+                    setPercentChange={setPercentChange}
+                    onDataUpdate={({ currentValue }) => {
+                      setCurrentValue(currentValue);
+                    }}
+                  />
+                </div>
               )}
             </div>
           </div>
