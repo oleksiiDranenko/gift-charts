@@ -31,9 +31,9 @@ export default function PageTransition({ children }: Props) {
       } lg:pt-5`}>
       <div
         className={`lg:hidden ${isTelegram ? "" : "hidden"} z-50 fixed top-0 right-0 w-full h-[110px] flex justify-center items-center`}>
-        <div className='flex flex-row bg-secondaryLight backdrop-blur-md rounded-3xl mt-3 px-3 py-2 gap-2'>
+        <div className='flex flex-row bg-secondaryLight backdrop-blur-md rounded-3xl mt-10 px-3 py-2 gap-2'>
           <Image src={"/images/logo.webp"} alt={""} width={24} height={24} />
-          <span className='font-medium'>Gift Charts</span>
+          <span className='font-medium text-sm'>Gift Charts</span>
         </div>
       </div>
       <Transition
