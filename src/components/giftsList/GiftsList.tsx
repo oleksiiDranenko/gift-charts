@@ -13,8 +13,9 @@ import ListSkeleton from "./ListSkeleton";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import axios from "axios";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
+import { mapSortToApi } from "@/utils/sortMapping";
 
 interface GiftsSearchResponse {
   data: GiftListItemInterface[];
@@ -45,11 +46,10 @@ export default function GiftsList() {
   const vibrate = useVibrate();
   const translate = useTranslations("mainPage");
 
-  // 1. Debounce Logic: Updates 'debouncedSearch' 300ms after user stops typing
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-    }, 100);
+    }, 500);
 
     return () => clearTimeout(handler);
   }, [searchQuery]);
@@ -87,6 +87,21 @@ export default function GiftsList() {
     setDebouncedSearch("");
   };
 
+  // Inside your frontend component or a custom hook
+  const { data: allGiftsMinimal } = useQuery(
+    ["giftsMinimal"],
+    async () => {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}/gifts/minimal`,
+      );
+      return res.data;
+    },
+    {
+      staleTime: 1000 * 60 * 10, // Cache for 10 minutes since gift lists rarely change
+      refetchOnWindowFocus: false,
+    },
+  );
+
   // 2. Infinite Query: Now uses 'debouncedSearch' in the key
   const {
     data,
@@ -96,11 +111,20 @@ export default function GiftsList() {
     isFetching,
     isLoading,
   } = useInfiniteQuery<GiftsSearchResponse>(
-    ["giftsSearch", currency, debouncedSearch, selectedList], // Updated key
+    [
+      "giftsSearch",
+      currency,
+      debouncedSearch,
+      selectedList,
+      filters.sort,
+      filters.chosenGifts,
+      user.savedList,
+    ],
     async ({ pageParam = 1 }) => {
-      let sortBy: "price" | "growth24hPercent" = "price";
-      let order: "desc" | "asc" = "desc";
+      // 1. Get Sort from Modal (Redux)
+      let { sortBy, order } = mapSortToApi(filters.sort);
 
+      // 2. Override if we are in specific tabs (Gainers/Losers)
       if (selectedList === "gainers") {
         sortBy = "growth24hPercent";
         order = "desc";
@@ -109,13 +133,24 @@ export default function GiftsList() {
         order = "asc";
       }
 
+      // Determine which IDs to filter by
+      let requestIds: string[] | undefined = undefined;
+
+      if (selectedList === "saved") {
+        // If user is on the "Saved" tab, use their personal list
+        requestIds = user.savedList;
+      } else if (filters.chosenGifts.length > 0) {
+        // If user is on any other tab but has manual filters applied
+        requestIds = filters.chosenGifts;
+      }
+
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API}/gifts/search`,
         {
           page: pageParam,
           currency,
-          search: debouncedSearch || undefined, // Send the debounced value
-          listType: selectedList,
+          search: debouncedSearch || undefined,
+          ids: requestIds,
           sort: { sortBy, order },
         },
       );
@@ -125,7 +160,7 @@ export default function GiftsList() {
       getNextPageParam: (lastPage) =>
         lastPage.hasMore ? lastPage.page + 1 : undefined,
       refetchOnWindowFocus: false,
-      keepPreviousData: true, // Shows old results while searching for new ones
+      keepPreviousData: true,
     },
   );
 
@@ -153,22 +188,24 @@ export default function GiftsList() {
   return (
     <div className='w-full flex flex-col items-center'>
       {/* Navigation Tabs */}
-      <div className='w-full mb-5 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap '>
-        {(["all", "saved", "gainers", "losers"] as const).map((list) => (
-          <button
-            key={list}
-            className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 transition-colors font-bold ${
-              selectedList === list
-                ? "border-b-2 border-foreground"
-                : "border-b-2 border-secondaryTransparent text-secondaryText"
-            }`}
-            onClick={() => {
-              vibrate();
-              setSelectedList(list);
-            }}>
-            {translate(list === "all" ? "allGifts" : list)}
-          </button>
-        ))}
+      <div className='w-full mb-3 px-3 overflow-scroll scrollbar-hide flex flex-row items-center justify-start text-nowrap '>
+        {(["all", "saved", "gainers", "losers"] as const)
+          .filter((list) => !(list === "saved" && user.username === "_guest"))
+          .map((list) => (
+            <button
+              key={list}
+              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 transition-colors font-bold ${
+                selectedList === list
+                  ? "border-b-2 border-foreground"
+                  : "border-b-2 border-secondaryTransparent text-secondaryText"
+              }`}
+              onClick={() => {
+                vibrate();
+                setSelectedList(list);
+              }}>
+              {translate(list === "all" ? "allGifts" : list)}
+            </button>
+          ))}
       </div>
 
       <div ref={sentinelRef} />
@@ -218,7 +255,7 @@ export default function GiftsList() {
               }
             />
             <FilterGiftsModal
-              giftsList={[]}
+              giftsList={allGiftsMinimal}
               trigger={
                 <button
                   onClick={() => vibrate()}
