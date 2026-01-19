@@ -76,7 +76,7 @@ export default function GiftsList() {
     if (!isMounted || !sentinelRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => setIsSticky(!entry.isIntersecting),
-      { threshold: 0 }
+      { threshold: 0 },
     );
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
@@ -117,7 +117,7 @@ export default function GiftsList() {
           search: debouncedSearch || undefined, // Send the debounced value
           listType: selectedList,
           sort: { sortBy, order },
-        }
+        },
       );
       return res.data;
     },
@@ -126,7 +126,7 @@ export default function GiftsList() {
         lastPage.hasMore ? lastPage.page + 1 : undefined,
       refetchOnWindowFocus: false,
       keepPreviousData: true, // Shows old results while searching for new ones
-    }
+    },
   );
 
   const lastElementRef = useCallback(
@@ -142,7 +142,7 @@ export default function GiftsList() {
 
       if (node) observerRef.current.observe(node);
     },
-    [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]
+    [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage],
   );
 
   const giftsList = data?.pages.flatMap((page) => page.data) ?? [];
@@ -157,7 +157,7 @@ export default function GiftsList() {
         {(["all", "saved", "gainers", "losers"] as const).map((list) => (
           <button
             key={list}
-            className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 transition-colors ${
+            className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 transition-colors font-bold ${
               selectedList === list
                 ? "border-b-2 border-foreground"
                 : "border-b-2 border-secondaryTransparent text-secondaryText"
@@ -199,7 +199,7 @@ export default function GiftsList() {
               <button
                 onClick={clearSearch}
                 className='absolute right-3 top-1/2 -translate-y-1/2 text-secondaryText'>
-                <X size={16} />
+                <X size={18} />
               </button>
             )}
           </div>
