@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 import axios from "axios";
 import NavbarLeft from "./navbar/NavbarLeft";
+import Image from "next/image";
 
 export default function AppInitializer({
   children,
@@ -86,13 +87,13 @@ export default function AppInitializer({
               dispatch(setUser(initialUser));
               console.log(
                 "Initial Telegram User stored in Redux:",
-                telegramUser
+                telegramUser,
               );
 
               // Fetch full user data from backend
               try {
                 const userRes = await axios.get(
-                  `${process.env.NEXT_PUBLIC_API}/users/check-account/${telegramUser.id}`
+                  `${process.env.NEXT_PUBLIC_API}/users/check-account/${telegramUser.id}`,
                 );
                 if (userRes.data?._id) {
                   // Ensure savedList is always an array
@@ -108,9 +109,8 @@ export default function AppInitializer({
                   };
                   dispatch(setUser(userData));
                   if (userRes.data.token) {
-                    axios.defaults.headers.common[
-                      "Authorization"
-                    ] = `Bearer ${userRes.data.token}`;
+                    axios.defaults.headers.common["Authorization"] =
+                      `Bearer ${userRes.data.token}`;
                     localStorage.setItem("token", userRes.data.token); // Store token
                   }
                   console.log("User data updated in Redux:", userData);
@@ -125,7 +125,7 @@ export default function AppInitializer({
                           telegramUser.username ||
                           telegramUser.first_name ||
                           "User",
-                      }
+                      },
                     );
                     const userData = {
                       ...createRes.data.user,
@@ -139,14 +139,13 @@ export default function AppInitializer({
                     };
                     dispatch(setUser(userData));
                     if (createRes.data.token) {
-                      axios.defaults.headers.common[
-                        "Authorization"
-                      ] = `Bearer ${createRes.data.token}`;
+                      axios.defaults.headers.common["Authorization"] =
+                        `Bearer ${createRes.data.token}`;
                       localStorage.setItem("token", createRes.data.token); // Store token
                     }
                     console.log(
                       "New user created and stored in Redux:",
-                      userData
+                      userData,
                     );
                   } catch (createErr) {
                     console.error("Error creating account:", createErr);
@@ -174,7 +173,7 @@ export default function AppInitializer({
               savedList: [],
               ton: 0,
               usd: 0,
-            })
+            }),
           );
           console.error("Error loading WebApp SDK:", err);
         });
