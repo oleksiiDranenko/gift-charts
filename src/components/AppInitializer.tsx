@@ -25,22 +25,20 @@ export default function AppInitializer({
           if (telegramWebApp) {
             telegramWebApp.ready();
 
-            // if (telegramWebApp.requestFullscreen) {
-            //   if (screen.width < 1024) {
-            //     telegramWebApp.requestFullscreen();
-            //     setIsFullscreen(true);
-            //     console.log("Requested fullscreen mode.");
-            //   }
-            // } else {
-            //   telegramWebApp.expand();
-            //   setIsFullscreen(false);
-            //   console.log("Expanded to full height.");
-            // }
+            if (telegramWebApp.requestFullscreen) {
+              telegramWebApp.requestFullscreen();
+              setIsFullscreen(true);
+              console.log("Requested fullscreen mode.");
+            } else {
+              telegramWebApp.expand();
+              setIsFullscreen(false);
+              console.log("Expanded to full height.");
+            }
 
-            // if (telegramWebApp.disableVerticalSwipes) {
-            //   telegramWebApp.disableVerticalSwipes();
-            //   console.log("Vertical swipes disabled.");
-            // }
+            if (telegramWebApp.disableVerticalSwipes) {
+              telegramWebApp.disableVerticalSwipes();
+              console.log("Vertical swipes disabled.");
+            }
 
             // if (telegramWebApp.BackButton) {
             //   telegramWebApp.BackButton.hide();
