@@ -361,6 +361,9 @@ export default function GiftChart({
                   />
                 </div>
               )}
+              <span className='absolute bottom-20 left-7 flex flex-row text-white/15 select-none pointer-events-none'>
+                <ChartSpline className='mr-1 size-5' /> Gift Charts
+              </span>
             </div>
           </div>
 

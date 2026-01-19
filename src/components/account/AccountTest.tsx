@@ -86,7 +86,7 @@ export default function AccountTest() {
     queryKey: ["userGifts", tgUser?.id],
     queryFn: async () => {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/portfolio/get-gifts/${tgUser?.id}`
+        `${process.env.NEXT_PUBLIC_API}/portfolio/get-gifts/${tgUser?.id}`,
       );
       return res.data as PortfolioResponse;
     },
@@ -146,7 +146,7 @@ export default function AccountTest() {
                   : formatPrice(
                       currency === "ton"
                         ? data?.total_value_ton!
-                        : data?.total_value_usd!
+                        : data?.total_value_usd!,
                     )}
               </span>
             </span>
@@ -187,23 +187,34 @@ export default function AccountTest() {
         </div>
       </div>
 
+      <div className='px-3 mb-4 flex justify-between items-end'>
+        <h2 className='text-lg font-bold'>My Collection</h2>
+        <span className='text-sm text-secondaryText bg-secondary/50 px-2 py-1 rounded-md'>
+          {data?.gifts.length || 0} Items
+        </span>
+      </div>
+
       {/* Gift Grid */}
-      <div className='w-full grid grid-cols-3 lg:grid-cols-6 gap-3'>
-        {isLoading && (
-          <div className='col-span-full py-10 text-center opacity-50'>
-            Fetching gifts...
+      <div className=' grid grid-cols-3 gap-3'>
+        {isLoading ? (
+          Array(6)
+            .fill(0)
+            .map((_, i) => (
+              <div
+                key={i}
+                className='aspect-square bg-secondary/20 animate-pulse rounded-2xl'
+              />
+            ))
+        ) : data?.gifts.length === 0 ? (
+          <div className='col-span-3 py-20 text-center bg-secondary/10 rounded-3xl border border-dashed border-white/10'>
+            <p className='text-secondaryText text-sm italic'>
+              No gifts found in this user.
+            </p>
           </div>
-        )}
-
-        {data &&
-          data.gifts.map((gift, i) => (
+        ) : (
+          data?.gifts.map((gift, i) => (
             <GiftItem gift={gift} currency={currency} key={i} />
-          ))}
-
-        {!isLoading && data?.gifts.length === 0 && (
-          <div className='col-span-full py-10 text-center opacity-50 text-sm'>
-            No gifts found for this user.
-          </div>
+          ))
         )}
       </div>
     </div>
