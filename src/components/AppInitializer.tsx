@@ -25,43 +25,38 @@ export default function AppInitializer({
           if (telegramWebApp) {
             telegramWebApp.ready();
 
-            if (telegramWebApp.requestFullscreen) {
-              if (screen.width < 1024) {
-                telegramWebApp.requestFullscreen();
-                setIsFullscreen(true);
-                console.log("Requested fullscreen mode.");
-              }
-            } else {
-              telegramWebApp.expand();
-              setIsFullscreen(false);
-              console.log("Expanded to full height.");
-            }
+            // if (telegramWebApp.requestFullscreen) {
+            //   if (screen.width < 1024) {
+            //     telegramWebApp.requestFullscreen();
+            //     setIsFullscreen(true);
+            //     console.log("Requested fullscreen mode.");
+            //   }
+            // } else {
+            //   telegramWebApp.expand();
+            //   setIsFullscreen(false);
+            //   console.log("Expanded to full height.");
+            // }
 
-            if (telegramWebApp.disableVerticalSwipes) {
-              telegramWebApp.disableVerticalSwipes();
-              console.log("Vertical swipes disabled.");
-            }
+            // if (telegramWebApp.disableVerticalSwipes) {
+            //   telegramWebApp.disableVerticalSwipes();
+            //   console.log("Vertical swipes disabled.");
+            // }
 
-            if (telegramWebApp.setHeaderColor) {
-              telegramWebApp.setHeaderColor("#000");
-              console.log("Header set to transparent.");
-            }
-
-            if (telegramWebApp.BackButton) {
-              telegramWebApp.BackButton.hide();
-              console.log("BackButton hidden.");
-            }
+            // if (telegramWebApp.BackButton) {
+            //   telegramWebApp.BackButton.hide();
+            //   console.log("BackButton hidden.");
+            // }
 
             // Set height to viewportStableHeight to avoid gaps
-            const updateViewportHeight = () => {
-              const height = telegramWebApp.viewportStableHeight;
-              document.documentElement.style.height = `${height}px`;
-              document.body.style.height = `${height}px`;
-              console.log("Viewport stable height set to:", height);
-            };
+            // const updateViewportHeight = () => {
+            //   const height = telegramWebApp.viewportStableHeight;
+            //   document.documentElement.style.height = `${height}px`;
+            //   document.body.style.height = `${height}px`;
+            //   console.log("Viewport stable height set to:", height);
+            // };
 
-            telegramWebApp.onEvent("viewportChanged", updateViewportHeight);
-            updateViewportHeight(); // Initial call
+            // telegramWebApp.onEvent("viewportChanged", updateViewportHeight);
+            // updateViewportHeight();
 
             // Get Telegram user data and update Redux
             const telegramUser = telegramWebApp.initDataUnsafe?.user;
