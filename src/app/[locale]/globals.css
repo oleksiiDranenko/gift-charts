@@ -12,6 +12,15 @@
   --foreground: #000000;
 }
 
+html,
+body {
+  position: fixed; /* Prevents the whole app window from dragging */
+  overflow: hidden; /* Disables window-level scrolling */
+  width: 100%;
+  height: 100%;
+  overscroll-behavior-y: none; /* Stops pull-to-refresh on mobile */
+}
+
 /* :root {
   --primary: #676fa3;
   --secondary: #cddeff;

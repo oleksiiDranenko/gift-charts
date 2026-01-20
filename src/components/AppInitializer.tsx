@@ -1,20 +1,29 @@
 "use client";
 
 import NavbarBottom from "@/components/navbar/NavbarBottom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 import axios from "axios";
 import NavbarLeft from "./navbar/NavbarLeft";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function AppInitializer({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname(); // Get current path
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo(0, 0);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -174,12 +183,13 @@ export default function AppInitializer({
   }, [dispatch]);
 
   return (
-    <div className={`flex flex-col`}>
+    <div
+      ref={scrollContainerRef}
+      className='fixed inset-0 pb-5 overflow-y-auto scrollbar-hide flex flex-col'>
       <div className='w-screen flex justify-center flex-grow'>
         <NavbarLeft />
         {children}
       </div>
-
       <NavbarBottom />
     </div>
   );
