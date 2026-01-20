@@ -40,7 +40,7 @@ export default function Page() {
       try {
         if (giftsList.length === 0) {
           const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`
+            `${process.env.NEXT_PUBLIC_API}/gifts`,
           );
           dispatch(setGiftsList(giftsRes.data));
         }
@@ -60,7 +60,7 @@ export default function Page() {
     queryKey: ["indexes"],
     queryFn: async () => {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/indexes/get-all`
+        `${process.env.NEXT_PUBLIC_API}/indexes/get-all`,
       );
       return res.data;
     },

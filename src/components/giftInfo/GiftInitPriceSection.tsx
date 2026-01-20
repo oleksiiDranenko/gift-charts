@@ -17,8 +17,8 @@ export default function GiftInitPriceSection({
 }: Props) {
   const translate = useTranslations("giftInfo");
   return (
-    <div className='w-full lg:w-1/2 flex flex-col gap-x-3 rounded-3xl p-3 bg-secondaryTransparent'>
-      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+    <div className='w-full flex flex-col gap-y-3 font-normal bg-secondaryTransparent  p-3 rounded-3xl'>
+      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b border-background dark:border-secondary'>
         <span className='text-secondaryText'>
           {translate("initStarsPrice")}
         </span>
@@ -38,7 +38,7 @@ export default function GiftInitPriceSection({
         </div>
       </div>
 
-      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b border-background dark:border-secondary'>
         <span className='text-secondaryText'>{translate("initUsdtPrice")}</span>
         <div className='flex flex-row items-center'>
           <Image
@@ -52,7 +52,7 @@ export default function GiftInitPriceSection({
         </div>
       </div>
 
-      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b-2 border-background dark:border-secondary'>
+      <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b border-background dark:border-secondary'>
         <span className='text-secondaryText'>
           {translate("initStarsMarketcap")}
         </span>

@@ -42,7 +42,7 @@ export default function GiftItem({
 
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
   const [percentChange24h, setPercentChange24h] = useState<number | "no data">(
-    0
+    0,
   );
   const [percentChangeWeek, setPercentChangeWeek] = useState<
     number | "no data"
@@ -149,8 +149,8 @@ export default function GiftItem({
                     "from-red-500/5 to-red-500/25"
               }`
             : resolvedTheme === "dark"
-            ? "pr-2"
-            : "bg-secondaryTransparent mt-2 pl-2 pr-3"
+              ? "pr-2"
+              : "bg-secondaryTransparent mt-2 pl-2 pr-3"
         }`}
         key={item._id}
         href={`/gift/${item._id}`}
@@ -215,8 +215,8 @@ export default function GiftItem({
                   ? percentChange >= 0
                     ? "text-green-500"
                     : percentChange < 0
-                    ? "text-red-500"
-                    : "text-slate-500"
+                      ? "text-red-500"
+                      : "text-slate-500"
                   : "text-slate-500"
               }`}>
               {percentChange === "no data" ? null : percentChange >= 0 ? (
@@ -292,8 +292,8 @@ export default function GiftItem({
                       "from-red-500/5 to-red-500/25"
                 }`
               : resolvedTheme === "dark"
-              ? "bg-none hover:bg-secondaryTransparent ease-in-out duration-200 border-b border-secondaryTransparent rounded-3xl"
-              : "bg-secondaryTransparent hover:bg-background border-b border-background rounded-3xl"
+                ? "bg-none hover:bg-secondaryTransparent ease-in-out duration-200 border-b border-secondaryTransparent rounded-3xl"
+                : "bg-secondaryTransparent hover:bg-background border-b border-background rounded-3xl"
           }`}
           key={item._id}
           href={`/gift/${item._id}`}
@@ -373,7 +373,7 @@ export default function GiftItem({
               )}
               <span className='text-sm'>
                 {formatNumberWithWord(
-                  item.prices.current * item.upgradedSupply
+                  item.prices.current * item.upgradedSupply,
                 )}
               </span>
             </div>
@@ -387,8 +387,8 @@ export default function GiftItem({
                     ? percentChange24h >= 0
                       ? "text-green-500 "
                       : percentChange24h < 0
-                      ? "text-red-500 "
-                      : "text-slate-500"
+                        ? "text-red-500 "
+                        : "text-slate-500"
                     : "text-slate-500"
                 }`}>
                 {percentChange24h !== "no data" && percentChange24h >= 0 ? (
@@ -430,8 +430,8 @@ export default function GiftItem({
                     ? percentChangeWeek >= 0
                       ? "text-green-500 "
                       : percentChangeWeek < 0
-                      ? "text-red-500 "
-                      : "text-slate-500"
+                        ? "text-red-500 "
+                        : "text-slate-500"
                     : "text-slate-500"
                 }`}>
                 {percentChangeWeek !== "no data" && percentChangeWeek >= 0 ? (
@@ -473,8 +473,8 @@ export default function GiftItem({
                     ? percentChangeMonth >= 0
                       ? "text-green-500 "
                       : percentChangeMonth < 0
-                      ? "text-red-500 "
-                      : "text-slate-500"
+                        ? "text-red-500 "
+                        : "text-slate-500"
                     : "text-slate-500"
                 }`}>
                 {percentChangeMonth !== "no data" && percentChangeMonth >= 0 ? (

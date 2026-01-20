@@ -75,7 +75,9 @@ body {
 .fade-enter-active {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+  transition:
+    opacity 300ms ease-in-out,
+    transform 300ms ease-in-out;
 }
 .fade-exit {
   opacity: 1;
@@ -84,7 +86,9 @@ body {
 .fade-exit-active {
   opacity: 0;
   transform: translateX(-20px);
-  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+  transition:
+    opacity 300ms ease-in-out,
+    transform 300ms ease-in-out;
 }
 
 @keyframes gradient-x {
