@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import ModelsList from "@/components/giftInfo/ModelsList";
 import { Transition } from "@headlessui/react";
+import { GiftSkeleton } from "@/components/giftInfo/GiftSkeleton";
 
 async function fetchWeekData(name: string) {
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/weekChart`, {
@@ -55,7 +56,7 @@ export default function Page({ params }: any) {
   } = useQuery<GiftWeekDataInterface[], Error>(
     ["weekData", gift?.name],
     () => fetchWeekData(gift!.name),
-    { enabled: !!gift } // only fetch when gift is loaded
+    { enabled: !!gift }, // only fetch when gift is loaded
   );
 
   // Fetch life data (depends on gift)
@@ -66,7 +67,7 @@ export default function Page({ params }: any) {
   } = useQuery<GiftLifeDataInterface[], Error>(
     ["lifeData", gift?.name],
     () => fetchLifeData(gift!.name),
-    { enabled: !!gift } // only fetch when gift is loaded
+    { enabled: !!gift }, // only fetch when gift is loaded
   );
 
   const giftLoading = !gift && giftsList !== null;
@@ -127,7 +128,7 @@ export default function Page({ params }: any) {
         </div>
         {loading ? (
           <div className='flex flex-col'>
-            <div className='w-full flex h-20 justify-center items-center'>
+            {/* <div className='w-full flex h-20 justify-center items-center'>
               <ReactLoading
                 type='spin'
                 color='var(--primary)'
@@ -135,10 +136,9 @@ export default function Page({ params }: any) {
                 width={30}
                 className='mt-5'
               />
-            </div>
-            {/* <div className='block lg:hidden'>
-              <GiftSkeleton />
             </div> */}
+
+            <GiftSkeleton />
           </div>
         ) : gift ? (
           <Transition
