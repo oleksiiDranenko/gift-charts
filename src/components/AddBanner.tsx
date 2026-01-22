@@ -25,7 +25,10 @@ export default function AddBanner({ className, hideable = false }: Props) {
       <div className='relative w-full'>
         <NoPrefetchLink
           href='https://t.me/mutant_gifts_bot/mutantgifts?startapp=rl_f1e02fca-a966-4fe8-865f-cded194f06fb'
-          className={`${className} relative w-full lg:h-24 flex items-center justify-center rounded-2xl overflow-hidden`}>
+          className={`${className} relative w-full lg:h-24 flex items-center justify-center rounded-2xl overflow-hidden`}
+          onClick={() => {
+            vibrate();
+          }}>
           {/* BACKGROUND LAYER: Blurred */}
           <div className='absolute inset-0 w-full h-full'>
             <Image
