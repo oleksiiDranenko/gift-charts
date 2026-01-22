@@ -25,6 +25,7 @@ interface LineChartProps {
   setPercentChange: (value: number) => void;
   onDataUpdate?: (data: { currentValue: number | null }) => void;
 }
+//d
 
 const TIME_RANGES: {
   key: "24h" | "1w" | "1m" | "3m" | "6m" | "all";

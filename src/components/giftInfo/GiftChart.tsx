@@ -268,7 +268,7 @@ export default function GiftChart({
                   />
                 </div>
               ) : (
-                <div className='px-3'>
+                <div className='pl-3'>
                   <BarChart
                     weekData={weekData}
                     lifeData={lifeData}

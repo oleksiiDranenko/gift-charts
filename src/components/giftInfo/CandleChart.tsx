@@ -20,13 +20,11 @@ const TIME_RANGES: {
   key: "2w" | "1m" | "2m" | "3m" | "6m" | "1y" | "all";
   label: (t: (key: string) => string) => string;
 }[] = [
-  { key: "2w", label: (t) => `2${t("week")}` },
-  { key: "1m", label: (t) => `1${t("month")}` },
-  { key: "2m", label: (t) => `2${t("month")}` },
-  { key: "3m", label: (t) => `3${t("month")}` },
-  { key: "6m", label: (t) => `6${t("month")}` },
-  { key: "1y", label: (t) => `1${t("year")}` },
   { key: "all", label: (t) => t("all") },
+  { key: "1y", label: (t) => `1${t("year")}` },
+  { key: "6m", label: (t) => `6${t("month")}` },
+  { key: "3m", label: (t) => `3${t("month")}` },
+  { key: "1m", label: (t) => `1${t("month")}` },
 ];
 
 interface PropsInterface {
@@ -49,7 +47,7 @@ export default function CandleChart({
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
 
   const [listType, setListType] =
-    useState<(typeof TIME_RANGES)[number]["key"]>("2w");
+    useState<(typeof TIME_RANGES)[number]["key"]>("1m");
   const [list, setList] = useState<GiftLifeDataInterface[]>([]);
 
   const { resolvedTheme } = useTheme();
@@ -72,7 +70,7 @@ export default function CandleChart({
         const todayWeekData = weekData.filter((item) => item.date === todayStr);
         if (todayWeekData.length > 0) {
           const sortedTodayData = [...todayWeekData].sort((a, b) =>
-            a.time.localeCompare(b.time)
+            a.time.localeCompare(b.time),
           );
           const prices = sortedTodayData
             .map((item) => item.priceTon)
@@ -106,7 +104,9 @@ export default function CandleChart({
       all: 0,
     };
     setList(
-      slices[listType] === 0 ? updatedData : updatedData.slice(slices[listType])
+      slices[listType] === 0
+        ? updatedData
+        : updatedData.slice(slices[listType]),
     );
   }, [listType, data, weekData]);
 
@@ -159,7 +159,7 @@ export default function CandleChart({
       },
       handleScroll: false,
       handleScale: false,
-      height: window.innerWidth < 1080 ? 250 : 450,
+      height: window.innerWidth < 1080 ? 300 : 450,
     });
 
     const series = chart.addSeries(CandlestickSeries, {
@@ -194,7 +194,7 @@ export default function CandleChart({
         const dateObj = new Date(
           parseInt(dateParts[2]),
           parseInt(dateParts[1]) - 1,
-          parseInt(dateParts[0])
+          parseInt(dateParts[0]),
         );
 
         return {
@@ -219,18 +219,18 @@ export default function CandleChart({
       <div ref={chartContainerRef} className='w-full' />
 
       <div className='w-full pr-3'>
-        <div className='w-full mt-3 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+        <div className='w-full mt-2 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
           {TIME_RANGES.map(({ key, label }) => {
             const isActive = listType === key;
 
             return (
               <button
                 key={key}
-                className={`w-full px-3 h-10 text-sm text-nowrap transition-colors rounded-3xl ${
+                className={`w-full px-3 h-8 text-sm text-nowrap transition-colors rounded-3xl ${
                   isActive
-                    ? " bg-secondary font-bold text-primary"
+                    ? "bg-primary text-white font-bold"
                     : "text-secondaryText"
-                } `}
+                }`}
                 onClick={() => {
                   setListType(key);
                   vibrate();
