@@ -51,13 +51,13 @@ export default function GiftBlockItem({
   useEffect(() => {
     if (timeGap === "24h") {
       setPercentChange(
-        countPercentChange(item.prices.h24, item.prices.current)
+        countPercentChange(item.prices.h24, item.prices.current),
       );
     } else if (timeGap === "1w") {
       setPercentChange(countPercentChange(item.prices.d7, item.prices.current));
     } else if (timeGap === "1m") {
       setPercentChange(
-        countPercentChange(item.prices.d30, item.prices.current)
+        countPercentChange(item.prices.d30, item.prices.current),
       );
     } else {
       setPercentChange("no data");
@@ -147,8 +147,8 @@ export default function GiftBlockItem({
                 ? percentChange >= 0
                   ? "text-green-500 bg-green-500"
                   : percentChange < 0
-                  ? "text-red-500 bg-red-500"
-                  : "text-slate-500"
+                    ? "text-red-500 bg-red-500"
+                    : "text-slate-500"
                 : "text-slate-500"
             }`}>
             {percentChange !== "no data" && percentChange >= 0 && "+"}
@@ -158,11 +158,7 @@ export default function GiftBlockItem({
         </div>
       </div>
       <div className='w-full flex items-center'>
-        <GiftItemChart
-          gift={item}
-          width={isLarge ? 150 : 100}
-          height={isLarge ? 30 : 40}
-        />
+        <GiftItemChart gift={item} height={isLarge ? 30 : 40} />
       </div>
     </NoPrefetchLink>
   );

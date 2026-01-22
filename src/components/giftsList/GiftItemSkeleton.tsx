@@ -54,6 +54,12 @@ export default function GiftItemSkeleton({
         </div>
       </div>
 
+      {resolvedTheme === "dark" && (
+        <div className='w-full pl-[62px] pr-2 lg:hidden'>
+          <div className='border-b border-secondaryTransparent'></div>
+        </div>
+      )}
+
       {/* LARGE SCREEN */}
       {/* LARGE SCREEN */}
       {/* LARGE SCREEN */}

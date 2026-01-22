@@ -1,115 +1,107 @@
 "use client";
 
-import { Line } from "react-chartjs-2";
+import { useEffect, useRef, useMemo } from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-  ChartOptions,
-  Filler,
-} from "chart.js";
+  createChart,
+  ColorType,
+  IChartApi,
+  AreaSeries,
+  Time,
+} from "lightweight-charts";
 import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
-import { useRef, useEffect, useState } from "react";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-  Filler
-);
 
 interface GiftItemChartProps {
   gift: GiftListItemInterface;
-  width: number;
-  height: number;
+  height: number; // Height remains fixed or prop-based
 }
 
-const GiftItemChart = ({ gift, width, height }: GiftItemChartProps) => {
-  const chartRef = useRef<any>(null);
-  const [gradient, setGradient] = useState<string | CanvasGradient>("");
+const GiftItemChart = ({ gift, height }: GiftItemChartProps) => {
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
 
-  const chartDataPoints = gift.chartData || [];
-  const labels = chartDataPoints.map((_, i) => (i + 1).toString());
-  const values = chartDataPoints.map((point) => point.price);
+  // 1. Memoize data to prevent unnecessary recalculations on parent resize
+  const formattedData = useMemo(() => {
+    const chartDataPoints = gift.chartData || [];
+    return chartDataPoints
+      .map((point) => ({
+        time: Math.floor(new Date(point.createdAt).getTime() / 1000) as Time,
+        value: point.price,
+      }))
+      .sort((a, b) => (a.time as number) - (b.time as number));
+  }, [gift.chartData]);
+
   const priceChange =
-    values.length > 0 ? values[values.length - 1] - values[0] : 0;
-  const borderColor =
-    priceChange >= 0 ? "rgba(34, 197, 94, 1)" : "rgba(239, 68, 68, 1)";
+    formattedData.length > 1
+      ? formattedData[formattedData.length - 1].value - formattedData[0].value
+      : 0;
 
-  // Hooks are safe here
+  const color = priceChange >= 0 ? "#22c55e" : "#ef4444";
+  const topColor =
+    priceChange >= 0 ? "rgba(34, 197, 94, 0.9)" : "rgba(239, 68, 68, 0.9)";
+
   useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart || chartDataPoints.length === 0) return;
+    if (!chartContainerRef.current || formattedData.length === 0) return;
 
-    const ctx = chart.ctx;
-    const chartArea = chart.chartArea;
-    if (!chartArea) return;
-
-    const grad = ctx.createLinearGradient(
-      0,
-      chartArea.top,
-      0,
-      chartArea.bottom
-    );
-
-    const topColor =
-      priceChange >= 0 ? "rgba(34, 197, 94, 0.6)" : "rgba(239, 68, 68, 0.6)";
-    const bottomColor =
-      priceChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
-
-    grad.addColorStop(0, topColor);
-    grad.addColorStop(1, bottomColor);
-
-    setGradient(grad);
-  }, [priceChange, chartDataPoints]);
-
-  if (chartDataPoints.length === 0) return null;
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: gift.name,
-        data: values,
-        borderColor,
-        borderWidth: 1,
-        fill: true,
-        backgroundColor: gradient,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        tension: 0.3,
+    // 2. Initialize with 0 width; we will resize immediately after
+    const chart = createChart(chartContainerRef.current, {
+      height: height,
+      layout: {
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor: "transparent",
+        attributionLogo: false, // Removes the logo
       },
-    ],
-  };
+      grid: {
+        vertLines: { visible: false },
+        horzLines: { visible: false },
+      },
+      rightPriceScale: { visible: false, borderVisible: false },
+      timeScale: { visible: false, borderVisible: false },
+      handleScale: false,
+      handleScroll: false,
+    });
 
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      title: { display: false },
-      tooltip: { enabled: false },
-    },
-    scales: {
-      x: { display: false },
-      y: { display: false },
-    },
-  };
+    const areaSeries = chart.addSeries(AreaSeries, {
+      lineColor: color,
+      topColor: topColor,
+      bottomColor: "rgba(0, 0, 0, 0)",
+      lineWidth: 2,
+      priceLineVisible: false,
+      crosshairMarkerVisible: false,
+      lastValueVisible: false,
+    });
+
+    areaSeries.setData(formattedData);
+    chart.timeScale().fitContent();
+
+    chartRef.current = chart;
+
+    // 3. Responsive Resize Logic
+    const handleResize = () => {
+      if (chartContainerRef.current && chartRef.current) {
+        chartRef.current.applyOptions({
+          width: chartContainerRef.current.clientWidth,
+        });
+      }
+    };
+
+    // Trigger initial resize
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
+  }, [formattedData, height, color, topColor]);
+
+  if (formattedData.length === 0) return null;
 
   return (
-    <Line
-      ref={chartRef}
-      data={data}
-      options={options}
-      height={height}
-      width={width}
-      className='rounded-b-md w-full h-full'
+    <div
+      ref={chartContainerRef}
+      className='rounded-b-md overflow-hidden pointer-events-none w-full'
+      style={{ height }} // Width is handled by CSS 'w-full'
     />
   );
 };
