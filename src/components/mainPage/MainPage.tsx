@@ -73,9 +73,9 @@ export default function MainPage() {
 
   return (
     <div>
-      {/* <div className='w-full px-3'>
-        <AddBanner className='mb-5' />
-      </div> */}
+      <div className='w-full px-3'>
+        <AddBanner className='mb-3' />
+      </div>
       {/* <SearchBar />
 
       <div className='px-3 mb-3'>

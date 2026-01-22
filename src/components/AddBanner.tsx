@@ -2,58 +2,55 @@
 
 import React, { useState } from "react";
 import NoPrefetchLink from "./NoPrefetchLink";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 interface Props {
   className?: string;
-  hideable?: boolean; // New prop to control hide functionality
+  hideable?: boolean;
 }
 
 export default function AddBanner({ className, hideable = false }: Props) {
   const [isVisible, setIsVisible] = useState(true);
-  const translateAdd = useTranslations("add");
 
-  if (!isVisible) return null; // Hide banner if not visible
+  if (!isVisible) return null;
 
   return (
     <div className='w-full relative'>
       <NoPrefetchLink
-        href='https://t.me/gift_charts'
-        className={`${className} relative w-full min-h-20 p-3 flex flex-row bg-gradient-to-tl from-primary to-green-500 rounded-3xl overflow-hidden`}>
-        <div className='w-full h-full flex flex-row justify-between relative'>
-          <div className='flex flex-col justify-evenly'>
-            <div className='flex flex-row'>
-              <h1 className='flex flex-row gap-x-1 items-center text-white font-bold text-lg'>
-                {translateAdd("title")}
-              </h1>
-            </div>
-            <p className='text-sm text-white/70'>
-              {translateAdd("description")}
-            </p>
-          </div>
-
-          {/* Right arrow icon */}
-          <div className='h-full flex items-center'>
-            <Image
-              src={"/images/logo-white.webp"}
-              width={50}
-              height={50}
-              alt={""}
-              className='mr-2'
-            />
-          </div>
+        href='https://t.me/mutant_gifts_bot/mutantgifts?startapp=rl_f1e02fca-a966-4fe8-865f-cded194f06fb'
+        /* - lg:h-20 (80px) restricts the height on large screens.
+           - flex items-center justify-center centers the sharp image.
+        */
+        className={`${className} relative w-full lg:h-24 flex items-center justify-center rounded-2xl overflow-hidden`}>
+        {/* BACKGROUND LAYER: Blurred, fills the entire width/height */}
+        <div className='absolute inset-0 w-full h-full'>
+          <Image
+            src={"/images/add_banner.webp"}
+            alt={""}
+            fill
+            className='object-cover blur-lg opacity-100'
+            aria-hidden='true'
+          />
         </div>
-        <span className='pointer-events-none absolute inset-0 translate-x-[-100%] animate-shine'>
-          <span className='absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12' />
-        </span>
+
+        {/* TOP LAYER: Sharp image, fits height perfectly (top to bottom), width auto-adjusts */}
+        <div className='relative h-full flex items-center justify-center'>
+          <Image
+            src={"/images/add_banner.webp"}
+            alt={"Banner"}
+            width={0}
+            height={0}
+            sizes='100vh'
+            className='h-full w-auto object-contain'
+            priority
+          />
+        </div>
       </NoPrefetchLink>
 
-      {/* Close button (only if hideable is true) */}
       {hideable && (
         <button
           onClick={() => setIsVisible(false)}
-          className='absolute top-0 right-0 text-foreground bg-secondary rounded-full p-1 flex items-center justify-center transition'>
+          className='absolute top-0 right-0 text-foreground bg-secondaryTransparent border border-secondary rounded-full p-1 flex items-center justify-center transition'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 24 24'
