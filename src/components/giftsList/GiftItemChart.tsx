@@ -37,7 +37,7 @@ const GiftItemChart = ({ gift, height }: GiftItemChartProps) => {
 
   const color = priceChange >= 0 ? "#22c55e" : "#ef4444";
   const topColor =
-    priceChange >= 0 ? "rgba(34, 197, 94, 0.9)" : "rgba(239, 68, 68, 0.9)";
+    priceChange >= 0 ? "rgba(34, 197, 94, 0.7)" : "rgba(239, 68, 68, 0.7)";
 
   useEffect(() => {
     if (!chartContainerRef.current || formattedData.length === 0) return;
@@ -64,7 +64,7 @@ const GiftItemChart = ({ gift, height }: GiftItemChartProps) => {
       lineColor: color,
       topColor: topColor,
       bottomColor: "rgba(0, 0, 0, 0)",
-      lineWidth: 2,
+      lineWidth: 1,
       priceLineVisible: false,
       crosshairMarkerVisible: false,
       lastValueVisible: false,
