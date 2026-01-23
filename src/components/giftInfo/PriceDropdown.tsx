@@ -9,6 +9,7 @@ type PriceOption = "ton" | "usd" | "onSale" | "volume" | "salesCount";
 interface PriceDropdownProps {
   selectedPrice: PriceOption;
   handleSelectedPrice: (price: PriceOption) => void;
+  ModelsOptions?: boolean;
 }
 
 const priceOptions: PriceOption[] = [
@@ -22,9 +23,15 @@ const priceOptions: PriceOption[] = [
 export default function PriceDropdown({
   selectedPrice,
   handleSelectedPrice,
+  ModelsOptions = false,
 }: PriceDropdownProps) {
   const translate = useTranslations("priceOptions");
   const vibrate = useVibrate();
+
+  // Filter options based on ModelsOptions prop
+  const availableOptions = ModelsOptions 
+    ? (priceOptions.filter(option => ["ton", "usd", "onSale"].includes(option)) as PriceOption[])
+    : priceOptions;
 
   return (
     <div className='relative min-w-36 h-8'>
@@ -50,7 +57,7 @@ export default function PriceDropdown({
               leaveTo='opacity-0 -translate-y-2 scale-95'>
               {/* 2. Added origin-top to ensure it slides down from the button */}
               <Listbox.Options className='z-50 absolute mt-0 origin-top max-h-60 w-full overflow-auto rounded-b-3xl focus:outline-none text-sm ring-0 shadow-lg'>
-                {priceOptions.map((price) => (
+                {availableOptions.map((price) => (
                   <Listbox.Option
                     key={price}
                     className={({ active }) =>

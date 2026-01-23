@@ -11,6 +11,7 @@ import ReactLoading from "react-loading";
 import { useQuery } from "react-query";
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
 import ModelItem from "./ModelItem";
+import ModelModal from "./ModelModal";
 import ModalBase from "@/utils/ui/ModalBase";
 import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 import { useAppSelector } from "@/redux/hooks";
@@ -23,7 +24,7 @@ interface MarketsModalProps {
 
 async function fetchGiftModels(giftId: string) {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API}/giftModels/${giftId}`
+    `${process.env.NEXT_PUBLIC_API}/giftModels/${giftId}`,
   );
   return data[0].models;
 }
@@ -41,6 +42,9 @@ export default function ModelsList({
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isMounted, setIsMounted] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<GiftModelInterface | null>(
+    null,
+  );
 
   const {
     data: modelsList = [],
@@ -73,7 +77,7 @@ export default function ModelsList({
         root: null,
         threshold: 0,
         rootMargin: "0px",
-      }
+      },
     );
 
     observer.observe(sentinel);
@@ -164,7 +168,13 @@ export default function ModelsList({
               {modelsList
                 .sort((a: any, b: any) => b.priceTon - a.priceTon)
                 .map((model: GiftModelInterface) => (
-                  <ModelItem model={model} key={model._id} />
+                  <ModalBase
+                    key={model._id}
+                    trigger={<ModelItem model={model} />}
+                    onOpen={() => setSelectedModel(model)}
+                    onClose={() => setSelectedModel(null)}>
+                    <ModelModal model={selectedModel} giftId={giftId} />
+                  </ModalBase>
                 ))}
             </div>
           ) : (
