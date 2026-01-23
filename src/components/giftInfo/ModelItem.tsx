@@ -25,7 +25,7 @@ export default function ModelItem({ model }: Props) {
   return (
     <div
       key={model._id}
-      className={`w-full p-3 flex flex-col items-center rounded-3xl ${
+      className={`w-full p-3 flex flex-col items-center rounded-3xl active:scale-95 transition-transform duration-200 ${
         resolvedTheme === "dark"
           ? "bg-secondaryTransparent"
           : "bg-secondaryTransparent"
@@ -68,8 +68,8 @@ export default function ModelItem({ model }: Props) {
                 ? percentChange >= 0
                   ? "text-green-500"
                   : percentChange < 0
-                  ? "text-red-500"
-                  : "text-slate-500"
+                    ? "text-red-500"
+                    : "text-slate-500"
                 : "text-slate-500"
             }`}>
             {percentChange === "no data" ? (

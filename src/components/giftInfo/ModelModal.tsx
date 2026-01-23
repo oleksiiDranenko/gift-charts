@@ -52,8 +52,6 @@ export default function ModelModal({ model, giftId }: Props) {
       enabled: !!model?.name && !!giftId,
       refetchOnWindowFocus: false,
       select: (data) => {
-        console.log("Week data response:", data);
-        // Handle different response structures
         if (Array.isArray(data)) {
           return data;
         } else if (data && typeof data === "object") {
@@ -65,8 +63,7 @@ export default function ModelModal({ model, giftId }: Props) {
             }
           }
         }
-        // If we can't find an array, return empty
-        console.warn("Week data is not in expected format:", data);
+
         return [];
       },
     },
@@ -79,8 +76,6 @@ export default function ModelModal({ model, giftId }: Props) {
       enabled: !!model?.name && !!giftId,
       refetchOnWindowFocus: false,
       select: (data) => {
-        console.log("Life data response:", data);
-        // Handle different response structures
         if (Array.isArray(data)) {
           return data;
         } else if (data && typeof data === "object") {
