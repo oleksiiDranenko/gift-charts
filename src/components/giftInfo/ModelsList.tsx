@@ -104,7 +104,7 @@ export default function ModelsList({
                 <input
                   type='text'
                   value={searchQuery}
-                  placeholder='Plush Pepe models...'
+                  placeholder={`${giftName} models...`}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => {
                     vibrate();
