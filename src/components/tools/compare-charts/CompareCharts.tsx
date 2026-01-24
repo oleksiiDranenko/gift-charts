@@ -143,9 +143,13 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
     })),
   );
 
+  // Memoize dependencies for chart initialization
+  const hasGifts = selectedGifts.length > 0;
+  const isLoading = results.some((r) => r.isLoading);
+
   // Initialize Chart
   useEffect(() => {
-    if (!chartContainerRef.current || selectedGifts.length === 0 || results.some((r) => r.isLoading)) {
+    if (!chartContainerRef.current || !hasGifts || isLoading) {
       return;
     }
 
@@ -212,7 +216,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
         chartRef.current = null;
       }
     };
-  }, [resolvedTheme, selectedGifts.length > 0, results.some((r) => r.isLoading)]);
+  }, [resolvedTheme, hasGifts, isLoading]);
 
   // Update Series Data when results or listType changes
   useEffect(() => {
@@ -514,7 +518,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
                   })
                 ) : (
                   <div className='text-center py-8 text-secondaryText'>
-                    No gifts matching "{searchTerm}"
+                    No gifts matching &quot;{searchTerm}&quot;
                   </div>
                 )}
                 <div className='h-20' /> {/* Spacer for the button */}
