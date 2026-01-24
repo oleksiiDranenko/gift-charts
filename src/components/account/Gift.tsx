@@ -16,7 +16,7 @@ export default function GiftItem({ gift, currency }: Props) {
   const { resolvedTheme } = useTheme();
   return (
     <NoPrefetchLink
-      className={`p-3 bg-secondaryTransparent ${resolvedTheme === "dark" ? "" : "border border-secondary"} rounded-3xl transform active:scale-95 transition-transform duration-200`}
+      className={`p-3 bg-secondaryTransparent ${resolvedTheme === "dark" ? "" : "shadow-lg shadow-background"} rounded-3xl transform active:scale-95 transition-transform duration-200`}
       onClick={() => vibrate()}
       href={`https://t.me/nft/${gift.base_name.replace(/\s+/g, "")}-${gift.number}`}
       target='_blank'>

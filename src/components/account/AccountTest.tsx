@@ -152,8 +152,8 @@ export default function AccountTest() {
   return (
     <div className='px-3'>
       {/* Portfolio Card */}
-      <div className='p-5 rounded-3xl bg-gradient-to-b from-slate-800 to-background w-full flex flex-col items-center justify-center gap-3 mb-5'>
-        <div className='w-full flex flex-row items-center justify-between'>
+      <div className='w-full flex flex-col items-center justify-center gap-3 mb-5'>
+        <div className='pl-3 pr-4 py-3 rounded-3xl bg-gradient-to-b from-secondaryTransparent to-secondaryLight w-full flex flex-row items-center justify-between'>
           <div className='flex flex-row items-center gap-3'>
             <div className='relative'>
               {tgUser?.photo_url ? (
@@ -243,7 +243,7 @@ export default function AccountTest() {
         </div>
       </div>
 
-      <div className='px-2 mb-5 flex justify-between items-center'>
+      <div className=' mb-5 flex justify-between items-center'>
         <h2 className='text-lg font-bold'>
           My Collection{" "}
           <span className='text-secondaryText text-base ml-1 font-normal'>{`(${data?.gifts.length || 0})`}</span>
@@ -253,7 +253,7 @@ export default function AccountTest() {
           <button
             className={`text-sm h-8 px-3 box-border transition-all flex items-center justify-center ${
               viewMode === "grouped"
-                ? "rounded-3xl bg-secondary text-primary"
+                ? "rounded-3xl bg-secondary"
                 : "text-secondaryText"
             }`}
             onClick={() => {
@@ -275,7 +275,7 @@ export default function AccountTest() {
           <button
             className={`text-sm h-8 px-3 box-border transition-all flex items-center justify-center ${
               viewMode === "list"
-                ? "rounded-3xl bg-secondary text-primary"
+                ? "rounded-3xl bg-secondary"
                 : "text-secondaryText"
             }`}
             onClick={() => {
@@ -320,7 +320,7 @@ export default function AccountTest() {
             <>
               <div
                 key={group.baseName}
-                className={` py-1 ${resolvedTheme === "dark" ? "px-3" : "px-3"} rounded-3xl`}>
+                className={` ${resolvedTheme === "dark" ? "pl-1 py-1" : "p-3 bg-secondaryTransparent"} rounded-3xl`}>
                 {/* Group Header */}
                 <button
                   onClick={() => toggleGroup(group.baseName)}
@@ -371,14 +371,15 @@ export default function AccountTest() {
 
                 {/* Expanded Gifts */}
                 <SectionTransition open={expandedGroups.has(group.baseName)}>
-                  <div className='mt-4 pb-4 grid grid-cols-3 lg:grid-cols-6 gap-3'>
+                  <div className='mt-4 pb-6 grid grid-cols-3 lg:grid-cols-6 gap-3'>
                     {group.gifts.map((gift, i) => (
                       <GiftItem gift={gift} currency={currency} key={i} />
                     ))}
                   </div>
                 </SectionTransition>
               </div>
-              {resolvedTheme === "dark" ? (
+              {resolvedTheme === "dark" &&
+              !expandedGroups.has(group.baseName) ? (
                 <div className='pl-16 pr-3 w-full'>
                   <div className='bg-secondaryTransparent h-[2px]'></div>
                 </div>
