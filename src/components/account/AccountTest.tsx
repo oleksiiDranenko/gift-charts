@@ -76,8 +76,7 @@ export default function AccountTest() {
         username: "_guest",
         first_name: "Guest",
         last_name: "",
-        photo_url:
-          "https://cloudfront.codeproject.com/gdi-plus/imageprocessing2/img.jpg",
+        photo_url: "",
       });
     }
   }, []);
@@ -195,7 +194,7 @@ export default function AccountTest() {
       </div>
 
       {/* Gift Grid */}
-      <div className=' grid grid-cols-3 gap-3'>
+      <div className=' grid grid-cols-3 lg:grid-cols-6 gap-3'>
         {isLoading ? (
           Array(6)
             .fill(0)

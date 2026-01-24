@@ -16,10 +16,10 @@ export default function GiftItem({ gift, currency }: Props) {
     <NoPrefetchLink
       className='p-3 bg-secondaryTransparent rounded-3xl transform active:scale-95 transition-transform duration-200'
       onClick={() => vibrate()}
-      href={"https://t.me/nft/PreciousPeach-2946"}
+      href={`https://t.me/nft/${gift.base_name.replace(/\s+/g, "")}-${gift.number}`}
       target='_blank'>
       <Image
-        src={`https://nft.fragment.com/gift/${gift.name.toLowerCase()}.medium.jpg`}
+        src={`https://nft.fragment.com/gift/${gift.name.toLowerCase()}.large.jpg`}
         alt={""}
         width={70}
         height={70}
@@ -31,7 +31,7 @@ export default function GiftItem({ gift, currency }: Props) {
           <span className='text-xs text-secondaryText'>#{gift.number}</span>
         </div>
 
-        <span className='w-full mt-2 font-bold flex flex-row justify-start items-center rounded-3xl gap-1'>
+        {/* <span className='w-full mt-2 font-bold flex flex-row justify-start items-center rounded-3xl gap-1'>
           {currency === "ton" ? (
             <Image
               alt='ton'
@@ -47,7 +47,7 @@ export default function GiftItem({ gift, currency }: Props) {
               ? gift.priceTon.toFixed(2)
               : gift.priceUsd.toFixed(2)}
           </span>
-        </span>
+        </span> */}
       </div>
     </NoPrefetchLink>
   );
