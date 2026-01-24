@@ -105,6 +105,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [localSelection, setLocalSelection] = useState<MinimalGift[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<"ton" | "usd">("ton");
 
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
@@ -317,7 +318,10 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
             const timestamp = Math.floor(
               new Date(year, month, day, hours, minutes).getTime() / 1000,
             );
-            return { time: timestamp as UTCTimestamp, value: item.priceTon };
+            return { 
+              time: timestamp as UTCTimestamp, 
+              value: selectedPrice === "ton" ? item.priceTon : item.priceUsd 
+            };
           })
           .filter((d) => !isNaN(d.time))
           .sort((a, b) => (a.time as number) - (b.time as number))
@@ -337,7 +341,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
         console.warn("Failed to fit content:", error);
       }
     }
-  }, [results, listType, selectedGifts]);
+  }, [results, listType, selectedGifts, selectedPrice]);
 
   const handleGiftSelect = (gift: GiftInterface) => {
     if (
@@ -389,7 +393,17 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
   const filteredGifts =
     allGiftsMinimal?.filter((gift: MinimalGift) =>
       gift.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    ) || [];
+    ).sort((a: MinimalGift, b: MinimalGift) => {
+      // Selected gifts come first
+      const aSelected = localSelection.find(g => g._id === a._id);
+      const bSelected = localSelection.find(g => g._id === b._id);
+      
+      if (aSelected && !bSelected) return -1;
+      if (!aSelected && bSelected) return 1;
+      
+      // Both selected or both not selected - maintain original order
+      return 0;
+    }) || [];
 
   return (
     <div className='w-full'>
@@ -414,6 +428,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
                 {translate("addGift")}
               </button>
             }
+            open={isModalOpen}
             onOpenChange={(open) => {
               console.log("ModalBase onOpenChange called with:", open);
               setIsModalOpen(open);
@@ -588,6 +603,48 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
         </div>
       )}
 
+      {/* Price selector - only show when gifts are selected */}
+      {selectedGifts.length > 0 && (
+        <div className='mb-2'>
+          <div className='w-fit flex flex-row box-border bg-secondary rounded-3xl gap-x-1'>
+            <button
+              className={`text-sm h-8 px-3 box-border ${
+                selectedPrice === "ton"
+                  ? "rounded-3xl bg-primary font-bold"
+                  : ""
+              }`}
+              onClick={() => {
+                setSelectedPrice("ton");
+                vibrate();
+              }}>
+              <Image
+                src='/images/toncoin.webp'
+                alt='ton'
+                width={18}
+                height={18}
+              />
+            </button>
+            <button
+              className={`text-sm h-8 px-3 box-border ${
+                selectedPrice === "usd"
+                  ? "rounded-3xl bg-primary font-bold"
+                  : ""
+              }`}
+              onClick={() => {
+                setSelectedPrice("usd");
+                vibrate();
+              }}>
+              <Image
+                src='/images/usdt.svg'
+                alt='usdt'
+                width={18}
+                height={18}
+              />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* No gifts selected message */}
       {selectedGifts.length === 0 && (
         <div className='text-center py-12'>
@@ -631,6 +688,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
           )}
 
           <div className='w-full mt-2'>
+            {/* Time range selector */}
             <div className='w-full flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl'>
               {TIME_RANGES.map(({ key, label }) => {
                 const isActive = listType === key;
