@@ -115,7 +115,6 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
 
   // Sync local state when modal opens
   useEffect(() => {
-    console.log("Modal state changed:", { isModalOpen });
     if (isModalOpen) {
       setLocalSelection(selectedGifts);
     }
@@ -146,26 +145,9 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
 
   // Initialize Chart
   useEffect(() => {
-    console.log("Chart initialization effect triggered:", {
-      hasContainer: !!chartContainerRef.current,
-      selectedGiftsCount: selectedGifts.length,
-      isLoading: results.some((r) => r.isLoading),
-      shouldInitialize: selectedGifts.length > 0 && !results.some((r) => r.isLoading),
-    });
-
     if (!chartContainerRef.current || selectedGifts.length === 0 || results.some((r) => r.isLoading)) {
-      console.log("Chart not initialized:", {
-        hasContainer: !!chartContainerRef.current,
-        selectedGiftsCount: selectedGifts.length,
-        isLoading: results.some((r) => r.isLoading),
-      });
       return;
     }
-
-    console.log(
-      "Initializing chart with gifts:",
-      selectedGifts.map((g) => g.name),
-    );
 
     const chart = createChart(chartContainerRef.current, {
       layout: {
@@ -235,10 +217,6 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
   // Update Series Data when results or listType changes
   useEffect(() => {
     if (!chartRef.current || selectedGifts.length === 0) {
-      console.log("Series data not updated:", {
-        hasChart: !!chartRef.current,
-        selectedGiftsCount: selectedGifts.length,
-      });
       return;
     }
 
@@ -259,18 +237,8 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
 
     // 3. If still loading, wait
     if (results.some((r) => r.isLoading)) {
-      console.log("Still loading data...");
       return;
     }
-
-    console.log(
-      "Results data:",
-      results.map((r) => ({
-        name: r.data?.name,
-        isLoading: r.isLoading,
-        hasData: !!r.data,
-      })),
-    );
 
     results.forEach((query, index) => {
       if (!query.data || !chartRef.current) return;
@@ -372,14 +340,8 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
   };
 
   const applySelection = () => {
-    console.log("applySelection called:", {
-      localSelectionCount: localSelection.length,
-      localSelection: localSelection.map(g => g.name),
-    });
-    
     vibrate();
     setSelectedGifts(localSelection);
-    console.log("Setting modal open to false");
     setIsModalOpen(false);
   };
 
@@ -430,7 +392,6 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
             }
             open={isModalOpen}
             onOpenChange={(open) => {
-              console.log("ModalBase onOpenChange called with:", open);
               setIsModalOpen(open);
             }}>
             <div className='flex-1 overflow-hidden flex flex-col'>
