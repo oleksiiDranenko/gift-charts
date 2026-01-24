@@ -34,6 +34,14 @@
     "currency": "Currency",
     "giftStyle": "Gift Style"
   },
+  "compare": {
+    "title": "Compare Gifts",
+    "clear": "Clear",
+    "addGift": "Add Gift",
+    "selectGifts": "Select Gifts",
+    "selected": "Selected",
+    "chooseAtLeastTwo": "Choose at least 2 gifts to compare"
+  },
   "tools": {
     "services": "Services",
     "buyStars": "Buy Stars",

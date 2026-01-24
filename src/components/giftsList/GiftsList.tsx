@@ -97,7 +97,7 @@ export default function GiftsList() {
       return res.data;
     },
     {
-      staleTime: 1000 * 60 * 10, // Cache for 10 minutes since gift lists rarely change
+      staleTime: 1000 * 60 * 30, // Cache for 10 minutes since gift lists rarely change
       refetchOnWindowFocus: false,
     },
   );

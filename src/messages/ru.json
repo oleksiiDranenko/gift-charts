@@ -34,6 +34,14 @@
     "currency": "Валюта",
     "giftStyle": "Стиль подарков"
   },
+  "compare": {
+    "title": "Сравнить подарки",
+    "clear": "Очистить",
+    "addGift": "Добавить подарок",
+    "selectGifts": "Выберите подарки",
+    "selected": "Выбрано",
+    "chooseAtLeastTwo": "Выберите хотя бы 2 подарка для сравнения"
+  },
   "tools": {
     "services": "Сервисы",
     "buyStars": "Купить звезды",
