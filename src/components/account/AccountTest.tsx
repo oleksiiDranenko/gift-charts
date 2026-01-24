@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import PortfolioChart from "./PortfolioChart";
 import { formatPrice } from "@/utils/formatNumber";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import SectionTransition from "@/components/filterGifts/SelectTransition";
+import { useTheme } from "next-themes";
 
 export interface GiftAttribute {
   name: string;
@@ -45,7 +48,10 @@ interface TelegramUser {
 
 export default function AccountTest() {
   const [tgUser, setTgUser] = useState<TelegramUser | null>(null);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [viewMode, setViewMode] = useState<"grouped" | "list">("grouped");
   const vibrate = useVibrate();
+  const { resolvedTheme } = useTheme();
 
   const [settings, setSettings] = useState(() => {
     if (typeof window !== "undefined") {
@@ -63,6 +69,57 @@ export default function AccountTest() {
 
   const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
 
+  const toggleGroup = (baseName: string) => {
+    setExpandedGroups((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(baseName)) {
+        newSet.delete(baseName);
+      } else {
+        newSet.add(baseName);
+      }
+      return newSet;
+    });
+    vibrate();
+  };
+
+  const groupGiftsByBaseName = (gifts: Gift[]) => {
+    const groups = gifts.reduce(
+      (acc, gift) => {
+        if (!acc[gift.base_name]) {
+          acc[gift.base_name] = [];
+        }
+        acc[gift.base_name].push(gift);
+        return acc;
+      },
+      {} as Record<string, Gift[]>,
+    );
+
+    return Object.entries(groups)
+      .map(([baseName, gifts]) => {
+        const totalTon = gifts.reduce((sum, gift) => sum + gift.priceTon, 0);
+        const totalUsd = gifts.reduce((sum, gift) => sum + gift.priceUsd, 0);
+
+        let result = baseName.replace(/\s+/g, "");
+
+        result = result.charAt(0).toLowerCase() + result.slice(1);
+
+        return {
+          baseName,
+          image: result,
+          gifts,
+          count: gifts.length,
+          totalTon,
+          totalUsd,
+        };
+      })
+      .sort((a, b) => {
+        // Sort by total value based on current currency
+        const aValue = currency === "ton" ? a.totalTon : a.totalUsd;
+        const bValue = currency === "ton" ? b.totalTon : b.totalUsd;
+        return bValue - aValue; // Sort descending (highest value first)
+      });
+  };
+
   useEffect(() => {
     // Access the Telegram WebApp SDK
     const telegram = (window as any).Telegram?.WebApp;
@@ -72,7 +129,7 @@ export default function AccountTest() {
     } else {
       // Keep fallback for local development only
       setTgUser({
-        id: 754292445,
+        id: 993540775,
         username: "_guest",
         first_name: "Guest",
         last_name: "",
@@ -95,7 +152,7 @@ export default function AccountTest() {
   return (
     <div className='px-3'>
       {/* Portfolio Card */}
-      <div className='p-5 bg-gradient-to-b from-secondaryTransparent to-background rounded-t-3xl w-full flex flex-col items-center justify-center gap-5'>
+      <div className='p-5 rounded-3xl bg-gradient-to-b from-slate-800 to-background w-full flex flex-col items-center justify-center gap-3 mb-5'>
         <div className='w-full flex flex-row items-center justify-between'>
           <div className='flex flex-row items-center gap-3'>
             <div className='relative'>
@@ -186,34 +243,155 @@ export default function AccountTest() {
         </div>
       </div>
 
-      <div className='px-3 mb-4 flex justify-between items-end'>
-        <h2 className='text-lg font-bold'>My Collection</h2>
-        <span className='text-sm text-secondaryText bg-secondary/50 px-2 py-1 rounded-md'>
-          {data?.gifts.length || 0} Items
-        </span>
+      <div className='px-2 mb-5 flex justify-between items-center'>
+        <h2 className='text-lg font-bold'>
+          My Collection{" "}
+          <span className='text-secondaryText text-base ml-1 font-normal'>{`(${data?.gifts.length || 0})`}</span>
+        </h2>
+
+        <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
+          <button
+            className={`text-sm h-8 px-3 box-border transition-all flex items-center justify-center ${
+              viewMode === "grouped"
+                ? "rounded-3xl bg-secondary text-primary"
+                : "text-secondaryText"
+            }`}
+            onClick={() => {
+              setViewMode("grouped");
+              vibrate();
+            }}>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-5'>
+              <path
+                fillRule='evenodd'
+                d='M2.625 6.75a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0A.75.75 0 0 1 8.25 6h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75ZM2.625 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0ZM7.5 12a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12A.75.75 0 0 1 7.5 12Zm-4.875 5.25a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+          <button
+            className={`text-sm h-8 px-3 box-border transition-all flex items-center justify-center ${
+              viewMode === "list"
+                ? "rounded-3xl bg-secondary text-primary"
+                : "text-secondaryText"
+            }`}
+            onClick={() => {
+              setViewMode("list");
+              vibrate();
+            }}>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-5'>
+              <path
+                fillRule='evenodd'
+                d='M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      {/* Gift Grid */}
-      <div className=' grid grid-cols-3 lg:grid-cols-6 gap-3'>
+      {/* Gift Display */}
+      <div className='flex flex-col gap-3'>
         {isLoading ? (
           Array(6)
             .fill(0)
             .map((_, i) => (
               <div
                 key={i}
-                className='aspect-square bg-secondary/20 animate-pulse rounded-2xl'
+                className='h-24 bg-secondary/20 animate-pulse rounded-3xl'
               />
             ))
         ) : data?.gifts.length === 0 ? (
-          <div className='col-span-3 py-20 text-center bg-secondary/10 rounded-3xl border border-dashed border-white/10'>
+          <div className='py-20 text-center bg-secondary/10 rounded-3xl border border-dashed border-white/10'>
             <p className='text-secondaryText text-sm italic'>
               No gifts found in this user.
             </p>
           </div>
-        ) : (
-          data?.gifts.map((gift, i) => (
-            <GiftItem gift={gift} currency={currency} key={i} />
+        ) : viewMode === "grouped" ? (
+          // Grouped View
+          groupGiftsByBaseName(data?.gifts || []).map((group) => (
+            <>
+              <div
+                key={group.baseName}
+                className={` py-1 ${resolvedTheme === "dark" ? "px-3" : "px-3"} rounded-3xl`}>
+                {/* Group Header */}
+                <button
+                  onClick={() => toggleGroup(group.baseName)}
+                  className='w-full flex items-center justify-between'>
+                  <div className='flex items-center gap-3'>
+                    <Image
+                      src={`/gifts/${group.image}.webp`}
+                      alt=''
+                      width={60}
+                      height={60}
+                      className='w-10 h-10 mr-3'
+                    />
+                    <div className='flex flex-col items-start'>
+                      <span className='font-bold text-lg'>
+                        {group.baseName}
+                      </span>
+                      <span className='text-sm text-secondaryText'>
+                        {group.count} gifts
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className='flex items-center gap-2'>
+                    <span className='font-bold flex flex-row justify-start items-center gap-1'>
+                      <Image
+                        alt={currency}
+                        src={
+                          currency === "ton"
+                            ? "/images/toncoin.webp"
+                            : "/images/usdt.svg"
+                        }
+                        width={20}
+                        height={20}
+                      />
+                      <span>
+                        {formatPrice(
+                          currency === "ton" ? group.totalTon : group.totalUsd,
+                        )}
+                      </span>
+                    </span>
+                    {expandedGroups.has(group.baseName) ? (
+                      <ChevronUp className='w-5 h-5 text-secondaryText' />
+                    ) : (
+                      <ChevronDown className='w-5 h-5 text-secondaryText' />
+                    )}
+                  </div>
+                </button>
+
+                {/* Expanded Gifts */}
+                <SectionTransition open={expandedGroups.has(group.baseName)}>
+                  <div className='mt-4 pb-4 grid grid-cols-3 lg:grid-cols-6 gap-3'>
+                    {group.gifts.map((gift, i) => (
+                      <GiftItem gift={gift} currency={currency} key={i} />
+                    ))}
+                  </div>
+                </SectionTransition>
+              </div>
+              {resolvedTheme === "dark" ? (
+                <div className='pl-16 pr-3 w-full'>
+                  <div className='bg-secondaryTransparent h-[2px]'></div>
+                </div>
+              ) : null}
+            </>
           ))
+        ) : (
+          // List View (original grid)
+          <div className='grid grid-cols-3 lg:grid-cols-6 gap-3'>
+            {data?.gifts.map((gift, i) => (
+              <GiftItem gift={gift} currency={currency} key={i} />
+            ))}
+          </div>
         )}
       </div>
     </div>

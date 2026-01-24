@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Gift } from "./AccountTest";
 import useVibrate from "@/hooks/useVibrate";
 import NoPrefetchLink from "../NoPrefetchLink";
+import { useTheme } from "next-themes";
 
 interface Props {
   gift: Gift;
@@ -12,9 +13,10 @@ interface Props {
 
 export default function GiftItem({ gift, currency }: Props) {
   const vibrate = useVibrate();
+  const { resolvedTheme } = useTheme();
   return (
     <NoPrefetchLink
-      className='p-3 bg-secondaryTransparent rounded-3xl transform active:scale-95 transition-transform duration-200'
+      className={`p-3 bg-secondaryTransparent ${resolvedTheme === "dark" ? "" : "border border-secondary"} rounded-3xl transform active:scale-95 transition-transform duration-200`}
       onClick={() => vibrate()}
       href={`https://t.me/nft/${gift.base_name.replace(/\s+/g, "")}-${gift.number}`}
       target='_blank'>
@@ -31,7 +33,7 @@ export default function GiftItem({ gift, currency }: Props) {
           <span className='text-xs text-secondaryText'>#{gift.number}</span>
         </div>
 
-        {/* <span className='w-full mt-2 font-bold flex flex-row justify-start items-center rounded-3xl gap-1'>
+        <span className='w-full mt-2 font-bold flex flex-row justify-start items-center rounded-3xl gap-1'>
           {currency === "ton" ? (
             <Image
               alt='ton'
@@ -47,7 +49,7 @@ export default function GiftItem({ gift, currency }: Props) {
               ? gift.priceTon.toFixed(2)
               : gift.priceUsd.toFixed(2)}
           </span>
-        </span> */}
+        </span>
       </div>
     </NoPrefetchLink>
   );
