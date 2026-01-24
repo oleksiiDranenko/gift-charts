@@ -331,7 +331,7 @@ export default function AccountTest() {
                       alt=''
                       width={60}
                       height={60}
-                      className='w-10 h-10 mr-3'
+                      className='w-10 h-10 mr-2'
                     />
                     <div className='flex flex-col items-start'>
                       <span className='font-bold text-lg'>
