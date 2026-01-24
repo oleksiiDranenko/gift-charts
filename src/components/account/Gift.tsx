@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Gift } from "./AccountTest";
 import useVibrate from "@/hooks/useVibrate";
+import NoPrefetchLink from "../NoPrefetchLink";
 
 interface Props {
   gift: Gift;
@@ -12,9 +13,11 @@ interface Props {
 export default function GiftItem({ gift, currency }: Props) {
   const vibrate = useVibrate();
   return (
-    <div
+    <NoPrefetchLink
       className='p-3 bg-secondaryTransparent rounded-3xl transform active:scale-95 transition-transform duration-200'
-      onClick={() => vibrate()}>
+      onClick={() => vibrate()}
+      href={"https://t.me/nft/PreciousPeach-2946"}
+      target='_blank'>
       <Image
         src={`https://nft.fragment.com/gift/${gift.name.toLowerCase()}.medium.jpg`}
         alt={""}
@@ -46,6 +49,6 @@ export default function GiftItem({ gift, currency }: Props) {
           </span>
         </span>
       </div>
-    </div>
+    </NoPrefetchLink>
   );
 }
