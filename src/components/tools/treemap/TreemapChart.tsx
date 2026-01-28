@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import type GiftInterface from "@/interfaces/GiftInterface";
+import { GiftHeatmapInterface } from "@/interfaces/GiftHeatmapInterface";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 
@@ -26,7 +26,7 @@ export interface TreemapChartRef {
 }
 
 interface TreemapChartProps {
-  data: GiftInterface[];
+  data: GiftHeatmapInterface[];
   chartType: "change" | "marketCap";
   timeGap: "24h" | "1w" | "1m";
   currency: "ton" | "usd";
@@ -63,7 +63,7 @@ const preloadImagesAsync = async (data: GiftData[]) => {
 };
 
 const transformGiftData = (
-  gifts: GiftInterface[],
+  gifts: GiftHeatmapInterface[],
   chartType: "change" | "marketCap",
   timeGap: "24h" | "1w" | "1m",
   currency: "ton" | "usd"

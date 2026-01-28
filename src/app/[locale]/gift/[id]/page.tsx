@@ -11,7 +11,6 @@ import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
 import GiftInitPriceSection from "@/components/giftInfo/GiftInitPriceSection";
-import { useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import ModelsList from "@/components/giftInfo/ModelsList";
@@ -32,21 +31,27 @@ async function fetchLifeData(name: string) {
   return data;
 }
 
+async function fetchGift(id: string) {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API}/gifts/${id}`,
+  );
+  return data;
+}
+
 export default function Page({ params }: any) {
   const { id } = params;
   const vibrate = useVibrate();
 
-  const giftsList = useAppSelector((state) => state.giftsList);
-
-  const [gift, setGift] = useState<GiftInterface | null>(null);
   const [page, setPage] = useState<"overview" | "models">("overview");
 
-  useEffect(() => {
-    if (giftsList) {
-      const selectedGift = giftsList.find((item) => item._id === id) || null;
-      setGift(selectedGift);
-    }
-  }, [giftsList, id]);
+  // Fetch gift data from API
+  const {
+    data: gift = null,
+    isLoading: isGiftLoading,
+    isError: isGiftError,
+  } = useQuery<GiftInterface | null, Error>(["gift", id], () => fetchGift(id), {
+    enabled: !!id,
+  });
 
   // Fetch week data (depends on gift)
   const {
@@ -70,7 +75,7 @@ export default function Page({ params }: any) {
     { enabled: !!gift }, // only fetch when gift is loaded
   );
 
-  const giftLoading = !gift && giftsList !== null;
+  const giftLoading = isGiftLoading;
   const loading = giftLoading || isWeekLoading || isLifeLoading;
 
   return (

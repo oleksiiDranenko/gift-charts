@@ -4,9 +4,8 @@ import TreemapChart, {
   TreemapChartRef,
 } from "@/components/tools/treemap/TreemapChart";
 import useVibrate from "@/hooks/useVibrate";
-import GiftInterface from "@/interfaces/GiftInterface";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setGiftsList } from "@/redux/slices/giftsListSlice";
+import { GiftHeatmapInterface } from "@/interfaces/GiftHeatmapInterface";
+import { useQuery } from "react-query";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ReactLoading from "react-loading";
@@ -31,8 +30,7 @@ export default function Page() {
     }
     return { currency: "ton", giftType: "line", giftBackground: "none" };
   });
-  const giftsList = useAppSelector((state) => state.giftsList);
-  const [list, setList] = useState<GiftInterface[]>([]);
+  const [list, setList] = useState<GiftHeatmapInterface[]>([]);
   const [listType, setListType] = useState<"change" | "marketCap">("marketCap");
   const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m">("24h");
   const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
@@ -42,45 +40,37 @@ export default function Page() {
   const [isDynamic, setIsDynamic] = useState<boolean>(false);
 
   const [amount, setAmount] = useState<number>(100);
-  const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data: giftsHeatmap, isLoading, error } = useQuery(
+    "gifts-heatmap",
+    async () => {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts/heatmap`);
+      return response.data;
+    },
+    {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    }
+  );
 
   const translate = useTranslations("heatmap");
 
   const vibrate = useVibrate();
-  const totalGifts = giftsList.length;
+  const totalGifts = giftsHeatmap?.length || 0;
   const chartRef = useRef<TreemapChartRef>(null);
 
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        if (giftsList.length === 0) {
-          const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`
-          );
-          dispatch(setGiftsList(giftsRes.data));
-        }
-      } catch (error) {
-        console.error("Error fetching gifts:", error);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [dispatch, giftsList]);
-
-  useEffect(() => {
-    if (giftsList.length > 0 && amount === 100) {
-      setAmount(giftsList.length);
+    if (giftsHeatmap && amount === 100) {
+      setAmount(giftsHeatmap.length);
     }
-  }, [giftsList]);
+  }, [giftsHeatmap]);
 
   useEffect(() => {
-    let rawList = [...giftsList];
+    if (!giftsHeatmap) return;
+    
+    let rawList = [...giftsHeatmap];
 
-    let sortedList = rawList.filter(
-      (gift) => gift.preSale === false || gift.preSale === undefined
-    );
+    // Note: GiftHeatmapInterface doesn't have preSale field, so we don't filter by it
+    let sortedList = rawList;
 
     switch (listType) {
       case "change":
@@ -143,7 +133,7 @@ export default function Page() {
     }
 
     setList(sortedList);
-  }, [giftsList, listType, timeGap]);
+  }, [giftsHeatmap, listType, timeGap]);
 
   return (
     <div className='w-full pt-[0px] pb-24 flex flex-col items-center overflow-visible'>
@@ -206,7 +196,7 @@ export default function Page() {
           />
         </div>
       </div>
-      {loading ? (
+      {isLoading ? (
         <ReactLoading
           type='spin'
           color='#0098EA'

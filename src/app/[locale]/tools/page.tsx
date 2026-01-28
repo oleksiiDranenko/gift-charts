@@ -14,8 +14,6 @@ import NoPrefetchLink from "@/components/NoPrefetchLink";
 import { MdOutlineSsidChart } from "react-icons/md";
 
 export default function Page() {
-  const dispatch = useAppDispatch();
-  const giftsList = useAppSelector((state) => state.giftsList);
   const vibrate = useVibrate();
   const translate = useTranslations("tools");
   const translateGeneral = useTranslations("general");
@@ -34,23 +32,6 @@ export default function Page() {
     return { currency: "ton", giftType: "line", giftBackground: "none" };
   });
 
-  // ✅ Fetch gifts (still via Redux)
-  useEffect(() => {
-    (async () => {
-      try {
-        if (giftsList.length === 0) {
-          const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`,
-          );
-          dispatch(setGiftsList(giftsRes.data));
-        }
-      } catch (error) {
-        console.error("Error fetching gifts:", error);
-      }
-    })();
-  }, [dispatch, giftsList]);
-
-  // ✅ Fetch indexes with TanStack Query
   const {
     data: indexList,
     isLoading,

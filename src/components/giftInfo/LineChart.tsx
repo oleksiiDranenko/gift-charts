@@ -207,7 +207,7 @@ export default function LineChart({
       },
       handleScroll: true,
       handleScale: true,
-      height: window.innerWidth < 1080 ? 300 : 450,
+      height: window.innerWidth < 1080 ? 300 : 500,
     });
 
     const series = chart.addSeries(AreaSeries, {

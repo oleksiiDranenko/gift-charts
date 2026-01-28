@@ -85,9 +85,7 @@ export default async function RootLayout({
                   <Analytics />
                   <TgAnalytics />
                   <AppInitializer>
-                    <DefaultUpdate>
-                      <PageTransition>{children}</PageTransition>
-                    </DefaultUpdate>
+                    <PageTransition>{children}</PageTransition>
                   </AppInitializer>
                 </ReactQueryProvider>
               </ThemeProvider>
