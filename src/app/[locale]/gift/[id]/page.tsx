@@ -131,67 +131,68 @@ export default function Page({ params }: any) {
             }
           />
         </div>
-        {loading ? (
-          <div className='flex flex-col'>
-            {/* <div className='w-full flex h-20 justify-center items-center'>
-              <ReactLoading
-                type='spin'
-                color='var(--primary)'
-                height={30}
-                width={30}
-                className='mt-5'
-              />
-            </div> */}
-
-            <GiftSkeleton />
-          </div>
-        ) : gift ? (
-          <Transition
-            key={page}
-            appear
-            show={true}
-            enter='transition-all ease-out duration-300'
-            enterFrom='opacity-0 translate-y-0'
-            enterTo='opacity-100 translate-y-0'
-            leave='transition-all ease-in duration-300'
-            leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-0'>
-            {page === "overview" ? (
-              <div className='flex flex-col'>
-                <GiftChart
-                  gift={gift}
-                  lifeData={lifeList}
-                  weekData={weekList}
-                />
-
-                <div className='w-full flex flex-col lg:items-start lg:flex-row px-3 mt-5 space-y-5 lg:space-y-0 lg:space-x-3'>
-                  <GiftInitPriceSection
-                    initStarsPrice={gift.starsPrice}
-                    initSupply={gift.initSupply}
-                    starUsdtCost={0.015}
+        <Transition
+          key={loading ? "loading" : "content"}
+          appear
+          show={true}
+          enter='transition-all ease-out duration-300'
+          enterFrom='opacity-0 translate-y-0'
+          enterTo='opacity-100 translate-y-0'
+          leave='transition-all ease-in duration-300'
+          leaveFrom='opacity-100 translate-y-0'
+          leaveTo='opacity-0 translate-y-0'>
+          {loading ? (
+            <div className='flex flex-col'>
+              <GiftSkeleton />
+            </div>
+          ) : gift ? (
+            <Transition
+              key={page}
+              appear
+              show={true}
+              enter='transition-all ease-out duration-300'
+              enterFrom='opacity-0 translate-y-0'
+              enterTo='opacity-100 translate-y-0'
+              leave='transition-all ease-in duration-300'
+              leaveFrom='opacity-100 translate-y-0'
+              leaveTo='opacity-0 translate-y-0'>
+              {page === "overview" ? (
+                <div className='flex flex-col'>
+                  <GiftChart
+                    gift={gift}
+                    lifeData={lifeList}
+                    weekData={weekList}
                   />
-                  <GiftSupplyPie
-                    initSupply={gift.initSupply}
-                    supply={gift.supply}
-                    upgradedSupply={gift.upgradedSupply}
+
+                  <div className='w-full flex flex-col lg:items-start lg:flex-row px-3 mt-5 space-y-5 lg:space-y-0 lg:space-x-3'>
+                    <GiftInitPriceSection
+                      initStarsPrice={gift.starsPrice}
+                      initSupply={gift.initSupply}
+                      starUsdtCost={0.015}
+                    />
+                    <GiftSupplyPie
+                      initSupply={gift.initSupply}
+                      supply={gift.supply}
+                      upgradedSupply={gift.upgradedSupply}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className='w-full pt-5'>
+                  <ModelsList
+                    isOpen={page === "models"}
+                    giftName={gift.name}
+                    giftId={gift._id}
                   />
                 </div>
-              </div>
-            ) : (
-              <div className='w-full pt-5'>
-                <ModelsList
-                  isOpen={page === "models"}
-                  giftName={gift.name}
-                  giftId={gift._id}
-                />
-              </div>
-            )}
-          </Transition>
-        ) : (
-          <div className='text-center text-red-500'>
-            Error loading gift data
-          </div>
-        )}
+              )}
+            </Transition>
+          ) : (
+            <div className='text-center text-red-500'>
+              Error loading gift data
+            </div>
+          )}
+        </Transition>
       </div>
     </div>
   );
