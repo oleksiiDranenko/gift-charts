@@ -252,7 +252,7 @@ export default function GiftsList() {
           .map((list) => (
             <button
               key={list}
-              className={`flex flex-row items-center justify-center gap-x-1 px-3 h-10 transition-colors font-bold ${
+              className={`flex flex-row items-center justify-center gap-x-2 px-3 h-10 transition-colors font-bold ${
                 selectedList === list
                   ? "border-b-2 border-foreground"
                   : "border-b-2 border-secondaryTransparent text-secondaryText"
@@ -261,7 +261,7 @@ export default function GiftsList() {
                 vibrate();
                 setSelectedList(list);
               }}>
-              <div className={`mr-1 `}>{getTabIcon(list)}</div>
+              <div className={` `}>{getTabIcon(list)}</div>
               <div className=''>
                 {translate(list === "all" ? "allGifts" : list)}
               </div>
