@@ -41,14 +41,6 @@ interface PortfolioResponse {
   gifts: Gift[];
 }
 
-interface TelegramUser {
-  id: number;
-  username?: string;
-  photo_url?: string;
-  first_name: string; // Required by Telegram
-  last_name?: string; // Optional
-}
-
 export default function AccountTest() {
   const user = useAppSelector((state) => state.user);
   const [telegramUser, setTelegramUser] = useState<any>(null);

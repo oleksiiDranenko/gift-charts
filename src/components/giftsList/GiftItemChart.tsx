@@ -9,6 +9,7 @@ import {
   Time,
 } from "lightweight-charts";
 import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
+import { useTheme } from "next-themes";
 
 interface GiftItemChartProps {
   gift: GiftListItemInterface;
@@ -18,6 +19,7 @@ interface GiftItemChartProps {
 const GiftItemChart = ({ gift, height }: GiftItemChartProps) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
+  const { resolvedTheme } = useTheme();
 
   // 1. Memoize data to prevent unnecessary recalculations on parent resize
   const formattedData = useMemo(() => {
@@ -63,7 +65,10 @@ const GiftItemChart = ({ gift, height }: GiftItemChartProps) => {
     const areaSeries = chart.addSeries(AreaSeries, {
       lineColor: color,
       topColor: topColor,
-      bottomColor: "rgba(0, 0, 0, 0)",
+      bottomColor:
+        priceChange >= 0
+          ? "rgba(34, 197, 94, 0.01)"
+          : "rgba(239, 68, 68, 0.01)",
       lineWidth: 1,
       priceLineVisible: false,
       crosshairMarkerVisible: false,
