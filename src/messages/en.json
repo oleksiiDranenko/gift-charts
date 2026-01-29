@@ -40,7 +40,7 @@
     "addGift": "Add Gift",
     "selectGifts": "Select Gifts",
     "selected": "Selected",
-    "chooseAtLeastTwo": "Choose at least 2 gifts to compare"
+    "chooseAtLeastOne": "Choose at least 1 gift"
   },
   "tools": {
     "services": "Services",

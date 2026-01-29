@@ -40,7 +40,7 @@
     "addGift": "Добавить подарок",
     "selectGifts": "Выберите подарки",
     "selected": "Выбрано",
-    "chooseAtLeastTwo": "Выберите хотя бы 2 подарка для сравнения"
+    "chooseAtLeastOne": "Выберите хотя бы 1 подарок"
   },
   "tools": {
     "services": "Сервисы",

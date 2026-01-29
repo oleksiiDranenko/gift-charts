@@ -194,8 +194,8 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
     const handleResize = () => {
       if (chartContainerRef.current && chartRef.current) {
         try {
-          chartRef.current.applyOptions({ 
-            width: chartContainerRef.current.clientWidth 
+          chartRef.current.applyOptions({
+            width: chartContainerRef.current.clientWidth,
           });
         } catch (error) {
           console.warn("Chart resize failed:", error);
@@ -204,7 +204,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
     };
 
     window.addEventListener("resize", handleResize);
-    
+
     return () => {
       window.removeEventListener("resize", handleResize);
       if (chartRef.current) {
@@ -260,7 +260,8 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
 
         // Filtering logic based on your LineChart component
         const { week, life } = query.data;
-        let filteredList: (GiftWeekDataInterface | GiftLifeDataInterface)[] = [];
+        let filteredList: (GiftWeekDataInterface | GiftLifeDataInterface)[] =
+          [];
 
         if (["24h", "1w"].includes(listType)) {
           filteredList = listType === "24h" ? week.slice(-48) : week;
@@ -290,9 +291,9 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
             const timestamp = Math.floor(
               new Date(year, month, day, hours, minutes).getTime() / 1000,
             );
-            return { 
-              time: timestamp as UTCTimestamp, 
-              value: selectedPrice === "ton" ? item.priceTon : item.priceUsd 
+            return {
+              time: timestamp as UTCTimestamp,
+              value: selectedPrice === "ton" ? item.priceTon : item.priceUsd,
             };
           })
           .filter((d) => !isNaN(d.time))
@@ -357,23 +358,25 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
   const clearSearch = () => setSearchTerm("");
 
   const filteredGifts =
-    allGiftsMinimal?.filter((gift: MinimalGift) =>
-      gift.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    ).sort((a: MinimalGift, b: MinimalGift) => {
-      // Selected gifts come first
-      const aSelected = localSelection.find(g => g._id === a._id);
-      const bSelected = localSelection.find(g => g._id === b._id);
-      
-      if (aSelected && !bSelected) return -1;
-      if (!aSelected && bSelected) return 1;
-      
-      // Both selected or both not selected - maintain original order
-      return 0;
-    }) || [];
+    allGiftsMinimal
+      ?.filter((gift: MinimalGift) =>
+        gift.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+      .sort((a: MinimalGift, b: MinimalGift) => {
+        // Selected gifts come first
+        const aSelected = localSelection.find((g) => g._id === a._id);
+        const bSelected = localSelection.find((g) => g._id === b._id);
+
+        if (aSelected && !bSelected) return -1;
+        if (!aSelected && bSelected) return 1;
+
+        // Both selected or both not selected - maintain original order
+        return 0;
+      }) || [];
 
   return (
     <div className='w-full'>
-      {/* Header with Add Gift button */}
+      {/* Add Gift button */}
       <div className='flex justify-between items-center mb-5'>
         {selectedGifts.length < 3 && (
           <ModalBase
@@ -599,12 +602,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
                 setSelectedPrice("usd");
                 vibrate();
               }}>
-              <Image
-                src='/images/usdt.svg'
-                alt='usdt'
-                width={18}
-                height={18}
-              />
+              <Image src='/images/usdt.svg' alt='usdt' width={18} height={18} />
             </button>
           </div>
         </div>
@@ -612,9 +610,41 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
 
       {/* No gifts selected message */}
       {selectedGifts.length === 0 && (
-        <div className='text-center py-12'>
-          <div className='text-secondaryText mb-4'>
-            {translate("chooseAtLeastTwo")}
+        <div className=' p-3   rounded-3xl'>
+          <div className='flex flex-row items-center gap-3 text-center'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='currentColor'
+              className='size-6 text-primary'>
+              <path
+                fillRule='evenodd'
+                d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+
+            <div className=' text-primary'>{translate("chooseAtLeastOne")}</div>
+          </div>
+
+          <div className='flex justify-center items-center w-full h-[300px] relative overflow-hidden'>
+            {/* The 3-Wave Line */}
+            <svg
+              className=' w-full px-5 h-full'
+              viewBox='0 0 1200 120'
+              preserveAspectRatio='none'>
+              <path
+                d='M0,60 
+         C100,120 100,0 200,60 
+         C300,120 300,0 400,60 
+         C500,120 500,0 600,60'
+                transform='scale(2, 1)'
+                fill='transparent'
+                className='stroke-current text-primary animate-pulse'
+                strokeWidth='2'
+                strokeLinecap='round'
+              />
+            </svg>
           </div>
         </div>
       )}

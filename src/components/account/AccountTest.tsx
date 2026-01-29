@@ -12,6 +12,7 @@ import { formatPrice } from "@/utils/formatNumber";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import SectionTransition from "@/components/filterGifts/SelectTransition";
 import { useTheme } from "next-themes";
+import OpenInTelegram from "./OpenInTelegram";
 
 export interface GiftAttribute {
   name: string;
@@ -35,6 +36,8 @@ interface PortfolioResponse {
   total_gifts: number;
   total_value_ton: number;
   total_value_usd: number;
+  total_value_ton_24h_ago: number;
+  total_value_usd_24h_ago: number;
   gifts: Gift[];
 }
 
@@ -47,11 +50,13 @@ interface TelegramUser {
 }
 
 export default function AccountTest() {
+  const user = useAppSelector((state) => state.user);
   const [tgUser, setTgUser] = useState<TelegramUser | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [viewMode, setViewMode] = useState<"grouped" | "list">("grouped");
   const vibrate = useVibrate();
   const { resolvedTheme } = useTheme();
+  const [percentChange, setPercentChange] = useState<number | "no data">(0);
 
   const [settings, setSettings] = useState(() => {
     if (typeof window !== "undefined") {
@@ -68,6 +73,10 @@ export default function AccountTest() {
   });
 
   const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
+
+  const countPercentChange = (last24: number, current: number) => {
+    return parseFloat((((current - last24) / last24) * 100).toFixed(2));
+  };
 
   const toggleGroup = (baseName: string) => {
     setExpandedGroups((prev) => {
@@ -126,16 +135,6 @@ export default function AccountTest() {
 
     if (telegram?.initDataUnsafe?.user) {
       setTgUser(telegram.initDataUnsafe.user);
-    } else {
-      // Keep fallback for local development only
-      setTgUser({
-        id: 993540775,
-        username: "_guest",
-        first_name: "Guest",
-        last_name: "",
-        photo_url:
-          "https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630",
-      });
     }
   }, []);
 
@@ -150,8 +149,35 @@ export default function AccountTest() {
     enabled: !!tgUser?.id,
   });
 
+  useEffect(() => {
+    if (!data) return;
+    if (
+      currency === "ton" &&
+      data?.total_value_ton_24h_ago &&
+      data?.total_value_ton
+    ) {
+      setPercentChange(
+        countPercentChange(
+          data?.total_value_ton_24h_ago,
+          data?.total_value_ton,
+        ),
+      );
+    } else if (data?.total_value_usd_24h_ago && data?.total_value_usd) {
+      setPercentChange(
+        countPercentChange(
+          data?.total_value_usd_24h_ago,
+          data?.total_value_usd,
+        ),
+      );
+    }
+  }, [currency, data]);
+
   return (
     <div className='px-3'>
+      {user.username === "_guest" ? (
+        <OpenInTelegram />
+      ) : (
+        <>
       {/* Portfolio Card */}
       <div className='w-full flex flex-col items-center justify-center gap-3 mb-5'>
         <div className='pl-3 pr-4 py-3 rounded-3xl bg-gradient-to-b from-secondaryTransparent to-secondaryLight w-full flex flex-row items-center justify-between'>
@@ -207,8 +233,57 @@ export default function AccountTest() {
                     )}
               </span>
             </span>
-            <span className='text-secondaryText text-sm'>
-              {data ? `${data.total_gifts} gifts` : "0 gifts"}
+            <span
+              className={`flex flex-row items-center text-sm font-normal ${
+                percentChange !== "no data"
+                  ? percentChange >= 0
+                    ? "text-green-500"
+                    : percentChange < 0
+                      ? "text-red-500"
+                      : "text-slate-500"
+                  : "text-slate-500"
+              }`}>
+              {percentChange === "no data" ? null : percentChange >= 0 ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-4 mr-1'>
+                  <path
+                    fillRule='evenodd'
+                    d='M15.22 6.268a.75.75 0 0 1 .968-.431l5.942 2.28a.75.75 0 0 1 .431.97l-2.28 5.94a.75.75 0 1 1-1.4-.537l1.63-4.251-1.086.484a11.2 11.2 0 0 0-5.45 5.173.75.75 0 0 1-1.199.19L9 12.312l-6.22 6.22a.75.75 0 0 1-1.06-1.061l6.75-6.75a.75.75 0 0 1 1.06 0l3.606 3.606a12.695 12.695 0 0 1 5.68-4.974l1.086-.483-4.251-1.632a.75.75 0 0 1-.432-.97Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-4 mr-1'>
+                  <path
+                    fillRule='evenodd'
+                    d='M1.72 5.47a.75.75 0 0 1 1.06 0L9 11.69l3.756-3.756a.75.75 0 0 1 .985-.066 12.698 12.698 0 0 1 4.575 6.832l.308 1.149 2.277-3.943a.75.75 0 1 1 1.299.75l-3.182 5.51a.75.75 0 0 1-1.025.275l-5.511-3.181a.75.75 0 0 1 .75-1.3l3.943 2.277-.308-1.149a11.194 11.194 0 0 0-3.528-5.617l-3.809 3.81a.75.75 0 0 1-1.06 0L1.72 6.53a.75.75 0 0 1 0-1.061Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              )}
+              {percentChange === "no data" ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                  className='size-4'>
+                  <path
+                    fillRule='evenodd'
+                    d='M4.25 12a.75.75 0 0 1 .75-.75h14a.75.75 0 0 1 0 1.5H5a.75.75 0 0 1-.75-.75Z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              ) : (
+                Math.abs(percentChange)
+              )}
+              {percentChange !== "no data" ? "%" : null}
             </span>
           </div>
         </div>
@@ -396,6 +471,8 @@ export default function AccountTest() {
           </div>
         )}
       </div>
+        </>
+      )}
     </div>
   );
 }
