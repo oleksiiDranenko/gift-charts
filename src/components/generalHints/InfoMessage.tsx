@@ -16,6 +16,7 @@ export default function InfoMessage({ text, buttonText, onClick }: Props) {
         alt={"logo"}
         width={60}
         height={60}
+        unoptimized
       />
       <h1 className='mt-5 '>{text}</h1>
       <button

@@ -69,7 +69,7 @@ export default function Page() {
 
   const updateSetting = <K extends keyof Settings>(
     key: K,
-    value: Settings[K]
+    value: Settings[K],
   ) => {
     vibrate();
     setSettings((prev) => ({ ...prev, [key]: value }));
@@ -188,6 +188,7 @@ export default function Page() {
                     alt='ton'
                     width={18}
                     height={18}
+                    unoptimized
                   />
                 ) : (
                   <Image
@@ -195,6 +196,7 @@ export default function Page() {
                     alt='usdt'
                     width={18}
                     height={18}
+                    unoptimized
                   />
                 )}
               </button>

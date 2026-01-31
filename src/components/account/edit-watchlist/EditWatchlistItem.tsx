@@ -42,9 +42,10 @@ export default function EditWatchlistItem({
       <div className='flex flex-row items-center'>
         <Image
           alt='gift image'
-          src={`/gifts/${gift?.image}.webp`}
+          src={`/cdn-assets/gifts/${gift?.image}.webp`}
           width={50}
           height={50}
+          unoptimized
           className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl ${
             resolvedTheme === "dark"
               ? "bg-secondaryTransparent "

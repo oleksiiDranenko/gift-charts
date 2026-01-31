@@ -161,9 +161,10 @@ export default function GiftItem({
           </span> */}
           <Image
             alt={item.name}
-            src={`/gifts/${item.image}.webp`}
+            src={`/cdn-assets/gifts/${item.image}.webp`}
             width={50}
             height={50}
+            unoptimized
             className={`w-[45px] h-[45px] p-[3px] mr-4 ml-1`}
           />
           <div className='flex flex-col'>
@@ -193,6 +194,7 @@ export default function GiftItem({
                   src='/images/toncoin.webp'
                   width={15}
                   height={15}
+                  unoptimized
                   className='mr-1'
                 />
               ) : (
@@ -201,6 +203,7 @@ export default function GiftItem({
                   src='/images/usdt.svg'
                   width={15}
                   height={15}
+                  unoptimized
                   className='mr-1'
                 />
               )}
@@ -304,9 +307,10 @@ export default function GiftItem({
             </span>
             <Image
               alt='gift image'
-              src={`/gifts/${item.image}.webp`}
+              src={`/cdn-assets/gifts/${item.image}.webp`}
               width={50}
               height={50}
+              unoptimized
               className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl ${
                 resolvedTheme === "dark"
                   ? "bg-gradient-to-t from-secondaryTransparent to-background"
@@ -339,6 +343,7 @@ export default function GiftItem({
                   src='/images/toncoin.webp'
                   width={15}
                   height={15}
+                  unoptimized
                   className='mr-1'
                 />
               ) : (
@@ -347,6 +352,7 @@ export default function GiftItem({
                   src='/images/usdt.svg'
                   width={15}
                   height={15}
+                  unoptimized
                   className='mr-1'
                 />
               )}
@@ -360,6 +366,7 @@ export default function GiftItem({
                   src='/images/toncoin.webp'
                   width={15}
                   height={15}
+                  unoptimized
                   className='mr-1'
                 />
               ) : (
@@ -368,6 +375,7 @@ export default function GiftItem({
                   src='/images/usdt.svg'
                   width={15}
                   height={15}
+                  unoptimized
                   className='mr-1'
                 />
               )}
@@ -519,6 +527,7 @@ export default function GiftItem({
                     src='/images/toncoin.webp'
                     width={15}
                     height={15}
+                    unoptimized
                     className='mr-1'
                   />
                 ) : (

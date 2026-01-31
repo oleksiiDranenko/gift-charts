@@ -46,6 +46,7 @@ export default function GiftInitPriceSection({
             src='/images/usdt.svg'
             width={16}
             height={16}
+            unoptimized
             className='mr-1'
           />
           {formatPrice(initStarsPrice * starUsdtCost)}
@@ -82,6 +83,7 @@ export default function GiftInitPriceSection({
             src='/images/usdt.svg'
             width={16}
             height={16}
+            unoptimized
             className='mr-1'
           />
           {formatPrice(initStarsPrice * starUsdtCost * initSupply)}

@@ -106,9 +106,10 @@ export default function GiftChart({
             <div className='h-full flex items-center'>
               <Image
                 alt='gift'
-                src={`/gifts/${gift?.image}.webp`}
+                src={`/cdn-assets/gifts/${gift?.image}.webp`}
                 width={55}
                 height={55}
+                unoptimized
                 className={`w-[45px] h-[45px] overflow-hidden ml-2 mr-3 ${
                   resolvedTheme === "dark" ? "" : "bg-background rounded-full"
                 }`}
@@ -128,6 +129,7 @@ export default function GiftChart({
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-2'
                   />
                 ) : selectedPrice === "usd" ? (
@@ -136,6 +138,7 @@ export default function GiftChart({
                     src='/images/usdt.svg'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-2'
                   />
                 ) : selectedPrice === "onSale" ? (
@@ -146,6 +149,7 @@ export default function GiftChart({
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-2'
                   />
                 ) : (
@@ -327,6 +331,7 @@ export default function GiftChart({
                       src='/images/usdt.svg'
                       width={16}
                       height={16}
+                      unoptimized
                       className='mr-1'
                     />
                   ) : (
@@ -335,6 +340,7 @@ export default function GiftChart({
                       src='/images/toncoin.webp'
                       width={16}
                       height={16}
+                      unoptimized
                       className='mr-1'
                     />
                   )}
@@ -417,9 +423,10 @@ export default function GiftChart({
               <div className='h-fit flex items-center mb-5'>
                 <Image
                   alt='gift'
-                  src={`/gifts/${gift?.image}.webp`}
+                  src={`/cdn-assets/gifts/${gift?.image}.webp`}
                   width={55}
                   height={55}
+                  unoptimized
                   className={`w-[60px] h-[60px] p-1 overflow-hidden mr-3  ${
                     resolvedTheme === "dark" ? "" : "bg-background rounded-full"
                   } `}
@@ -438,6 +445,7 @@ export default function GiftChart({
                       src='/images/toncoin.webp'
                       width={24}
                       height={24}
+                      unoptimized
                       className='mr-2'
                     />
                   ) : selectedPrice === "usd" ? (
@@ -446,6 +454,7 @@ export default function GiftChart({
                       src='/images/usdt.svg'
                       width={24}
                       height={24}
+                      unoptimized
                       className='mr-2'
                     />
                   ) : selectedPrice === "onSale" ? (
@@ -456,6 +465,7 @@ export default function GiftChart({
                       src='/images/toncoin.webp'
                       width={18}
                       height={18}
+                      unoptimized
                       className='mr-2'
                     />
                   ) : (
@@ -514,6 +524,7 @@ export default function GiftChart({
                         src='/images/usdt.svg'
                         width={14}
                         height={14}
+                        unoptimized
                         className='mr-1'
                       />
                     ) : (
@@ -522,6 +533,7 @@ export default function GiftChart({
                         src='/images/toncoin.webp'
                         width={14}
                         height={14}
+                        unoptimized
                         className='mr-1'
                       />
                     )}

@@ -108,9 +108,10 @@ export default function GiftBlockItem({
       <div className='px-3 pt-3 w-full flex flex-col items-center relative'>
         <Image
           alt='gift image'
-          src={`/gifts/${item.image}.webp`}
+          src={`/cdn-assets/gifts/${item.image}.webp`}
           width={70}
           height={70}
+          unoptimized
           className={`p-1 ${borderColor ? "border" : ""}'`}
           style={borderColor ? { borderColor: `${borderColor}80` } : {}}
         />
@@ -125,6 +126,7 @@ export default function GiftBlockItem({
                 src='/images/toncoin.webp'
                 width={15}
                 height={15}
+                unoptimized
                 className='mr-1'
               />
             ) : (
@@ -133,6 +135,7 @@ export default function GiftBlockItem({
                 src='/images/usdt.svg'
                 width={15}
                 height={15}
+                unoptimized
                 className='mr-1'
               />
             )}

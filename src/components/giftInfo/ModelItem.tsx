@@ -36,6 +36,7 @@ export default function ModelItem({ model }: Props) {
           src={model.image}
           width={50}
           height={50}
+          unoptimized
           className={`w-[80px] h-[80px]`}
         />
       </div>
@@ -55,6 +56,7 @@ export default function ModelItem({ model }: Props) {
               src='/images/toncoin.webp'
               width={15}
               height={15}
+              unoptimized
               className='mr-1'
             />
             <span className='text-lg font-bold'>

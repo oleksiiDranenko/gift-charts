@@ -111,6 +111,7 @@ export default function IndexBlock({
               src='/images/toncoin.webp'
               width={14}
               height={14}
+              unoptimized
               className='mr-1'
             />
           ) : (
@@ -119,6 +120,7 @@ export default function IndexBlock({
               src='/images/usdt.svg'
               width={14}
               height={14}
+              unoptimized
               className='mr-1'
             />
           )

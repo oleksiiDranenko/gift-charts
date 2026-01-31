@@ -25,6 +25,7 @@ export default function GiftItem({ gift, currency }: Props) {
         alt={""}
         width={70}
         height={70}
+        unoptimized
         className='w-full rounded-3xl mb-3'
       />
       <div className='w-full flex flex-col justify-center items-center'>
@@ -40,9 +41,16 @@ export default function GiftItem({ gift, currency }: Props) {
               src='/images/toncoin.webp'
               width={15}
               height={15}
+              unoptimized
             />
           ) : (
-            <Image alt='usdt' src='/images/usdt.svg' width={15} height={15} />
+            <Image
+              alt='usdt'
+              src='/images/usdt.svg'
+              width={15}
+              height={15}
+              unoptimized
+            />
           )}
           <span className='font-bold'>
             {currency === "ton"

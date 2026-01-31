@@ -30,7 +30,7 @@ export default function GiftSearchBar() {
         keys: ["name"],
         threshold: 0.3,
       }),
-    [giftsList]
+    [giftsList],
   );
 
   const filteredGifts: GiftInterface[] = query
@@ -70,10 +70,11 @@ export default function GiftSearchBar() {
                   }>
                   <div className='flex flex-row items-center gap-2'>
                     <Image
-                      src={`/gifts/${gift.image}.webp`}
+                      src={`/cdn-assets/gifts/${gift.image}.webp`}
                       alt={gift.name}
                       width={32}
                       height={32}
+                      unoptimized
                       className='rounded-md'
                     />
                     <span className='font-bold text-sm'>{gift.name}</span>

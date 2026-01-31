@@ -554,10 +554,11 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
                 backgroundColor: `${COLORS[index].top}`,
               }}>
               <Image
-                src={`/gifts/${gift.image}.webp`}
+                src={`/cdn-assets/gifts/${gift.image}.webp`}
                 alt={gift.name}
                 width={24}
                 height={24}
+                unoptimized
                 className='w-6 h-6'
               />
               <span className='text-sm font-medium'>{gift.name}</span>
@@ -590,6 +591,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
                 alt='ton'
                 width={18}
                 height={18}
+                unoptimized
               />
             </button>
             <button
@@ -602,7 +604,13 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
                 setSelectedPrice("usd");
                 vibrate();
               }}>
-              <Image src='/images/usdt.svg' alt='usdt' width={18} height={18} />
+              <Image
+                src='/images/usdt.svg'
+                alt='usdt'
+                width={18}
+                height={18}
+                unoptimized
+              />
             </button>
           </div>
         </div>

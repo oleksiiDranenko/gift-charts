@@ -89,6 +89,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                   alt={""}
                   width={70}
                   height={70}
+                  unoptimized
                   className='rounded-3xl mb-2'
                 />
                 <span className='font-bold'>{market.name}</span>
@@ -112,6 +113,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
                   alt={""}
                   width={70}
                   height={70}
+                  unoptimized
                   className='rounded-3xl mb-2'
                 />
                 <span className='font-bold'>{market.name}</span>

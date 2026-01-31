@@ -308,6 +308,7 @@ export default function TreemapControlModal({
                             alt='ton'
                             width={18}
                             height={18}
+                            unoptimized
                           />
                         </button>
                         <button
@@ -325,6 +326,7 @@ export default function TreemapControlModal({
                             alt='usdt'
                             width={18}
                             height={18}
+                            unoptimized
                           />
                         </button>
                       </div>
@@ -337,7 +339,7 @@ export default function TreemapControlModal({
                       onClick={() => {
                         vibrate();
                         setOpenSection(
-                          openSection === "style" ? null : "style"
+                          openSection === "style" ? null : "style",
                         );
                       }}
                       className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
@@ -440,7 +442,7 @@ export default function TreemapControlModal({
                       onClick={() => {
                         vibrate();
                         setOpenSection(
-                          openSection === "amount" ? null : "amount"
+                          openSection === "amount" ? null : "amount",
                         );
                       }}
                       className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>

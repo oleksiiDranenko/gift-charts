@@ -18,6 +18,7 @@ export default function Cash({ name, amount, percentage }: PropsInterface) {
             src={`/images/toncoin.webp`}
             width={50}
             height={50}
+            unoptimized
             className={`bg-secondary p-3 box-border mr-3 rounded-3xl`}
           />
         ) : (
@@ -44,6 +45,7 @@ export default function Cash({ name, amount, percentage }: PropsInterface) {
                 src='/images/toncoin.webp'
                 width={15}
                 height={15}
+                unoptimized
                 className='mr-1'
               />
             ) : (

@@ -213,6 +213,7 @@ export default function AccountTest() {
                     }
                     width={22}
                     height={22}
+                    unoptimized
                   />
                   <span className='font-bold'>
                     {isLoading
@@ -296,6 +297,7 @@ export default function AccountTest() {
                     alt='ton'
                     width={18}
                     height={18}
+                    unoptimized
                   />
                 </button>
                 <button
@@ -313,6 +315,7 @@ export default function AccountTest() {
                     alt='usdt'
                     width={18}
                     height={18}
+                    unoptimized
                   />
                 </button>
               </div>
@@ -403,11 +406,12 @@ export default function AccountTest() {
                       className='w-full flex items-center justify-between'>
                       <div className='flex items-center gap-3'>
                         <Image
-                          src={`/gifts/${group.image}.webp`}
+                          src={`/cdn-assets/gifts/${group.image}.webp`}
                           alt=''
                           width={60}
                           height={60}
                           className='w-10 h-10 mr-2'
+                          unoptimized
                         />
                         <div className='flex flex-col items-start'>
                           <span className='font-bold text-lg'>
@@ -430,6 +434,7 @@ export default function AccountTest() {
                             }
                             width={20}
                             height={20}
+                            unoptimized
                           />
                           <span>
                             {formatPrice(

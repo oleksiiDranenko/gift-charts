@@ -125,6 +125,7 @@ export default function ModelModal({ model, giftId }: Props) {
                 src={model.image}
                 width={55}
                 height={55}
+                unoptimized
                 className={`w-[45px] h-[45px] overflow-hidden ml-2 mr-3 ${
                   resolvedTheme === "dark" ? "" : "bg-background rounded-full"
                 }`}
@@ -144,6 +145,7 @@ export default function ModelModal({ model, giftId }: Props) {
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-2'
                   />
                 ) : selectedPrice === "usd" ? (
@@ -152,6 +154,7 @@ export default function ModelModal({ model, giftId }: Props) {
                     src='/images/usdt.svg'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-2'
                   />
                 ) : selectedPrice === "onSale" ? null : selectedPrice ===
@@ -161,6 +164,7 @@ export default function ModelModal({ model, giftId }: Props) {
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-2'
                   />
                 ) : (
