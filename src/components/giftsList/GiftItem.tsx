@@ -330,7 +330,7 @@ export default function GiftItem({
             </div>
           </div>
           <div className='w-[16%] flex items-center justify-start'>
-            <div className='w-fll h-full flex'>
+            <div className='w-full pr-5 h-full flex'>
               <GiftItemChart gift={item} height={30} />
             </div>
           </div>
