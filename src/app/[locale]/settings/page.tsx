@@ -203,10 +203,8 @@ export default function Page() {
             ))}
           </div>
         </div>
-      </div>
-      {/* Gift Style */}
-      <div className='w-full p-3 flex flex-col font-bold bg-secondaryTransparent rounded-3xl'>
-        <div className='flex justify-between'>
+        <div className='w-full p-3 flex flex-col font-bold bg-secondaryTransparent rounded-3xl'>
+        <div className='flex justify-between items-center'>
           <h1>{translate("giftStyle")}</h1>
           <div className='flex gap-x-1'>
             <div
@@ -329,6 +327,9 @@ export default function Page() {
           )}
         </div> */}
       </div>
+      </div>
+
+      
     </div>
   );
 }

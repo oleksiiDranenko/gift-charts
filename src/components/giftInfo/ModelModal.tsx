@@ -10,6 +10,7 @@ import axios from "axios";
 import LineChart from "./LineChart";
 import PriceDropdown from "./PriceDropdown";
 import { GiftSkeleton } from "./ModelSkeleton";
+import { useTranslations } from "next-intl";
 
 type PriceOption = "ton" | "usd" | "onSale" | "volume" | "salesCount";
 
@@ -44,6 +45,7 @@ export default function ModelModal({ model, giftId }: Props) {
   const [chartPercentChange, setChartPercentChange] = useState<number>(0);
   const [currentValue, setCurrentValue] = useState<number | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<PriceOption>("ton");
+  const translate = useTranslations('giftInfo')
 
   const { data: weekData = [], isLoading: isLoadingWeek } = useQuery(
     ["modelWeekData", model?.name, giftId],
@@ -133,7 +135,7 @@ export default function ModelModal({ model, giftId }: Props) {
               <h1 className='flex flex-col'>
                 <span className='text-lg font-bold'>{model.name}</span>
                 <span className='text-secondaryText text-sm flex justify-start'>
-                  Rarity: {model.rarity}%
+                  {translate('rarity')}: {model.rarity}%
                 </span>
               </h1>
             </div>

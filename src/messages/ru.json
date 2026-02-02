@@ -53,6 +53,8 @@
     "fearGreedDescription": "Узнайте, как другие относятся к рынку",
     "marketSentiment": "Настроения рынка",
     "marketSentimentDescription": "Узнайте, как другие относятся к рынку",
+    "compareCharts": "Сравнение графиков",
+"compareChartsDescription": "Сравнение графиков до 3 подарков",
     "indexes": "Индексы",
     "marketCap": "Рыночная капитализация"
   },
@@ -194,7 +196,8 @@
     "burnt": "Сожжено",
     "notUpgraded": "Не улучшено",
     "viewModels": "Просмотреть модели",
-    "marketCap": "Рын. капитализация"
+    "marketCap": "Рын. капитализация",
+    "rarity": "Редкость"
   },
 
   "modelsList": {

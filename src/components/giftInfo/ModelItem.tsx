@@ -3,6 +3,7 @@
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
 import { formatPrice } from "@/utils/formatNumber";
 import { Percent } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -13,6 +14,8 @@ interface Props {
 
 export default function ModelItem({ model }: Props) {
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
+
+  const translate = useTranslations('giftInfo')
 
   const { resolvedTheme } = useTheme();
 
@@ -43,7 +46,7 @@ export default function ModelItem({ model }: Props) {
       <div className='w-full flex-col items-start justify-start p-3 space-y-1'>
         <span className=' mr-2'>{model.name}</span>
         <div className='flex flex-row items-center'>
-          <span className='text-sm mr-1 text-secondaryText'>Rarity:</span>
+          <span className='text-sm mr-1 text-secondaryText'>{translate('rarity')}:</span>
           <span className='w-fit text-sm text-primary flex flex-row items-center'>
             {model.rarity}
             <Percent size={12} />

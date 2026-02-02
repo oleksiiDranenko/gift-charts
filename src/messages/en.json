@@ -53,6 +53,8 @@
     "fearGreedDescription": "See how others feel about the market",
     "marketSentiment": "Market Sentiment",
     "marketSentimentDescription": "See how others feel about the market",
+    "compareCharts": "Compare Charts",
+    "compareChartsDescription": "Compare Charts of up to 3 gifts",
     "indexes": "Indexes",
     "marketCap": "Market Cap"
   },
@@ -193,7 +195,8 @@
     "burnt": "Burnt",
     "notUpgraded": "Not upgraded",
     "viewModels": "View Models",
-    "marketCap": "Market Cap"
+    "marketCap": "Market Cap",
+    "rarity": "Rarity"
   },
 
   "modelsList": {

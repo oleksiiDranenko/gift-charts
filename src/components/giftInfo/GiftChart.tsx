@@ -97,7 +97,10 @@ export default function GiftChart({
     <>
       {smallScreen ? (
         <div className='h-auto w-full'>
-          <div
+          <div className={`${resolvedTheme === "dark"
+                ? ""
+                : "px-3"}`}>
+            <div
             className={`w-full h-16 px-3 mt-3 gap-x-3 flex flex-row justify-between items-center ${
               resolvedTheme === "dark"
                 ? ""
@@ -192,6 +195,7 @@ export default function GiftChart({
               </span>
             </div>
           </div>
+          </div>
 
           <div className='w-full h-fit px-3 mb-3 mt-3 flex flex-col gap-y-3'>
             <div className='w-full flex flex-row justify-between'>
@@ -244,8 +248,8 @@ export default function GiftChart({
             </div>
           </div>
 
-          <div>
-            <div className='relative '>
+          <div className={`${resolvedTheme === 'dark' ? '' : 'px-3'}`}>
+            <div className={`relative ${resolvedTheme === 'dark' ? '' : 'bg-secondaryTransparent rounded-3xl'}`}>
               {chartType === "line" ? (
                 <div className='pl-3'>
                   <LineChart

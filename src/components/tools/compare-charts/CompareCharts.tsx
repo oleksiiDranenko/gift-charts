@@ -74,6 +74,7 @@ const COLORS = [
 
 const TIME_RANGES = [
   { key: "all", label: (t: any) => t("all"), requiresLifeData: true },
+  { key: "6m", label: (t: any) => `6${t("month")}`, requiresLifeData: true },
   { key: "3m", label: (t: any) => `3${t("month")}`, requiresLifeData: true },
   { key: "1m", label: (t: any) => `1${t("month")}`, requiresLifeData: true },
   { key: "1w", label: (t: any) => `1${t("week")}` },
@@ -266,7 +267,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
         if (["24h", "1w"].includes(listType)) {
           filteredList = listType === "24h" ? week.slice(-48) : week;
         } else {
-          const slices = { "1m": -30, "3m": -90, all: 0 };
+          const slices = { "1m": -30, "3m": -90, "6m": -180, all: 0 };
           filteredList =
             slices[listType as keyof typeof slices] === 0
               ? life
@@ -381,7 +382,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
         {selectedGifts.length < 3 && (
           <ModalBase
             trigger={
-              <button className='w-full p-3 rounded-3xl bg-secondaryTransparent flex flex-row items-center justify-center gap-2'>
+              <button className='w-full p-3 rounded-3xl bg-primary text-white flex flex-row items-center justify-center gap-2'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   viewBox='0 0 24 24'
@@ -575,7 +576,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
       {/* Price selector - only show when gifts are selected */}
       {selectedGifts.length > 0 && (
         <div className='mb-2'>
-          <div className='w-fit flex flex-row box-border bg-secondary rounded-3xl gap-x-1'>
+          <div className='w-fit flex flex-row box-border bg-secondaryTransparent rounded-3xl gap-x-1'>
             <button
               className={`text-sm h-8 px-3 box-border ${
                 selectedPrice === "ton"
@@ -618,8 +619,8 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
 
       {/* No gifts selected message */}
       {selectedGifts.length === 0 && (
-        <div className=' p-3   rounded-3xl'>
-          <div className='flex flex-row items-center gap-3 text-center'>
+        <div className=''>
+          <div className='flex px-3 mb-5 flex-row items-center gap-3 text-center'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -635,8 +636,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
             <div className=' text-primary'>{translate("chooseAtLeastOne")}</div>
           </div>
 
-          <div className='flex justify-center items-center w-full h-[300px] relative overflow-hidden'>
-            {/* The 3-Wave Line */}
+          {/* <div className='flex justify-center items-center w-full h-96 bg-secondaryTransparent rounded-3xl relative overflow-hidden'>
             <svg
               className=' w-full px-5 h-full'
               viewBox='0 0 1200 120'
@@ -648,12 +648,12 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
          C500,120 500,0 600,60'
                 transform='scale(2, 1)'
                 fill='transparent'
-                className='stroke-current text-primary animate-pulse'
+                className='stroke-current text-secondary animate-pulse'
                 strokeWidth='2'
                 strokeLinecap='round'
               />
             </svg>
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -692,23 +692,27 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
 
           <div className='w-full mt-2'>
             {/* Time range selector */}
-            <div className='w-full flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl'>
+            <div className='w-full mt-2 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl'>
               {TIME_RANGES.map(({ key, label }) => {
-                const isActive = listType === key;
-                return (
-                  <button
-                    key={key}
-                    className={`w-full px-3 h-10 text-xs text-nowrap transition-colors rounded-3xl ${
-                      isActive ? "bg-secondary font-bold" : "text-secondaryText"
-                    }`}
-                    onClick={() => {
-                      setListType(key);
-                      vibrate();
-                    }}>
-                    {label(translateTime)}
-                  </button>
-                );
-              })}
+            const isActive = listType === key;
+
+            return (
+              <button
+                key={key}
+                className={`w-full px-3 h-8 text-sm text-nowrap transition-colors rounded-3xl ${
+                  isActive
+                    ? "bg-primary text-white font-bold"
+                    : "text-secondaryText"
+                } `}
+                onClick={() => {
+                  
+                    setListType(key);
+                    vibrate();
+                }}>
+                {label(translateTime)}
+              </button>
+            );
+          })}
             </div>
           </div>
         </div>
