@@ -123,10 +123,38 @@ export default function AccountTest() {
 
   useEffect(() => {
     // Get Telegram user data for display purposes
+    // Use a more robust approach to handle Telegram WebApp initialization
+    const getTelegramUser = () => {
+      const telegram = (window as any).Telegram?.WebApp;
+      if (telegram?.initDataUnsafe?.user) {
+        setTelegramUser(telegram.initDataUnsafe.user);
+      } else if (telegram) {
+        // If WebApp is available but user data isn't ready yet, wait for it
+        telegram.ready();
+        if (telegram.initDataUnsafe?.user) {
+          setTelegramUser(telegram.initDataUnsafe.user);
+        }
+      }
+    };
+
+    // Try immediately
+    getTelegramUser();
+
+    // Also try after a short delay to handle async initialization
+    const timeoutId = setTimeout(getTelegramUser, 100);
+
+    // Listen for WebApp ready event if available
     const telegram = (window as any).Telegram?.WebApp;
-    if (telegram?.initDataUnsafe?.user) {
-      setTelegramUser(telegram.initDataUnsafe.user);
+    if (telegram?.onEvent) {
+      telegram.onEvent('ready', getTelegramUser);
     }
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (telegram?.offEvent) {
+        telegram.offEvent('ready', getTelegramUser);
+      }
+    };
   }, []);
 
   const { data, isLoading } = useQuery({
