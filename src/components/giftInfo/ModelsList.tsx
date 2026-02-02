@@ -15,6 +15,8 @@ import ModelModal from "./ModelModal";
 import ModalBase from "@/utils/ui/ModalBase";
 import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 import { useAppSelector } from "@/redux/hooks";
+import InfoMessage from "../generalHints/InfoMessage";
+import { useTranslations } from "next-intl";
 
 interface MarketsModalProps {
   isOpen: boolean;
@@ -35,6 +37,7 @@ export default function ModelsList({
   giftId,
 }: MarketsModalProps) {
   const user = useAppSelector((state) => state.user);
+  const t = useTranslations("modelsList");
 
   const vibrate = useVibrate();
 
@@ -56,6 +59,11 @@ export default function ModelsList({
   });
 
   const clearSearch = () => setSearchQuery("");
+
+  // Filter models based on search query
+  const filteredModels = modelsList.filter((model: GiftModelInterface) => 
+    model.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     setIsMounted(true);
@@ -104,7 +112,7 @@ export default function ModelsList({
                 <input
                   type='text'
                   value={searchQuery}
-                  placeholder={`${giftName} models...`}
+                  placeholder={`${giftName} ${t("searchPlaceholder")}`}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => {
                     vibrate();
@@ -125,7 +133,7 @@ export default function ModelsList({
               </div>
 
               {/* Sort & Filter Buttons */}
-              <div className='flex gap-1'>
+              {/* <div className='flex gap-1'>
                 <div className='relative'>
                   <button
                     onClick={() => vibrate()}
@@ -143,7 +151,7 @@ export default function ModelsList({
                   </button>
                 </div>
 
-                {/* <div className='relative'>
+                <div className='relative'>
                   <button
                     onClick={() => vibrate()}
                     className='h-12 w-12 flex items-center justify-center bg-secondaryTransparent rounded-3xl'>
@@ -158,25 +166,33 @@ export default function ModelsList({
                       />
                     </svg>
                   </button>
-                </div> */}
-              </div>
+                </div>
+              </div> */}
             </div>
           </div>
           <ScrollToTopButton />
           {!isLoading ? (
-            <div className='w-full px-3 grid grid-cols-2 lg:grid-cols-5 gap-3'>
-              {modelsList
-                .sort((a: any, b: any) => b.priceTon - a.priceTon)
-                .map((model: GiftModelInterface) => (
-                  <ModalBase
-                    key={model._id}
-                    trigger={<ModelItem model={model} />}
-                    onOpen={() => setSelectedModel(model)}
-                    onClose={() => setSelectedModel(null)}>
-                    <ModelModal model={selectedModel} giftId={giftId} />
-                  </ModalBase>
-                ))}
-            </div>
+            filteredModels.length > 0 ? (
+              <div className='w-full px-3 grid grid-cols-2 lg:grid-cols-5 gap-3'>
+                {filteredModels
+                  .sort((a: any, b: any) => b.priceTon - a.priceTon)
+                  .map((model: GiftModelInterface) => (
+                    <ModalBase
+                      key={model._id}
+                      trigger={<ModelItem model={model} />}
+                      onOpen={() => setSelectedModel(model)}
+                      onClose={() => setSelectedModel(null)}>
+                      <ModelModal model={selectedModel} giftId={giftId} />
+                    </ModalBase>
+                  ))}
+              </div>
+            ) : (
+              <InfoMessage
+                text={t("noModelsFound", { giftName })}
+                buttonText={t("clearSearch")}
+                onClick={clearSearch}
+              />
+            )
           ) : (
             <div className='w-full flex justify-center mt-10'>
               <ReactLoading

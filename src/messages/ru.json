@@ -197,6 +197,22 @@
     "marketCap": "Рын. капитализация"
   },
 
+  "modelsList": {
+    "searchPlaceholder": "модели...",
+    "noModelsFound": "Не найдено моделей {giftName}",
+    "clearSearch": "Очистить поиск"
+  },
+
+  "giftsList": {
+    "noGiftsFound": "Не найдено подарков \"{search}\"",
+    "clearSearch": "Очистить поиск"
+  },
+
+  "filterGiftsModal": {
+    "noGiftsFound": "Не найдено подарков \"{search}\"",
+    "clearSearch": "Очистить поиск"
+  },
+
   "priceOptions": {
     "ton": "TON",
     "usd": "USDT",

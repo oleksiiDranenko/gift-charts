@@ -31,6 +31,7 @@ export default function FilterGiftsModal({ trigger, giftsList }: Props) {
 
   const vibrate = useVibrate();
   const translate = useTranslations("general");
+  const filterTranslate = useTranslations("filterGiftsModal");
 
   // Sync local state when modal opens
   useEffect(() => {
@@ -165,8 +166,8 @@ export default function FilterGiftsModal({ trigger, giftsList }: Props) {
             ))
           ) : (
             <InfoMessage
-              text={`No gifts matching "${searchTerm}"`}
-              buttonText='Clear search'
+              text={filterTranslate("noGiftsFound", { search: searchTerm })}
+              buttonText={filterTranslate("clearSearch")}
               onClick={clearSearch}
             />
           )}

@@ -45,6 +45,7 @@ export default function GiftsList() {
 
   const vibrate = useVibrate();
   const translate = useTranslations("mainPage");
+  const giftsListTranslate = useTranslations("giftsList");
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -359,8 +360,8 @@ export default function GiftsList() {
           </>
         ) : (
           <InfoMessage
-            text={`No gifts matching "${debouncedSearch}"`}
-            buttonText='Clear search'
+            text={giftsListTranslate("noGiftsFound", { search: debouncedSearch })}
+            buttonText={giftsListTranslate("clearSearch")}
             onClick={clearSearch}
           />
         )}

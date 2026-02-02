@@ -196,6 +196,22 @@
     "marketCap": "Market Cap"
   },
 
+  "modelsList": {
+    "searchPlaceholder": "models...",
+    "noModelsFound": "No {giftName} models found",
+    "clearSearch": "Clear search"
+  },
+
+  "giftsList": {
+    "noGiftsFound": "No gifts matching \"{search}\"",
+    "clearSearch": "Clear search"
+  },
+
+  "filterGiftsModal": {
+    "noGiftsFound": "No gifts matching \"{search}\"",
+    "clearSearch": "Clear search"
+  },
+
   "priceOptions": {
     "ton": "TON",
     "usd": "USDT",

@@ -12,8 +12,8 @@ export default function InfoMessage({ text, buttonText, onClick }: Props) {
   return (
     <div className='w-full mt-16 flex flex-col items-center justify-center'>
       <Image
-        src={"/gifts/electricSkull.webp"}
-        alt={"logo"}
+        src={"/cdn-assets/gifts/electricSkull.webp"}
+        alt={"gift"}
         width={60}
         height={60}
         unoptimized
