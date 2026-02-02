@@ -16,12 +16,12 @@ interface MarketsModalProps {
 const offchain = [
   {
     name: "Portals",
-    img: "https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/ni7vlvzll03912e/avatar_9xf5gwd17v.jpg",
+    img: "https://portalsmarket.co/wp-content/uploads/2025/07/cropped-ChatGPT-Image-13-%D0%B8%D1%8E%D0%BB.-2025-%D0%B3.-22_11_02.png",
     link: "https://t.me/portals/market?startapp=s6ekgi",
   },
   {
     name: "Tonnel",
-    img: "https://db.stickerswiki.app/api/files/1nlpavfhdos0lje/2cyjbta6sjfetin/avatar_wiaiqqnm_nt_TUsxtMdabW.jpg",
+    img: "https://avatars.githubusercontent.com/u/234289366?s=200&v=4",
     link: "https://t.me/tonnel_network_bot/gifts?startapp=ref_754292445",
   },
   {
@@ -126,7 +126,7 @@ export default function MarketsModal({ trigger }: MarketsModalProps) {
           <button
             onClick={closeModal}
             className='w-full h-12 bg-primary text-white font-bold rounded-3xl'>
-            Close
+            {translateGeneral("close")}
           </button>
         </div>
       </ModalBase>
