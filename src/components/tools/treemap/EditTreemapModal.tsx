@@ -11,7 +11,6 @@ import {
 import SectionTransition from "@/components/filterGifts/SelectTransition";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Image from "next/image";
 
 interface Props {
   trigger: ReactNode;
@@ -21,15 +20,6 @@ interface Props {
   currency: "ton" | "usd";
   amount: number;
   totalGifts: number; // giftsList.length
-  heatmapStyle: "round" | "default";
-  dynamicColors: boolean;
-
-  onListTypeChange: (type: "change" | "marketCap") => void;
-  onTimeGapChange: (gap: "24h" | "1w" | "1m") => void;
-  onCurrencyChange: (cur: "ton" | "usd") => void;
-  onAmountChange: (amount: number) => void;
-  onStyleChange: (style: "round" | "default") => void;
-  onDynamicColorsChange: (val: boolean) => void;
   heatmapStyle: "round" | "default";
   dynamicColors: boolean;
 
@@ -56,14 +46,9 @@ export default function TreemapControlModal({
   dynamicColors,
   onStyleChange,
   onDynamicColorsChange,
-  heatmapStyle,
-  dynamicColors,
-  onStyleChange,
-  onDynamicColorsChange,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState<
-    "type" | "time" | "currency" | "amount" | "style" | null
     "type" | "time" | "currency" | "amount" | "style" | null
   >(null);
 
@@ -282,7 +267,6 @@ export default function TreemapControlModal({
                   {/* 3. Currency */}
                   <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
                     <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
-                    <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -386,25 +370,8 @@ export default function TreemapControlModal({
                       <ChevronIcon open={openSection === "style"} />
                     </button>
                     <SectionTransition open={openSection === "style"}>
-                    <SectionTransition open={openSection === "style"}>
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
-                        <OptionButton
-                          label={translate("square")}
-                          selected={heatmapStyle === "default"}
-                          onClick={() => {
-                            onStyleChange("default");
-                            setOpenSection(null);
-                          }}
-                        />
-                        <OptionButton
-                          label={translate("rounded")}
-                          selected={heatmapStyle === "round"}
-                          onClick={() => {
-                            onStyleChange("round");
-                            setOpenSection(null);
-                          }}
-                        />
                         <OptionButton
                           label={translate("square")}
                           selected={heatmapStyle === "default"}
