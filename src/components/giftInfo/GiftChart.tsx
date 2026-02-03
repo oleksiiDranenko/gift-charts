@@ -12,15 +12,11 @@ import {
   ChartCandlestick,
   ChartNoAxesColumn,
   ChartSpline,
-  ChevronDown,
-  ChevronUp,
-  Component,
   SquareArrowOutUpRight,
   Store,
   BarChart4,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import CalendarHeatmap from "../tools/calendar-heatmap/CalendarHeatmap";
 import MarketsModal from "./MarketsModal";
 import ModelsModal from "./ModelsModal";
 import SettingsModal from "./PriceDropdown";
