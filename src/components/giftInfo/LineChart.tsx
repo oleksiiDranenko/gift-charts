@@ -208,6 +208,9 @@ export default function LineChart({
       handleScroll: true,
       handleScale: true,
       height: window.innerWidth < 1080 ? 300 : 500,
+      localization: {
+        locale: "en-US",
+      },
     });
 
     const series = chart.addSeries(AreaSeries, {

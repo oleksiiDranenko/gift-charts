@@ -195,6 +195,9 @@ export default function BarChart({
         timeVisible: true,
         secondsVisible: false,
       },
+      localization: {
+        locale: "en-US",
+      },
       handleScroll: true,
       handleScale: true,
       height: window.innerWidth < 1080 ? 300 : 450,

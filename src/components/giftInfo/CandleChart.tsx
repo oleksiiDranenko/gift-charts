@@ -157,6 +157,9 @@ export default function CandleChart({
         borderVisible: false,
         timeVisible: true,
       },
+      localization: {
+        locale: "en-US",
+      },
       handleScroll: false,
       handleScale: false,
       height: window.innerWidth < 1080 ? 300 : 450,
