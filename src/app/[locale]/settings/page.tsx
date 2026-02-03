@@ -83,16 +83,6 @@ export default function Page() {
 
           <div className='flex flex-col gap-3 lg:grid lg:grid-cols-2'>
             <NoPrefetchLink
-              href='/settings/edit-assets'
-              className='w-full h-14 px-3 flex justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
-              onClick={() => vibrate()}>
-              <span className='flex flex-row items-center gap-3'>
-                <Gift size={20} className='text-primary' />
-                {translate("editAssets")}
-              </span>
-              <ChevronRight size={20} className='text-primary' />
-            </NoPrefetchLink>
-            <NoPrefetchLink
               href='/settings/edit-watchlist'
               className='w-full h-14 px-3 flex flex-row justify-between items-center font-bold bg-secondaryTransparent rounded-3xl'
               onClick={() => vibrate()}>
@@ -204,99 +194,99 @@ export default function Page() {
           </div>
         </div>
         <div className='w-full p-3 flex flex-col font-bold bg-secondaryTransparent rounded-3xl'>
-        <div className='flex justify-between items-center'>
-          <h1>{translate("giftStyle")}</h1>
-          <div className='flex gap-x-1'>
-            <div
-              className={`flex ${
-                resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
-              } rounded-3xl overflow-hidden`}>
-              <button
-                className={`px-3 h-8 ${
-                  settings.giftType === "line"
-                    ? "font-bold text-white bg-primary rounded-3xl"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => updateSetting("giftType", "line")}>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className='size-5'>
-                  <path
-                    fillRule='evenodd'
-                    d='M2.625 6.75a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0A.75.75 0 0 1 8.25 6h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75ZM2.625 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0ZM7.5 12a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12A.75.75 0 0 1 7.5 12Zm-4.875 5.25a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75Z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-              </button>
-              <button
-                className={`px-3 h-8 ${
-                  settings.giftType === "block"
-                    ? "font-bold text-white bg-primary rounded-3xl"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => updateSetting("giftType", "block")}>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className='size-5'>
-                  <path
-                    fillRule='evenodd'
-                    d='M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-              </button>
-            </div>
-            <div
-              className={`flex ${
-                resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
-              } rounded-3xl`}>
-              <button
-                className={`px-3 h-8 ${
-                  settings.giftBackground === "none"
-                    ? "font-bold text-white bg-primary rounded-3xl"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => updateSetting("giftBackground", "none")}>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className='size-5'>
-                  <path
-                    fillRule='evenodd'
-                    d='m6.72 5.66 11.62 11.62A8.25 8.25 0 0 0 6.72 5.66Zm10.56 12.68L5.66 6.72a8.25 8.25 0 0 0 11.62 11.62ZM5.105 5.106c3.807-3.808 9.98-3.808 13.788 0 3.808 3.807 3.808 9.98 0 13.788-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788Z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-              </button>
-              <button
-                className={`px-3 h-8 ${
-                  settings.giftBackground === "color"
-                    ? "font-bold text-white bg-primary rounded-3xl"
-                    : "text-secondaryText"
-                }`}
-                onClick={() => updateSetting("giftBackground", "color")}>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className='size-5'>
-                  <path
-                    fillRule='evenodd'
-                    d='M20.599 1.5c-.376 0-.743.111-1.055.32l-5.08 3.385a18.747 18.747 0 0 0-3.471 2.987 10.04 10.04 0 0 1 4.815 4.815 18.748 18.748 0 0 0 2.987-3.472l3.386-5.079A1.902 1.902 0 0 0 20.599 1.5Zm-8.3 14.025a18.76 18.76 0 0 0 1.896-1.207 8.026 8.026 0 0 0-4.513-4.513A18.75 18.75 0 0 0 8.475 11.7l-.278.5a5.26 5.26 0 0 1 3.601 3.602l.502-.278ZM6.75 13.5A3.75 3.75 0 0 0 3 17.25a1.5 1.5 0 0 1-1.601 1.497.75.75 0 0 0-.7 1.123 5.25 5.25 0 0 0 9.8-2.62 3.75 3.75 0 0 0-3.75-3.75Z'
-                    clipRule='evenodd'
-                  />
-                </svg>
-              </button>
+          <div className='flex justify-between items-center'>
+            <h1>{translate("giftStyle")}</h1>
+            <div className='flex gap-x-1'>
+              <div
+                className={`flex ${
+                  resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
+                } rounded-3xl overflow-hidden`}>
+                <button
+                  className={`px-3 h-8 ${
+                    settings.giftType === "line"
+                      ? "font-bold text-white bg-primary rounded-3xl"
+                      : "text-secondaryText"
+                  }`}
+                  onClick={() => updateSetting("giftType", "line")}>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-5'>
+                    <path
+                      fillRule='evenodd'
+                      d='M2.625 6.75a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0A.75.75 0 0 1 8.25 6h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75ZM2.625 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0ZM7.5 12a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12A.75.75 0 0 1 7.5 12Zm-4.875 5.25a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875 0a.75.75 0 0 1 .75-.75h12a.75.75 0 0 1 0 1.5h-12a.75.75 0 0 1-.75-.75Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                </button>
+                <button
+                  className={`px-3 h-8 ${
+                    settings.giftType === "block"
+                      ? "font-bold text-white bg-primary rounded-3xl"
+                      : "text-secondaryText"
+                  }`}
+                  onClick={() => updateSetting("giftType", "block")}>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-5'>
+                    <path
+                      fillRule='evenodd'
+                      d='M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                className={`flex ${
+                  resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
+                } rounded-3xl`}>
+                <button
+                  className={`px-3 h-8 ${
+                    settings.giftBackground === "none"
+                      ? "font-bold text-white bg-primary rounded-3xl"
+                      : "text-secondaryText"
+                  }`}
+                  onClick={() => updateSetting("giftBackground", "none")}>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-5'>
+                    <path
+                      fillRule='evenodd'
+                      d='m6.72 5.66 11.62 11.62A8.25 8.25 0 0 0 6.72 5.66Zm10.56 12.68L5.66 6.72a8.25 8.25 0 0 0 11.62 11.62ZM5.105 5.106c3.807-3.808 9.98-3.808 13.788 0 3.808 3.807 3.808 9.98 0 13.788-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                </button>
+                <button
+                  className={`px-3 h-8 ${
+                    settings.giftBackground === "color"
+                      ? "font-bold text-white bg-primary rounded-3xl"
+                      : "text-secondaryText"
+                  }`}
+                  onClick={() => updateSetting("giftBackground", "color")}>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='currentColor'
+                    className='size-5'>
+                    <path
+                      fillRule='evenodd'
+                      d='M20.599 1.5c-.376 0-.743.111-1.055.32l-5.08 3.385a18.747 18.747 0 0 0-3.471 2.987 10.04 10.04 0 0 1 4.815 4.815 18.748 18.748 0 0 0 2.987-3.472l3.386-5.079A1.902 1.902 0 0 0 20.599 1.5Zm-8.3 14.025a18.76 18.76 0 0 0 1.896-1.207 8.026 8.026 0 0 0-4.513-4.513A18.75 18.75 0 0 0 8.475 11.7l-.278.5a5.26 5.26 0 0 1 3.601 3.602l.502-.278ZM6.75 13.5A3.75 3.75 0 0 0 3 17.25a1.5 1.5 0 0 1-1.601 1.497.75.75 0 0 0-.7 1.123 5.25 5.25 0 0 0 9.8-2.62 3.75 3.75 0 0 0-3.75-3.75Z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* <div className='w-full mt-3 px-3 pt-3 pb-1 bg-background rounded-3xl'>
+          {/* <div className='w-full mt-3 px-3 pt-3 pb-1 bg-background rounded-3xl'>
           {settings.giftType === "line" ? (
             gifts.length === 0 ? (
               <ListSkeleton type='line' count={1} hideHeader={true} />
@@ -326,10 +316,8 @@ export default function Page() {
             </div>
           )}
         </div> */}
+        </div>
       </div>
-      </div>
-
-      
     </div>
   );
 }

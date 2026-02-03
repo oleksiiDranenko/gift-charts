@@ -33,7 +33,7 @@ export default function EditWatchlist() {
 
   const [addGiftList, setAddGiftList] = useState<GiftInterface[]>([]);
   const [editedUser, setEditedUser] = useState<UserInterface | undefined>(
-    undefined
+    undefined,
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,14 +63,14 @@ export default function EditWatchlist() {
         // Fetch gifts if not already loaded
         if (giftsList.length === 0) {
           const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`
+            `${process.env.NEXT_PUBLIC_API}/gifts`,
           );
           dispatch(setGiftsList(giftsRes.data));
         }
 
         // Check or create user account
         const userRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`
+          `${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`,
         );
 
         if (userRes.data._id) {
@@ -84,14 +84,14 @@ export default function EditWatchlist() {
             {
               telegramId: user.telegramId,
               username: user.username || "Anonymous",
-            }
+            },
           );
           if (createRes.data.user) {
             dispatch(setUser(createRes.data.user));
             setEditedUser(createRes.data.user);
           } else {
             throw new Error(
-              createRes.data.message || "Failed to create account"
+              createRes.data.message || "Failed to create account",
             );
           }
         } else {
@@ -110,7 +110,7 @@ export default function EditWatchlist() {
   useEffect(() => {
     const list = giftsList
       .filter(
-        (gift) => !editedUser?.savedList.some((item) => item === gift._id)
+        (gift) => !editedUser?.savedList.some((item) => item === gift._id),
       )
       .sort((a, b) => a.name.localeCompare(b.name));
     setAddGiftList(list);
@@ -130,7 +130,7 @@ export default function EditWatchlist() {
 
       const res = await axios.patch(
         `${process.env.NEXT_PUBLIC_API}/users/update-account/${updatedUser.telegramId}`,
-        payload
+        payload,
       );
 
       dispatch(setUser(res.data.user));
@@ -151,7 +151,7 @@ export default function EditWatchlist() {
     const removedGift = giftsList.find((gift) => gift._id === id);
     if (removedGift) {
       setAddGiftList((prev) =>
-        [...prev, removedGift].sort((a, b) => a.name.localeCompare(b.name))
+        [...prev, removedGift].sort((a, b) => a.name.localeCompare(b.name)),
       );
     }
 
@@ -174,7 +174,7 @@ export default function EditWatchlist() {
 
   const filteredGiftList = addGiftList
     .filter((gift) =>
-      gift.name.toLowerCase().includes(searchTerm.toLowerCase())
+      gift.name.toLowerCase().includes(searchTerm.toLowerCase()),
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -194,7 +194,7 @@ export default function EditWatchlist() {
         <OpenInTelegram />
       ) : (
         <>
-          <BackButton middleText={translate("watchlist")} />
+          <BackButton />
 
           <div className='w-full mt-7 pr-2 gap-x-3'>
             {editedUser
