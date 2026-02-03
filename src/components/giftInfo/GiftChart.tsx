@@ -18,8 +18,6 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import MarketsModal from "./MarketsModal";
-import ModelsModal from "./ModelsModal";
-import SettingsModal from "./PriceDropdown";
 import LineChart from "./LineChart";
 import PriceDropdown from "./PriceDropdown";
 import { useTranslations } from "next-intl";
