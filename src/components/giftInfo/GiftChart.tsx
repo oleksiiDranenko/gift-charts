@@ -81,7 +81,6 @@ export default function GiftChart({
         typeof item.closeTon === "number" &&
         typeof item.highTon === "number" &&
         typeof item.lowTon === "number",
-        typeof item.lowTon === "number",
     );
     setCandleData(filteredCandleData);
   }, [lifeData]);
@@ -98,104 +97,102 @@ export default function GiftChart({
     <>
       {smallScreen ? (
         <div className='h-auto w-full'>
-          <div className={`${resolvedTheme === "dark"
-                ? ""
-                : "px-3"}`}>
+          <div className={`${resolvedTheme === "dark" ? "" : "px-3"}`}>
             <div
-            className={`w-full h-16 px-3 mt-3 gap-x-3 flex flex-row justify-between items-center ${
-              resolvedTheme === "dark"
-                ? ""
-                : "bg-secondaryTransparent rounded-3xl pl-2"
-            }`}>
-            <div className='h-full flex items-center'>
-              <Image
-                alt='gift'
-                src={`/cdn-assets/gifts/${gift?.image}.webp`}
-                width={55}
-                height={55}
-                unoptimized
-                className={`w-[45px] h-[45px] overflow-hidden ml-2 mr-3 ${
-                  resolvedTheme === "dark" ? "" : "bg-background rounded-full"
-                }`}
-              />
-              <h1 className='flex flex-col'>
-                <span className='text-lg font-bold'>{gift?.name}</span>
-                <span className='text-secondaryText text-sm flex justify-start'>
-                  {gift ? formatNumber(gift?.upgradedSupply) : null}
-                </span>
-              </h1>
-            </div>
-            <div className='w-1/3 h-14 pr-3 flex flex-col items-end justify-center'>
-              <div className='flex flex-row items-center'>
-                {selectedPrice === "ton" || chartType === "candle" ? (
-                  <Image
-                    alt='ton'
-                    src='/images/toncoin.webp'
-                    width={18}
-                    height={18}
-                    unoptimized
-                    className='mr-2'
-                  />
-                ) : selectedPrice === "usd" ? (
-                  <Image
-                    alt='usdt'
-                    src='/images/usdt.svg'
-                    width={18}
-                    height={18}
-                    unoptimized
-                    className='mr-2'
-                  />
-                ) : selectedPrice === "onSale" ? (
-                  <Store size={18} className='mr-2 font-bold' />
-                ) : selectedPrice === "volume" ? (
-                  <Image
-                    alt='TON logo'
-                    src='/images/toncoin.webp'
-                    width={18}
-                    height={18}
-                    unoptimized
-                    className='mr-2'
-                  />
-                ) : (
-                  <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
-                )}
-                <span className='text-xl font-bold'>
-                  {currentValue !== null ? formatPrice(currentValue) : "N/A"}
+              className={`w-full h-16 px-3 mt-3 gap-x-3 flex flex-row justify-between items-center ${
+                resolvedTheme === "dark"
+                  ? ""
+                  : "bg-secondaryTransparent rounded-3xl pl-2"
+              }`}>
+              <div className='h-full flex items-center'>
+                <Image
+                  alt='gift'
+                  src={`/cdn-assets/gifts/${gift?.image}.webp`}
+                  width={55}
+                  height={55}
+                  unoptimized
+                  className={`w-[45px] h-[45px] overflow-hidden ml-2 mr-3 ${
+                    resolvedTheme === "dark" ? "" : "bg-background rounded-full"
+                  }`}
+                />
+                <h1 className='flex flex-col'>
+                  <span className='text-lg font-bold'>{gift?.name}</span>
+                  <span className='text-secondaryText text-sm flex justify-start'>
+                    {gift ? formatNumber(gift?.upgradedSupply) : null}
+                  </span>
+                </h1>
+              </div>
+              <div className='w-1/3 h-14 pr-3 flex flex-col items-end justify-center'>
+                <div className='flex flex-row items-center'>
+                  {selectedPrice === "ton" || chartType === "candle" ? (
+                    <Image
+                      alt='ton'
+                      src='/images/toncoin.webp'
+                      width={18}
+                      height={18}
+                      unoptimized
+                      className='mr-2'
+                    />
+                  ) : selectedPrice === "usd" ? (
+                    <Image
+                      alt='usdt'
+                      src='/images/usdt.svg'
+                      width={18}
+                      height={18}
+                      unoptimized
+                      className='mr-2'
+                    />
+                  ) : selectedPrice === "onSale" ? (
+                    <Store size={18} className='mr-2 font-bold' />
+                  ) : selectedPrice === "volume" ? (
+                    <Image
+                      alt='TON logo'
+                      src='/images/toncoin.webp'
+                      width={18}
+                      height={18}
+                      unoptimized
+                      className='mr-2'
+                    />
+                  ) : (
+                    <ChartNoAxesColumn size={18} className='mr-2 font-bold' />
+                  )}
+                  <span className='text-xl font-bold'>
+                    {currentValue !== null ? formatPrice(currentValue) : "N/A"}
+                  </span>
+                </div>
+                <span
+                  className={`text-sm flex flex-row items-center ${
+                    percentChange >= 0 ? "text-green-500" : "text-red-500"
+                  }`}>
+                  {percentChange > 0 ? (
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='currentColor'
+                      className='size-3 mr-1'>
+                      <path
+                        fillRule='evenodd'
+                        d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      fill='currentColor'
+                      className='size-3 mr-1'>
+                      <path
+                        fillRule='evenodd'
+                        d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                  )}{" "}
+                  {percentChange.toFixed(2) + "%"}
                 </span>
               </div>
-              <span
-                className={`text-sm flex flex-row items-center ${
-                  percentChange >= 0 ? "text-green-500" : "text-red-500"
-                }`}>
-                {percentChange > 0 ? (
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='currentColor'
-                    className='size-3 mr-1'>
-                    <path
-                      fillRule='evenodd'
-                      d='M8.25 3.75H19.5a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V6.31L5.03 20.03a.75.75 0 0 1-1.06-1.06L17.69 5.25H8.25a.75.75 0 0 1 0-1.5Z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='currentColor'
-                    className='size-3 mr-1'>
-                    <path
-                      fillRule='evenodd'
-                      d='M3.97 3.97a.75.75 0 0 1 1.06 0l13.72 13.72V8.25a.75.75 0 0 1 1.5 0V19.5a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1 0-1.5h9.44L3.97 5.03a.75.75 0 0 1 0-1.06Z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                )}{" "}
-                {percentChange.toFixed(2) + "%"}
-              </span>
             </div>
-          </div>
           </div>
 
           <div className='w-full h-fit px-3 mb-3 mt-3 flex flex-col gap-y-3'>
@@ -224,8 +221,6 @@ export default function GiftChart({
                       : selectedPrice !== "ton"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
                   }`}
                   onClick={() => {
                     if (selectedPrice === "ton") {
@@ -251,8 +246,9 @@ export default function GiftChart({
             </div>
           </div>
 
-          <div className={`${resolvedTheme === 'dark' ? '' : 'px-3'}`}>
-            <div className={`relative ${resolvedTheme === 'dark' ? '' : 'bg-secondaryTransparent rounded-3xl'}`}>
+          <div className={`${resolvedTheme === "dark" ? "" : "px-3"}`}>
+            <div
+              className={`relative ${resolvedTheme === "dark" ? "" : "bg-secondaryTransparent rounded-3xl"}`}>
               {chartType === "line" ? (
                 <div className='pl-3'>
                   <LineChart
@@ -550,7 +546,6 @@ export default function GiftChart({
                       ((selectedPrice === "usd"
                         ? gift?.priceUsd
                         : gift?.priceTon) || 0) * (gift?.upgradedSupply || 0),
-                        : gift?.priceTon) || 0) * (gift?.upgradedSupply || 0),
                     )}
                   </span>
                 </div>
@@ -623,8 +618,6 @@ export default function GiftChart({
                     chartType === "candle"
                       ? "rounded-3xl bg-primary font-bold text-white"
                       : selectedPrice !== "ton"
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                   }`}
