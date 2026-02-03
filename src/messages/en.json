@@ -77,7 +77,8 @@
     "save": "Save",
     "removeGift": "Remove Gift",
     "gift": "Gift",
-    "gifts": "Gifts"
+    "gifts": "Gifts",
+    "myCollection": "My Collection"
   },
   "filters": {
     "hideFilters": "Hide Filters",

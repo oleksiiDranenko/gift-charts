@@ -54,7 +54,7 @@
     "marketSentiment": "Настроения рынка",
     "marketSentimentDescription": "Узнайте, как другие относятся к рынку",
     "compareCharts": "Сравнение графиков",
-"compareChartsDescription": "Сравнение графиков до 3 подарков",
+    "compareChartsDescription": "Сравнение графиков до 3 подарков",
     "indexes": "Индексы",
     "marketCap": "Рыночная капитализация"
   },
@@ -77,7 +77,8 @@
     "save": "Save",
     "removeGift": "Remove Gift",
     "gift": "подарок",
-    "gifts": "подарков"
+    "gifts": "подарков",
+    "myCollection": "Моя Коллекция"
   },
   "filters": {
     "hideFilters": "Скрыть фильтры",

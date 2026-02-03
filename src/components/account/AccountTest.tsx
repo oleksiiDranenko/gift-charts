@@ -13,6 +13,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import SectionTransition from "@/components/filterGifts/SelectTransition";
 import { useTheme } from "next-themes";
 import OpenInTelegram from "./OpenInTelegram";
+import { useTranslations } from "next-intl";
 
 export interface GiftAttribute {
   name: string;
@@ -49,6 +50,7 @@ export default function AccountTest() {
   const vibrate = useVibrate();
   const { resolvedTheme } = useTheme();
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
+  const translate = useTranslations("account");
 
   const [settings, setSettings] = useState(() => {
     if (typeof window !== "undefined") {
@@ -146,13 +148,13 @@ export default function AccountTest() {
     // Listen for WebApp ready event if available
     const telegram = (window as any).Telegram?.WebApp;
     if (telegram?.onEvent) {
-      telegram.onEvent('ready', getTelegramUser);
+      telegram.onEvent("ready", getTelegramUser);
     }
 
     return () => {
       clearTimeout(timeoutId);
       if (telegram?.offEvent) {
-        telegram.offEvent('ready', getTelegramUser);
+        telegram.offEvent("ready", getTelegramUser);
       }
     };
   }, []);
@@ -352,7 +354,7 @@ export default function AccountTest() {
 
           <div className=' mb-5 flex justify-between items-center'>
             <h2 className='text-lg font-bold'>
-              My Collection{" "}
+              {translate("myCollection")}
               <span className='text-secondaryText text-base ml-1 font-normal'>{`(${data?.gifts.length || 0})`}</span>
             </h2>
 
@@ -446,7 +448,10 @@ export default function AccountTest() {
                             {group.baseName}
                           </span>
                           <span className='text-sm text-secondaryText'>
-                            {group.count} gifts
+                            {group.count}{" "}
+                            {group.count === 1
+                              ? translate("gift")
+                              : translate("gifts")}
                           </span>
                         </div>
                       </div>
