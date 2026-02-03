@@ -11,6 +11,7 @@ import {
 import SectionTransition from "@/components/filterGifts/SelectTransition";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import Image from "next/image";
 
 interface Props {
   trigger: ReactNode;
@@ -20,6 +21,15 @@ interface Props {
   currency: "ton" | "usd";
   amount: number;
   totalGifts: number; // giftsList.length
+  heatmapStyle: "round" | "default";
+  dynamicColors: boolean;
+
+  onListTypeChange: (type: "change" | "marketCap") => void;
+  onTimeGapChange: (gap: "24h" | "1w" | "1m") => void;
+  onCurrencyChange: (cur: "ton" | "usd") => void;
+  onAmountChange: (amount: number) => void;
+  onStyleChange: (style: "round" | "default") => void;
+  onDynamicColorsChange: (val: boolean) => void;
   heatmapStyle: "round" | "default";
   dynamicColors: boolean;
 
@@ -46,9 +56,14 @@ export default function TreemapControlModal({
   dynamicColors,
   onStyleChange,
   onDynamicColorsChange,
+  heatmapStyle,
+  dynamicColors,
+  onStyleChange,
+  onDynamicColorsChange,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState<
+    "type" | "time" | "currency" | "amount" | "style" | null
     "type" | "time" | "currency" | "amount" | "style" | null
   >(null);
 
@@ -267,6 +282,7 @@ export default function TreemapControlModal({
                   {/* 3. Currency */}
                   <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
                     <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+                    <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
                       <div className='flex flex-row items-center gap-x-3'>
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
@@ -370,8 +386,25 @@ export default function TreemapControlModal({
                       <ChevronIcon open={openSection === "style"} />
                     </button>
                     <SectionTransition open={openSection === "style"}>
+                    <SectionTransition open={openSection === "style"}>
                       <div className='flex flex-col gap-1 px-4 pb-3'>
                         <div className='h-[2px] w-full bg-secondary mb-1' />
+                        <OptionButton
+                          label={translate("square")}
+                          selected={heatmapStyle === "default"}
+                          onClick={() => {
+                            onStyleChange("default");
+                            setOpenSection(null);
+                          }}
+                        />
+                        <OptionButton
+                          label={translate("rounded")}
+                          selected={heatmapStyle === "round"}
+                          onClick={() => {
+                            onStyleChange("round");
+                            setOpenSection(null);
+                          }}
+                        />
                         <OptionButton
                           label={translate("square")}
                           selected={heatmapStyle === "default"}
@@ -392,6 +425,49 @@ export default function TreemapControlModal({
                     </SectionTransition>
                   </div>
 
+                  {/* Color Mode */}
+                  <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
+                    <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>
+                      <div className='flex flex-row items-center gap-x-3'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='currentColor'
+                          className='size-7 text-primary'>
+                          <path
+                            fillRule='evenodd'
+                            d='M16.098 2.598a3.75 3.75 0 1 1 3.622 6.275l-1.72.46V12a.75.75 0 0 1-.22.53l-.75.75a.75.75 0 0 1-1.06 0l-.97-.97-7.94 7.94a2.56 2.56 0 0 1-1.81.75 1.06 1.06 0 0 0-.75.31l-.97.97a.75.75 0 0 1-1.06 0l-.75-.75a.75.75 0 0 1 0-1.06l.97-.97a1.06 1.06 0 0 0 .31-.75c0-.68.27-1.33.75-1.81L11.69 9l-.97-.97a.75.75 0 0 1 0-1.06l.75-.75A.75.75 0 0 1 12 6h2.666l.461-1.72c.165-.617.49-1.2.971-1.682Zm-3.348 7.463L4.81 18a1.06 1.06 0 0 0-.31.75c0 .318-.06.63-.172.922a2.56 2.56 0 0 1 .922-.172c.281 0 .551-.112.75-.31l7.94-7.94-1.19-1.19Z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+
+                        <div className='flex flex-col items-start'>
+                          <span className='text-lg font-bold'>
+                            {translate("dynamicColor")}
+                          </span>
+                          <span className='text-sm text-secondaryText'>
+                            {translate("dynamicColorDescription")}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Simple Toggle Switch */}
+                      <button
+                        onClick={() => {
+                          onDynamicColorsChange(!dynamicColors);
+                          vibrate();
+                        }}
+                        className={`min-w-16 h-8 flex items-center rounded-full p-1 transition-colors ${
+                          dynamicColors ? "bg-primary" : "bg-secondary"
+                        }`}>
+                        <div
+                          className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform ${
+                            dynamicColors ? "translate-x-8" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
                   {/* Color Mode */}
                   <div className='bg-secondaryTransparent rounded-3xl overflow-visible'>
                     <div className='w-full flex justify-between items-center p-4 py-3 text-left text-foreground'>

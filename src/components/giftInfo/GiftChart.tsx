@@ -81,6 +81,7 @@ export default function GiftChart({
         typeof item.closeTon === "number" &&
         typeof item.highTon === "number" &&
         typeof item.lowTon === "number",
+        typeof item.lowTon === "number",
     );
     setCandleData(filteredCandleData);
   }, [lifeData]);
@@ -223,6 +224,8 @@ export default function GiftChart({
                       : selectedPrice !== "ton"
                         ? "opacity-50 cursor-not-allowed"
                         : ""
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                   }`}
                   onClick={() => {
                     if (selectedPrice === "ton") {
@@ -317,6 +320,8 @@ export default function GiftChart({
               }
             />
           </div>
+
+          <AddBanner className='mt-5' hideable />
 
           <div className='w-full px-3'>
             <AddBanner className='mt-5 rounded-3xl' hideable />
@@ -545,6 +550,7 @@ export default function GiftChart({
                       ((selectedPrice === "usd"
                         ? gift?.priceUsd
                         : gift?.priceTon) || 0) * (gift?.upgradedSupply || 0),
+                        : gift?.priceTon) || 0) * (gift?.upgradedSupply || 0),
                     )}
                   </span>
                 </div>
@@ -617,6 +623,8 @@ export default function GiftChart({
                     chartType === "candle"
                       ? "rounded-3xl bg-primary font-bold text-white"
                       : selectedPrice !== "ton"
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                         ? "opacity-50 cursor-not-allowed"
                         : ""
                   }`}
