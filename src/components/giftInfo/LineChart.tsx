@@ -81,14 +81,14 @@ export default function LineChart({
       hours = parseInt(timeParts[0], 10);
       minutes = parseInt(timeParts[1], 10);
     }
-    const dateObj = new Date(
+    const dateObj = new Date(Date.UTC(
       parseInt(dateParts[2]),
       parseInt(dateParts[1]) - 1,
       parseInt(dateParts[0]),
       hours,
       minutes,
       0,
-    );
+    ));
     return Math.floor(dateObj.getTime() / 1000) as UTCTimestamp;
   };
 
