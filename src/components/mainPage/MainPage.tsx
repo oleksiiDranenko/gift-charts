@@ -86,7 +86,7 @@ export default function MainPage() {
         />
       </div> */}
 
-      <GiftsList loading={isLoading} />
+      <GiftsList />
 
       {/* <div className='w-full px-3'>
         <NoPrefetchLink

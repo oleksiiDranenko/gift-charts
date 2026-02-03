@@ -28,7 +28,7 @@ ChartJS.register(
   LinearScale,
   Tooltip,
   CategoryScale,
-  Filler
+  Filler,
 );
 
 interface PropsInterface {
@@ -113,11 +113,11 @@ export default function IndexChart({
       const last48 = indexMonthData.slice(-48);
       const totalTon = last48.reduce(
         (acc, item) => acc + (item.priceTon || 0),
-        0
+        0,
       );
       const totalUsd = last48.reduce(
         (acc, item) => acc + (item.priceUsd || 0),
-        0
+        0,
       );
 
       return {
@@ -132,7 +132,7 @@ export default function IndexChart({
       arr.filter(
         (v, i, a) =>
           a.findIndex((t) => t.date === v.date && t.priceTon === v.priceTon) ===
-          i
+          i,
       );
 
     let newList: IndexDataInterface[] = [];
@@ -177,7 +177,7 @@ export default function IndexChart({
     if (!list || list.length === 0) return;
 
     const prices = list.map((item) =>
-      selectedPrice === "ton" ? item.priceTon : item.priceUsd
+      selectedPrice === "ton" ? item.priceTon : item.priceUsd,
     );
     const first = prices[0];
     const last = prices[prices.length - 1];
@@ -192,8 +192,8 @@ export default function IndexChart({
     num >= 1_000_000
       ? `${(num / 1_000_000).toFixed(2)}M`
       : num >= 1_000
-      ? `${(num / 1_000).toFixed(2)} K`
-      : num.toFixed(2);
+        ? `${(num / 1_000).toFixed(2)} K`
+        : num.toFixed(2);
 
   const formatNumberWithDots = (value: number, type: string) => {
     if (typeof value !== "number" || isNaN(value)) return "0";
@@ -231,7 +231,7 @@ export default function IndexChart({
       {
         label: "Index Price",
         data: list.map((item) =>
-          selectedPrice === "ton" ? item.priceTon : item.priceUsd
+          selectedPrice === "ton" ? item.priceTon : item.priceUsd,
         ),
         borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
         borderWidth: 1.3,
@@ -248,7 +248,7 @@ export default function IndexChart({
             0,
             chartArea.top,
             0,
-            chartArea.bottom
+            chartArea.bottom,
           );
 
           const isUp = percentChange >= 0;
@@ -393,6 +393,7 @@ export default function IndexChart({
                     src='/images/toncoin.webp'
                     width={14}
                     height={14}
+                    unoptimized
                     className='mr-1'
                   />
                 ) : (
@@ -401,6 +402,7 @@ export default function IndexChart({
                     src='/images/usdt.svg'
                     width={14}
                     height={14}
+                    unoptimized
                     className='mr-1'
                   />
                 )}
@@ -408,11 +410,11 @@ export default function IndexChart({
                   {selectedPrice == "ton"
                     ? formatNumberWithDots(
                         Number(list[list.length - 1]?.priceTon),
-                        "price"
+                        "price",
                       )
                     : formatNumberWithDots(
                         Number(list[list.length - 1]?.priceUsd),
-                        "price"
+                        "price",
                       )}
                   {index.valueType === "percent" && "%"}
                 </span>
@@ -445,6 +447,7 @@ export default function IndexChart({
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
+                    unoptimized
                     className=''
                   />
                 </button>
@@ -463,6 +466,7 @@ export default function IndexChart({
                     src='/images/usdt.svg'
                     width={18}
                     height={18}
+                    unoptimized
                     className=''
                   />
                 </button>
@@ -525,6 +529,7 @@ export default function IndexChart({
                     src='/images/toncoin.webp'
                     width={22}
                     height={22}
+                    unoptimized
                     className='mr-2'
                   />
                 ) : (
@@ -533,6 +538,7 @@ export default function IndexChart({
                     src='/images/usdt.svg'
                     width={22}
                     height={22}
+                    unoptimized
                     className='mr-2'
                   />
                 )}
@@ -541,11 +547,11 @@ export default function IndexChart({
                 {selectedPrice == "ton"
                   ? formatNumberWithDots(
                       Number(list[list.length - 1]?.priceTon),
-                      "price"
+                      "price",
                     )
                   : formatNumberWithDots(
                       Number(list[list.length - 1]?.priceUsd),
-                      "price"
+                      "price",
                     )}
                 {index.valueType === "percent" && "%"}
               </span>

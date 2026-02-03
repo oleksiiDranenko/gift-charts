@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-const DEFAULT_VIBRATE_MS = 50;
+const DEFAULT_VIBRATE_MS = 200;
 
 const useVibrate = () => {
   const vibrate = useCallback(
@@ -25,7 +25,7 @@ const useVibrate = () => {
         });
       }
     },
-    []
+    [],
   );
 
   return vibrate;

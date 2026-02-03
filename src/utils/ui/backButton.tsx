@@ -16,8 +16,8 @@ export default function BackButton({ middleText, rightElement }: Props) {
   const vibrate = useVibrate();
   const translate = useTranslations("general");
   return (
-    <button className='w-full flex flex-row items-center font-bold'>
-      <div className='w-1/3 flex justify-start'>
+    <button className='w-full flex flex-row items-center'>
+      <div className='w-1/3 flex justify-start text-nowrap'>
         <div
           className='w-fit flex flex-row items-center font-bold'
           onClick={() => {
@@ -36,13 +36,13 @@ export default function BackButton({ middleText, rightElement }: Props) {
             />
           </svg>
 
-          <span className='pr-1'>{translate("back")}</span>
+          <span className='pr-1 text-lg'>{translate("back")}</span>
         </div>
       </div>
-      <div className='w-1/3 flex-nowrap text-nowrap flex justify-center'>
+      <div className='w-full flex-nowrap text-nowrap flex justify-center'>
         <span className=''> {middleText}</span>
       </div>
-      <div className='w-1/3 flex justify-end'>{rightElement}</div>
+      <div className='w-full flex justify-end'>{rightElement}</div>
       {/* {translate("back")} */}
     </button>
   );

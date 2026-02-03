@@ -97,7 +97,7 @@ export default function Account() {
         setLoading(true);
         if (giftsList.length === 0) {
           const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`
+            `${process.env.NEXT_PUBLIC_API}/gifts`,
           );
           dispatch(setGiftsList(giftsRes.data));
         }
@@ -116,7 +116,7 @@ export default function Account() {
       const updatedAssets = user.assets
         .map((asset: { giftId: string; amount: number; avgPrice: number }) => {
           const gift = giftsList.find(
-            (gift: GiftInterface) => gift._id === asset.giftId
+            (gift: GiftInterface) => gift._id === asset.giftId,
           );
           if (!gift) return undefined;
           return {
@@ -173,6 +173,7 @@ export default function Account() {
                       width={25}
                       height={25}
                       className='mr-2'
+                      unoptimized
                     />
                   ) : (
                     <Image
@@ -181,6 +182,7 @@ export default function Account() {
                       width={25}
                       height={25}
                       className='mr-2'
+                      unoptimized
                     />
                   )}
 
@@ -204,7 +206,7 @@ export default function Account() {
                       : ""}
                     {countPercentChange(
                       portfolioValuePrev,
-                      portfolioValue
+                      portfolioValue,
                     ).toFixed(2)}
                     %
                   </span>
@@ -249,6 +251,7 @@ export default function Account() {
                     alt='ton'
                     width={18}
                     height={18}
+                    unoptimized
                   />
                 </button>
                 <button
@@ -266,6 +269,7 @@ export default function Account() {
                     alt='usdt'
                     width={18}
                     height={18}
+                    unoptimized
                   />
                 </button>
               </div>

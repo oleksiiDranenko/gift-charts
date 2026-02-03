@@ -1,4 +1,3 @@
-import { ChartLine, Gift, LoaderCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export const GiftSkeleton = () => {
@@ -31,9 +30,6 @@ export const GiftSkeleton = () => {
           <div className='w-full flex flex-row justify-between'>
             {/* Price Dropdown */}
             <div className='w-36 h-8 bg-secondaryTransparent rounded-3xl' />
-
-            {/* Chart Type Buttons */}
-            <div className='flex flex-row h-8 w-32 bg-secondaryTransparent rounded-3xl' />
           </div>
         </div>
 
@@ -57,9 +53,7 @@ export const GiftSkeleton = () => {
           </svg>
         </div>
 
-        <div className='w-full mt-2 h-12 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl gap-x-2'></div>
-
-        <div className='w-full h-60 rounded-3xl bg-secondaryTransparent mt-5'></div>
+        <div className='w-full mt-2 h-12 flex flex-row  bg-secondaryTransparent rounded-3xl gap-x-2'></div>
       </div>
     </>
   );

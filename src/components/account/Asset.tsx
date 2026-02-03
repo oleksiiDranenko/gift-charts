@@ -47,9 +47,10 @@ export default function Asset({
         <div className=' flex flex-row items-center'>
           <Image
             alt='gift image'
-            src={`/gifts/${image}.webp`}
+            src={`/cdn-assets/gifts/${image}.webp`}
             width={50}
             height={50}
+            unoptimized
             className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 rounded-full ${
               resolvedTheme === "dark"
                 ? "bg-secondaryTransparent"
@@ -62,10 +63,10 @@ export default function Asset({
               <span className='ml-1 text-sm font-normal text-secondaryText'>
                 {currency === "ton"
                   ? ` (${Math.round(
-                      ((priceTon * amount) / assetsPrice) * 100
+                      ((priceTon * amount) / assetsPrice) * 100,
                     )}%)`
                   : ` (${Math.round(
-                      ((priceUsd * amount) / assetsPrice) * 100
+                      ((priceUsd * amount) / assetsPrice) * 100,
                     )}%)`}
               </span>
             </span>
@@ -86,6 +87,7 @@ export default function Asset({
                   width={15}
                   height={15}
                   className='mr-1'
+                  unoptimized
                 />
               ) : (
                 <Image
@@ -94,6 +96,7 @@ export default function Asset({
                   width={15}
                   height={15}
                   className='mr-1'
+                  unoptimized
                 />
               )}
               <span className='text-base font-bold'>
@@ -106,8 +109,8 @@ export default function Asset({
                 percentChange >= 0
                   ? "text-green-500 bg-green-500"
                   : percentChange < 0
-                  ? "text-red-500 bg-red-500"
-                  : ""
+                    ? "text-red-500 bg-red-500"
+                    : ""
               }`}>
               {percentChange >= 0 && "+"}
               {percentChange}%

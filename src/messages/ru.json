@@ -1,7 +1,7 @@
 {
   "add": {
-    "title": "Голосуй за Gift Charts!",
-    "description": "Поддержи проект в Telegram Apps Center"
+    "title": "Вступай в официальный канал",
+    "description": "Самые свежие новости и обновления"
   },
   "general": {
     "save": "Сохранить",
@@ -34,6 +34,14 @@
     "currency": "Валюта",
     "giftStyle": "Стиль подарков"
   },
+  "compare": {
+    "title": "Сравнить подарки",
+    "clear": "Очистить",
+    "addGift": "Добавить подарок",
+    "selectGifts": "Выберите подарки",
+    "selected": "Выбрано",
+    "chooseAtLeastOne": "Выберите хотя бы 1 подарок"
+  },
   "tools": {
     "services": "Сервисы",
     "buyStars": "Купить звезды",
@@ -45,6 +53,8 @@
     "fearGreedDescription": "Узнайте, как другие относятся к рынку",
     "marketSentiment": "Настроения рынка",
     "marketSentimentDescription": "Узнайте, как другие относятся к рынку",
+    "compareCharts": "Сравнение графиков",
+    "compareChartsDescription": "Сравнение графиков до 3 подарков",
     "indexes": "Индексы",
     "marketCap": "Рыночная капитализация"
   },
@@ -67,7 +77,8 @@
     "save": "Save",
     "removeGift": "Remove Gift",
     "gift": "подарок",
-    "gifts": "подарков"
+    "gifts": "подарков",
+    "myCollection": "Моя Коллекция"
   },
   "filters": {
     "hideFilters": "Скрыть фильтры",
@@ -109,7 +120,7 @@
     "currency": "Валюта",
     "displayAmount": "Количество подарков",
     "all": "Все",
-    "displayAll": "Показать все",
+    "displayAll": "Отображать все",
     "style": "Стиль",
     "rounded": "Закруглённый",
     "square": "Квадратный",
@@ -131,6 +142,7 @@
     "day": "д",
     "week": "н",
     "month": "мес",
+    "year": "год",
     "all": "Все"
   },
 
@@ -185,7 +197,24 @@
     "burnt": "Сожжено",
     "notUpgraded": "Не улучшено",
     "viewModels": "Просмотреть модели",
-    "marketCap": "Рыночная капитализация"
+    "marketCap": "Рын. капитализация",
+    "rarity": "Редкость"
+  },
+
+  "modelsList": {
+    "searchPlaceholder": "модели...",
+    "noModelsFound": "Не найдено моделей {giftName}",
+    "clearSearch": "Очистить поиск"
+  },
+
+  "giftsList": {
+    "noGiftsFound": "Не найдено подарков \"{search}\"",
+    "clearSearch": "Очистить поиск"
+  },
+
+  "filterGiftsModal": {
+    "noGiftsFound": "Не найдено подарков \"{search}\"",
+    "clearSearch": "Очистить поиск"
   },
 
   "priceOptions": {
@@ -198,6 +227,7 @@
 
   "giftHeader": {
     "gift": "Подарок",
+    "chart": "График",
     "price": "Цена",
     "marketCap": "Рын. капитализация",
     "24h": "24ч",

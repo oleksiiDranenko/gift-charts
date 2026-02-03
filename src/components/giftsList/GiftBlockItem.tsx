@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import GiftItemChart from "./GiftItemChart";
 import NoPrefetchLink from "../NoPrefetchLink";
+import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
 
 interface PropsInterface {
-  item: GiftInterface;
+  item: GiftListItemInterface;
   currency: "ton" | "usd";
   sortBy:
     | "price"
@@ -35,45 +36,29 @@ export default function GiftBlockItem({
 
   const [percentChange, setPercentChange] = useState<number | "no data">(0);
 
+  const [isLarge, setIsLarge] = useState(false);
+
   useEffect(() => {
-    if (item.tonPrice24hAgo && item.usdPrice24hAgo) {
-      if (currency === "ton") {
-        if (timeGap === "24h") {
-          setPercentChange(
-            countPercentChange(item.tonPrice24hAgo, item.priceTon)
-          );
-        } else if (timeGap === "1w") {
-          item.tonPriceWeekAgo
-            ? setPercentChange(
-                countPercentChange(item.tonPriceWeekAgo, item.priceTon)
-              )
-            : setPercentChange("no data");
-        } else if (timeGap === "1m") {
-          item.tonPriceMonthAgo
-            ? setPercentChange(
-                countPercentChange(item.tonPriceMonthAgo, item.priceTon)
-              )
-            : setPercentChange("no data");
-        }
-      } else {
-        if (timeGap === "24h") {
-          setPercentChange(
-            countPercentChange(item.usdPrice24hAgo, item.priceUsd)
-          );
-        } else if (timeGap === "1w") {
-          item.usdPriceWeekAgo
-            ? setPercentChange(
-                countPercentChange(item.usdPriceWeekAgo, item.priceUsd)
-              )
-            : setPercentChange("no data");
-        } else if (timeGap === "1m" || timeGap === "all") {
-          item.usdPriceMonthAgo
-            ? setPercentChange(
-                countPercentChange(item.usdPriceMonthAgo, item.priceUsd)
-              )
-            : setPercentChange("no data");
-        }
-      }
+    const media = window.matchMedia("(min-width: 1024px)"); // lg breakpoint
+    setIsLarge(media.matches);
+
+    const listener = (e: any) => setIsLarge(e.matches);
+    media.addEventListener("change", listener);
+
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    if (timeGap === "24h") {
+      setPercentChange(
+        countPercentChange(item.prices.h24, item.prices.current),
+      );
+    } else if (timeGap === "1w") {
+      setPercentChange(countPercentChange(item.prices.d7, item.prices.current));
+    } else if (timeGap === "1m") {
+      setPercentChange(
+        countPercentChange(item.prices.d30, item.prices.current),
+      );
     } else {
       setPercentChange("no data");
     }
@@ -106,7 +91,7 @@ export default function GiftBlockItem({
 
   return (
     <NoPrefetchLink
-      className={`w-full mt-2 p-3 gap-y-1 flex flex-col items-center justify-between rounded-3xl ${
+      className={`w-full mt-2 gap-y-1 flex flex-col items-center justify-between  rounded-3xl overflow-hidden ${
         background === "color"
           ? `bg-gradient-to-b ${
               percentChange !== "no data" && percentChange >= 0
@@ -120,30 +105,19 @@ export default function GiftBlockItem({
       key={item._id}
       href={`/gift/${item._id}`}
       onClick={() => vibrate()}>
-      <div className='w-full flex flex-col items-center relative'>
+      <div className='px-3 pt-3 w-full flex flex-col items-center relative'>
         <Image
           alt='gift image'
-          src={`/gifts/${item.image}.webp`}
+          src={`/cdn-assets/gifts/${item.image}.webp`}
           width={70}
           height={70}
+          unoptimized
           className={`p-1 ${borderColor ? "border" : ""}'`}
           style={borderColor ? { borderColor: `${borderColor}80` } : {}}
         />
-        {item.preSale && (
-          <span className='text-[8px] text-cyan-500 font-bold ml-2 absolute top-0 right-0'>
-            Pre-Market
-          </span>
-        )}
-        {/* <div className="flex flex-col items-center">
-                    <span className="text-sm text-center text-wrap font-bold">
-                        {item.name}
-                    </span>
-                </div> */}
       </div>
 
-      {/* <GiftItemChart /> */}
-
-      <div className=' flex flex-row items-center justify-end'>
+      <div className='px-3 mt-3 flex flex-row items-center justify-end'>
         <div className='w-fit text-sm flex flex-col items-center justify-center'>
           <div className='flex flex-row items-center'>
             {currency === "ton" ? (
@@ -152,6 +126,7 @@ export default function GiftBlockItem({
                 src='/images/toncoin.webp'
                 width={15}
                 height={15}
+                unoptimized
                 className='mr-1'
               />
             ) : (
@@ -160,19 +135,12 @@ export default function GiftBlockItem({
                 src='/images/usdt.svg'
                 width={15}
                 height={15}
+                unoptimized
                 className='mr-1'
               />
             )}
-            <span className='text-sm font-bold'>
-              {currency === "ton" && displayValue === "price"
-                ? formatPrice(item.priceTon)
-                : currency === "ton" && displayValue === "marketCap"
-                ? formatNumber(item.priceTon * item.upgradedSupply)
-                : currency === "usd" && displayValue === "price"
-                ? formatPrice(item.priceUsd)
-                : currency === "usd" && displayValue === "marketCap"
-                ? formatNumber(item.priceUsd * item.upgradedSupply)
-                : null}
+            <span className='text-base font-bold'>
+              {formatPrice(item.prices.current)}
             </span>
           </div>
 
@@ -182,8 +150,8 @@ export default function GiftBlockItem({
                 ? percentChange >= 0
                   ? "text-green-500 bg-green-500"
                   : percentChange < 0
-                  ? "text-red-500 bg-red-500"
-                  : "text-slate-500"
+                    ? "text-red-500 bg-red-500"
+                    : "text-slate-500"
                 : "text-slate-500"
             }`}>
             {percentChange !== "no data" && percentChange >= 0 && "+"}
@@ -191,6 +159,9 @@ export default function GiftBlockItem({
             {percentChange !== "no data" ? "%" : null}
           </span>
         </div>
+      </div>
+      <div className='w-full flex items-center'>
+        <GiftItemChart gift={item} height={isLarge ? 30 : 40} />
       </div>
     </NoPrefetchLink>
   );

@@ -1,7 +1,7 @@
 {
   "add": {
-    "title": "Vote for Gift Charts!",
-    "description": "Support the project in the Telegram Apps Center"
+    "title": "Join the Official Channel",
+    "description": "Find out about the latest updates"
   },
   "general": {
     "save": "Save",
@@ -34,6 +34,14 @@
     "currency": "Currency",
     "giftStyle": "Gift Style"
   },
+  "compare": {
+    "title": "Compare Gifts",
+    "clear": "Clear",
+    "addGift": "Add Gift",
+    "selectGifts": "Select Gifts",
+    "selected": "Selected",
+    "chooseAtLeastOne": "Choose at least 1 gift"
+  },
   "tools": {
     "services": "Services",
     "buyStars": "Buy Stars",
@@ -45,6 +53,8 @@
     "fearGreedDescription": "See how others feel about the market",
     "marketSentiment": "Market Sentiment",
     "marketSentimentDescription": "See how others feel about the market",
+    "compareCharts": "Compare Charts",
+    "compareChartsDescription": "Compare Charts of up to 3 gifts",
     "indexes": "Indexes",
     "marketCap": "Market Cap"
   },
@@ -67,7 +77,8 @@
     "save": "Save",
     "removeGift": "Remove Gift",
     "gift": "Gift",
-    "gifts": "Gifts"
+    "gifts": "Gifts",
+    "myCollection": "My Collection"
   },
   "filters": {
     "hideFilters": "Hide Filters",
@@ -127,10 +138,11 @@
   },
 
   "timegap": {
-    "hour": "h",
+    "hour": "hr",
     "day": "d",
     "week": "w",
     "month": "m",
+    "year": "year",
     "all": "All"
   },
 
@@ -184,7 +196,24 @@
     "burnt": "Burnt",
     "notUpgraded": "Not upgraded",
     "viewModels": "View Models",
-    "marketCap": "Market Cap"
+    "marketCap": "Market Cap",
+    "rarity": "Rarity"
+  },
+
+  "modelsList": {
+    "searchPlaceholder": "models...",
+    "noModelsFound": "No {giftName} models found",
+    "clearSearch": "Clear search"
+  },
+
+  "giftsList": {
+    "noGiftsFound": "No gifts matching \"{search}\"",
+    "clearSearch": "Clear search"
+  },
+
+  "filterGiftsModal": {
+    "noGiftsFound": "No gifts matching \"{search}\"",
+    "clearSearch": "Clear search"
   },
 
   "priceOptions": {
@@ -197,6 +226,7 @@
 
   "giftHeader": {
     "gift": "Gift",
+    "chart": "Chart",
     "price": "Price",
     "marketCap": "Market Cap",
     "24h": "24h",

@@ -7,12 +7,26 @@ const nextConfig = {
   images: {
     formats: ["image/webp"],
     minimumCacheTTL: 31536000,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "images.giftcharts.com",
+        pathname: "/gifts/**",
+      },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/cdn-assets/:path*",
+        destination: "https://images.giftcharts.com/:path*",
+      },
+    ];
   },
   experimental: {
     prefetchOnHover: false,

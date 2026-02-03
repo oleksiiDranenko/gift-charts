@@ -1,3 +1,4 @@
+import { Activity } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function GiftItemSkeleton({
@@ -17,12 +18,12 @@ export default function GiftItemSkeleton({
             ? "pr-2"
             : "bg-secondaryTransparent mb-2 pl-2 pr-3"
         }`}>
-        <div className='flex flex-row items-center'>
+        <div className='w-[55%] flex flex-row items-center'>
           {/* <span className='w-6 h-6 box-border flex items-center justify-center text-secondaryText text-xs'>
             {index + 1}
           </span> */}
           <div
-            className={`w-[50px] h-[50px] p-[6px] !overflow-visible  mr-3 rounded-full ml-2 animate-pulse ${
+            className={`w-[50px] h-[50px] p-[6px] !overflow-visible  mr-3 rounded-full ml-1 animate-pulse ${
               resolvedTheme === "dark" ? "bg-secondary" : "bg-background"
             }`}></div>
           <div className='flex flex-col gap-y-[2px]'>
@@ -36,7 +37,10 @@ export default function GiftItemSkeleton({
               } animate-pulse`}></div>
           </div>
         </div>
-        <div className='flex flex-row items-center justify-end'>
+        <div className='w-[15%] flex justify-center items-center text-secondary'>
+          <div className='w-full h-[2px] bg-secondary'></div>
+        </div>
+        <div className='w-[30%] flex flex-row items-center justify-end'>
           <div className='w-fit gap-y-[2px] text-sm flex flex-col items-end justify-center'>
             <div
               className={`h-4 w-24 rounded-3xl ${
@@ -50,6 +54,12 @@ export default function GiftItemSkeleton({
         </div>
       </div>
 
+      {resolvedTheme === "dark" && (
+        <div className='w-full pl-[62px] pr-2 lg:hidden'>
+          <div className='border-b border-secondaryTransparent'></div>
+        </div>
+      )}
+
       {/* LARGE SCREEN */}
       {/* LARGE SCREEN */}
       {/* LARGE SCREEN */}
@@ -58,7 +68,7 @@ export default function GiftItemSkeleton({
         className={`w-full hidden lg:flex h-16 mb-2 flex-row items-center justify-between bg-none border-b border-secondaryTransparent rounded-3xl animate-pulse
                   }`}
         key={index}>
-        <div className='w-1/3 flex flex-row items-center'>
+        <div className='w-[30%] flex flex-row items-center'>
           <span className='mx-5 text-secondaryText text-sm'>{index + 1}</span>
           <div
             className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl
@@ -72,7 +82,11 @@ export default function GiftItemSkeleton({
           </div>
         </div>
 
-        <div className='w-1/3 flex flex-row'>
+        <div className='w-[16%] flex items-center justify-start'>
+          <div className='w-24 h-[2px] bg-secondary animate-pulse'></div>
+        </div>
+
+        <div className='w-[27%] flex flex-row'>
           <div className='w-full flex flex-row justify-start items-center'>
             <div className='h-5 w-16 bg-secondaryTransparent rounded-3xl'></div>
           </div>
@@ -82,7 +96,7 @@ export default function GiftItemSkeleton({
           </div>
         </div>
 
-        <div className='w-1/3 flex flex-row'>
+        <div className='w-[27%] flex flex-row'>
           <div className='w-full flex flex-row justify-start items-center'>
             <div className='h-5 w-16 bg-secondaryTransparent rounded-3xl'></div>
           </div>
@@ -99,6 +113,6 @@ export default function GiftItemSkeleton({
     </>
   ) : (
     // GRID TYPE — vertical tile
-    <div className='w-full mt-2 h-[146px] gap-y-1 bg-secondaryTransparent rounded-3xl animate-pulse' />
+    <div className='w-full mt-2 h-[190px] gap-y-1 bg-secondaryTransparent rounded-3xl animate-pulse' />
   );
 }

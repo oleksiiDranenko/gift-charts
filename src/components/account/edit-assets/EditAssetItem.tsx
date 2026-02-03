@@ -103,9 +103,10 @@ export default function EditAssetItem({
               <div className='flex flex-row items-center'>
                 <Image
                   alt='gift image'
-                  src={`/gifts/${gift?.image}.webp`}
+                  src={`/cdn-assets/gifts/${gift?.image}.webp`}
                   width={50}
                   height={50}
+                  unoptimized
                   className={`w-[50px] h-[50px] p-[6px] !overflow-visible mr-3 ml-2 rounded-3xl ${
                     resolvedTheme === "dark"
                       ? "bg-secondaryTransparent "
@@ -150,9 +151,10 @@ export default function EditAssetItem({
           <div className='flex flex-col items-center justify-center gap-y-3 mb-5'>
             <Image
               alt='gift image'
-              src={`/gifts/${gift?.image}.webp`}
+              src={`/cdn-assets/gifts/${gift?.image}.webp`}
               width={70}
               height={70}
+              unoptimized
               className=''
             />
             <h2 className='text-xl font-bold'>{gift?.name}</h2>

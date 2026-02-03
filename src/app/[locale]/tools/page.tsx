@@ -11,10 +11,9 @@ import { useTranslations } from "next-intl";
 import { useQuery } from "react-query";
 import IndexBlockSkeleton from "@/components/tools/IndexBlockSkeleton";
 import NoPrefetchLink from "@/components/NoPrefetchLink";
+import { MdOutlineSsidChart } from "react-icons/md";
 
 export default function Page() {
-  const dispatch = useAppDispatch();
-  const giftsList = useAppSelector((state) => state.giftsList);
   const vibrate = useVibrate();
   const translate = useTranslations("tools");
   const translateGeneral = useTranslations("general");
@@ -33,23 +32,6 @@ export default function Page() {
     return { currency: "ton", giftType: "line", giftBackground: "none" };
   });
 
-  // ✅ Fetch gifts (still via Redux)
-  useEffect(() => {
-    (async () => {
-      try {
-        if (giftsList.length === 0) {
-          const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`
-          );
-          dispatch(setGiftsList(giftsRes.data));
-        }
-      } catch (error) {
-        console.error("Error fetching gifts:", error);
-      }
-    })();
-  }, [dispatch, giftsList]);
-
-  // ✅ Fetch indexes with TanStack Query
   const {
     data: indexList,
     isLoading,
@@ -59,7 +41,7 @@ export default function Page() {
     queryKey: ["indexes"],
     queryFn: async () => {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/indexes/get-all`
+        `${process.env.NEXT_PUBLIC_API}/indexes/get-all`,
       );
       return res.data;
     },
@@ -140,6 +122,28 @@ export default function Page() {
                 </span>
                 <span className='text-sm text-secondaryText'>
                   {translate("heatmapDescription")}
+                </span>
+              </div>
+            </div>
+
+            <ChevronRight size={20} className='text-primary' />
+          </div>
+        </NoPrefetchLink>
+
+        <NoPrefetchLink
+          className='bg-secondaryTransparent rounded-3xl overflow-hidden'
+          href={"/tools/compare-charts"}
+          onClick={() => {
+            vibrate();
+          }}>
+          <div className='w-full p-3 flex flex-row justify-between items-center'>
+            <div className='flex flex-row items-center gap-x-3'>
+              <MdOutlineSsidChart className='size-7 text-primary' />
+
+              <div className='flex flex-col'>
+                <span className='font-bold text-lg'>{translate('compareCharts')}</span>
+                <span className='text-sm text-secondaryText'>
+                  {translate('compareChartsDescription')}
                 </span>
               </div>
             </div>

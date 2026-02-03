@@ -34,7 +34,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
     queryKey: ["marketCapWidget"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/indexMonthData/${indexId}`
+        `${process.env.NEXT_PUBLIC_API}/indexMonthData/${indexId}`,
       );
       return data.slice(-336);
     },
@@ -49,13 +49,13 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
       if (currency === "ton") {
         const result = countPercentChange(
           monthData[0]?.priceTon,
-          monthData[monthData.length - 1]?.priceTon
+          monthData[monthData.length - 1]?.priceTon,
         );
         setPercentChange(result);
       } else {
         const result = countPercentChange(
           monthData[0]?.priceUsd,
-          monthData[monthData.length - 1]?.priceUsd
+          monthData[monthData.length - 1]?.priceUsd,
         );
         setPercentChange(result);
       }
@@ -84,6 +84,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
                     src='/images/toncoin.webp'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-[6px]'
                   />
                 ) : (
@@ -92,6 +93,7 @@ export default function IndexWidget({ indexId, indexName, currency }: Props) {
                     src='/images/usdt.svg'
                     width={18}
                     height={18}
+                    unoptimized
                     className='mr-[6px]'
                   />
                 )}

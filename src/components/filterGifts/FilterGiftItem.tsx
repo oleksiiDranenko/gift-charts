@@ -24,8 +24,10 @@ export default function FilterGiftItem({
       className={`w-full h-16 my-2 pl-3 pr-3 flex flex-row items-center justify-start rounded-3xl
         transition-all active:scale-[95%] duration-200 ease-in-out 
         ${selected ? "bg-secondaryTransparent" : "bg-transparent"} ${
-        resolvedTheme === "dark" ? "border-b-2 border-secondaryTransparent" : ""
-      }
+          resolvedTheme === "dark"
+            ? "border-b-2 border-secondaryTransparent"
+            : ""
+        }
       `}
       key={gift._id}
       onClick={() => {
@@ -63,9 +65,10 @@ export default function FilterGiftItem({
       <div className='h-full flex flex-row items-center justify-start'>
         <Image
           alt='gift image'
-          src={`/gifts/${gift.image}.webp`}
+          src={`/cdn-assets/gifts/${gift?.image}.webp`}
           width={50}
           height={50}
+          unoptimized
           className='w-[50px] h-[50px] p-[6px] !overflow-visible mr-2 rounded-3xl bg-secondaryTransparent border border-secondaryTransparent'
         />
         <div className='flex flex-col'>

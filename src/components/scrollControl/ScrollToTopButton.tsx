@@ -9,7 +9,7 @@ const HIDE_DELAY = 2000;
 
 /** Finds the nearest scrollable ancestor */
 function getScrollableParent(
-  node: HTMLElement | null
+  node: HTMLElement | null,
 ): HTMLElement | (Document & { scrollingElement: Element | null }) | Window {
   if (!node) return window;
   let el: HTMLElement | null = node.parentElement;
@@ -51,7 +51,7 @@ export default function ScrollToTopButton() {
         const visible = !entry.isIntersecting;
         setIsVisible(visible);
       },
-      { root: observerRoot, threshold: 0 }
+      { root: observerRoot, threshold: 0 },
     );
 
     observer.observe(sentinel);
@@ -67,8 +67,8 @@ export default function ScrollToTopButton() {
       root instanceof HTMLElement
         ? root
         : root instanceof Window
-        ? window
-        : document;
+          ? window
+          : document;
 
     const resetHideTimer = () => {
       if (hideTimeout.current) clearTimeout(hideTimeout.current);
@@ -120,7 +120,7 @@ export default function ScrollToTopButton() {
       <button
         onClick={scrollToTop}
         aria-label='Scroll to top'
-        className={`fixed bottom-28 right-4 z-50 p-4 rounded-full bg-secondaryTransparent text-primary shadow-lg transition-all duration-300
+        className={`fixed bottom-28 right-4 z-50 p-4 rounded-full bg-secondaryLight backdrop-blur-lg text-primary shadow-lg transition-all duration-300
           ${
             isTemporarilyVisible
               ? "opacity-100 translate-y-0"

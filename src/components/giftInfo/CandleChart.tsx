@@ -1,29 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Chart, registerables } from "chart.js";
-import { Chart as ReactChart, ChartProps } from "react-chartjs-2";
-import { parse, addDays, format } from "date-fns";
-import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import {
-  CandlestickController,
-  CandlestickElement,
-} from "chartjs-chart-financial";
-import "chartjs-adapter-date-fns";
+  createChart,
+  IChartApi,
+  ISeriesApi,
+  ColorType,
+  UTCTimestamp,
+  CandlestickSeries,
+} from "lightweight-charts";
 import { useTheme } from "next-themes";
-import useVibrate from "@/hooks/useVibrate";
-import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
+import useVibrate from "@/hooks/useVibrate";
+import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
+import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
+import { parse, format, addDays } from "date-fns";
 
-Chart.register(...registerables, CandlestickController, CandlestickElement);
-
-type CandlestickData = {
-  x: number;
-  o: number;
-  h: number;
-  l: number;
-  c: number;
-};
+const TIME_RANGES: {
+  key: "2w" | "1m" | "2m" | "3m" | "6m" | "1y" | "all";
+  label: (t: (key: string) => string) => string;
+}[] = [
+  { key: "all", label: (t) => t("all") },
+  { key: "1y", label: (t) => `1${t("year")}` },
+  { key: "6m", label: (t) => `6${t("month")}` },
+  { key: "3m", label: (t) => `3${t("month")}` },
+  { key: "1m", label: (t) => `1${t("month")}` },
+];
 
 interface PropsInterface {
   data: GiftLifeDataInterface[];
@@ -40,19 +42,19 @@ export default function CandleChart({
   setPercentChange,
   onDataUpdate,
 }: PropsInterface) {
-  const chartRef = useRef<
-    Chart<"candlestick", CandlestickData[], unknown> | null | undefined
-  >(null);
-  const [listType, setListType] = useState<"2w" | "1m" | "2m" | "3m" | "all">(
-    "2w"
-  );
-  const [list, setList] = useState<GiftLifeDataInterface[]>(data);
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
+
+  const [listType, setListType] =
+    useState<(typeof TIME_RANGES)[number]["key"]>("1m");
+  const [list, setList] = useState<GiftLifeDataInterface[]>([]);
+
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
-
   const translateTime = useTranslations("timegap");
 
-  // Update data based on listType and append today's data if applicable
+  // 1. Logic to process and filter data (Matches your original logic)
   useEffect(() => {
     const today = new Date();
     const todayStr = format(today, "dd-MM-yyyy");
@@ -65,293 +67,182 @@ export default function CandleChart({
       const nextDayStr = format(nextDay, "dd-MM-yyyy");
 
       if (nextDayStr === todayStr) {
-        // Filter weekData for today's entries
         const todayWeekData = weekData.filter((item) => item.date === todayStr);
-
         if (todayWeekData.length > 0) {
-          // Sort by time to ensure correct order for open/close
           const sortedTodayData = [...todayWeekData].sort((a, b) =>
-            a.time.localeCompare(b.time)
+            a.time.localeCompare(b.time),
           );
-
-          // Calculate open, high, low, close for today
           const prices = sortedTodayData
             .map((item) => item.priceTon)
-            .filter((v): v is number => v !== undefined && v !== null);
-          const openTon = sortedTodayData[0].priceTon;
-          const closeTon = sortedTodayData[sortedTodayData.length - 1].priceTon;
-          const highTon = prices.length > 0 ? Math.max(...prices) : openTon;
-          const lowTon = prices.length > 0 ? Math.min(...prices) : openTon;
+            .filter((v): v is number => v != null);
 
-          // Create new data item for today
-          const newDataItem: GiftLifeDataInterface = {
-            _id: `temp-${todayStr}`,
-            name: sortedTodayData[0].name,
-            date: todayStr,
-            priceTon: closeTon,
-            priceUsd: 0,
-            openTon,
-            closeTon,
-            highTon,
-            lowTon,
-          };
-
-          updatedData = [...data, newDataItem];
+          updatedData = [
+            ...data,
+            {
+              _id: `temp-${todayStr}`,
+              name: sortedTodayData[0].name,
+              date: todayStr,
+              priceTon: sortedTodayData[sortedTodayData.length - 1].priceTon,
+              priceUsd: 0,
+              openTon: sortedTodayData[0].priceTon,
+              closeTon: sortedTodayData[sortedTodayData.length - 1].priceTon,
+              highTon: Math.max(...prices),
+              lowTon: Math.min(...prices),
+            },
+          ];
         }
       }
     }
 
-    // Apply listType filtering
-    switch (listType) {
-      case "2w":
-        setList(updatedData.slice(-14));
-        break;
-      case "1m":
-        setList(updatedData.slice(-30));
-        break;
-      case "2m":
-        setList(updatedData.slice(-60));
-        break;
-      case "3m":
-        setList(updatedData.slice(-90));
-        break;
-      case "all":
-        setList(updatedData);
-        break;
-    }
+    const slices = {
+      "2w": -14,
+      "1m": -30,
+      "2m": -60,
+      "3m": -90,
+      "6m": -180,
+      "1y": -360,
+      all: 0,
+    };
+    setList(
+      slices[listType] === 0
+        ? updatedData
+        : updatedData.slice(slices[listType]),
+    );
   }, [listType, data, weekData]);
 
-  // Calculate percent change from first openTon to last closeTon
+  // 2. Sync Percent Change
   useEffect(() => {
     if (list.length === 0) {
       setPercentChange(0);
-      if (onDataUpdate) onDataUpdate({ currentValue: null });
+      onDataUpdate?.({ currentValue: null });
       return;
     }
+    const firstOpen = list[0].openTon ?? 0;
+    const lastClose = list[list.length - 1].closeTon ?? 0;
+    const change =
+      firstOpen !== 0 ? ((lastClose - firstOpen) / firstOpen) * 100 : 0;
 
-    const firstOpen = list[0].openTon;
-    const lastClose = list[list.length - 1].closeTon;
-    let calculatedPercentChange = 0;
-    let currentValue: number | null = null;
-
-    if (
-      typeof firstOpen === "number" &&
-      typeof lastClose === "number" &&
-      firstOpen !== 0
-    ) {
-      calculatedPercentChange = parseFloat(
-        (((lastClose - firstOpen) / firstOpen) * 100).toFixed(2)
-      );
-      currentValue = lastClose;
-    }
-
-    setPercentChange(calculatedPercentChange);
-    if (onDataUpdate) {
-      onDataUpdate({ currentValue });
-    }
+    setPercentChange(parseFloat(change.toFixed(2)));
+    onDataUpdate?.({ currentValue: lastClose });
   }, [list, setPercentChange, onDataUpdate]);
 
-  const chartData: ChartProps<
-    "candlestick",
-    CandlestickData[],
-    unknown
-  >["data"] = {
-    datasets: [
-      {
-        label: "Price (TON)",
-        data: list.map((item) => {
-          const parsedDate = parse(item.date, "dd-MM-yyyy", new Date());
-          return {
-            x: parsedDate.getTime(),
-            o: item.openTon || 0,
-            h: item.highTon || 0,
-            l: item.lowTon || 0,
-            c: item.closeTon || 0,
-          };
-        }),
-        borderColor: "#ffffff",
-        upColor: "#14cc00",
-        downColor: "#ff0303",
-      } as any,
-    ],
-  };
+  // 3. Initialize Lightweight Chart
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
 
-  const prices = list
-    .map((item) => [item.openTon, item.highTon, item.lowTon, item.closeTon])
-    .flat()
-    .filter((v): v is number => typeof v === "number");
-  const maxPrice = prices.length > 0 ? Math.max(...prices) : 1;
-  const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
-
-  const options: ChartProps<
-    "candlestick",
-    CandlestickData[],
-    unknown
-  >["options"] = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor:
+          resolvedTheme === "dark"
+            ? "rgba(255, 255, 255, 0.6)"
+            : "rgba(0, 0, 0, 0.6)",
+        fontSize: 11,
+        attributionLogo: false,
       },
-      title: {
-        display: false,
-      },
-      tooltip: {
-        enabled: true,
-        mode: "index",
-        intersect: false,
-        callbacks: {
-          title: (tooltipItems) => {
-            const item = list[tooltipItems[0].dataIndex];
-            return item.date;
-          },
-          label: (tooltipItem) => {
-            const item = list[tooltipItem.dataIndex];
-            return `Open: ${item.openTon} TON, Close: ${item.closeTon} TON`;
-          },
-        },
-      },
-    },
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
-    scales: {
-      x: {
-        type: "time" as const,
-        time: {
-          unit: "day",
-          displayFormats: {
-            day: "dd-MM",
-          },
-        },
-        ticks: {
-          source: "data",
-          autoSkip: true,
-          maxTicksLimit: 10,
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
-          padding: 0,
-          maxRotation: 0,
-          minRotation: 0,
-          callback: (value, index, ticks) => {
-            const tickInterval = 5;
-            if (index % tickInterval === 0) {
-              return format(new Date(value), "dd-MM");
-            }
-            return null;
-          },
-        },
-        title: {
-          display: false,
-        },
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        type: "linear" as const,
-        position: "right",
-        title: {
-          display: false,
-        },
-        grid: {
+      grid: {
+        vertLines: { visible: false },
+        horzLines: {
           color:
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.05)"
               : "rgba(0, 0, 0, 0.05)",
-          drawTicks: true,
-          tickLength: 10,
         },
-        ticks: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
-          padding: 3,
-          maxTicksLimit: 7,
-        },
-        suggestedMax: maxPrice * 1.05,
-        suggestedMin: minPrice * 0.95,
       },
-    },
-  };
+      rightPriceScale: {
+        borderVisible: false,
+        scaleMargins: { top: 0.15, bottom: 0.2 },
+      },
+      timeScale: {
+        borderVisible: false,
+        timeVisible: true,
+      },
+      localization: {
+        locale: "en-US",
+      },
+      handleScroll: false,
+      handleScale: false,
+      height: window.innerWidth < 1080 ? 300 : 450,
+    });
+
+    const series = chart.addSeries(CandlestickSeries, {
+      upColor: "#14cc00",
+      downColor: "#ff0303",
+      borderVisible: false,
+      wickUpColor: "#14cc00",
+      wickDownColor: "#ff0303",
+    });
+
+    chartRef.current = chart;
+    seriesRef.current = series;
+
+    const handleResize = () => {
+      chart.applyOptions({ width: chartContainerRef.current?.clientWidth });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
+  }, [resolvedTheme]);
+
+  // 4. Update Series Data
+  useEffect(() => {
+    if (!seriesRef.current || list.length === 0) return;
+
+    const formattedData = list
+      .map((item) => {
+        const dateParts = item.date.split("-");
+        const dateObj = new Date(
+          parseInt(dateParts[2]),
+          parseInt(dateParts[1]) - 1,
+          parseInt(dateParts[0]),
+        );
+
+        return {
+          time: Math.floor(dateObj.getTime() / 1000) as UTCTimestamp,
+          open: item.openTon ?? 0,
+          high: item.highTon ?? 0,
+          low: item.lowTon ?? 0,
+          close: item.closeTon ?? 0,
+        };
+      })
+      .sort((a, b) => (a.time as number) - (b.time as number));
+
+    seriesRef.current.setData(formattedData);
+    chartRef.current?.timeScale().fitContent();
+  }, [list]);
 
   return (
-    <div className='h-auto w-full'>
-      <ReactChart
-        ref={chartRef}
-        type='candlestick'
-        data={chartData}
-        options={options}
-        className={
-          resolvedTheme === "dark" ? "" : "bg-secondaryTransparent rounded-lg"
-        }
-        height={window.innerWidth < 1080 ? 200 : 150}
-      />
-      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl'>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "all"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (data.length > 0) setListType("all");
-            vibrate();
-          }}>
-          {translateTime("all")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (data.length > 0) setListType("3m");
-            vibrate();
-          }}>
-          3{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "2m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("2m");
-            vibrate();
-          }}>
-          2{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("1m");
-            vibrate();
-          }}>
-          1{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "2w"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("2w");
-            vibrate();
-          }}>
-          2{translateTime("week")}
-        </button>
+    <div
+      className={`relative w-full ${
+        resolvedTheme !== "dark" && "bg-secondaryTransparent rounded-3xl"
+      }`}>
+      <div ref={chartContainerRef} className='w-full' />
+
+      <div className='w-full pr-3'>
+        <div className='w-full mt-2 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl time-gap-buttons'>
+          {TIME_RANGES.map(({ key, label }) => {
+            const isActive = listType === key;
+
+            return (
+              <button
+                key={key}
+                className={`w-full px-3 h-8 text-sm text-nowrap transition-colors rounded-3xl ${
+                  isActive
+                    ? "bg-primary text-white font-bold"
+                    : "text-secondaryText"
+                }`}
+                onClick={() => {
+                  setListType(key);
+                  vibrate();
+                }}>
+                {label(translateTime)}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

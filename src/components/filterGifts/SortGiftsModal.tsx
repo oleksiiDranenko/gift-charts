@@ -116,16 +116,16 @@ export default function SortGiftsModal({ trigger }: Props) {
             ? "changeGrowthTon"
             : "changeGrowth"
           : isTon
-          ? "changeGrowthTonAsc"
-          : "changeGrowthAsc";
+            ? "changeGrowthTonAsc"
+            : "changeGrowthAsc";
       case "volatility":
         return highFirst
           ? isTon
             ? "changeAbsoluteTon"
             : "changeAbsolute"
           : isTon
-          ? "changeAbsoluteTonAsc"
-          : "changeAbsoluteAsc";
+            ? "changeAbsoluteTonAsc"
+            : "changeAbsoluteAsc";
       case "supply":
         return highFirst ? "supplyHigh" : "supplyLow";
       case "initSupply":
@@ -169,7 +169,7 @@ export default function SortGiftsModal({ trigger }: Props) {
     <>
       <ModalBase trigger={trigger} open={isOpen} onOpenChange={setIsOpen}>
         {/* HEADER */}
-        <div className='w-full h-10 pb-3 flex justify-between items-center'>
+        <div className='w-full h-12 pb-3 flex justify-between items-center'>
           <button
             onClick={resetAll}
             className={`flex flex-row items-center justify-center gap-x-1 h-8 px-3 bg-secondaryTransparent rounded-3xl transition-opacity ${

@@ -19,6 +19,7 @@ export default function OpenInTelegram() {
             alt={""}
             width={20}
             height={20}
+            unoptimized
           />{" "}
           Gift Charts Bot
         </NoPrefetchLink>

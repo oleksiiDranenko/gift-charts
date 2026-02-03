@@ -70,6 +70,7 @@ export default function NavbarLeft() {
               alt='Gift Charts'
               width={30}
               height={30}
+              unoptimized
               className='flex-shrink-0'
             />
 

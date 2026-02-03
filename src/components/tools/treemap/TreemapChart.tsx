@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import type GiftInterface from "@/interfaces/GiftInterface";
+import { GiftHeatmapInterface } from "@/interfaces/GiftHeatmapInterface";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 
@@ -26,7 +26,7 @@ export interface TreemapChartRef {
 }
 
 interface TreemapChartProps {
-  data: GiftInterface[];
+  data: GiftHeatmapInterface[];
   chartType: "change" | "marketCap";
   timeGap: "24h" | "1w" | "1m";
   currency: "ton" | "usd";
@@ -38,7 +38,7 @@ const preloadImages = (data: GiftData[]) => {
   const map = new Map<string, HTMLImageElement>();
   data.forEach((item) => {
     const img = new Image();
-    img.src = `/gifts/${item.imageName}.webp`;
+    img.src = `/cdn-assets/gifts/${item.imageName}.webp`;
     map.set(item.imageName, img);
   });
   return map;
@@ -55,38 +55,39 @@ const preloadImagesAsync = async (data: GiftData[]) => {
             map.set(item.imageName, img);
             resolve();
           };
-          img.src = `/gifts/${item.imageName}.webp`;
-        })
-    )
+          img.src = `/cdn-assets/gifts/${item.imageName}.webp`;
+        }),
+    ),
   );
   return map;
 };
 
 const transformGiftData = (
-  gifts: GiftInterface[],
+  gifts: GiftHeatmapInterface[],
   chartType: "change" | "marketCap",
   timeGap: "24h" | "1w" | "1m",
-  currency: "ton" | "usd"
+  currency: "ton" | "usd",
 ): GiftData[] => {
   return gifts.map((gift) => {
-    const now = currency === "ton" ? gift.priceTon ?? 0 : gift.priceUsd ?? 0;
+    const now =
+      currency === "ton" ? (gift.priceTon ?? 0) : (gift.priceUsd ?? 0);
     let then = now;
 
     if (timeGap === "24h")
       then =
         currency === "ton"
-          ? gift.tonPrice24hAgo ?? now
-          : gift.usdPrice24hAgo ?? now;
+          ? (gift.tonPrice24hAgo ?? now)
+          : (gift.usdPrice24hAgo ?? now);
     else if (timeGap === "1w")
       then =
         currency === "ton"
-          ? gift.tonPriceWeekAgo ?? now
-          : gift.usdPriceWeekAgo ?? now;
+          ? (gift.tonPriceWeekAgo ?? now)
+          : (gift.usdPriceWeekAgo ?? now);
     else if (timeGap === "1m")
       then =
         currency === "ton"
-          ? gift.tonPriceMonthAgo ?? now
-          : gift.usdPriceMonthAgo ?? now;
+          ? (gift.tonPriceMonthAgo ?? now)
+          : (gift.usdPriceMonthAgo ?? now);
 
     const percentChange = then === 0 ? 0 : ((now - then) / then) * 100;
     let size: number;
@@ -118,7 +119,7 @@ const imagePlugin = (
   imageScale: number = 1,
   borderWidth: number = 0,
   type: HeatmapType,
-  dynamicColors: boolean = false // Added dynamicColors to plugin
+  dynamicColors: boolean = false, // Added dynamicColors to plugin
 ) => ({
   id: "treemapImages",
   afterDatasetDraw(chart: any) {
@@ -169,8 +170,8 @@ const imagePlugin = (
         item.percentChange > 0
           ? `rgba(1, 143, 53, ${opacity})`
           : item.percentChange < 0
-          ? `rgba(220, 38, 38, ${opacity})`
-          : `rgba(143, 151, 121, ${opacity})`;
+            ? `rgba(220, 38, 38, ${opacity})`
+            : `rgba(143, 151, 121, ${opacity})`;
 
       ctx.fillStyle = baseColor;
       ctx.strokeStyle = "#1e293b";
@@ -209,7 +210,7 @@ const imagePlugin = (
         x + (width - drawWidth) / 2,
         startY,
         drawWidth,
-        drawHeight
+        drawHeight,
       );
       ctx.fillStyle = "white";
       ctx.textAlign = "center";
@@ -217,7 +218,7 @@ const imagePlugin = (
       ctx.fillText(
         item.name,
         centerX,
-        startY + drawHeight + fontSize + lineSpacing
+        startY + drawHeight + fontSize + lineSpacing,
       );
 
       ctx.font = `${fontSize}px sans-serif`;
@@ -249,25 +250,25 @@ const imagePlugin = (
               lineSpacing * 2 -
               iconSize * 0.8,
             iconSize,
-            iconSize
+            iconSize,
           );
           ctx.fillText(
             middleText,
             centerX + iconSize / 2 + iconSpacing,
-            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2,
           );
         } catch {
           ctx.fillText(
             middleText,
             centerX,
-            startY + drawHeight + fontSize * 2 + lineSpacing * 2
+            startY + drawHeight + fontSize * 2 + lineSpacing * 2,
           );
         }
       } else {
         ctx.fillText(
           middleText,
           centerX,
-          startY + drawHeight + fontSize * 2 + lineSpacing * 2
+          startY + drawHeight + fontSize * 2 + lineSpacing * 2,
         );
       }
 
@@ -278,7 +279,7 @@ const imagePlugin = (
       ctx.fillText(
         changeText,
         centerX,
-        startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3
+        startY + drawHeight + fontSize * 2 + priceFontSize + lineSpacing * 3,
       );
 
       if (index === 0) {
@@ -296,7 +297,7 @@ const imagePlugin = (
 const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
   (
     { data, chartType, timeGap, currency, type, dynamicColors = false },
-    ref
+    ref,
   ) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const chartRef = useRef<any>(null);
@@ -317,9 +318,8 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       if (!ctx) return;
 
       const { default: ChartJS } = await import("chart.js/auto");
-      const { TreemapController, TreemapElement } = await import(
-        "chartjs-chart-treemap"
-      );
+      const { TreemapController, TreemapElement } =
+        await import("chartjs-chart-treemap");
       ChartJS.register(TreemapController, TreemapElement);
 
       const transformed = transformGiftData(data, chartType, timeGap, currency);
@@ -372,11 +372,11 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
       form.append("file", blob, `treemap-${Date.now()}.jpeg`);
       form.append(
         "chatId",
-        window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString()
+        window.Telegram!.WebApp!.initDataUnsafe!.user!.id.toString(),
       );
       await axios.post(
         `${process.env.NEXT_PUBLIC_API}/telegram/send-image`,
-        form
+        form,
       );
     };
 
@@ -387,9 +387,8 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
 
       (async () => {
         const { default: ChartJS } = await import("chart.js/auto");
-        const { TreemapController, TreemapElement } = await import(
-          "chartjs-chart-treemap"
-        );
+        const { TreemapController, TreemapElement } =
+          await import("chartjs-chart-treemap");
         ChartJS.register(TreemapController, TreemapElement);
 
         chartRef.current?.destroy();
@@ -397,7 +396,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
           data,
           chartType,
           timeGap,
-          currency
+          currency,
         );
         const imageMap = preloadImages(transformed);
 
@@ -434,7 +433,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
               1.2,
               1,
               type,
-              dynamicColors
+              dynamicColors,
             ),
           ],
         });
@@ -450,7 +449,7 @@ const TreemapChart = forwardRef<TreemapChartRef, TreemapChartProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 TreemapChart.displayName = "TreemapChart";

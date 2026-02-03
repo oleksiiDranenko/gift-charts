@@ -1,19 +1,29 @@
 "use client";
 
 import NavbarBottom from "@/components/navbar/NavbarBottom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 import axios from "axios";
 import NavbarLeft from "./navbar/NavbarLeft";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function AppInitializer({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname(); // Get current path
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo(0, 0);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -25,11 +35,9 @@ export default function AppInitializer({
             telegramWebApp.ready();
 
             if (telegramWebApp.requestFullscreen) {
-              if (screen.width < 1024) {
-                telegramWebApp.requestFullscreen();
-                setIsFullscreen(true);
-                console.log("Requested fullscreen mode.");
-              }
+              telegramWebApp.requestFullscreen();
+              setIsFullscreen(true);
+              console.log("Requested fullscreen mode.");
             } else {
               telegramWebApp.expand();
               setIsFullscreen(false);
@@ -41,26 +49,21 @@ export default function AppInitializer({
               console.log("Vertical swipes disabled.");
             }
 
-            if (telegramWebApp.setHeaderColor) {
-              telegramWebApp.setHeaderColor("#000");
-              console.log("Header set to transparent.");
-            }
-
-            if (telegramWebApp.BackButton) {
-              telegramWebApp.BackButton.hide();
-              console.log("BackButton hidden.");
-            }
+            // if (telegramWebApp.BackButton) {
+            //   telegramWebApp.BackButton.hide();
+            //   console.log("BackButton hidden.");
+            // }
 
             // Set height to viewportStableHeight to avoid gaps
-            const updateViewportHeight = () => {
-              const height = telegramWebApp.viewportStableHeight;
-              document.documentElement.style.height = `${height}px`;
-              document.body.style.height = `${height}px`;
-              console.log("Viewport stable height set to:", height);
-            };
+            // const updateViewportHeight = () => {
+            //   const height = telegramWebApp.viewportStableHeight;
+            //   document.documentElement.style.height = `${height}px`;
+            //   document.body.style.height = `${height}px`;
+            //   console.log("Viewport stable height set to:", height);
+            // };
 
-            telegramWebApp.onEvent("viewportChanged", updateViewportHeight);
-            updateViewportHeight(); // Initial call
+            // telegramWebApp.onEvent("viewportChanged", updateViewportHeight);
+            // updateViewportHeight();
 
             // Get Telegram user data and update Redux
             const telegramUser = telegramWebApp.initDataUnsafe?.user;
@@ -86,13 +89,13 @@ export default function AppInitializer({
               dispatch(setUser(initialUser));
               console.log(
                 "Initial Telegram User stored in Redux:",
-                telegramUser
+                telegramUser,
               );
 
               // Fetch full user data from backend
               try {
                 const userRes = await axios.get(
-                  `${process.env.NEXT_PUBLIC_API}/users/check-account/${telegramUser.id}`
+                  `${process.env.NEXT_PUBLIC_API}/users/check-account/${telegramUser.id}`,
                 );
                 if (userRes.data?._id) {
                   // Ensure savedList is always an array
@@ -108,9 +111,8 @@ export default function AppInitializer({
                   };
                   dispatch(setUser(userData));
                   if (userRes.data.token) {
-                    axios.defaults.headers.common[
-                      "Authorization"
-                    ] = `Bearer ${userRes.data.token}`;
+                    axios.defaults.headers.common["Authorization"] =
+                      `Bearer ${userRes.data.token}`;
                     localStorage.setItem("token", userRes.data.token); // Store token
                   }
                   console.log("User data updated in Redux:", userData);
@@ -125,7 +127,7 @@ export default function AppInitializer({
                           telegramUser.username ||
                           telegramUser.first_name ||
                           "User",
-                      }
+                      },
                     );
                     const userData = {
                       ...createRes.data.user,
@@ -139,14 +141,13 @@ export default function AppInitializer({
                     };
                     dispatch(setUser(userData));
                     if (createRes.data.token) {
-                      axios.defaults.headers.common[
-                        "Authorization"
-                      ] = `Bearer ${createRes.data.token}`;
+                      axios.defaults.headers.common["Authorization"] =
+                        `Bearer ${createRes.data.token}`;
                       localStorage.setItem("token", createRes.data.token); // Store token
                     }
                     console.log(
                       "New user created and stored in Redux:",
-                      userData
+                      userData,
                     );
                   } catch (createErr) {
                     console.error("Error creating account:", createErr);
@@ -174,7 +175,7 @@ export default function AppInitializer({
               savedList: [],
               ton: 0,
               usd: 0,
-            })
+            }),
           );
           console.error("Error loading WebApp SDK:", err);
         });
@@ -183,12 +184,12 @@ export default function AppInitializer({
 
   return (
     <div
-      className={`h-screen w-screen pb-5 overflow-scroll scrollbar-hide bg-fixed flex flex-col`}>
+      ref={scrollContainerRef}
+      className='fixed inset-0 pb-5 overflow-y-auto scrollbar-hide flex flex-col'>
       <div className='w-screen flex justify-center flex-grow'>
         <NavbarLeft />
         {children}
       </div>
-
       <NavbarBottom />
     </div>
   );

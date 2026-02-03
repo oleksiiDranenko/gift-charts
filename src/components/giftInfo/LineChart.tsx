@@ -1,31 +1,21 @@
 "use client";
 
-import { Line } from "react-chartjs-2";
+import { useEffect, useRef, useState, useMemo } from "react";
 import {
-  Chart as ChartJS,
-  LineElement,
-  PointElement,
-  LinearScale,
-  Tooltip,
-  CategoryScale,
-  ChartOptions,
-  Filler,
-} from "chart.js";
-import { useEffect, useRef, useState } from "react";
+  createChart,
+  IChartApi,
+  ISeriesApi,
+  ColorType,
+  MouseEventParams,
+  UTCTimestamp,
+  AreaSeries,
+  LineType,
+} from "lightweight-charts";
 import { useTheme } from "next-themes";
-import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
-import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
 import useVibrate from "@/hooks/useVibrate";
-
-ChartJS.register(
-  LineElement,
-  PointElement,
-  LinearScale,
-  Tooltip,
-  CategoryScale,
-  Filler
-);
+import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
+import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 
 interface LineChartProps {
   weekData: GiftWeekDataInterface[];
@@ -35,6 +25,20 @@ interface LineChartProps {
   setPercentChange: (value: number) => void;
   onDataUpdate?: (data: { currentValue: number | null }) => void;
 }
+//d
+
+const TIME_RANGES: {
+  key: "24h" | "1w" | "1m" | "3m" | "6m" | "all";
+  label: (t: (key: string) => string) => string;
+  requiresLifeData?: boolean;
+}[] = [
+  { key: "all", label: (t) => t("all"), requiresLifeData: true },
+  { key: "6m", label: (t) => `6${t("month")}`, requiresLifeData: true },
+  { key: "3m", label: (t) => `3${t("month")}`, requiresLifeData: true },
+  { key: "1m", label: (t) => `1${t("month")}`, requiresLifeData: true },
+  { key: "1w", label: (t) => `1${t("week")}` },
+  { key: "24h", label: (t) => `24${t("hour")}` },
+];
 
 export default function LineChart({
   weekData,
@@ -45,572 +49,292 @@ export default function LineChart({
   onDataUpdate,
 }: LineChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<ChartJS<"line">>(null);
-  const [gradient, setGradient] = useState<CanvasGradient | null>(null);
-  const [list, setList] = useState<
-    (GiftLifeDataInterface | GiftWeekDataInterface)[]
-  >(weekData.slice(-24));
-  const [listType, setListType] = useState<
-    "24h" | "3d" | "1w" | "1m" | "3m" | "all"
-  >("24h");
-  const [low, setLow] = useState<number>();
-  const [high, setHigh] = useState<number>();
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
+  const lastVibratedIndex = useRef<number | null>(null);
+
+  const [listType, setListType] =
+    useState<(typeof TIME_RANGES)[number]["key"]>("24h");
+
   const { resolvedTheme } = useTheme();
   const vibrate = useVibrate();
-
   const translateTime = useTranslations("timegap");
 
-  useEffect(() => {
-    const chartContainer = chartContainerRef.current;
-    if (!chartContainer) return;
-
-    const buttonContainer = chartContainer.querySelector(
-      ".time-gap-buttons"
-    ) as HTMLElement;
-
-    const preventScroll = (e: TouchEvent) => {
-      if (buttonContainer && buttonContainer.contains(e.target as Node)) {
-        return;
-      }
-      e.preventDefault();
-    };
-
-    chartContainer.addEventListener("touchstart", preventScroll, {
-      passive: false,
-    });
-    chartContainer.addEventListener("touchmove", preventScroll, {
-      passive: false,
-    });
-    chartContainer.addEventListener("touchend", preventScroll, {
-      passive: false,
-    });
-
-    const handleClickOutside = (e: MouseEvent) => {
-      const chartCanvas = chartContainer.querySelector("canvas");
-      if (chartCanvas && !chartCanvas.contains(e.target as Node)) {
-        const chartInstance = ChartJS.getChart(chartCanvas);
-        if (chartInstance) {
-          chartInstance.setActiveElements([]);
-          chartInstance.tooltip?.setActiveElements([], { x: 0, y: 0 });
-          chartInstance.update();
-        }
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      chartContainer.removeEventListener("touchstart", preventScroll);
-      chartContainer.removeEventListener("touchmove", preventScroll);
-      chartContainer.removeEventListener("touchend", preventScroll);
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart) return;
-
-    const ctx = chart.ctx;
-    const chartArea = chart.chartArea;
-    const gradient = ctx.createLinearGradient(
-      0,
-      chartArea.top,
-      0,
-      chartArea.bottom
-    );
-
-    const topColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0.7)" : "rgba(239, 68, 68, 0.7)";
-    const bottomColor =
-      percentChange >= 0 ? "rgba(34, 197, 94, 0)" : "rgba(239, 68, 68, 0)";
-
-    gradient.addColorStop(0, topColor);
-    gradient.addColorStop(1, bottomColor);
-
-    setGradient(gradient);
-  }, [percentChange]);
-
-  useEffect(() => {
-    const lastPriceIndex = weekData.length - 1;
-    if (lastPriceIndex < 0) {
-      switch (listType) {
-        case "24h":
-        case "3d":
-        case "1w":
-          setList([]);
-          break;
-        case "1m":
-          setList(lifeData.slice(-30));
-          break;
-        case "3m":
-          setList(lifeData.slice(-90));
-          break;
-        case "all":
-          setList(lifeData);
-          break;
-      }
-      return;
-    }
-
-    const lastWeekData = weekData[lastPriceIndex];
-    const lastDate = lastWeekData.date;
-
-    // Aggregate volume and salesCount for weekData documents with the same date as the last document
-    const aggregatedWeekData: GiftWeekDataInterface = {
-      ...lastWeekData,
-      volume: weekData
-        .filter((item) => item.date === lastDate)
-        .reduce((sum, item) => sum + (item.volume ?? 0), 0),
-      salesCount: weekData
-        .filter((item) => item.date === lastDate)
-        .reduce((sum, item) => sum + (item.salesCount ?? 0), 0),
-    };
-
-    switch (listType) {
-      case "24h":
-        setList(weekData.slice(-48));
-        break;
-      case "3d":
-        setList(weekData.slice(-144));
-        break;
-      case "1w":
-        setList(weekData);
-        break;
-      case "1m":
-        setList([...lifeData.slice(-30), aggregatedWeekData]);
-        break;
-      case "3m":
-        setList([...lifeData.slice(-90), aggregatedWeekData]);
-        break;
-      case "all":
-        setList([...lifeData, aggregatedWeekData]);
-        break;
-    }
-  }, [listType, lifeData, weekData]);
-
-  useEffect(() => {
-    if (list.length === 0) {
-      if (typeof setPercentChange === "function") {
-        setPercentChange(0);
-      } else {
-        console.warn("setPercentChange is not a function");
-      }
-      if (onDataUpdate) {
-        onDataUpdate({ currentValue: null });
-      }
-      return;
-    }
-
-    let currentValue: number | null = null;
-    let calculatedPercentChange = 0;
-
-    if (selectedPrice === "ton") {
-      const prices = list
-        .map((item) => item.priceTon)
-        .filter((v): v is number => v !== undefined && v !== null);
-      if (prices.length > 1 && prices[0] !== 0) {
-        const firstData = prices[0];
-        const lastData = prices[prices.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...prices));
-        setHigh(Math.max(...prices));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(prices.length > 0 ? Math.min(...prices) : undefined);
-        setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
-        currentValue =
-          prices.length > 0 && Number.isFinite(prices[prices.length - 1])
-            ? prices[prices.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "usd") {
-      const prices = list
-        .map((item) => item.priceUsd)
-        .filter((v): v is number => v !== undefined && v !== null);
-      if (prices.length > 1 && prices[0] !== 0) {
-        const firstData = prices[0];
-        const lastData = prices[prices.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...prices));
-        setHigh(Math.max(...prices));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(prices.length > 0 ? Math.min(...prices) : undefined);
-        setHigh(prices.length > 0 ? Math.max(...prices) : undefined);
-        currentValue =
-          prices.length > 0 && Number.isFinite(prices[prices.length - 1])
-            ? prices[prices.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "onSale") {
-      const amounts = list
-        .map((item) =>
-          typeof item.amountOnSale === "number" ? item.amountOnSale : null
-        )
-        .filter((v): v is number => v !== null);
-      if (amounts.length > 1 && amounts[0] !== 0) {
-        const firstData = amounts[0];
-        const lastData = amounts[amounts.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...amounts));
-        setHigh(Math.max(...amounts));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(amounts.length > 0 ? Math.min(...amounts) : undefined);
-        setHigh(amounts.length > 0 ? Math.max(...amounts) : undefined);
-        currentValue =
-          amounts.length > 0 && Number.isFinite(amounts[amounts.length - 1])
-            ? amounts[amounts.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "volume") {
-      const volumes = list
-        .map((item) => (typeof item.volume === "number" ? item.volume : null))
-        .filter((v): v is number => v !== null);
-      if (volumes.length > 1 && volumes[0] !== 0) {
-        const firstData = volumes[0];
-        const lastData = volumes[volumes.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...volumes));
-        setHigh(Math.max(...volumes));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(volumes.length > 0 ? Math.min(...volumes) : undefined);
-        setHigh(volumes.length > 0 ? Math.max(...volumes) : undefined);
-        currentValue =
-          volumes.length > 0 && Number.isFinite(volumes[volumes.length - 1])
-            ? volumes[volumes.length - 1]
-            : null;
-      }
-    } else if (selectedPrice === "salesCount") {
-      const counts = list
-        .map((item) =>
-          typeof item.salesCount === "number" ? item.salesCount : null
-        )
-        .filter((v): v is number => v !== null);
-      if (counts.length > 1 && counts[0] !== 0) {
-        const firstData = counts[0];
-        const lastData = counts[counts.length - 1];
-        calculatedPercentChange = parseFloat(
-          (((lastData - firstData) / firstData) * 100).toFixed(2)
-        );
-        setLow(Math.min(...counts));
-        setHigh(Math.max(...counts));
-        currentValue = Number.isFinite(lastData) ? lastData : null;
-      } else {
-        calculatedPercentChange = 0;
-        setLow(counts.length > 0 ? Math.min(...counts) : undefined);
-        setHigh(counts.length > 0 ? Math.max(...counts) : undefined);
-        currentValue =
-          counts.length > 0 && Number.isFinite(counts[counts.length - 1])
-            ? counts[counts.length - 1]
-            : null;
-      }
-    }
-
-    if (typeof setPercentChange === "function") {
-      setPercentChange(
-        Number.isFinite(calculatedPercentChange) ? calculatedPercentChange : 0
-      );
-    } else {
-      console.warn("setPercentChange is not a function");
-    }
-    if (onDataUpdate) {
-      onDataUpdate({ currentValue });
-    }
-  }, [selectedPrice, list, setPercentChange, onDataUpdate]);
-
-  const values = list.map((item) => {
+  // Format Helper
+  const getVal = (item: GiftLifeDataInterface | GiftWeekDataInterface) => {
     if (selectedPrice === "ton") return item.priceTon;
     if (selectedPrice === "usd") return item.priceUsd;
-    if (selectedPrice === "onSale")
-      return typeof item.amountOnSale === "number" ? item.amountOnSale : null;
-    if (selectedPrice === "volume")
-      return typeof item.volume === "number" ? item.volume : null;
-    if (selectedPrice === "salesCount")
-      return typeof item.salesCount === "number" ? item.salesCount : null;
-  });
-
-  const data = {
-    labels: list.map((item) => {
-      if ("time" in item && listType === "24h") {
-        return item.time;
-      }
-      return item.date.slice(0, 5);
-    }),
-    datasets: [
-      {
-        label:
-          selectedPrice === "onSale"
-            ? "Amount On Sale"
-            : selectedPrice === "volume"
-            ? "Volume"
-            : selectedPrice === "salesCount"
-            ? "Sales Count"
-            : "Price",
-        data: values,
-        borderColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        borderWidth: 1.3,
-        tension: 0.4,
-        pointRadius: 0,
-        pointHoverRadius: 6,
-        fill: true,
-        backgroundColor:
-          gradient ||
-          (percentChange >= 0
-            ? "rgba(34, 197, 94, 0.2)"
-            : "rgba(239, 68, 68, 0.2)"),
-        pointBackgroundColor: percentChange >= 0 ? "#22c55e" : "#ef4444",
-        spanGaps: false,
-      },
-    ],
+    if (selectedPrice === "onSale") return item.amountOnSale;
+    if (selectedPrice === "volume") return item.volume;
+    if (selectedPrice === "salesCount") return item.salesCount;
+    return 0;
   };
 
-  const numericValues = (data.datasets[0].data as (number | null)[]).filter(
-    (v): v is number => v !== null
-  );
+  const parseToTimestamp = (
+    item: GiftLifeDataInterface | GiftWeekDataInterface,
+  ): UTCTimestamp => {
+    const dateParts = item.date.split("-");
+    let hours = 0,
+      minutes = 0;
+    if ("time" in item && item.time) {
+      const timeParts = item.time.split(":");
+      hours = parseInt(timeParts[0], 10);
+      minutes = parseInt(timeParts[1], 10);
+    }
+    const dateObj = new Date(
+      parseInt(dateParts[2]),
+      parseInt(dateParts[1]) - 1,
+      parseInt(dateParts[0]),
+      hours,
+      minutes,
+      0,
+    );
+    return Math.floor(dateObj.getTime() / 1000) as UTCTimestamp;
+  };
 
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      title: { display: false },
-      tooltip: {
-        enabled: true,
-        mode: "index",
-        intersect: false,
-        callbacks: {
-          title: function (tooltipItems) {
-            const item = list[tooltipItems[0].dataIndex];
-            if ("time" in item && (listType === "24h" || listType === "1w")) {
-              return `${item.time} ${item.date}`;
-            }
-            return item.date;
-          },
-          label: function (tooltipItem) {
-            if (selectedPrice === "onSale") {
-              return tooltipItem.raw === null
-                ? "No data"
-                : `On Sale: ${tooltipItem.raw}`;
-            } else if (selectedPrice === "volume") {
-              return tooltipItem.raw === null
-                ? "No data"
-                : `Volume: ${tooltipItem.raw} TON`;
-            } else if (selectedPrice === "salesCount") {
-              return tooltipItem.raw === null
-                ? "No data"
-                : `Amount sold: ${tooltipItem.raw}`;
-            }
-            return `Price: ${tooltipItem.raw} ${
-              selectedPrice === "ton" ? "TON" : "USD"
-            }`;
-          },
-        },
-        external: function (context) {
-          const { chart, tooltip } = context;
-          const ctx = chart.ctx;
+  // 1. Process High-Granularity Week Data
+  const formattedWeek = useMemo(() => {
+    return weekData
+      .map((item) => ({
+        time: parseToTimestamp(item),
+        value: getVal(item) ?? 0,
+      }))
+      .sort((a, b) => (a.time as number) - (b.time as number))
+      .filter((v, i, a) => i === 0 || v.time !== a[i - 1].time);
+  }, [weekData, selectedPrice]);
 
-          if (!tooltip || !tooltip.opacity) {
-            // Tooltip hidden → reset last index
-            if ((chart as any).lastActiveIndex !== null) {
-              (chart as any).lastActiveIndex = null;
-            }
-            return;
-          }
+  // 2. Process Life Data AND append the latest Week Data point
+  const formattedLife = useMemo(() => {
+    const life = lifeData.map((item) => ({
+      time: parseToTimestamp(item),
+      value: getVal(item) ?? 0,
+    }));
 
-          if (!tooltip || !tooltip.opacity) {
-            return;
-          }
+    // Append the latest point from weekData if it exists
+    if (weekData.length > 0) {
+      const lastWeekItem = weekData[weekData.length - 1];
+      const latestPoint = {
+        time: parseToTimestamp(lastWeekItem),
+        value: getVal(lastWeekItem) ?? 0,
+      };
 
-          const tooltipX = tooltip.caretX;
-          const tooltipY = tooltip.caretY;
+      // Only append if it's actually newer than the last life point
+      if (
+        life.length === 0 ||
+        (latestPoint.time as number) > (life[life.length - 1].time as number)
+      ) {
+        life.push(latestPoint);
+      }
+    }
 
-          ctx.save();
-          ctx.beginPath();
-          ctx.setLineDash([5, 5]);
-          ctx.lineWidth = 1;
-          ctx.strokeStyle =
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.5)"
-              : "rgba(0, 0, 0, 0.5)";
+    return life
+      .sort((a, b) => (a.time as number) - (b.time as number))
+      .filter((v, i, a) => i === 0 || v.time !== a[i - 1].time);
+  }, [lifeData, weekData, selectedPrice]);
 
-          ctx.moveTo(tooltipX, chart.chartArea.top);
-          ctx.lineTo(tooltipX, chart.chartArea.bottom);
+  // Determine current active source
+  const currentSource = ["24h", "1w"].includes(listType)
+    ? formattedWeek
+    : formattedLife;
 
-          ctx.moveTo(chart.chartArea.left, tooltipY);
-          ctx.lineTo(chart.chartArea.right, tooltipY);
+  // Sync Percent Change and Parent State
+  useEffect(() => {
+    if (currentSource.length === 0) {
+      setPercentChange(0);
+      onDataUpdate?.({ currentValue: null });
+      return;
+    }
 
-          ctx.stroke();
-          ctx.restore();
+    const last = currentSource[currentSource.length - 1].value;
+    const now = currentSource[currentSource.length - 1].time as number;
+    let lookback = 0;
+    const day = 24 * 60 * 60;
 
-          const currentIndex = tooltip.dataPoints?.[0]?.dataIndex;
+    if (listType === "24h") lookback = day;
+    else if (listType === "1w") lookback = day * 7;
+    else if (listType === "1m") lookback = day * 30;
+    else if (listType === "3m") lookback = day * 90;
+    else if (listType === "6m") lookback = day * 180;
+    else lookback = now - (currentSource[0].time as number);
 
-          if (currentIndex !== undefined) {
-            const lastIndex = (chart as any).lastActiveIndex;
+    const firstPointInRange =
+      currentSource.find((d) => (d.time as number) >= now - lookback) ||
+      currentSource[0];
+    const first = firstPointInRange.value;
 
-            // Vibrate only when moving to a NEW point
-            if (lastIndex !== null && lastIndex !== currentIndex) {
-              vibrate();
-            }
+    const change = first !== 0 ? ((last - first) / first) * 100 : 0;
+    setPercentChange(parseFloat(change.toFixed(2)));
+    onDataUpdate?.({ currentValue: last });
+  }, [currentSource, listType, setPercentChange, onDataUpdate]);
 
-            (chart as any).lastActiveIndex = currentIndex;
-          } else {
-            (chart as any).lastActiveIndex = null;
-          }
-        },
+  // Initialize Chart
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
+
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor:
+          resolvedTheme === "dark"
+            ? "rgba(255, 255, 255, 0.6)"
+            : "rgba(0, 0, 0, 0.6)",
+        attributionLogo: false,
+        fontSize: 11,
       },
-    },
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
-          padding: 0,
-          autoSkip: true,
-          maxTicksLimit: 3,
-          maxRotation: 0,
-          minRotation: 0,
-        },
-      },
-      y: {
-        grid: {
+      grid: {
+        vertLines: { visible: false },
+        horzLines: {
           color:
             resolvedTheme === "dark"
               ? "rgba(255, 255, 255, 0.05)"
               : "rgba(0, 0, 0, 0.05)",
-          drawTicks: true,
-          tickLength: 10,
         },
-        ticks: {
-          color:
-            resolvedTheme === "dark"
-              ? "rgba(255, 255, 255, 0.6)"
-              : "rgba(0, 0, 0, 0.6)",
-          padding: 3,
-          maxTicksLimit: 7,
-        },
-        position: "right",
-        suggestedMax:
-          numericValues.length > 0
-            ? Math.max(...numericValues) * 1.05
-            : undefined,
-        suggestedMin:
-          numericValues.length > 0
-            ? Math.min(...numericValues) * 0.95
-            : undefined,
       },
-    },
-  };
+      rightPriceScale: {
+        visible: true,
+        borderVisible: true,
+        borderColor:
+          resolvedTheme === "dark"
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.1)",
+        autoScale: true,
+        scaleMargins: { top: 0.15, bottom: 0.15 },
+      },
+      timeScale: {
+        borderVisible: false,
+        timeVisible: true,
+        secondsVisible: false,
+      },
+      handleScroll: true,
+      handleScale: true,
+      height: window.innerWidth < 1080 ? 300 : 500,
+      localization: {
+        locale: "en-US",
+      },
+    });
+
+    const series = chart.addSeries(AreaSeries, {
+      lineWidth: 2,
+      lastValueVisible: true,
+      priceLineVisible: true,
+      crosshairMarkerVisible: true,
+      lineType: LineType.Simple,
+    });
+
+    chart.subscribeCrosshairMove((param: MouseEventParams) => {
+      if (param.time) {
+        const currentIndex = param.logical as number;
+        if (currentIndex !== lastVibratedIndex.current) {
+          vibrate();
+          lastVibratedIndex.current = currentIndex;
+        }
+      }
+    });
+
+    chartRef.current = chart;
+    seriesRef.current = series;
+
+    const handleResize = () => {
+      if (chartContainerRef.current) {
+        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
+  }, [resolvedTheme]);
+
+  // Update Series Data and Colors
+  useEffect(() => {
+    if (!seriesRef.current || currentSource.length === 0) return;
+
+    const isPositive = percentChange >= 0;
+    seriesRef.current.applyOptions({
+      lineColor: isPositive ? "#22c55e" : "#ef4444",
+      topColor: isPositive
+        ? "rgba(34, 197, 94, 0.5)"
+        : "rgba(239, 68, 68, 0.5)",
+      bottomColor: isPositive
+        ? "rgba(34, 197, 94, 0.001)"
+        : "rgba(239, 68, 68, 0.001)",
+      priceLineColor: isPositive ? "#178941" : "#ef4444",
+    });
+
+    seriesRef.current.setData(currentSource);
+  }, [currentSource, percentChange]);
+
+  // Zoom Handling
+  useEffect(() => {
+    if (!chartRef.current || currentSource.length === 0) return;
+
+    const timeScale = chartRef.current.timeScale();
+    const lastTimestamp = currentSource[currentSource.length - 1]
+      .time as number;
+    const day = 24 * 60 * 60;
+
+    let fromTimestamp: number;
+
+    switch (listType) {
+      case "24h":
+        fromTimestamp = lastTimestamp - day;
+        break;
+      case "1w":
+        fromTimestamp = lastTimestamp - day * 7;
+        break;
+      case "1m":
+        fromTimestamp = lastTimestamp - day * 30;
+        break;
+      case "3m":
+        fromTimestamp = lastTimestamp - day * 90;
+        break;
+      case "6m":
+        fromTimestamp = lastTimestamp - day * 180;
+        break;
+      case "all":
+        timeScale.fitContent();
+        return;
+      default:
+        fromTimestamp = currentSource[0].time as number;
+    }
+
+    timeScale.setVisibleRange({
+      from: fromTimestamp as UTCTimestamp,
+      to: lastTimestamp as UTCTimestamp,
+    });
+  }, [listType, currentSource]);
 
   return (
-    <div
-      className={
-        resolvedTheme === "dark"
-          ? "relative"
-          : "relative bg-secondaryTransparent rounded-3xl"
-      }
-      ref={chartContainerRef}>
-      <Line
-        ref={chartRef as any}
-        data={data}
-        options={options}
-        height={window.innerWidth < 1080 ? 200 : 150}
-      />
-      <div className='w-full mt-3 p-2 flex flex-row overflow-x-scroll bg-secondaryTransparent rounded-3xl time-gap-buttons'>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "all"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("all");
-            vibrate();
-          }}>
-          {translateTime("all")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("3m");
-            vibrate();
-          }}>
-          3{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1m"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            if (lifeData.length > 0) setListType("1m");
-            vibrate();
-          }}>
-          1{translateTime("month")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "1w"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("1w");
-            vibrate();
-          }}>
-          1{translateTime("week")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "3d"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("3d");
-            vibrate();
-          }}>
-          3{translateTime("day")}
-        </button>
-        <button
-          className={`w-full px-1 text-sm h-8 ${
-            listType === "24h"
-              ? "rounded-3xl bg-primary font-bold text-white"
-              : "text-secondaryText"
-          }`}
-          onClick={() => {
-            setListType("24h");
-            vibrate();
-          }}>
-          24{translateTime("hour")}
-        </button>
+    <div className='relative w-full'>
+      <div ref={chartContainerRef} className='w-full' />
+      <div className='w-full pr-3'>
+        <div className='w-full mt-2 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl'>
+          {TIME_RANGES.map(({ key, label, requiresLifeData }) => {
+            const isActive = listType === key;
+            const isDisabled = requiresLifeData && lifeData.length === 0;
+
+            return (
+              <button
+                key={key}
+                disabled={isDisabled}
+                className={`w-full px-3 h-8 text-sm text-nowrap transition-colors rounded-3xl ${
+                  isActive
+                    ? "bg-primary text-white font-bold"
+                    : "text-secondaryText"
+                } ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                onClick={() => {
+                  if (!isDisabled) {
+                    setListType(key);
+                    vibrate();
+                  }
+                }}>
+                {label(translateTime)}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

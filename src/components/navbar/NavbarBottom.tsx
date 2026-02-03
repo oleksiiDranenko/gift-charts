@@ -39,9 +39,9 @@ export default function NavbarBottom() {
       <div
         className={`w-full flex flex-row justify-around items-center pt-3 ${
           user.username === "_guest" ? "pb-3" : "pb-10"
-        } px-3 rounded-t-3xl bg-secondaryLight backdrop-blur-xl`}>
+        } px-3 rounded-t-3xl bg-secondaryLight backdrop-blur-lg`}>
         <NoPrefetchLink
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[95%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[80%] duration-200 ${
             selectedPage === "home" ? "text-primary " : "text-secondaryText"
           }`}
           href='/'
@@ -49,7 +49,6 @@ export default function NavbarBottom() {
             setSelectedPage("home");
             vibrate();
           }}>
-          {/* <House size={24} /> */}
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 24 24'
@@ -62,7 +61,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("home")}</span>
         </NoPrefetchLink>
         {/* <NoPrefetchLink
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[80%]  duration-200 ${
             selectedPage === "gifts" ? "text-primary" : "text-secondaryText"
           }`}
           href='/gifts-list'
@@ -81,7 +80,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("gifts")}</span>
         </NoPrefetchLink> */}
         <NoPrefetchLink
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[80%]  duration-200 ${
             selectedPage === "tools" ? "text-primary" : "text-secondaryText"
           }`}
           href='/tools'
@@ -105,7 +104,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("tools")}</span>
         </NoPrefetchLink>
         <NoPrefetchLink
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[80%]  duration-200 ${
             selectedPage === "account" ? "text-primary" : "text-secondaryText"
           }`}
           href='/account'
@@ -121,7 +120,7 @@ export default function NavbarBottom() {
             className='size-7'>
             <path
               fillRule='evenodd'
-              d='M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z'
+              d='M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z'
               clipRule='evenodd'
             />
           </svg>
@@ -129,7 +128,7 @@ export default function NavbarBottom() {
           <span className='text-xs'>{t("profile")}</span>
         </NoPrefetchLink>
         <NoPrefetchLink
-          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[90%]  duration-200 ${
+          className={`w-1/5 h-12 gap-y-1 flex flex-col justify-end items-center box-border active:scale-[80%]  duration-200 ${
             selectedPage === "settings" ? "text-primary" : "text-secondaryText"
           }`}
           href='/settings'
@@ -149,7 +148,6 @@ export default function NavbarBottom() {
               clipRule='evenodd'
             />
           </svg>
-
           <span className='text-xs'>{t("settings")}</span>
         </NoPrefetchLink>
       </div>

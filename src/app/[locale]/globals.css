@@ -6,10 +6,19 @@
   --primary: #3b82f6;
   --secondary: #cbdfff;
   --secondary-transparent: #ffffff;
-  --secondary-text: #285082;
+  --secondary-text: #798696;
   --secondary-light: #ffffff;
-  --background: #f3f3f3;
+  --background: #f9f9f9;
   --foreground: #000000;
+}
+
+html,
+body {
+  position: fixed; /* Prevents the whole app window from dragging */
+  overflow: hidden; /* Disables window-level scrolling */
+  width: 100%;
+  height: 100%;
+  overscroll-behavior-y: none; /* Stops pull-to-refresh on mobile */
 }
 
 /* :root {
@@ -75,7 +84,9 @@ body {
 .fade-enter-active {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+  transition:
+    opacity 300ms ease-in-out,
+    transform 300ms ease-in-out;
 }
 .fade-exit {
   opacity: 1;
@@ -84,7 +95,9 @@ body {
 .fade-exit-active {
   opacity: 0;
   transform: translateX(-20px);
-  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+  transition:
+    opacity 300ms ease-in-out,
+    transform 300ms ease-in-out;
 }
 
 @keyframes gradient-x {
