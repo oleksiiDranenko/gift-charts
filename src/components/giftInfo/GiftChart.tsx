@@ -311,8 +311,6 @@ export default function GiftChart({
             />
           </div>
 
-          <AddBanner className='mt-5' hideable />
-
           <div className='w-full px-3'>
             <AddBanner className='mt-5 rounded-3xl' hideable />
           </div>
