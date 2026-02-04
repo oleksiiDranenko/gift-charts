@@ -35,9 +35,11 @@ export default function AppInitializer({
             telegramWebApp.ready();
 
             if (telegramWebApp.requestFullscreen) {
-              telegramWebApp.requestFullscreen();
-              setIsFullscreen(true);
-              console.log("Requested fullscreen mode.");
+              if (screen.width < 1024) {
+                telegramWebApp.requestFullscreen();
+                setIsFullscreen(true);
+                console.log("Requested fullscreen mode.");
+              }
             } else {
               telegramWebApp.expand();
               setIsFullscreen(false);
@@ -55,15 +57,15 @@ export default function AppInitializer({
             // }
 
             // Set height to viewportStableHeight to avoid gaps
-            // const updateViewportHeight = () => {
-            //   const height = telegramWebApp.viewportStableHeight;
-            //   document.documentElement.style.height = `${height}px`;
-            //   document.body.style.height = `${height}px`;
-            //   console.log("Viewport stable height set to:", height);
-            // };
+            const updateViewportHeight = () => {
+              const height = telegramWebApp.viewportStableHeight;
+              document.documentElement.style.height = `${height}px`;
+              document.body.style.height = `${height}px`;
+              console.log("Viewport stable height set to:", height);
+            };
 
-            // telegramWebApp.onEvent("viewportChanged", updateViewportHeight);
-            // updateViewportHeight();
+            telegramWebApp.onEvent("viewportChanged", updateViewportHeight);
+            updateViewportHeight();
 
             // Get Telegram user data and update Redux
             const telegramUser = telegramWebApp.initDataUnsafe?.user;
