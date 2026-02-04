@@ -78,7 +78,9 @@
     "removeGift": "Remove Gift",
     "gift": "подарок",
     "gifts": "подарков",
-    "myCollection": "Моя Коллекция"
+    "myCollection": "Моя Коллекция",
+    "auto": "Авто",
+    "manual": "Вручную"
   },
   "filters": {
     "hideFilters": "Скрыть фильтры",
