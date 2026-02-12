@@ -59,13 +59,23 @@ body {
   --foreground: #ffffff;
 } */
 
-html.dark {
+/* html.dark {
   --primary: #3b82f6;
   --secondary: #2c3039;
   --secondary-transparent: #1c1f24;
   --secondary-light: #1c1f2480;
   --secondary-text: #9ca3af;
   --background: #0f1216;
+  --foreground: #ffffff;
+} */
+
+html.dark {
+  --primary: #4186f6;
+  --secondary: #25282f;
+  --secondary-transparent: #15181b;
+  --secondary-light: #17191d80;
+  --secondary-text: #9ca3af;
+  --background: #0a0c0e;
   --foreground: #ffffff;
 }
 
