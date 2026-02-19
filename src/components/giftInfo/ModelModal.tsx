@@ -12,7 +12,7 @@ import PriceDropdown from "./PriceDropdown";
 import { GiftSkeleton } from "./ModelSkeleton";
 import { useTranslations } from "next-intl";
 
-type PriceOption = "ton" | "usd" | "onSale" | "volume" | "salesCount";
+type PriceOption = "ton" | "usd" | "onSale" | "volume" | "salesCount" | "upgradedSupply" | "supply";
 
 interface Props {
   model: GiftModelInterface | null;
