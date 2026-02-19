@@ -28,9 +28,6 @@ const nextConfig = {
       },
     ];
   },
-  experimental: {
-    prefetchOnHover: false,
-  },
   async headers() {
     return [
       {
