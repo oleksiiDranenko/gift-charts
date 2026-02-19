@@ -7,7 +7,6 @@ import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { setDefaultUser, setUser } from "@/redux/slices/userSlice";
 import EditAssetItem from "./EditAssetItem";
-import ReactLoading from "react-loading";
 import AddAssetItem from "../AddListItem";
 import GiftInterface from "@/interfaces/GiftInterface";
 import Image from "next/image";
@@ -20,6 +19,7 @@ import { useTranslations } from "next-intl";
 import ScrollToTopButton from "@/components/scrollControl/ScrollToTopButton";
 import InfoMessage from "@/components/generalHints/InfoMessage";
 import OpenInTelegram from "../OpenInTelegram";
+import Loader from "@/components/reusable/Loader";
 
 export default function EditAssets() {
   const vibrate = useVibrate();
@@ -33,7 +33,7 @@ export default function EditAssets() {
 
   const [addGiftList, setAddGiftList] = useState<GiftInterface[]>([]);
   const [editedUser, setEditedUser] = useState<UserInterface | undefined>(
-    undefined
+    undefined,
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,13 +59,13 @@ export default function EditAssets() {
 
         if (giftsList.length === 0) {
           const giftsRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API}/gifts`
+            `${process.env.NEXT_PUBLIC_API}/gifts`,
           );
           dispatch(setGiftsList(giftsRes.data));
         }
 
         const userRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`
+          `${process.env.NEXT_PUBLIC_API}/users/check-account/${user.telegramId}`,
         );
 
         if (userRes.data._id) {
@@ -87,7 +87,7 @@ export default function EditAssets() {
             {
               telegramId: user.telegramId,
               username: user.username || "Anonymous",
-            }
+            },
           );
           if (createRes.data.user) {
             const updatedUser = {
@@ -103,7 +103,7 @@ export default function EditAssets() {
             setUsdInput(updatedUser.usd?.toString() || "");
           } else {
             throw new Error(
-              createRes.data.message || "Failed to create account"
+              createRes.data.message || "Failed to create account",
             );
           }
         } else {
@@ -122,7 +122,8 @@ export default function EditAssets() {
   useEffect(() => {
     const list = giftsList
       .filter(
-        (gift) => !editedUser?.assets.some((asset) => asset.giftId === gift._id)
+        (gift) =>
+          !editedUser?.assets.some((asset) => asset.giftId === gift._id),
       )
       .sort((a, b) => a.name.localeCompare(b.name));
     setAddGiftList(list);
@@ -149,7 +150,7 @@ export default function EditAssets() {
 
       const res = await axios.patch(
         `${process.env.NEXT_PUBLIC_API}/users/update-account/${updatedUser.telegramId}`,
-        payload
+        payload,
       );
 
       dispatch(setUser(res.data.user));
@@ -170,7 +171,7 @@ export default function EditAssets() {
     const removedGift = giftsList.find((g) => g._id === id);
     if (removedGift) {
       setAddGiftList((prev) =>
-        [...prev, removedGift].sort((a, b) => a.name.localeCompare(b.name))
+        [...prev, removedGift].sort((a, b) => a.name.localeCompare(b.name)),
       );
     }
 
@@ -184,7 +185,7 @@ export default function EditAssets() {
     if (isNaN(newAmount) || newAmount < 0) newAmount = 0;
 
     const newAssets = editedUser.assets.map((a) =>
-      a.giftId === id ? { ...a, amount: newAmount } : a
+      a.giftId === id ? { ...a, amount: newAmount } : a,
     );
 
     const updatedUser = { ...editedUser, assets: newAssets };
@@ -202,7 +203,7 @@ export default function EditAssets() {
     if (isNaN(newAvgPrice) || newAvgPrice < 0) newAvgPrice = 0;
 
     const newAssets = editedUser.assets.map((a) =>
-      a.giftId === id ? { ...a, avgPrice: newAvgPrice } : a
+      a.giftId === id ? { ...a, avgPrice: newAvgPrice } : a,
     );
 
     const updatedUser = { ...editedUser, assets: newAssets };
@@ -256,7 +257,7 @@ export default function EditAssets() {
     try {
       if (editedUser && editedUser.telegramId) {
         const validAssets = editedUser.assets.filter(
-          (asset) => asset.amount !== undefined && asset.amount > 0
+          (asset) => asset.amount !== undefined && asset.amount > 0,
         );
 
         const updatedUser = {
@@ -283,7 +284,7 @@ export default function EditAssets() {
         const updateRes = await axios.patch(
           `${process.env.NEXT_PUBLIC_API}/users/update-account/${editedUser.telegramId}`,
           updatedUser,
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { "Content-Type": "application/json" } },
         );
 
         dispatch(setUser(updateRes.data.user));
@@ -298,7 +299,7 @@ export default function EditAssets() {
 
   const filteredGiftList = addGiftList
     .filter((gift) =>
-      gift.name.toLowerCase().includes(searchTerm.toLowerCase())
+      gift.name.toLowerCase().includes(searchTerm.toLowerCase()),
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -306,13 +307,7 @@ export default function EditAssets() {
     <div className='w-full flex flex-col px-3'>
       {loading ? (
         <div className='w-full flex justify-center'>
-          <ReactLoading
-            type='spin'
-            color='#0098EA'
-            height={30}
-            width={30}
-            className='mt-5'
-          />
+          <Loader />
         </div>
       ) : error ? (
         <OpenInTelegram />

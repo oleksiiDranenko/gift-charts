@@ -15,7 +15,6 @@ import {
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import GaugeChart from "react-gauge-chart";
-import ReactLoading from "react-loading";
 
 export default function Page() {
   // const fetchIndex = async () => {

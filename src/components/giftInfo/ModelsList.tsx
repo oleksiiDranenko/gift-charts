@@ -7,7 +7,6 @@ import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { Search, X } from "lucide-react";
-import ReactLoading from "react-loading";
 import { useQuery } from "@tanstack/react-query";
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
 import ModelItem from "./ModelItem";
@@ -17,6 +16,7 @@ import ScrollToTopButton from "../scrollControl/ScrollToTopButton";
 import { useAppSelector } from "@/redux/hooks";
 import InfoMessage from "../generalHints/InfoMessage";
 import { useTranslations } from "next-intl";
+import Loader from "../reusable/Loader";
 
 interface MarketsModalProps {
   isOpen: boolean;
@@ -196,13 +196,7 @@ export default function ModelsList({
             )
           ) : (
             <div className='w-full flex justify-center mt-10'>
-              <ReactLoading
-                type='spin'
-                color='var(--primary)'
-                height={30}
-                width={30}
-                className='mt-5'
-              />
+              <Loader />
             </div>
           )}
 

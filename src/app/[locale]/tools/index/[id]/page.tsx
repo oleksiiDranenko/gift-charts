@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { IndexDataInterface } from "@/interfaces/IndexDataInterface";
 import IndexChart from "@/components/tools/IndexChart";
-import ReactLoading from "react-loading";
 import { useRouter } from "next/navigation";
 import IndexPie from "@/components/tools/IndexPie";
 import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
@@ -14,6 +13,7 @@ import CalendarHeatmap from "@/components/tools/calendar-heatmap/CalendarHeatmap
 import { IndexMonthDataInterface } from "@/interfaces/IndexMonthDataInterface";
 import BackButton from "@/utils/ui/backButton";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "@/components/reusable/Loader";
 
 async function fetchIndex(id: string): Promise<IndexInterface> {
   const { data } = await axios.get(
@@ -117,13 +117,7 @@ export default function Page({ params }: any) {
           </div>
         ) : (
           <div className='w-full flex justify-center'>
-            <ReactLoading
-              type='spin'
-              color='#0098EA'
-              height={30}
-              width={30}
-              className='mt-5'
-            />
+            <Loader />
           </div>
         )}
       </div>

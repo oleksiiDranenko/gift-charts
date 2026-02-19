@@ -8,13 +8,13 @@ import { GiftHeatmapInterface } from "@/interfaces/GiftHeatmapInterface";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 import TreemapControlModal from "@/components/tools/treemap/EditTreemapModal";
 import { Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import DownloadHeatmapModal from "@/components/tools/treemap/DownloadHeatmapModal";
 import AddBanner from "@/components/AddBanner";
+import Loader from "@/components/reusable/Loader";
 
 export default function Page() {
   const [settings, setSettings] = useState(() => {
@@ -203,13 +203,7 @@ export default function Page() {
         </div>
       </div>
       {isLoading ? (
-        <ReactLoading
-          type='spin'
-          color='#0098EA'
-          height={30}
-          width={30}
-          className='mt-5'
-        />
+        <Loader />
       ) : (
         <TreemapChart
           ref={chartRef}

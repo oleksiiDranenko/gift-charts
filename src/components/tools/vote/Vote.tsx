@@ -7,7 +7,6 @@
 // import { useMutation, useQuery, useQueryClient } from "react-query";
 // import axios from "axios";
 // import { useRouter } from "next/navigation";
-// import ReactLoading from "react-loading";
 
 // export default function Vote() {
 //   const { resolvedTheme } = useTheme();

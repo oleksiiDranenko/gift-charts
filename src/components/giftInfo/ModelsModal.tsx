@@ -7,11 +7,11 @@ import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { X } from "lucide-react";
-import ReactLoading from "react-loading";
 import { useQuery } from "@tanstack/react-query";
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
 import ModelItem from "./ModelItem";
 import ModalBase from "@/utils/ui/ModalBase";
+import Loader from "../reusable/Loader";
 
 interface MarketsModalProps {
   trigger: ReactNode;
@@ -80,13 +80,7 @@ export default function ModelsModal({
               ))
           ) : (
             <div className='w-full flex justify-center mt-10'>
-              <ReactLoading
-                type='spin'
-                color='var(--primary)'
-                height={30}
-                width={30}
-                className='mt-5'
-              />
+              <Loader />
             </div>
           )}
           <div className='h-10'></div>

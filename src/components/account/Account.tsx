@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import Asset from "./Asset";
-import ReactLoading from "react-loading";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
@@ -15,6 +14,7 @@ import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
 import OpenInTelegram from "./OpenInTelegram";
 import NoPrefetchLink from "../NoPrefetchLink";
+import Loader from "../reusable/Loader";
 
 interface AssetDisplayInterface {
   _id: string;
@@ -149,13 +149,7 @@ export default function Account() {
     <div className='w-full flex flex-col justify-center relative'>
       {loading ? (
         <div className='w-full flex justify-center'>
-          <ReactLoading
-            type='spin'
-            color='#0098EA'
-            height={30}
-            width={30}
-            className='mt-5'
-          />
+          <Loader />
         </div>
       ) : user.username === "_guest" ? (
         <OpenInTelegram />

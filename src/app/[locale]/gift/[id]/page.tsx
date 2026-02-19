@@ -7,7 +7,6 @@ import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
 import GiftInitPriceSection from "@/components/giftInfo/GiftInitPriceSection";

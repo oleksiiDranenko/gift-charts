@@ -6,7 +6,6 @@ import axios from "axios";
 import { setGiftsList } from "@/redux/slices/giftsListSlice";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { setDefaultUser, setUser } from "@/redux/slices/userSlice";
-import ReactLoading from "react-loading";
 import AddListItem from "../AddListItem";
 import GiftInterface from "@/interfaces/GiftInterface";
 import { useRouter } from "next/navigation";
@@ -19,6 +18,7 @@ import { useTranslations } from "next-intl";
 import ScrollToTopButton from "@/components/scrollControl/ScrollToTopButton";
 import InfoMessage from "@/components/generalHints/InfoMessage";
 import OpenInTelegram from "../OpenInTelegram";
+import Loader from "@/components/reusable/Loader";
 
 export default function EditWatchlist() {
   const vibrate = useVibrate();
@@ -182,13 +182,7 @@ export default function EditWatchlist() {
     <div className='w-full flex flex-col px-3'>
       {loading ? (
         <div className='w-full flex justify-center'>
-          <ReactLoading
-            type='spin'
-            color='#0098EA'
-            height={30}
-            width={30}
-            className='mt-5'
-          />
+          <Loader />
         </div>
       ) : error ? (
         <OpenInTelegram />
