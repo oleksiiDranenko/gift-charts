@@ -223,7 +223,9 @@
     "usd": "USDT",
     "onSale": "On sale",
     "volume": "Volume",
-    "salesCount": "Sales count"
+    "salesCount": "Sales count",
+    "upgradedSupply": "Upgraded Supply",
+    "supply": "Supply"
   },
 
   "giftHeader": {

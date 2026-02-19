@@ -20,7 +20,7 @@ import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 interface LineChartProps {
   weekData: GiftWeekDataInterface[];
   lifeData: GiftLifeDataInterface[];
-  selectedPrice: "ton" | "usd" | "onSale" | "volume" | "salesCount";
+  selectedPrice: "ton" | "usd" | "onSale" | "volume" | "salesCount" | "upgradedSupply" | "supply";
   percentChange: number;
   setPercentChange: (value: number) => void;
   onDataUpdate?: (data: { currentValue: number | null }) => void;
@@ -67,6 +67,8 @@ export default function LineChart({
     if (selectedPrice === "onSale") return item.amountOnSale;
     if (selectedPrice === "volume") return item.volume;
     if (selectedPrice === "salesCount") return item.salesCount;
+    if (selectedPrice === "upgradedSupply") return (item as any).upgradedSupply || 0;
+    if (selectedPrice === "supply") return (item as any).supply || 0;
     return 0;
   };
 
@@ -99,6 +101,7 @@ export default function LineChart({
         time: parseToTimestamp(item),
         value: getVal(item) ?? 0,
       }))
+      .filter((item) => item.value !== 0) // Filter out 0 values
       .sort((a, b) => (a.time as number) - (b.time as number))
       .filter((v, i, a) => i === 0 || v.time !== a[i - 1].time);
   }, [weekData, selectedPrice]);
@@ -108,7 +111,8 @@ export default function LineChart({
     const life = lifeData.map((item) => ({
       time: parseToTimestamp(item),
       value: getVal(item) ?? 0,
-    }));
+    }))
+    .filter((item) => item.value !== 0); // Filter out 0 values
 
     // Append the latest point from weekData if it exists
     if (weekData.length > 0) {
@@ -118,10 +122,10 @@ export default function LineChart({
         value: getVal(lastWeekItem) ?? 0,
       };
 
-      // Only append if it's actually newer than the last life point
+      // Only append if it's actually newer than the last life point and not 0
       if (
         life.length === 0 ||
-        (latestPoint.time as number) > (life[life.length - 1].time as number)
+        ((latestPoint.time as number) > (life[life.length - 1].time as number) && latestPoint.value !== 0)
       ) {
         life.push(latestPoint);
       }

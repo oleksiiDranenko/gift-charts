@@ -52,7 +52,7 @@ export default function GiftChart({
     return { currency: "ton", giftType: "line", giftBackground: "none" };
   });
   const [selectedPrice, setSelectedPrice] = useState<
-    "ton" | "usd" | "onSale" | "volume" | "salesCount"
+    "ton" | "usd" | "onSale" | "volume" | "salesCount" | "upgradedSupply" | "supply"
   >(settings.currency);
   const [candleData, setCandleData] = useState<GiftLifeDataInterface[]>([]);
   const [chartType, setChartType] = useState<"line" | "candle" | "bar">("line");

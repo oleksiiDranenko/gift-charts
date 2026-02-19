@@ -224,7 +224,9 @@
     "usd": "USDT",
     "onSale": "На продаже",
     "volume": "Объём",
-    "salesCount": "Количество продаж"
+    "salesCount": "Количество продаж",
+    "upgradedSupply": "Улучшенные",
+    "supply": "Тираж"
   },
 
   "giftHeader": {

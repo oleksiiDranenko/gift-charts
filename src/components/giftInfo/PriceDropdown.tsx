@@ -4,7 +4,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import useVibrate from "@/hooks/useVibrate";
 
-type PriceOption = "ton" | "usd" | "onSale" | "volume" | "salesCount";
+type PriceOption = "ton" | "usd" | "onSale" | "volume" | "salesCount" | "upgradedSupply" | "supply";
 
 interface PriceDropdownProps {
   selectedPrice: PriceOption;
@@ -18,6 +18,8 @@ const priceOptions: PriceOption[] = [
   "onSale",
   "volume",
   "salesCount",
+  "upgradedSupply",
+  "supply",
 ];
 
 export default function PriceDropdown({
