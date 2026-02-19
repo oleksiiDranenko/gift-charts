@@ -4,6 +4,13 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: [
+    "markmind-editor",
+    "notion-design-system",
+    "niva-ui",
+    "lucide-react",
+    "@headlessui/react",
+  ],
   images: {
     formats: ["image/webp"],
     minimumCacheTTL: 31536000,
