@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import IndexChart from "./IndexChart";
 import Image from "next/image";
 import { Activity, ChartSpline } from "lucide-react";

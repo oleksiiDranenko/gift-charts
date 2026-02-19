@@ -5,14 +5,21 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
 import { formatPrice } from "@/utils/formatNumber";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LineChart from "./LineChart";
 import PriceDropdown from "./PriceDropdown";
 import { GiftSkeleton } from "./ModelSkeleton";
 import { useTranslations } from "next-intl";
 
-type PriceOption = "ton" | "usd" | "onSale" | "volume" | "salesCount" | "upgradedSupply" | "supply";
+type PriceOption =
+  | "ton"
+  | "usd"
+  | "onSale"
+  | "volume"
+  | "salesCount"
+  | "upgradedSupply"
+  | "supply";
 
 interface Props {
   model: GiftModelInterface | null;
@@ -45,56 +52,42 @@ export default function ModelModal({ model, giftId }: Props) {
   const [chartPercentChange, setChartPercentChange] = useState<number>(0);
   const [currentValue, setCurrentValue] = useState<number | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<PriceOption>("ton");
-  const translate = useTranslations('giftInfo')
+  const translate = useTranslations("giftInfo");
 
-  const { data: weekData = [], isLoading: isLoadingWeek } = useQuery(
-    ["modelWeekData", model?.name, giftId],
-    () => fetchWeekData(model?.name || "", giftId || ""),
-    {
-      enabled: !!model?.name && !!giftId,
-      refetchOnWindowFocus: false,
-      select: (data) => {
-        if (Array.isArray(data)) {
-          return data;
-        } else if (data && typeof data === "object") {
-          // Try to find an array property
-          const possibleArrays = ["data", "models", "results", "items"];
-          for (const key of possibleArrays) {
-            if (Array.isArray(data[key])) {
-              return data[key];
-            }
-          }
+  const { data: weekData = [], isLoading: isLoadingWeek } = useQuery({
+    queryKey: ["modelWeekData", model?.name, giftId],
+    queryFn: () => fetchWeekData(model?.name || "", giftId || ""),
+    enabled: !!model?.name && !!giftId,
+    refetchOnWindowFocus: false,
+    select: (data) => {
+      if (Array.isArray(data)) return data;
+      if (data && typeof data === "object") {
+        const possibleArrays = ["data", "models", "results", "items"];
+        for (const key of possibleArrays) {
+          if (Array.isArray(data[key])) return data[key];
         }
-
-        return [];
-      },
+      }
+      return [];
     },
-  );
+  });
 
-  const { data: lifeData = [], isLoading: isLoadingLife } = useQuery(
-    ["modelLifeData", model?.name, giftId],
-    () => fetchLifeData(model?.name || "", giftId || ""),
-    {
-      enabled: !!model?.name && !!giftId,
-      refetchOnWindowFocus: false,
-      select: (data) => {
-        if (Array.isArray(data)) {
-          return data;
-        } else if (data && typeof data === "object") {
-          // Try to find an array property
-          const possibleArrays = ["data", "models", "results", "items"];
-          for (const key of possibleArrays) {
-            if (Array.isArray(data[key])) {
-              return data[key];
-            }
-          }
+  const { data: lifeData = [], isLoading: isLoadingLife } = useQuery({
+    queryKey: ["modelLifeData", model?.name, giftId],
+    queryFn: () => fetchLifeData(model?.name || "", giftId || ""),
+    enabled: !!model?.name && !!giftId,
+    refetchOnWindowFocus: false,
+    select: (data) => {
+      if (Array.isArray(data)) return data;
+      if (data && typeof data === "object") {
+        const possibleArrays = ["data", "models", "results", "items"];
+        for (const key of possibleArrays) {
+          if (Array.isArray(data[key])) return data[key];
         }
-        // If we can't find an array, return empty
-        console.warn("Life data is not in expected format:", data);
-        return [];
-      },
+      }
+      console.warn("Life data is not in expected format:", data);
+      return [];
     },
-  );
+  });
 
   useEffect(() => {
     if (!model) return;
@@ -135,7 +128,7 @@ export default function ModelModal({ model, giftId }: Props) {
               <h1 className='flex flex-col'>
                 <span className='text-lg font-bold'>{model.name}</span>
                 <span className='text-secondaryText text-sm flex justify-start'>
-                  {translate('rarity')}: {model.rarity}%
+                  {translate("rarity")}: {model.rarity}%
                 </span>
               </h1>
             </div>

@@ -17,7 +17,6 @@ import {
 import { useTranslations } from "next-intl";
 import IndexWidget from "./IndexWidget";
 import ListSkeleton from "../giftsList/ListSkeleton";
-import VoteBanner from "../tools/vote/VoteBanner";
 import { GiftSorter } from "../filterGifts/GiftSorter";
 import NoPrefetchLink from "../NoPrefetchLink";
 import AddBanner from "../AddBanner";
@@ -73,7 +72,6 @@ export default function MainPage() {
 
   return (
     <div>
-      
       {/* <SearchBar />
 
       <div className='px-3 mb-3'>

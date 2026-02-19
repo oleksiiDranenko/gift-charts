@@ -5,7 +5,7 @@ import TreemapChart, {
 } from "@/components/tools/treemap/TreemapChart";
 import useVibrate from "@/hooks/useVibrate";
 import { GiftHeatmapInterface } from "@/interfaces/GiftHeatmapInterface";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ReactLoading from "react-loading";
@@ -35,22 +35,26 @@ export default function Page() {
   const [timeGap, setTimeGap] = useState<"24h" | "1w" | "1m">("24h");
   const [currency, setCurrency] = useState<"ton" | "usd">(settings.currency);
   const [heatmapStyle, setHeatmapStyle] = useState<"round" | "default">(
-    "default"
+    "default",
   );
   const [isDynamic, setIsDynamic] = useState<boolean>(false);
 
   const [amount, setAmount] = useState<number>(100);
-  const { data: giftsHeatmap, isLoading, error } = useQuery(
-    "gifts-heatmap",
-    async () => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API}/gifts/heatmap`);
+  const {
+    data: giftsHeatmap,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["gifts-heatmap"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API}/gifts/heatmap`,
+      );
       return response.data;
     },
-    {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
-    }
-  );
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
 
   const translate = useTranslations("heatmap");
 
@@ -66,7 +70,7 @@ export default function Page() {
 
   useEffect(() => {
     if (!giftsHeatmap) return;
-    
+
     let rawList = [...giftsHeatmap];
 
     // Note: GiftHeatmapInterface doesn't have preSale field, so we don't filter by it
@@ -78,12 +82,12 @@ export default function Page() {
           if (timeGap === "24h") {
             const aChange = a.tonPrice24hAgo
               ? Math.abs(
-                  ((a.priceTon - a.tonPrice24hAgo) / a.tonPrice24hAgo) * 100
+                  ((a.priceTon - a.tonPrice24hAgo) / a.tonPrice24hAgo) * 100,
                 )
               : 0;
             const bChange = b.tonPrice24hAgo
               ? Math.abs(
-                  ((b.priceTon - b.tonPrice24hAgo) / b.tonPrice24hAgo) * 100
+                  ((b.priceTon - b.tonPrice24hAgo) / b.tonPrice24hAgo) * 100,
                 )
               : 0;
             return bChange - aChange;
@@ -94,12 +98,12 @@ export default function Page() {
           ) {
             const aChange = a.tonPrice24hAgo
               ? Math.abs(
-                  ((a.priceTon - a.tonPriceWeekAgo) / a.tonPriceWeekAgo) * 100
+                  ((a.priceTon - a.tonPriceWeekAgo) / a.tonPriceWeekAgo) * 100,
                 )
               : 0;
             const bChange = b.tonPrice24hAgo
               ? Math.abs(
-                  ((b.priceTon - b.tonPriceWeekAgo) / b.tonPriceWeekAgo) * 100
+                  ((b.priceTon - b.tonPriceWeekAgo) / b.tonPriceWeekAgo) * 100,
                 )
               : 0;
             return bChange - aChange;
@@ -110,12 +114,14 @@ export default function Page() {
           ) {
             const aChange = a.tonPrice24hAgo
               ? Math.abs(
-                  ((a.priceTon - a.tonPriceMonthAgo) / a.tonPriceMonthAgo) * 100
+                  ((a.priceTon - a.tonPriceMonthAgo) / a.tonPriceMonthAgo) *
+                    100,
                 )
               : 0;
             const bChange = b.tonPrice24hAgo
               ? Math.abs(
-                  ((b.priceTon - b.tonPriceMonthAgo) / b.tonPriceMonthAgo) * 100
+                  ((b.priceTon - b.tonPriceMonthAgo) / b.tonPriceMonthAgo) *
+                    100,
                 )
               : 0;
             return bChange - aChange;
@@ -127,7 +133,7 @@ export default function Page() {
       case "marketCap":
         sortedList.sort(
           (a, b) =>
-            b.priceTon * b.upgradedSupply - a.priceTon * a.upgradedSupply
+            b.priceTon * b.upgradedSupply - a.priceTon * a.upgradedSupply,
         );
         break;
     }

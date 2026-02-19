@@ -6,7 +6,7 @@ import axios from "axios";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface VoteModalProps {
   /** Optional: external control for opening/closing modal */
@@ -37,19 +37,22 @@ export default function VoteModal({
   const voteToScore = { negative: 0, neutral: 50, positive: 100 };
 
   // --- Vote Status Query ---
-  const { data: voteStatus, isLoading: isVoteStatusLoading } = useQuery(
-    ["voteStatus", "marketSentiment"],
-    async () => {
+  const {
+    data: voteStatus,
+    isLoading: isVoteStatusLoading,
+    error,
+  } = useQuery({
+    queryKey: ["voteStatus", "marketSentiment"],
+    queryFn: async () => {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/vote/marketSentiment`
+        `${process.env.NEXT_PUBLIC_API}/vote/marketSentiment`,
       );
       return res.data;
     },
-    {
-      onError: (err: any) => console.error("Error checking vote status:", err),
-      retry: false,
-    }
-  );
+    retry: false,
+  });
+
+  if (error) console.error("Error checking vote status:", error);
 
   useEffect(() => {
     if (!isVoteStatusLoading && voteStatus !== undefined) {
@@ -76,7 +79,9 @@ export default function VoteModal({
     },
     onSuccess: () => {
       setHasVoted(true);
-      queryClient.invalidateQueries(["voteStatus", "marketSentiment"]);
+      queryClient.invalidateQueries({
+        queryKey: ["voteStatus", "marketSentiment"],
+      });
     },
     onError: (error: any) => {
       console.error("Error submitting vote:", error);
@@ -142,8 +147,8 @@ export default function VoteModal({
                           ? type === "negative"
                             ? "bg-red-500 font-bold text-white"
                             : type === "neutral"
-                            ? "bg-yellow-500 font-bold text-white"
-                            : "bg-green-500 font-bold text-white"
+                              ? "bg-yellow-500 font-bold text-white"
+                              : "bg-green-500 font-bold text-white"
                           : "bg-secondaryTransparent"
                       } text-secondaryText rounded-3xl p-2`}
                       onClick={() => {
@@ -158,9 +163,9 @@ export default function VoteModal({
                 <button
                   className='w-full flex items-center justify-center text-white gap-x-1 p-2 bg-primary disabled:opacity-50 rounded-3xl mb-5'
                   onClick={handleVoteSubmit}
-                  disabled={!selectedVote || voteMutation.isLoading}>
+                  disabled={!selectedVote || voteMutation.isPending}>
                   <Check size={16} />
-                  {voteMutation.isLoading ? "Submitting..." : "Vote"}
+                  {voteMutation.isPending ? "Submitting..." : "Vote"}
                 </button>
 
                 <div className='w-full flex items-center justify-center'>

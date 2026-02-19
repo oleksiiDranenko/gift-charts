@@ -8,7 +8,7 @@ import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { X } from "lucide-react";
 import ReactLoading from "react-loading";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
 import ModelItem from "./ModelItem";
 import ModalBase from "@/utils/ui/ModalBase";
@@ -21,7 +21,7 @@ interface MarketsModalProps {
 
 async function fetchGiftModels(giftId: string) {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API}/giftModels/${giftId}`
+    `${process.env.NEXT_PUBLIC_API}/giftModels/${giftId}`,
   );
   return data[0].models;
 }
@@ -38,7 +38,9 @@ export default function ModelsModal({
     data: modelsList = [],
     isLoading,
     isError,
-  } = useQuery(["giftModels", giftId], () => fetchGiftModels(giftId), {
+  } = useQuery({
+    queryKey: ["giftModels", giftId],
+    queryFn: () => fetchGiftModels(giftId),
     enabled: isOpen && !!giftId,
     refetchOnWindowFocus: false,
   });

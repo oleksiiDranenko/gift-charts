@@ -12,7 +12,7 @@ import {
 } from "lightweight-charts";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
-import { useQueries, useQuery } from "react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import useVibrate from "@/hooks/useVibrate";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
@@ -122,27 +122,25 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
   }, [isModalOpen, selectedGifts]);
 
   // Fetch all gifts for the modal
-  const { data: allGiftsMinimal } = useQuery(
-    ["giftsMinimal"],
-    async () => {
+  const { data: allGiftsMinimal } = useQuery({
+    queryKey: ["giftsMinimal"],
+    queryFn: async () => {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_API}/gifts/minimal`,
       );
       return res.data;
     },
-    {
-      staleTime: 1000 * 60 * 30, // Cache for 30 minutes since gift lists rarely change
-      refetchOnWindowFocus: false,
-    },
-  );
+    staleTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
+  });
 
-  const results = useQueries(
-    selectedGifts.slice(0, 3).map((gift) => ({
+  const results = useQueries({
+    queries: selectedGifts.slice(0, 3).map((gift) => ({
       queryKey: ["compare-gifts", gift.name],
       queryFn: () => fetchGiftDataset(gift.name),
       staleTime: 1000 * 60 * 5,
     })),
-  );
+  });
 
   // Memoize dependencies for chart initialization
   const hasGifts = selectedGifts.length > 0;
@@ -694,25 +692,24 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
             {/* Time range selector */}
             <div className='w-full mt-2 p-2 flex flex-row overflow-x-scroll scrollbar-hide bg-secondaryTransparent rounded-3xl'>
               {TIME_RANGES.map(({ key, label }) => {
-            const isActive = listType === key;
+                const isActive = listType === key;
 
-            return (
-              <button
-                key={key}
-                className={`w-full px-3 h-8 text-sm text-nowrap transition-colors rounded-3xl ${
-                  isActive
-                    ? "bg-primary text-white font-bold"
-                    : "text-secondaryText"
-                } `}
-                onClick={() => {
-                  
-                    setListType(key);
-                    vibrate();
-                }}>
-                {label(translateTime)}
-              </button>
-            );
-          })}
+                return (
+                  <button
+                    key={key}
+                    className={`w-full px-3 h-8 text-sm text-nowrap transition-colors rounded-3xl ${
+                      isActive
+                        ? "bg-primary text-white font-bold"
+                        : "text-secondaryText"
+                    } `}
+                    onClick={() => {
+                      setListType(key);
+                      vibrate();
+                    }}>
+                    {label(translateTime)}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

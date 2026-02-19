@@ -6,7 +6,7 @@ import GiftInterface from "@/interfaces/GiftInterface";
 import GiftLifeDataInterface from "@/interfaces/GiftLifeDataInterface";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import ReactLoading from "react-loading";
 import BackButton from "@/utils/ui/backButton";
 import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
@@ -49,31 +49,31 @@ export default function Page({ params }: any) {
     data: gift = null,
     isLoading: isGiftLoading,
     isError: isGiftError,
-  } = useQuery<GiftInterface | null, Error>(["gift", id], () => fetchGift(id), {
+  } = useQuery<GiftInterface | null, Error>({
+    queryKey: ["gift", id],
+    queryFn: () => fetchGift(id),
     enabled: !!id,
   });
-
   // Fetch week data (depends on gift)
   const {
     data: weekList = [],
     isLoading: isWeekLoading,
     isError: isWeekError,
-  } = useQuery<GiftWeekDataInterface[], Error>(
-    ["weekData", gift?.name],
-    () => fetchWeekData(gift!.name),
-    { enabled: !!gift }, // only fetch when gift is loaded
-  );
+  } = useQuery<GiftWeekDataInterface[], Error>({
+    queryKey: ["weekData", gift?.name],
+    queryFn: () => fetchWeekData(gift!.name),
+    enabled: !!gift,
+  });
 
-  // Fetch life data (depends on gift)
   const {
     data: lifeList = [],
     isLoading: isLifeLoading,
     isError: isLifeError,
-  } = useQuery<GiftLifeDataInterface[], Error>(
-    ["lifeData", gift?.name],
-    () => fetchLifeData(gift!.name),
-    { enabled: !!gift }, // only fetch when gift is loaded
-  );
+  } = useQuery<GiftLifeDataInterface[], Error>({
+    queryKey: ["lifeData", gift?.name],
+    queryFn: () => fetchLifeData(gift!.name),
+    enabled: !!gift,
+  });
 
   const giftLoading = isGiftLoading;
   const loading = giftLoading || isWeekLoading || isLifeLoading;

@@ -13,27 +13,27 @@ import useVibrate from "@/hooks/useVibrate";
 import CalendarHeatmap from "@/components/tools/calendar-heatmap/CalendarHeatmap";
 import { IndexMonthDataInterface } from "@/interfaces/IndexMonthDataInterface";
 import BackButton from "@/utils/ui/backButton";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 async function fetchIndex(id: string): Promise<IndexInterface> {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API}/indexes/get-one/${id}`
+    `${process.env.NEXT_PUBLIC_API}/indexes/get-one/${id}`,
   );
   return data;
 }
 
 async function fetchIndexData(id: string): Promise<IndexDataInterface[]> {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API}/indexData/get-all/${id}`
+    `${process.env.NEXT_PUBLIC_API}/indexData/get-all/${id}`,
   );
   return data;
 }
 
 async function fetchIndexMonthData(
-  id: string
+  id: string,
 ): Promise<IndexMonthDataInterface[]> {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API}/indexMonthData/${id}`
+    `${process.env.NEXT_PUBLIC_API}/indexMonthData/${id}`,
   );
   return data;
 }

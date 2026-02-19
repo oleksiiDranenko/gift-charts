@@ -16,24 +16,23 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import GaugeChart from "react-gauge-chart";
 import ReactLoading from "react-loading";
-import { useQuery } from "react-query";
 
 export default function Page() {
-  const fetchIndex = async () => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/fearAndGreed`);
-    const percent = res.data.value / 100;
-    console.log(percent);
-    return percent;
-  };
+  // const fetchIndex = async () => {
+  //   const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/fearAndGreed`);
+  //   const percent = res.data.value / 100;
+  //   console.log(percent);
+  //   return percent;
+  // };
 
-  const { data: percent, isLoading } = useQuery<number>({
-    queryKey: ["fearAndGreed"],
-    queryFn: fetchIndex,
-  });
+  // const { data: percent, isLoading } = useQuery<number>({
+  //   queryKey: ["fearAndGreed"],
+  //   queryFn: fetchIndex,
+  // });
 
-  const { resolvedTheme } = useTheme();
+  // const { resolvedTheme } = useTheme();
 
-  const t = useTranslations("fearAndGreed");
+  // const t = useTranslations("fearAndGreed");
 
   return (
     <main className='w-full lg:w-[98%] pt-[0px]  px-3'>
@@ -41,7 +40,7 @@ export default function Page() {
         <BackButton />
       </div>
 
-      {isLoading ? (
+      {/* {isLoading ? (
         <div>loading</div>
       ) : (
         <div className='w-full lg:1/2 mt-3 flex flex-col lg:flex-row lg:justify-between items-center py-3 '>
@@ -134,7 +133,7 @@ export default function Page() {
 
       <div className='flex flex-row items-center gap-x-3 bg-blue-400 text-primary bg-opacity-15 mt-5 p-5 rounded-3xl'>
         <Info size={20} /> Index is currently in testing
-      </div>
+      </div> */}
     </main>
   );
 }

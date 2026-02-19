@@ -2,7 +2,7 @@
 
 import { useAppSelector } from "@/redux/hooks";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import GiftItem from "./Gift";
 import { useEffect, useState } from "react";

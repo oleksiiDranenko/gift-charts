@@ -8,7 +8,7 @@ import useVibrate from "@/hooks/useVibrate";
 import axios from "axios";
 import { Search, X } from "lucide-react";
 import ReactLoading from "react-loading";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import GiftModelInterface from "@/interfaces/GiftModelInterface";
 import ModelItem from "./ModelItem";
 import ModelModal from "./ModelModal";
@@ -53,16 +53,17 @@ export default function ModelsList({
     data: modelsList = [],
     isLoading,
     isError,
-  } = useQuery(["giftModels", giftId], () => fetchGiftModels(giftId), {
+  } = useQuery({
+    queryKey: ["giftModels", giftId],
+    queryFn: () => fetchGiftModels(giftId),
     enabled: isOpen,
     refetchOnWindowFocus: false,
   });
-
   const clearSearch = () => setSearchQuery("");
 
   // Filter models based on search query
-  const filteredModels = modelsList.filter((model: GiftModelInterface) => 
-    model.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredModels = modelsList.filter((model: GiftModelInterface) =>
+    model.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   useEffect(() => {

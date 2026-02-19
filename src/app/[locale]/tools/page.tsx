@@ -8,7 +8,7 @@ import IndexBlock from "@/components/tools/IndexBlock";
 import useVibrate from "@/hooks/useVibrate";
 import { ChevronRight, Gauge } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import IndexBlockSkeleton from "@/components/tools/IndexBlockSkeleton";
 import NoPrefetchLink from "@/components/NoPrefetchLink";
 import { MdOutlineSsidChart } from "react-icons/md";
@@ -141,9 +141,11 @@ export default function Page() {
               <MdOutlineSsidChart className='size-7 text-primary' />
 
               <div className='flex flex-col'>
-                <span className='font-bold text-lg'>{translate('compareCharts')}</span>
+                <span className='font-bold text-lg'>
+                  {translate("compareCharts")}
+                </span>
                 <span className='text-sm text-secondaryText'>
-                  {translate('compareChartsDescription')}
+                  {translate("compareChartsDescription")}
                 </span>
               </div>
             </div>

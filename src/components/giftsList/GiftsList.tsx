@@ -13,7 +13,11 @@ import ListSkeleton from "./ListSkeleton";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import axios from "axios";
-import { useInfiniteQuery, useQuery } from "react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import { GiftListItemInterface } from "@/interfaces/GiftListItemInterface";
 import { mapSortToApi } from "@/utils/sortMapping";
 
@@ -89,19 +93,17 @@ export default function GiftsList() {
   };
 
   // Inside your frontend component or a custom hook
-  const { data: allGiftsMinimal } = useQuery(
-    ["giftsMinimal"],
-    async () => {
+  const { data: allGiftsMinimal } = useQuery({
+    queryKey: ["giftsMinimal"],
+    queryFn: async () => {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_API}/gifts/minimal`,
       );
       return res.data;
     },
-    {
-      staleTime: 1000 * 60 * 30, // Cache for 10 minutes since gift lists rarely change
-      refetchOnWindowFocus: false,
-    },
-  );
+    staleTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
+  });
 
   // 2. Infinite Query: Now uses 'debouncedSearch' in the key
   const {
@@ -111,8 +113,8 @@ export default function GiftsList() {
     isFetchingNextPage,
     isFetching,
     isLoading,
-  } = useInfiniteQuery<GiftsSearchResponse>(
-    [
+  } = useInfiniteQuery<GiftsSearchResponse>({
+    queryKey: [
       "giftsSearch",
       currency,
       debouncedSearch,
@@ -121,11 +123,9 @@ export default function GiftsList() {
       filters.chosenGifts,
       user.savedList,
     ],
-    async ({ pageParam = 1 }) => {
-      // 1. Get Sort from Modal (Redux)
+    queryFn: async ({ pageParam = 1 }) => {
       let { sortBy, order } = mapSortToApi(filters.sort);
 
-      // 2. Override if we are in specific tabs (Gainers/Losers)
       if (selectedList === "gainers") {
         sortBy = "growth24hPercent";
         order = "desc";
@@ -134,14 +134,11 @@ export default function GiftsList() {
         order = "asc";
       }
 
-      // Determine which IDs to filter by
       let requestIds: string[] | undefined = undefined;
 
       if (selectedList === "saved") {
-        // If user is on the "Saved" tab, use their personal list
         requestIds = user.savedList;
       } else if (filters.chosenGifts.length > 0) {
-        // If user is on any other tab but has manual filters applied
         requestIds = filters.chosenGifts;
       }
 
@@ -157,13 +154,12 @@ export default function GiftsList() {
       );
       return res.data;
     },
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage.hasMore ? lastPage.page + 1 : undefined,
-      refetchOnWindowFocus: false,
-      keepPreviousData: true,
-    },
-  );
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? lastPage.page + 1 : undefined,
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
+  });
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -360,7 +356,9 @@ export default function GiftsList() {
           </>
         ) : (
           <InfoMessage
-            text={giftsListTranslate("noGiftsFound", { search: debouncedSearch })}
+            text={giftsListTranslate("noGiftsFound", {
+              search: debouncedSearch,
+            })}
             buttonText={giftsListTranslate("clearSearch")}
             onClick={clearSearch}
           />

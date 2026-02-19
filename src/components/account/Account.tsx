@@ -13,7 +13,6 @@ import useVibrate from "@/hooks/useVibrate";
 import PortfolioChart from "./PortfolioChart";
 import GiftWeekDataInterface from "@/interfaces/GiftWeekDataInterface";
 import { useTranslations } from "next-intl";
-import { useQuery } from "react-query";
 import OpenInTelegram from "./OpenInTelegram";
 import NoPrefetchLink from "../NoPrefetchLink";
 

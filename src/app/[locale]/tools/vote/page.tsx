@@ -1,6 +1,5 @@
 "use client";
 
-import Vote from "@/components/tools/vote/Vote";
 import BackButton from "@/utils/ui/backButton";
 
 export default function Page() {
@@ -9,7 +8,7 @@ export default function Page() {
       <div className='w-full h-10 gap-x-3 flex items-center justify-between'>
         <BackButton />
       </div>
-      <Vote />
+      {/* <Vote /> */}
     </div>
   );
 }
