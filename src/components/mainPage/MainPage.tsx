@@ -72,15 +72,9 @@ export default function MainPage() {
 
   return (
     <div>
-      {/* <SearchBar />
-
       <div className='px-3 mb-3'>
-        <IndexWidget
-          currency={currency}
-          indexId='68493d064b37eed02b7ae5af'
-          indexName='marketCap'
-        />
-      </div> */}
+        <AddBanner />
+      </div>
 
       <GiftsList />
 

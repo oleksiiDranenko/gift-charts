@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import NoPrefetchLink from "./NoPrefetchLink";
 import Image from "next/image";
 import useVibrate from "@/hooks/useVibrate";
+import { useTranslations } from "next-intl";
 
 interface Props {
   className?: string;
@@ -13,6 +14,7 @@ interface Props {
 export default function AddBanner({ className, hideable = false }: Props) {
   const [isVisible, setIsVisible] = useState(true);
   const vibrate = useVibrate();
+  const translate = useTranslations("banner");
 
   return (
     <div
@@ -32,7 +34,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
           {/* BACKGROUND LAYER: Blurred */}
           <div className='absolute inset-0 w-full h-full'>
             <Image
-              src={"/images/add_banner.webp"}
+              src={translate("url")}
               alt={""}
               fill
               className='object-cover blur-lg'
@@ -43,7 +45,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
           {/* TOP LAYER: Sharp image */}
           <div className='relative h-full flex items-center justify-center'>
             <Image
-              src={"/images/add_banner.webp"}
+              src={translate("url")}
               alt={"Banner"}
               width={0}
               height={0}

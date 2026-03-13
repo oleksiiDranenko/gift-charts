@@ -3,6 +3,9 @@
     "title": "Вступай в официальный канал",
     "description": "Самые свежие новости и обновления"
   },
+  "banner": {
+    "url": "/images/banner-ru.webp"
+  },
   "general": {
     "save": "Сохранить",
     "clear": "Очистить",

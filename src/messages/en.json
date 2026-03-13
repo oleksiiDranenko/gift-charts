@@ -3,6 +3,9 @@
     "title": "Join the Official Channel",
     "description": "Find out about the latest updates"
   },
+  "banner": {
+    "url": "/images/banner-en.webp"
+  },
   "general": {
     "save": "Save",
     "clear": "Clear",
