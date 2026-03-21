@@ -33,6 +33,11 @@ async function handleRequest(request: NextRequest) {
     const anonId = getOrCreateAnonId(request, res);
 
     const headers = new Headers();
+    const clientIp =
+      request.headers.get("cf-connecting-ip") ||
+      request.headers.get("x-forwarded-for") ||
+      "";
+    headers.set("x-client-ip", clientIp);
 
     headers.set("x-internal-secret", process.env.INTERNAL_PROXY_SECRET || "");
 
