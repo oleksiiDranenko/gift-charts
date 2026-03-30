@@ -4,7 +4,7 @@
     "description": "Самые свежие новости и обновления"
   },
   "banner": {
-    "url": "/images/banner-ru.webp"
+    "url": "/images/banner_ru.png"
   },
   "general": {
     "save": "Сохранить",
