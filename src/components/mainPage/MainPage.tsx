@@ -72,9 +72,9 @@ export default function MainPage() {
 
   return (
     <div>
-      <div className='px-3 mb-3'>
+      {/* <div className='px-3 mb-3'>
         <AddBanner />
-      </div>
+      </div> */}
 
       <GiftsList />
 
