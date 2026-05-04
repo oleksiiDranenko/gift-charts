@@ -100,16 +100,19 @@ export default function AppInitializer({
                   `${process.env.NEXT_PUBLIC_API}/users/check-account/${telegramUser.id}`,
                 );
                 if (userRes.data?._id) {
-                  // Ensure savedList is always an array
                   const userData = {
-                    ...userRes.data,
+                    _id: userRes.data._id,
+                    telegramId: userRes.data.telegramId,
                     token: userRes.data.token,
+                    username: userRes.data.username,
                     savedList: Array.isArray(userRes.data.savedList)
                       ? userRes.data.savedList
                       : [],
                     assets: Array.isArray(userRes.data.assets)
                       ? userRes.data.assets
                       : [],
+                    ton: userRes.data.ton ?? 0,
+                    usd: userRes.data.usd ?? 0,
                   };
                   dispatch(setUser(userData));
                   if (userRes.data.token) {
@@ -132,14 +135,18 @@ export default function AppInitializer({
                       },
                     );
                     const userData = {
-                      ...createRes.data.user,
+                      _id: createRes.data.user._id,
+                      telegramId: createRes.data.user.telegramId,
                       token: createRes.data.token,
+                      username: createRes.data.user.username,
                       savedList: Array.isArray(createRes.data.user.savedList)
                         ? createRes.data.user.savedList
                         : [],
                       assets: Array.isArray(createRes.data.user.assets)
                         ? createRes.data.user.assets
                         : [],
+                      ton: createRes.data.user.ton ?? 0,
+                      usd: createRes.data.user.usd ?? 0,
                     };
                     dispatch(setUser(userData));
                     if (createRes.data.token) {

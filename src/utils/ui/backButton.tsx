@@ -16,7 +16,7 @@ export default function BackButton({ middleText, rightElement }: Props) {
   const vibrate = useVibrate();
   const translate = useTranslations("general");
   return (
-    <button className='w-full flex flex-row items-center'>
+    <div className='w-full flex flex-row items-center'>
       <div className='w-1/3 flex justify-start text-nowrap'>
         <div
           className='w-fit flex flex-row items-center font-bold'
@@ -44,6 +44,6 @@ export default function BackButton({ middleText, rightElement }: Props) {
       </div>
       <div className='w-full flex justify-end'>{rightElement}</div>
       {/* {translate("back")} */}
-    </button>
+    </div>
   );
 }

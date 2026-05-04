@@ -75,7 +75,7 @@ export default async function RootLayout({
         `}
       </Script>
 
-      <html lang={locale}>
+      <html lang={locale} suppressHydrationWarning>
         <body
           className={`${inter.className} min-h-screen overflow-auto transition-all duration-300 ease-in-out`}>
           <NextIntlClientProvider messages={messages}>

@@ -61,7 +61,7 @@
     "@types/react-gauge-chart": "^0.4.3",
     "@types/react-redux": "^7.1.34",
     "@types/react-transition-group": "^4.4.12",
-    "autoprefixer": "^10",
+    "autoprefixer": "^10.5.0",
     "eslint": "^8",
     "eslint-config-next": "^15.5.12",
     "postcss": "^8",

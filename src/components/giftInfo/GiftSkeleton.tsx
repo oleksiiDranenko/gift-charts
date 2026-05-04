@@ -1,17 +1,11 @@
 import { ChartLine, Gift, LoaderCircle } from "lucide-react";
-import { useTheme } from "next-themes";
 
 export const GiftSkeleton = () => {
-  const { resolvedTheme } = useTheme();
   return (
     <>
       <div className='block lg:hidden h-auto px-3 w-full animate-pulse'>
         <div
-          className={`w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center ${
-            resolvedTheme === "dark"
-              ? ""
-              : "bg-secondaryTransparent rounded-3xl pl-2"
-          }`}>
+          className='w-full h-16 mt-3 gap-x-3 flex flex-row justify-between items-center bg-secondaryTransparent rounded-3xl pl-2 dark:bg-transparent dark:rounded-none dark:pl-0'>
           <div className='h-full flex items-center'>
             <div className='w-[45px] h-[45px] flex items-center justify-center rounded-3xl ml-2 mr-3 bg-secondaryTransparent'></div>
             <div className='flex flex-col'>

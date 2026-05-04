@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import BackButton from "@/utils/ui/backButton";
 import GiftSupplyPie from "@/components/giftInfo/GiftSupplyPie";
 import GiftInitPriceSection from "@/components/giftInfo/GiftInitPriceSection";
-import { useEffect, useState } from "react";
+import { use, useState } from "react";
 import useVibrate from "@/hooks/useVibrate";
 import ModelsList from "@/components/giftInfo/ModelsList";
 import { Transition } from "@headlessui/react";
@@ -37,8 +37,8 @@ async function fetchGift(id: string) {
   return data;
 }
 
-export default function Page({ params }: any) {
-  const { id } = params;
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const vibrate = useVibrate();
 
   const [page, setPage] = useState<"overview" | "models">("overview");
