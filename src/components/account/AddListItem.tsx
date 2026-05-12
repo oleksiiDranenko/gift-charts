@@ -41,7 +41,7 @@ export default function AddAssetItem({
       <div className=' flex flex-row items-center'>
         <Image
           alt='gift image'
-          src={`/cdn-assets/gifts/${image}.webp`}
+          src={`/cdn-assets/gifts/${image}`}
           width={50}
           height={50}
           unoptimized

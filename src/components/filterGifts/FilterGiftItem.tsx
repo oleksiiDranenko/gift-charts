@@ -65,7 +65,7 @@ export default function FilterGiftItem({
       <div className='h-full flex flex-row items-center justify-start'>
         <Image
           alt='gift image'
-          src={`/cdn-assets/gifts/${gift?.image}.webp`}
+          src={`/cdn-assets/gifts/${gift?.image}`}
           width={50}
           height={50}
           unoptimized

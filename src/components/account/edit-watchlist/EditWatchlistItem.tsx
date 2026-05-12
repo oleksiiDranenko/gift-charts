@@ -42,7 +42,7 @@ export default function EditWatchlistItem({
       <div className='flex flex-row items-center'>
         <Image
           alt='gift image'
-          src={`/cdn-assets/gifts/${gift?.image}.webp`}
+          src={`/cdn-assets/gifts/${gift?.image}`}
           width={50}
           height={50}
           unoptimized

@@ -38,7 +38,7 @@ const preloadImages = (data: GiftData[]) => {
   const map = new Map<string, HTMLImageElement>();
   data.forEach((item) => {
     const img = new Image();
-    img.src = `/cdn-assets/gifts/${item.imageName}.webp`;
+    img.src = `/cdn-assets/gifts/${item.imageName}`;
     map.set(item.imageName, img);
   });
   return map;
@@ -55,7 +55,7 @@ const preloadImagesAsync = async (data: GiftData[]) => {
             map.set(item.imageName, img);
             resolve();
           };
-          img.src = `/cdn-assets/gifts/${item.imageName}.webp`;
+          img.src = `/cdn-assets/gifts/${item.imageName}`;
         }),
     ),
   );

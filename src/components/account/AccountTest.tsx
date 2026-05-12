@@ -436,7 +436,7 @@ export default function AccountTest() {
                       className='w-full flex items-center justify-between'>
                       <div className='flex items-center gap-3'>
                         <Image
-                          src={`/cdn-assets/gifts/${group.image}.webp`}
+                          src={`/cdn-assets/gifts/${group.image}`}
                           alt=''
                           width={60}
                           height={60}

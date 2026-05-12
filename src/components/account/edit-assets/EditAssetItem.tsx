@@ -103,7 +103,7 @@ export default function EditAssetItem({
               <div className='flex flex-row items-center'>
                 <Image
                   alt='gift image'
-                  src={`/cdn-assets/gifts/${gift?.image}.webp`}
+                  src={`/cdn-assets/gifts/${gift?.image}`}
                   width={50}
                   height={50}
                   unoptimized
@@ -151,7 +151,7 @@ export default function EditAssetItem({
           <div className='flex flex-col items-center justify-center gap-y-3 mb-5'>
             <Image
               alt='gift image'
-              src={`/cdn-assets/gifts/${gift?.image}.webp`}
+              src={`/cdn-assets/gifts/${gift?.image}`}
               width={70}
               height={70}
               unoptimized

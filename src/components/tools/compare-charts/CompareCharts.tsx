@@ -553,7 +553,7 @@ export default function CompareCharts({ giftNames = [] }: CompareChartsProps) {
                 backgroundColor: `${COLORS[index].top}`,
               }}>
               <Image
-                src={`/cdn-assets/gifts/${gift.image}.webp`}
+                src={`/cdn-assets/gifts/${gift.image}`}
                 alt={gift.name}
                 width={24}
                 height={24}

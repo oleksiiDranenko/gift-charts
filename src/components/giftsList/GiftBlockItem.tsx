@@ -108,7 +108,7 @@ export default function GiftBlockItem({
       <div className='px-3 pt-3 w-full flex flex-col items-center relative'>
         <Image
           alt='gift image'
-          src={`/cdn-assets/gifts/${item.image}.webp`}
+          src={`/cdn-assets/gifts/${item.image}`}
           width={70}
           height={70}
           unoptimized

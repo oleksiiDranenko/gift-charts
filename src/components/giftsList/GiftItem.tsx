@@ -161,7 +161,7 @@ export default function GiftItem({
           </span> */}
           <Image
             alt={item.name}
-            src={`/cdn-assets/gifts/${item.image}.webp`}
+            src={`/cdn-assets/gifts/${item.image}`}
             width={50}
             height={50}
             unoptimized
@@ -307,7 +307,7 @@ export default function GiftItem({
             </span>
             <Image
               alt='gift image'
-              src={`/cdn-assets/gifts/${item.image}.webp`}
+              src={`/cdn-assets/gifts/${item.image}`}
               width={50}
               height={50}
               unoptimized

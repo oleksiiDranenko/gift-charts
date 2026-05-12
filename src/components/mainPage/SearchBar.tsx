@@ -70,7 +70,7 @@ export default function GiftSearchBar() {
                   }>
                   <div className='flex flex-row items-center gap-2'>
                     <Image
-                      src={`/cdn-assets/gifts/${gift.image}.webp`}
+                      src={`/cdn-assets/gifts/${gift.image}`}
                       alt={gift.name}
                       width={32}
                       height={32}

@@ -52,7 +52,13 @@ export default function GiftChart({
     return { currency: "ton", giftType: "line", giftBackground: "none" };
   });
   const [selectedPrice, setSelectedPrice] = useState<
-    "ton" | "usd" | "onSale" | "volume" | "salesCount" | "upgradedSupply" | "supply"
+    | "ton"
+    | "usd"
+    | "onSale"
+    | "volume"
+    | "salesCount"
+    | "upgradedSupply"
+    | "supply"
   >(settings.currency);
   const [candleData, setCandleData] = useState<GiftLifeDataInterface[]>([]);
   const [chartType, setChartType] = useState<"line" | "candle" | "bar">("line");
@@ -101,7 +107,7 @@ export default function GiftChart({
               <div className='h-full flex items-center'>
                 <Image
                   alt='gift'
-                  src={`/cdn-assets/gifts/${gift?.image}.webp`}
+                  src={`/cdn-assets/gifts/${gift?.image}`}
                   width={55}
                   height={55}
                   unoptimized
@@ -311,8 +317,6 @@ export default function GiftChart({
             />
           </div>
 
-         
-
           <div className='w-full px-3'>
             <div className='w-full mt-5 flex flex-col gap-y-3 font-normal bg-secondaryTransparent p-3 rounded-3xl'>
               <div className='w-full flex flex-row justify-between items-center p-2 gap-y-1 border-b border-background dark:border-secondary'>
@@ -418,7 +422,7 @@ export default function GiftChart({
               <div className='h-fit flex items-center mb-5'>
                 <Image
                   alt='gift'
-                  src={`/cdn-assets/gifts/${gift?.image}.webp`}
+                  src={`/cdn-assets/gifts/${gift?.image}`}
                   width={55}
                   height={55}
                   unoptimized
