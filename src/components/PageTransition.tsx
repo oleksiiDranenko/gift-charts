@@ -2,9 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { Transition } from "@headlessui/react";
-import { useAppSelector } from "@/redux/hooks";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useIsMobile } from "@/hooks/useMobile";
+import { useTmaPlatform } from "@/hooks/usePlatform";
 
 interface Props {
   children: React.ReactNode;
@@ -12,30 +11,18 @@ interface Props {
 
 export default function PageTransition({ children }: Props) {
   const pathname = usePathname();
-  const user = useAppSelector((state) => state.user);
-
-  const [isTelegram, setIsTelegram] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (user.username === "_guest") {
-      setIsTelegram(false);
-    } else {
-      setIsTelegram(true);
-    }
-  }, [user]);
+  const isMobile = useIsMobile();
+  const { isMobile: isMobilePlatform } = useTmaPlatform();
 
   return (
     <div
       className={`relative w-full flex flex-row justify-center ${
-        isTelegram ? "pt-[110px]" : "pt-5"
-      } lg:pt-5`}>
-      {/* <div
-        className={`lg:hidden ${isTelegram ? "" : "hidden"} z-50 fixed top-0 right-0 w-full h-[110px] flex justify-center items-center`}>
-        <div className='flex flex-row bg-secondaryLight backdrop-blur-md rounded-3xl mt-10 px-3 py-2 gap-2'>
-          <Image src={"/images/logo.webp"} alt={""} width={24} height={24} />
-          <span className='font-medium text-sm'>Gift Charts</span>
-        </div>
-      </div> */}
+        isMobilePlatform
+          ? "px-3 pt-[105px] pb-28"
+          : isMobile
+            ? "px-3 pt-3 pb-28"
+            : "px-8 py-6"
+      }`}>
       <Transition
         key={pathname}
         appear

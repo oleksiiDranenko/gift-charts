@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@tanstack/react-query": "^5.90.21",
     "@telegram-apps/analytics": "^1.4.4",
+    "@tma.js/sdk": "^3.2.0",
     "@tonconnect/ui-react": "^2.0.11",
     "@twa-dev/sdk": "^8.0.2",
     "@types/chart.js": "^2.9.41",
