@@ -18,10 +18,10 @@ export default function PageTransition({ children }: Props) {
     <div
       className={`relative w-full flex flex-row justify-center ${
         isMobilePlatform
-          ? "px-3 pt-[105px] pb-28"
+          ? " pt-[105px] pb-28"
           : isMobile
-            ? "px-3 pt-3 pb-28"
-            : "px-8 py-6"
+            ? " pt-3 pb-28"
+            : " py-6"
       }`}>
       <Transition
         key={pathname}
