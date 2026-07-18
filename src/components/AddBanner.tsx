@@ -26,7 +26,7 @@ export default function AddBanner({ className, hideable = false }: Props) {
       }`}>
       <div className='relative w-full'>
         <NoPrefetchLink
-          href='https://t.me/epic_gift_bot/app?startapp=cmp_GIFTCHARTSBANNER2'
+          href='https://t.me/epic_gift_bot/app?startapp=cmp_GIFTCHARTSBANNER3'
           className={`${className} relative w-full lg:h-24 flex items-center justify-center rounded-2xl overflow-hidden`}
           onClick={() => {
             vibrate();
